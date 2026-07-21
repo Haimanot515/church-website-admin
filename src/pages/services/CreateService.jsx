@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import API from "../../api/api";
 
 
-const CreateMedia = () => {
+const CreateService = () => {
 
 
-  const [media,setMedia] = useState({
+  const [service,setService] = useState({
 
     title:"",
     description:"",
-    type:"photo",
-    file:null
+    day:"",
+    time:"",
+    image:null
 
   });
 
@@ -26,12 +27,13 @@ const CreateMedia = () => {
 
 
 
+
   const handleChange=(e)=>{
 
 
-    setMedia({
+    setService({
 
-      ...media,
+      ...service,
 
       [e.target.name]:e.target.value
 
@@ -52,11 +54,11 @@ const CreateMedia = () => {
     const file=e.target.files[0];
 
 
-    setMedia({
+    setService({
 
-      ...media,
+      ...service,
 
-      file:file
+      image:file
 
     });
 
@@ -72,6 +74,7 @@ const CreateMedia = () => {
 
 
   };
+
 
 
 
@@ -104,30 +107,37 @@ const CreateMedia = () => {
 
       formData.append(
         "title",
-        media.title
+        service.title
       );
 
 
 
       formData.append(
         "description",
-        media.description
+        service.description
       );
 
 
 
       formData.append(
-        "type",
-        media.type
+        "day",
+        service.day
       );
 
 
 
-      if(media.file){
+      formData.append(
+        "time",
+        service.time
+      );
+
+
+
+      if(service.image){
 
         formData.append(
-          "file",
-          media.file
+          "image",
+          service.image
         );
 
       }
@@ -139,7 +149,7 @@ const CreateMedia = () => {
 
       await API.post(
 
-        "/media",
+        "/services",
 
         formData,
 
@@ -147,7 +157,8 @@ const CreateMedia = () => {
 
           headers:{
 
-            Authorization:`Bearer ${token}`,
+            Authorization:
+            `Bearer ${token}`,
 
             "Content-Type":
             "multipart/form-data"
@@ -162,20 +173,23 @@ const CreateMedia = () => {
 
 
 
+
       alert(
-        "Media uploaded successfully"
+        "Service created successfully"
       );
 
 
 
 
 
-      setMedia({
+
+      setService({
 
         title:"",
         description:"",
-        type:"photo",
-        file:null
+        day:"",
+        time:"",
+        image:null
 
       });
 
@@ -196,7 +210,7 @@ const CreateMedia = () => {
 
         err.response?.data?.message ||
 
-        "Failed to upload media"
+        "Failed to create service"
 
       );
 
@@ -262,8 +276,10 @@ boxShadow:"0 10px 30px rgba(0,0,0,.1)"
 
 
 <h2>
-Create Media
+Create Church Service
 </h2>
+
+
 
 
 
@@ -275,6 +291,7 @@ error &&
 </p>
 
 }
+
 
 
 
@@ -307,9 +324,30 @@ type="text"
 
 name="title"
 
-placeholder="Media title"
+placeholder="Service title"
 
-value={media.title}
+value={service.title}
+
+onChange={handleChange}
+
+required
+
+/>
+
+
+
+
+
+
+<textarea
+
+name="description"
+
+placeholder="Service description"
+
+rows="5"
+
+value={service.description}
 
 onChange={handleChange}
 
@@ -323,17 +361,19 @@ required
 
 
 
-<textarea
+<input
 
-name="description"
+type="text"
 
-placeholder="Media description"
+name="day"
 
-rows="5"
+placeholder="Example: Sundays & Feast Days"
 
-value={media.description}
+value={service.day}
 
 onChange={handleChange}
+
+required
 
 />
 
@@ -343,44 +383,21 @@ onChange={handleChange}
 
 
 
-<select
+<input
 
-name="type"
+type="text"
 
-value={media.type}
+name="time"
+
+placeholder="Example: 6:00 - 9:00 AM"
+
+value={service.time}
 
 onChange={handleChange}
 
->
+required
 
-
-
-<option value="photo">
-
-Photo
-
-</option>
-
-
-
-<option value="video">
-
-Video
-
-</option>
-
-
-
-<option value="audio">
-
-Audio
-
-</option>
-
-
-
-</select>
-
+/>
 
 
 
@@ -392,11 +409,9 @@ Audio
 
 type="file"
 
-accept="image/*,video/*,audio/*"
+accept="image/*"
 
 onChange={handleFileChange}
-
-required
 
 />
 
@@ -405,10 +420,8 @@ required
 
 
 
-
-
 {
-preview && media.type==="photo" &&
+preview &&
 
 <img
 
@@ -427,50 +440,6 @@ objectFit:"cover",
 borderRadius:"10px"
 
 }}
-
-/>
-
-}
-
-
-
-
-
-
-
-{
-preview && media.type==="video" &&
-
-<video
-
-src={preview}
-
-controls
-
-style={{
-
-width:"100%"
-
-}}
-
-/>
-
-}
-
-
-
-
-
-
-
-{
-preview && media.type==="audio" &&
-
-<audio
-
-src={preview}
-
-controls
 
 />
 
@@ -510,9 +479,9 @@ cursor:"pointer"
 {
 loading
 ?
-"Uploading..."
+"Creating..."
 :
-"Upload Media"
+"Create Service"
 }
 
 
@@ -522,7 +491,9 @@ loading
 
 
 
+
 </form>
+
 
 
 </div>
@@ -537,4 +508,4 @@ loading
 };
 
 
-export default CreateMedia;
+export default CreateService;
