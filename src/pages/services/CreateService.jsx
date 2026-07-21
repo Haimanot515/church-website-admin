@@ -39,10 +39,6 @@ const CreateService = () => {
   ];
 
 
-
-
-
-
   const handleChange = (e) => {
 
     const { name, value, type, checked } = e.target;
@@ -57,11 +53,6 @@ const CreateService = () => {
 
 
   };
-
-
-
-
-
 
 
   const handleFileChange = (e) => {
@@ -90,13 +81,6 @@ const CreateService = () => {
 
 
   };
-
-
-
-
-
-
-
 
 
   const handleSubmit = async (e) => {
@@ -181,9 +165,6 @@ const CreateService = () => {
 
 
 
-
-
-
       await API.post(
 
         "/services",
@@ -208,15 +189,9 @@ const CreateService = () => {
 
 
 
-
-
-
       alert(
         "Service created successfully"
       );
-
-
-
 
 
 
@@ -269,13 +244,6 @@ const CreateService = () => {
   };
 
 
-
-
-
-
-
-
-
   return (
 
     <div
@@ -321,8 +289,6 @@ const CreateService = () => {
 
 
 
-
-
         {
           error &&
 
@@ -331,10 +297,6 @@ const CreateService = () => {
           </p>
 
         }
-
-
-
-
 
 
 
@@ -355,9 +317,6 @@ const CreateService = () => {
         >
 
 
-
-
-
           <input
 
             type="text"
@@ -373,10 +332,6 @@ const CreateService = () => {
             required
 
           />
-
-
-
-
 
 
           <textarea
@@ -396,11 +351,6 @@ const CreateService = () => {
           />
 
 
-
-
-
-
-
           <input
 
             type="text"
@@ -418,11 +368,6 @@ const CreateService = () => {
           />
 
 
-
-
-
-
-
           <input
 
             type="text"
@@ -438,11 +383,6 @@ const CreateService = () => {
             required
 
           />
-
-
-
-
-
 
 
           <select
@@ -472,11 +412,6 @@ const CreateService = () => {
           </select>
 
 
-
-
-
-
-
           <input
 
             type="text"
@@ -490,11 +425,6 @@ const CreateService = () => {
             onChange={handleChange}
 
           />
-
-
-
-
-
 
 
           <label
@@ -524,11 +454,6 @@ const CreateService = () => {
           </label>
 
 
-
-
-
-
-
           <input
 
             type="file"
@@ -538,10 +463,6 @@ const CreateService = () => {
             onChange={handleFileChange}
 
           />
-
-
-
-
 
 
           {
@@ -568,11 +489,6 @@ const CreateService = () => {
             />
 
           }
-
-
-
-
-
 
 
           <button
@@ -608,10 +524,6 @@ const CreateService = () => {
 
 
           </button>
-
-
-
-
 
 
         </form>

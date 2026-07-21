@@ -8,6 +8,7 @@ import GetPost from "./pages/posts/GetPost";
 
 import CreateMedia from "./pages/media/CreateMedia";
 import CreateService from "./pages/services/CreateService";
+import GetService from "./pages/services/GetService";
 import CreateCategory from "./pages/categories/CreateCategory";
 import CreateLanguage from "./pages/languages/CreateLanguage";
 import Projects from "./pages/Projects";
@@ -119,6 +120,9 @@ function App() {
 
           <Route path="media/create" element={<CreateMedia />} />
           <Route path="services/create" element={<CreateService />} />
+           <Route path="services/view" element={<GetService />} />
+          
+
           <Route path="categories/create" element={<CreateCategory />} />
           <Route path="languages/create" element={<CreateLanguage />} />
 
