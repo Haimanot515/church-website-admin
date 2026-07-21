@@ -1,0 +1,227 @@
+/* ===== 1. BASE CONTAINER & TYPOGRAPHY ===== */
+.portfolio-container {
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.main-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin: 0 0 25px 0;
+  color: #0f172a;
+}
+
+.text-gradient {
+  display: inline-block;
+  color: #2563eb;
+  background: linear-gradient(to right, #2563eb, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.description {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: #334155;
+  margin-bottom: 30px;
+  line-height: 1.7;
+  text-align: justify;
+  hyphens: auto;
+  word-break: break-word;
+}
+
+/* ===== 2. GRIDS & SECTIONS ===== */
+.hero-section { padding: 80px 0; }
+.video-section-top { padding: 80px 0; }
+.video-section { padding: 80px 0; }
+.owner-gallery-section { padding: 80px 0; background-color: #fcfdfe; }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.campus-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: stretch; 
+}
+
+.video-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.tutorial-margin { margin-top: 0; }
+
+/* ===== 3. MEDIA CONTAINERS (UNIFIED SIZING) ===== */
+.hero-image-container {
+  width: 100%;
+  max-width: 450px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 24px;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+  margin: 0 auto;
+}
+
+.owner-img-hero {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-wrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  aspect-ratio: 16 / 9;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+}
+
+.gallery-item-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #f8fafc;
+  border: 1px solid #f1f5f9;
+}
+
+.media-bg-container {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== 4. NAVBAR & HAMBURGER ===== */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* ===== 5. RESPONSIVENESS BREAKPOINTS ===== */
+
+@media (max-width: 1100px) {
+  .navbar { justify-content: center; }
+  .menu-toggle { display: block; margin: 0 auto; }
+}
+
+@media (max-width: 1024px) {
+  .hero-grid { gap: 30px; }
+  .content-wrapper { padding: 0 30px; }
+}
+
+@media (max-width: 768px) {
+  .hero-section { padding: 40px 0; }
+  .video-section-top { padding: 40px 0; }
+  .video-section { padding: 40px 0; }
+  .owner-gallery-section { padding: 40px 0; }
+  
+  /* ONLY CHANGE: All main titles now center on Mobile/Tablet */
+  .main-title {
+    text-align: center;
+    margin: 0 auto 25px auto;
+  }
+
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .hero-image-wrapper {
+    order: -1; 
+    width: 100%;
+  }
+
+  .hero-text-wrapper {
+    order: 1; 
+    text-align: center; 
+  }
+
+  .hero-text-wrapper .hero-image-container {
+    margin: 20px auto;
+    max-width: 450px;
+    width: 100%;
+  }
+
+  .campus-split-grid, .video-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .reverse-mobile {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .description { text-align: center; }
+  .awards-list { align-items: center; }
+
+  .contact-group {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-wrapper { padding: 0 20px; }
+  .main-title { letter-spacing: -0.5px; }
+  .hero-image-container { border-radius: 16px; }
+  .video-wrapper { border-radius: 12px; }
+}
+
+/* ===== 6. FOOTER & AWARDS ===== */
+.footer-style {
+  padding: 40px 0;
+  border-top: 1px solid #f1f5f9;
+}
+
+.contact-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.awards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.award-item {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: left;
+  line-height: 1.6;
+}

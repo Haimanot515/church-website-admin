@@ -1,0 +1,32 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 5000; /* High priority to stay on top */
+  border-bottom: 1px solid #eee;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  
+  /* Desktop Defaults */
+  height: 80px;
+  padding: 20px 50px;
+  flex-direction: row;
+  gap: 0;
+}
+
+/* Mobile Logic (isMobile = width <= 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+}
