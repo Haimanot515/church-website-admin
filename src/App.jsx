@@ -8,7 +8,7 @@ import CreatePost from "./pages/posts/CreatePost";
 import CreateMedia from "./pages/media/CreateMedia";
 import CreateService from "./pages/services/CreateService";
 import CreateCategory from "./pages/categories/CreateCategory";
-import CreateLanguage from "./pages/languages/createLanguage";
+import CreateLanguage from "./pages/languages/CreateLanguage";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
