@@ -5,37 +5,53 @@ import API from "../../api/api";
 const CreateService = () => {
 
 
-  const [service,setService] = useState({
+  const [service, setService] = useState({
 
-    title:"",
-    description:"",
-    day:"",
-    time:"",
-    image:null
+    title: "",
+    description: "",
+    day: "",
+    time: "",
+    category: "Other",
+    location: "",
+    isFeatured: false,
+    image: null
 
   });
 
 
 
-  const [preview,setPreview] = useState(null);
+  const [preview, setPreview] = useState(null);
 
-  const [error,setError] = useState("");
+  const [error, setError] = useState("");
 
-  const [loading,setLoading] = useState(false);
-
-
+  const [loading, setLoading] = useState(false);
 
 
+  const categories = [
+    "Worship",
+    "Teaching",
+    "Prayer",
+    "Music",
+    "Youth",
+    "Ministry",
+    "Outreach",
+    "Other"
+  ];
 
 
-  const handleChange=(e)=>{
 
+
+
+
+  const handleChange = (e) => {
+
+    const { name, value, type, checked } = e.target;
 
     setService({
 
       ...service,
 
-      [e.target.name]:e.target.value
+      [name]: type === "checkbox" ? checked : value
 
     });
 
@@ -48,23 +64,23 @@ const CreateService = () => {
 
 
 
-  const handleFileChange=(e)=>{
+  const handleFileChange = (e) => {
 
 
-    const file=e.target.files[0];
+    const file = e.target.files[0];
 
 
     setService({
 
       ...service,
 
-      image:file
+      image: file
 
     });
 
 
 
-    if(file){
+    if (file) {
 
       setPreview(
         URL.createObjectURL(file)
@@ -83,13 +99,13 @@ const CreateService = () => {
 
 
 
-  const handleSubmit=async(e)=>{
+  const handleSubmit = async (e) => {
 
 
     e.preventDefault();
 
 
-    try{
+    try {
 
 
       setLoading(true);
@@ -97,11 +113,11 @@ const CreateService = () => {
 
 
       const token =
-      localStorage.getItem("token");
+        localStorage.getItem("token");
 
 
 
-      const formData=new FormData();
+      const formData = new FormData();
 
 
 
@@ -133,7 +149,28 @@ const CreateService = () => {
 
 
 
-      if(service.image){
+      formData.append(
+        "category",
+        service.category
+      );
+
+
+
+      formData.append(
+        "location",
+        service.location
+      );
+
+
+
+      formData.append(
+        "isFeatured",
+        service.isFeatured
+      );
+
+
+
+      if (service.image) {
 
         formData.append(
           "image",
@@ -155,13 +192,13 @@ const CreateService = () => {
 
         {
 
-          headers:{
+          headers: {
 
             Authorization:
-            `Bearer ${token}`,
+              `Bearer ${token}`,
 
             "Content-Type":
-            "multipart/form-data"
+              "multipart/form-data"
 
           }
 
@@ -185,11 +222,14 @@ const CreateService = () => {
 
       setService({
 
-        title:"",
-        description:"",
-        day:"",
-        time:"",
-        image:null
+        title: "",
+        description: "",
+        day: "",
+        time: "",
+        category: "Other",
+        location: "",
+        isFeatured: false,
+        image: null
 
       });
 
@@ -200,7 +240,7 @@ const CreateService = () => {
 
 
     }
-    catch(err){
+    catch (err) {
 
 
       console.log(err);
@@ -216,7 +256,7 @@ const CreateService = () => {
 
 
     }
-    finally{
+    finally {
 
 
       setLoading(false);
@@ -236,61 +276,61 @@ const CreateService = () => {
 
 
 
-return (
+  return (
 
-<div
+    <div
 
-style={{
+      style={{
 
-minHeight:"100vh",
+        minHeight: "100vh",
 
-background:"#f1f5f9",
+        background: "#f1f5f9",
 
-padding:"30px"
+        padding: "30px"
 
-}}
+      }}
 
->
+    >
 
 
 
-<div
+      <div
 
-style={{
+        style={{
 
-maxWidth:"650px",
+          maxWidth: "650px",
 
-margin:"auto",
+          margin: "auto",
 
-background:"#fff",
+          background: "#fff",
 
-padding:"30px",
+          padding: "30px",
 
-borderRadius:"15px",
+          borderRadius: "15px",
 
-boxShadow:"0 10px 30px rgba(0,0,0,.1)"
+          boxShadow: "0 10px 30px rgba(0,0,0,.1)"
 
-}}
+        }}
 
->
+      >
 
 
-<h2>
-Create Church Service
-</h2>
+        <h2>
+          Create Church Service
+        </h2>
 
 
 
 
 
-{
-error &&
+        {
+          error &&
 
-<p style={{color:"red"}}>
-{error}
-</p>
+          <p style={{ color: "red" }}>
+            {error}
+          </p>
 
-}
+        }
 
 
 
@@ -298,62 +338,62 @@ error &&
 
 
 
-<form
+        <form
 
-onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
 
-style={{
+          style={{
 
-display:"flex",
+            display: "flex",
 
-flexDirection:"column",
+            flexDirection: "column",
 
-gap:"15px"
+            gap: "15px"
 
-}}
+          }}
 
->
+        >
 
 
 
 
 
-<input
+          <input
 
-type="text"
+            type="text"
 
-name="title"
+            name="title"
 
-placeholder="Service title"
+            placeholder="Service title"
 
-value={service.title}
+            value={service.title}
 
-onChange={handleChange}
+            onChange={handleChange}
 
-required
+            required
 
-/>
+          />
 
 
 
 
 
 
-<textarea
+          <textarea
 
-name="description"
+            name="description"
 
-placeholder="Service description"
+            placeholder="Service description"
 
-rows="5"
+            rows="5"
 
-value={service.description}
+            value={service.description}
 
-onChange={handleChange}
+            onChange={handleChange}
 
-required
+            required
 
-/>
+          />
 
 
 
@@ -361,21 +401,21 @@ required
 
 
 
-<input
+          <input
 
-type="text"
+            type="text"
 
-name="day"
+            name="day"
 
-placeholder="Example: Sundays & Feast Days"
+            placeholder="Example: Sundays & Feast Days"
 
-value={service.day}
+            value={service.day}
 
-onChange={handleChange}
+            onChange={handleChange}
 
-required
+            required
 
-/>
+          />
 
 
 
@@ -383,21 +423,21 @@ required
 
 
 
-<input
+          <input
 
-type="text"
+            type="text"
 
-name="time"
+            name="time"
 
-placeholder="Example: 6:00 - 9:00 AM"
+            placeholder="Example: 6:00 - 9:00 AM"
 
-value={service.time}
+            value={service.time}
 
-onChange={handleChange}
+            onChange={handleChange}
 
-required
+            required
 
-/>
+          />
 
 
 
@@ -405,104 +445,186 @@ required
 
 
 
-<input
+          <select
 
-type="file"
+            name="category"
 
-accept="image/*"
+            value={service.category}
 
-onChange={handleFileChange}
+            onChange={handleChange}
 
-/>
+            style={{
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc"
+            }}
 
+          >
 
+            {categories.map((cat) => (
 
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
 
+            ))}
 
+          </select>
 
-{
-preview &&
 
-<img
 
-src={preview}
 
-alt="preview"
 
-style={{
 
-width:"100%",
 
-height:"250px",
+          <input
 
-objectFit:"cover",
+            type="text"
 
-borderRadius:"10px"
+            name="location"
 
-}}
+            placeholder="Location (e.g. Main Hall)"
 
-/>
+            value={service.location}
 
-}
+            onChange={handleChange}
 
+          />
 
 
 
 
 
 
-<button
 
-type="submit"
+          <label
 
-disabled={loading}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
+            }}
 
-style={{
+          >
 
-padding:"14px",
+            <input
 
-background:"#2563eb",
+              type="checkbox"
 
-color:"#fff",
+              name="isFeatured"
 
-border:"none",
+              checked={service.isFeatured}
 
-borderRadius:"10px",
+              onChange={handleChange}
 
-cursor:"pointer"
+            />
 
-}}
+            Mark as Featured
 
->
+          </label>
 
 
-{
-loading
-?
-"Creating..."
-:
-"Create Service"
-}
 
 
-</button>
 
 
 
+          <input
 
+            type="file"
 
+            accept="image/*"
 
-</form>
+            onChange={handleFileChange}
 
+          />
 
 
-</div>
 
 
-</div>
 
 
-);
+          {
+            preview &&
+
+            <img
+
+              src={preview}
+
+              alt="preview"
+
+              style={{
+
+                width: "100%",
+
+                height: "250px",
+
+                objectFit: "cover",
+
+                borderRadius: "10px"
+
+              }}
+
+            />
+
+          }
+
+
+
+
+
+
+
+          <button
+
+            type="submit"
+
+            disabled={loading}
+
+            style={{
+
+              padding: "14px",
+
+              background: "#2563eb",
+
+              color: "#fff",
+
+              border: "none",
+
+              borderRadius: "10px",
+
+              cursor: "pointer"
+
+            }}
+
+          >
+
+
+            {
+              loading
+                ? "Creating..."
+                : "Create Service"
+            }
+
+
+          </button>
+
+
+
+
+
+
+        </form>
+
+
+
+      </div>
+
+
+    </div>
+
+
+  );
 
 
 };

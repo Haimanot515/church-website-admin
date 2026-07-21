@@ -37,8 +37,7 @@ const CreateCategory = () => {
 
       setError("");
 
-      const token = localStorage.getItem("token");
-
+      // Auth header is already attached globally by the API interceptor
       await API.post(
 
         "/categories",
@@ -48,16 +47,6 @@ const CreateCategory = () => {
           name: category.name,
 
           description: category.description,
-
-        },
-
-        {
-
-          headers: {
-
-            Authorization: `Bearer ${token}`,
-
-          },
 
         }
 

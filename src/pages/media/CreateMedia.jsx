@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 
@@ -21,6 +21,22 @@ const CreateMedia = () => {
   const [error,setError] = useState("");
 
   const [loading,setLoading] = useState(false);
+
+
+  // Revoke the previous object URL whenever it changes or the component unmounts
+  useEffect(() => {
+
+    return () => {
+
+      if (preview) {
+
+        URL.revokeObjectURL(preview);
+
+      }
+
+    };
+
+  }, [preview]);
 
 
 
@@ -85,16 +101,13 @@ const CreateMedia = () => {
 
     e.preventDefault();
 
+    setError("");
+
 
     try{
 
 
       setLoading(true);
-
-
-
-      const token =
-      localStorage.getItem("token");
 
 
 
@@ -134,9 +147,7 @@ const CreateMedia = () => {
 
 
 
-
-
-
+      // Auth header is already attached globally by the API interceptor
       await API.post(
 
         "/media",
@@ -146,8 +157,6 @@ const CreateMedia = () => {
         {
 
           headers:{
-
-            Authorization:`Bearer ${token}`,
 
             "Content-Type":
             "multipart/form-data"

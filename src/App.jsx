@@ -3,6 +3,9 @@ import { useLocation, Routes, Route, Navigate } from "react-router-dom";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import CreatePost from "./pages/posts/CreatePost";
+import GetPost from "./pages/posts/GetPost";
+
+
 import CreateMedia from "./pages/media/CreateMedia";
 import CreateService from "./pages/services/CreateService";
 import CreateCategory from "./pages/categories/CreateCategory";
@@ -112,6 +115,8 @@ function App() {
           <Route path="users/update" element={<AdminUser mode={pathname} />} />
 
           <Route path="posts/create" element={<CreatePost />} />
+          <Route path="posts/view" element={<GetPost />} />
+
           <Route path="media/create" element={<CreateMedia />} />
           <Route path="services/create" element={<CreateService />} />
           <Route path="categories/create" element={<CreateCategory />} />
