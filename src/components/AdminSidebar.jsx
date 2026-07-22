@@ -10,6 +10,8 @@ import {
   Sparkles,
   Info,
   LogOut,
+  Megaphone,
+  
   LayoutDashboard,
   FileText,
   Wrench,
@@ -133,6 +135,29 @@ const SECTIONS = [
       { to: "/admin/skills/delete", label: "Delete Skills" },
     ],
   },
+  {
+  key: "promotions",
+  label: "Promotions",
+  icon: Megaphone,
+  links: [
+    {
+      to: "/admin/promotions/create",
+      label: "Create Promotion",
+    },
+    {
+      to: "/admin/promotions/view",
+      label: "View Promotions",
+    },
+    {
+      to: "/admin/promotions/update",
+      label: "Update Promotions",
+    },
+    {
+      to: "/admin/promotions/delete",
+      label: "Delete Promotions",
+    },
+  ],
+},
   {
     key: "about",
     label: "About",

@@ -11,6 +11,7 @@ import CreateService from "./pages/services/CreateService";
 import GetService from "./pages/services/GetService";
 import CreateCategory from "./pages/categories/CreateCategory";
 import CreateLanguage from "./pages/languages/CreateLanguage";
+import CreatePromotion from "./pages/promotions/CreatePromotion";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
@@ -125,6 +126,7 @@ function App() {
 
           <Route path="categories/create" element={<CreateCategory />} />
           <Route path="languages/create" element={<CreateLanguage />} />
+          <Route path="promotions/create" element={<CreatePromotion />} />
 
           <Route path="projects/create" element={<AdminProject mode={pathname} />} />
           <Route path="projects/view" element={<AdminProject mode={pathname} />} />
