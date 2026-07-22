@@ -5,7 +5,7 @@ const CreatePromotion = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [photo,  setPhoto] =  useState(null);
 
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
