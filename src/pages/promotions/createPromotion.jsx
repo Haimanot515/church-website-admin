@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./CreatePromotion.css";
+
 
 const CreatePromotion = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [photo,  setPhoto] =  useState(null);
+  const [photo, setPhoto] = useState(null);
 
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,18 +17,23 @@ const CreatePromotion = () => {
 
   // Image selection
   const handlePhotoChange = (e) => {
+
     const selectedFile = e.target.files[0];
 
     if (selectedFile) {
+
       setPhoto(selectedFile);
       setPreview(URL.createObjectURL(selectedFile));
+
     }
+
   };
 
 
 
   // Submit form
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
@@ -39,8 +46,11 @@ const CreatePromotion = () => {
       formData.append("title", title);
       formData.append("description", description);
 
+
       if (photo) {
+
         formData.append("photo", photo);
+
       }
 
 
@@ -60,10 +70,13 @@ const CreatePromotion = () => {
 
       console.log(res.data);
 
-      setMessage("Promotion created successfully ✅");
+
+      setMessage(
+        "Promotion created successfully ✅"
+      );
 
 
-      // Clear form after success
+      // Reset form
       setTitle("");
       setDescription("");
       setPhoto(null);
@@ -74,6 +87,7 @@ const CreatePromotion = () => {
     } catch (error) {
 
       console.log(error);
+
 
       setMessage(
         error.response?.data?.message ||
@@ -107,10 +121,13 @@ const CreatePromotion = () => {
 
 
         {message && (
+
           <div className="promotion-message">
             {message}
           </div>
+
         )}
+
 
 
 
@@ -178,20 +195,19 @@ const CreatePromotion = () => {
 
 
 
-          {
-            preview && (
+          {preview && (
 
-              <div className="image-preview">
+            <div className="image-preview">
 
-                <img
-                  src={preview}
-                  alt="promotion preview"
-                />
+              <img
+                src={preview}
+                alt="promotion preview"
+              />
 
-              </div>
+            </div>
 
-            )
-          }
+          )}
+
 
 
 
@@ -212,6 +228,7 @@ const CreatePromotion = () => {
 
 
 
+
         </form>
 
 
@@ -221,6 +238,7 @@ const CreatePromotion = () => {
     </div>
 
   );
+
 };
 
 
