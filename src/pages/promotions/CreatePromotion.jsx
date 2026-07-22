@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./CreatePromotion.css";
-
 
 const CreatePromotion = () => {
 
@@ -14,24 +12,19 @@ const CreatePromotion = () => {
   const [message, setMessage] = useState("");
 
 
-
-  // Image selection
   const handlePhotoChange = (e) => {
 
     const selectedFile = e.target.files[0];
 
     if (selectedFile) {
-
       setPhoto(selectedFile);
       setPreview(URL.createObjectURL(selectedFile));
-
     }
 
   };
 
 
 
-  // Submit form
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -46,54 +39,41 @@ const CreatePromotion = () => {
       formData.append("title", title);
       formData.append("description", description);
 
-
-      if (photo) {
-
+      if(photo){
         formData.append("photo", photo);
-
       }
-
 
 
       const res = await axios.post(
         "http://localhost:5000/api/promotions",
         formData,
         {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          withCredentials:true,
+          headers:{
+            "Content-Type":"multipart/form-data"
+          }
         }
       );
 
 
-
       console.log(res.data);
 
+      setMessage("Promotion created successfully ✅");
 
-      setMessage(
-        "Promotion created successfully ✅"
-      );
-
-
-      // Reset form
       setTitle("");
       setDescription("");
       setPhoto(null);
       setPreview("");
 
 
-
-    } catch (error) {
+    } catch(error){
 
       console.log(error);
-
 
       setMessage(
         error.response?.data?.message ||
         "Failed to create promotion"
       );
-
 
     } finally {
 
@@ -105,8 +85,167 @@ const CreatePromotion = () => {
 
 
 
-
   return (
+
+    <>
+
+    <style>{`
+
+      .create-promotion-page {
+        min-height: 100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        padding:40px;
+        background:#f8fafc;
+        font-family:Arial, sans-serif;
+      }
+
+
+      .promotion-card {
+        width:100%;
+        max-width:650px;
+        background:white;
+        padding:35px;
+        border-radius:12px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.08);
+      }
+
+
+      .promotion-card h2 {
+        text-align:center;
+        margin-bottom:25px;
+        color:#1e293b;
+      }
+
+
+      .promotion-message {
+        padding:12px;
+        margin-bottom:20px;
+        text-align:center;
+        border-radius:8px;
+        background:#dcfce7;
+        color:#166534;
+        font-weight:bold;
+      }
+
+
+      .form-group {
+        margin-bottom:20px;
+      }
+
+
+      .form-group label {
+        display:block;
+        margin-bottom:8px;
+        font-weight:600;
+        color:#334155;
+      }
+
+
+      .form-group input,
+      .form-group textarea {
+
+        width:100%;
+        padding:12px;
+        border:1px solid #cbd5e1;
+        border-radius:8px;
+        font-size:15px;
+        box-sizing:border-box;
+      }
+
+
+      .form-group textarea {
+        resize:vertical;
+      }
+
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+
+        outline:none;
+        border-color:#16a34a;
+
+      }
+
+
+      .image-preview {
+
+        display:flex;
+        justify-content:center;
+        margin:20px 0;
+
+      }
+
+
+      .image-preview img {
+
+        width:300px;
+        height:200px;
+        object-fit:cover;
+        border-radius:10px;
+
+      }
+
+
+      .promotion-card button {
+
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:8px;
+        background:#16a34a;
+        color:white;
+        font-size:16px;
+        font-weight:bold;
+        cursor:pointer;
+
+      }
+
+
+      .promotion-card button:hover {
+
+        background:#15803d;
+
+      }
+
+
+      .promotion-card button:disabled {
+
+        background:#94a3b8;
+        cursor:not-allowed;
+
+      }
+
+
+      @media(max-width:700px){
+
+        .create-promotion-page{
+
+          padding:20px;
+
+        }
+
+
+        .promotion-card{
+
+          padding:20px;
+
+        }
+
+
+        .image-preview img{
+
+          width:100%;
+          height:auto;
+
+        }
+
+      }
+
+    `}</style>
+
+
 
     <div className="create-promotion-page">
 
@@ -130,7 +269,6 @@ const CreatePromotion = () => {
 
 
 
-
         <form onSubmit={handleSubmit}>
 
 
@@ -139,7 +277,6 @@ const CreatePromotion = () => {
             <label>
               Promotion Title
             </label>
-
 
             <input
               type="text"
@@ -153,14 +290,11 @@ const CreatePromotion = () => {
 
 
 
-
-
           <div className="form-group">
 
             <label>
               Description
             </label>
-
 
             <textarea
               value={description}
@@ -174,14 +308,11 @@ const CreatePromotion = () => {
 
 
 
-
-
           <div className="form-group">
 
             <label>
               Promotion Photo
             </label>
-
 
             <input
               type="file"
@@ -194,21 +325,18 @@ const CreatePromotion = () => {
 
 
 
-
           {preview && (
 
             <div className="image-preview">
 
               <img
                 src={preview}
-                alt="promotion preview"
+                alt="preview"
               />
 
             </div>
 
           )}
-
-
 
 
 
@@ -228,7 +356,6 @@ const CreatePromotion = () => {
 
 
 
-
         </form>
 
 
@@ -237,10 +364,12 @@ const CreatePromotion = () => {
 
     </div>
 
+
+    </>
+
   );
 
 };
-
 
 
 export default CreatePromotion;
