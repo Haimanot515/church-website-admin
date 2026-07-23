@@ -11,7 +11,7 @@ import {
   Info,
   LogOut,
   Megaphone,
-  
+  Church,
   LayoutDashboard,
   FileText,
   Wrench,
@@ -112,6 +112,18 @@ const SECTIONS = [
       { to: "/admin/languages/view", label: "View Languages" },
       { to: "/admin/languages/update", label: "Update Languages" },
       { to: "/admin/languages/delete", label: "Delete Languages" },
+    ],
+  },
+  {
+    key: "churches",
+    label: "Churches",
+    icon: Church,
+    links: [
+      { to: "/admin/churches/create", label: "Create Church" },
+      { to: "/admin/churches/view", label: "View Churches" },
+      { to: "/admin/churches/update", label: "Update Churches" },
+      { to: "/admin/churches/delete", label: "Delete Churches" },
+      { to: "/admin/churches/assign", label: "Assign Church" },
     ],
   },
   {
