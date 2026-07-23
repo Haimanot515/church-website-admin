@@ -21,12 +21,16 @@ const CreateChurchAssignment = () => {
   useEffect(() => {
     const fetchOptions = async () => {
       try {
+        const token = localStorage.getItem("token");
+
         const [userRes, churchRes] = await Promise.all([
-          API.get("/users"),
+          API.get("/admin/users?page=1&limit=1000", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
           API.get("/churches"),
         ]);
 
-        setUsers(userRes.data);
+        setUsers(userRes.data.users); // /admin/users returns { users, totalUsers }
         setChurches(churchRes.data);
       } catch (err) {
         console.log(err);
@@ -54,16 +58,24 @@ const CreateChurchAssignment = () => {
     try {
       setLoading(true);
 
+      const token = localStorage.getItem("token");
+
       // Matches POST /api/churches/assignment in churchRoutes.js,
       // handled by createAssignment in churchController.js
-      await API.post("/churches/assignment", {
-        user: assignment.user,
-        church: assignment.church,
-        role: assignment.role,
-        servingSince: assignment.servingSince || undefined,
-        description: assignment.description,
-        isCurrent: true,
-      });
+      await API.post(
+        "/churches/assignment",
+        {
+          user: assignment.user,
+          church: assignment.church,
+          role: assignment.role,
+          servingSince: assignment.servingSince || undefined,
+          description: assignment.description,
+          isCurrent: true,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       alert("Church assignment saved successfully");
 
