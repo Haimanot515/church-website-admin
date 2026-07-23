@@ -10,6 +10,7 @@ const CreateMedia = () => {
     title:"",
     description:"",
     type:"photo",
+    status:"draft",
     file:null
 
   });
@@ -136,6 +137,13 @@ const CreateMedia = () => {
 
 
 
+      formData.append(
+        "status",
+        media.status
+      );
+
+
+
       if(media.file){
 
         formData.append(
@@ -184,6 +192,7 @@ const CreateMedia = () => {
         title:"",
         description:"",
         type:"photo",
+        status:"draft",
         file:null
 
       });
@@ -383,6 +392,42 @@ Video
 <option value="audio">
 
 Audio
+
+</option>
+
+
+
+</select>
+
+
+
+
+
+
+
+<select
+
+name="status"
+
+value={media.status}
+
+onChange={handleChange}
+
+>
+
+
+
+<option value="draft">
+
+Save as Draft
+
+</option>
+
+
+
+<option value="published">
+
+Publish
 
 </option>
 
