@@ -10,10 +10,17 @@ const CreateMedia = () => {
     title:"",
     description:"",
     type:"photo",
-    status:"draft",
+    status:"published",
+    category:"",
     file:null
 
   });
+
+
+
+  const [categories,setCategories] = useState([]);
+
+  const [optionsLoading,setOptionsLoading] = useState(true);
 
 
 
@@ -22,6 +29,37 @@ const CreateMedia = () => {
   const [error,setError] = useState("");
 
   const [loading,setLoading] = useState(false);
+
+
+  // Fetch categories from the backend on mount
+  useEffect(() => {
+
+    const fetchOptions = async () => {
+
+      try {
+
+        const catRes = await API.get("/categories");
+
+        setCategories(catRes.data);
+
+      } catch (err) {
+
+        console.log(err);
+
+        setError("Failed to load categories");
+
+      } finally {
+
+        setOptionsLoading(false);
+
+      }
+
+    };
+
+    fetchOptions();
+
+  }, []);
+
 
 
   // Revoke the previous object URL whenever it changes or the component unmounts
@@ -144,6 +182,13 @@ const CreateMedia = () => {
 
 
 
+      formData.append(
+        "category",
+        media.category
+      );
+
+
+
       if(media.file){
 
         formData.append(
@@ -192,7 +237,8 @@ const CreateMedia = () => {
         title:"",
         description:"",
         type:"photo",
-        status:"draft",
+        status:"published",
+        category:"",
         file:null
 
       });
@@ -407,6 +453,48 @@ Audio
 
 <select
 
+name="category"
+
+value={media.category}
+
+onChange={handleChange}
+
+disabled={optionsLoading}
+
+>
+
+
+
+<option value="">
+
+{optionsLoading ? "Loading categories..." : "Select Category"}
+
+</option>
+
+
+
+{categories.map((cat) => (
+
+<option key={cat._id} value={cat._id}>
+
+{cat.name}
+
+</option>
+
+))}
+
+
+
+</select>
+
+
+
+
+
+
+
+<select
+
 name="status"
 
 value={media.status}
@@ -540,7 +628,7 @@ controls
 
 type="submit"
 
-disabled={loading}
+disabled={loading || optionsLoading}
 
 style={{
 
