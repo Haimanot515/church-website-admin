@@ -129,6 +129,37 @@ const CreateMedia = () => {
   };
 
 
+  const getAcceptForType = () => {
+
+    if (media.type === "photo") {
+
+      return "image/*";
+
+    }
+
+    if (media.type === "video") {
+
+      return "video/*";
+
+    }
+
+    if (media.type === "audio") {
+
+      return "audio/*";
+
+    }
+
+    if (media.type === "document") {
+
+      return "application/pdf";
+
+    }
+
+    return "*/*";
+
+  };
+
+
 
 
 
@@ -443,6 +474,14 @@ Audio
 
 
 
+<option value="document">
+
+Book / PDF
+
+</option>
+
+
+
 </select>
 
 
@@ -534,7 +573,7 @@ Publish
 
 type="file"
 
-accept="image/*,video/*,audio/*"
+accept={getAcceptForType()}
 
 onChange={handleFileChange}
 
@@ -615,6 +654,51 @@ src={preview}
 controls
 
 />
+
+}
+
+
+
+
+
+
+
+{
+preview && media.type==="document" &&
+
+<div
+
+style={{
+
+border:"1px solid #e2e8f0",
+
+borderRadius:"10px",
+
+overflow:"hidden"
+
+}}
+
+>
+
+<iframe
+
+src={preview}
+
+title="PDF preview"
+
+style={{
+
+width:"100%",
+
+height:"350px",
+
+border:"none"
+
+}}
+
+/>
+
+</div>
 
 }
 
