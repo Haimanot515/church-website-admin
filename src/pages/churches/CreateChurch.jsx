@@ -10,6 +10,7 @@ const CreateChurch = () => {
     serviceDays: "",
     serviceTime: "",
     isFeatured: false,
+    isPrimary: false,
     image: null,
   });
 
@@ -48,6 +49,7 @@ const CreateChurch = () => {
       formData.append("serviceDays", church.serviceDays);
       formData.append("serviceTime", church.serviceTime);
       formData.append("isFeatured", church.isFeatured);
+      formData.append("isPrimary", church.isPrimary);
 
       if (church.image) {
         formData.append("image", church.image);
@@ -68,6 +70,7 @@ const CreateChurch = () => {
         serviceDays: "",
         serviceTime: "",
         isFeatured: false,
+        isPrimary: false,
         image: null,
       });
 
@@ -167,6 +170,27 @@ const CreateChurch = () => {
           <label>
             <input type="checkbox" name="isFeatured" checked={church.isFeatured} onChange={handleChange} />
             Featured
+          </label>
+
+          {/* UI-facing label reads "Main Church" — maps internally to isPrimary,
+              which drives the public hero section on the Church page. */}
+          <label style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+            <input
+              type="checkbox"
+              name="isPrimary"
+              checked={church.isPrimary}
+              onChange={handleChange}
+              style={{ marginTop: "3px" }}
+            />
+            <span>
+              Set as Main Church
+              <br />
+              <small style={{ color: "#64748b" }}>
+                Shown in the hero section of the public Church page. Only one
+                church can hold this — selecting it will replace whichever
+                church currently holds it.
+              </small>
+            </span>
           </label>
 
           <button
