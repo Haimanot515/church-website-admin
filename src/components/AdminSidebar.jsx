@@ -18,6 +18,7 @@ import {
   Image,
   Tags,
   Languages as LanguagesIcon,
+  UserRound,
 } from "lucide-react";
 
 const SECTIONS = [
@@ -124,6 +125,18 @@ const SECTIONS = [
       { to: "/admin/churches/update", label: "Update Churches" },
       { to: "/admin/churches/delete", label: "Delete Churches" },
       { to: "/admin/churches/assign", label: "Assign Church" },
+    ],
+  },
+  {
+    key: "churchpersons",
+    label: "Church Persons",
+    icon: UserRound,
+    links: [
+      { to: "/admin/church-persons/create", label: "Create Person" },
+      { to: "/admin/church-persons/view", label: "View Persons" },
+      { to: "/admin/church-persons/update", label: "Update Persons" },
+      { to: "/admin/church-persons/reorder", label: "Reorder Persons" },
+      { to: "/admin/church-persons/delete", label: "Delete Persons" },
     ],
   },
   {
