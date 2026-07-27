@@ -15,6 +15,8 @@ import CreatePromotion from "./pages/promotions/CreatePromotion";
 import CreateChurch from "./pages/churches/CreateChurch";
 import ChurchAssignment from "./pages/churches/ChurchAssignment";
 import CreateChurchPerson from "./pages/churchPersons/CreateChurchPerson";
+import CreateChurchStory from "./pages/CreateChurchStory";
+
 
 
 import Projects from "./pages/Projects";
@@ -136,6 +138,8 @@ function App() {
           <Route path="churches/create" element={<CreateChurch />} />
           <Route path="churches/assign" element={<ChurchAssignment />} />
                     <Route path="church-persons/create" element={<CreateChurchPerson />} />
+          <Route path="church-story/create" element={<CreateChurchStory />} />
+
 
 
           <Route path="projects/create" element={<AdminProject mode={pathname} />} />

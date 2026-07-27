@@ -4,6 +4,7 @@ import API from "../../api/api";
 const AdminAbout = () => {
   const [about, setAbout] = useState({
     title: "",
+    churchLeader: "",
     description: "",
     image: null,
   });
@@ -18,6 +19,7 @@ const AdminAbout = () => {
 
       const formData = new FormData();
       formData.append("title", about.title);
+      formData.append("churchLeader", about.churchLeader);
       formData.append("description", about.description);
       if (about.image) formData.append("image", about.image);
 
@@ -31,6 +33,7 @@ const AdminAbout = () => {
 
       setAbout({
         title: "",
+        churchLeader: "",
         description: "",
         image: null,
       });
@@ -90,6 +93,22 @@ const AdminAbout = () => {
             value={about.title}
             onChange={(e) =>
               setAbout({ ...about, title: e.target.value })
+            }
+            required
+            style={{
+              padding: "12px",
+              borderRadius: "8px",
+              border: "1px solid #cbd5e1",
+              fontSize: "14px",
+            }}
+          />
+
+          <input
+            type="text"
+            placeholder="Church Leader"
+            value={about.churchLeader}
+            onChange={(e) =>
+              setAbout({ ...about, churchLeader: e.target.value })
             }
             required
             style={{

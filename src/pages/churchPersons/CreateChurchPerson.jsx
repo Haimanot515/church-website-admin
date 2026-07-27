@@ -2,6 +2,26 @@ import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 
+const ROLE_OPTIONS = [
+  "",
+  "Founding Pastor",
+  "Senior Pastor",
+  "Associate Pastor",
+  "Church Elder",
+  "Ministry Assistant",
+  "Worship Leader",
+  "Small Group Leader",
+  "Food Pantry Volunteer",
+  "Worship Team Member",
+  "Sunday School Teacher",
+  "Choir Member",
+  "Usher",
+  "Treasurer",
+  "Secretary",
+  "Member"
+];
+
+
 const CreateChurchPerson = () => {
 
 
@@ -163,10 +183,16 @@ const CreateChurchPerson = () => {
 
 
 
-      formData.append(
-        "rank",
-        person.rank
-      );
+      // Only append rank if a value was actually selected — sending an empty
+      // string fails the backend's enum validator, since "" isn't a valid rank.
+      if(person.rank){
+
+        formData.append(
+          "rank",
+          person.rank
+        );
+
+      }
 
 
 
@@ -446,19 +472,31 @@ onChange={handleChange}
 
 
 
-<input
-
-type="text"
+<select
 
 name="role"
-
-placeholder="Role (e.g. Founding Pastor, Church Elder)"
 
 value={person.role}
 
 onChange={handleChange}
 
-/>
+>
+
+
+
+{ROLE_OPTIONS.map((opt) => (
+
+<option key={opt} value={opt}>
+
+{opt === "" ? "Select Role" : opt}
+
+</option>
+
+))}
+
+
+
+</select>
 
 
 

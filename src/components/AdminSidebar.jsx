@@ -19,6 +19,7 @@ import {
   Tags,
   Languages as LanguagesIcon,
   UserRound,
+  BookOpen,
 } from "lucide-react";
 
 const SECTIONS = [
@@ -137,6 +138,17 @@ const SECTIONS = [
       { to: "/admin/church-persons/update", label: "Update Persons" },
       { to: "/admin/church-persons/reorder", label: "Reorder Persons" },
       { to: "/admin/church-persons/delete", label: "Delete Persons" },
+    ],
+  },
+  {
+    key: "churchstory",
+    label: "Church Story",
+    icon: BookOpen,
+    links: [
+      { to: "/admin/church-story/create", label: "Create Chapter" },
+      { to: "/admin/church-story/view", label: "View Chapters" },
+      { to: "/admin/church-story/update", label: "Update Chapters" },
+      { to: "/admin/church-story/delete", label: "Delete Chapters" },
     ],
   },
   {
