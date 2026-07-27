@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 const POSTS_PER_PAGE = 10;
@@ -17,15 +16,12 @@ const emptyForm = {
   image: null,
 };
 
-const GetPost = () => {
-  const navigate = useNavigate();
-
+const UpdatePost = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [deletingId, setDeletingId] = useState(null);
 
   const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -37,8 +33,6 @@ const GetPost = () => {
   const [existingImageUrl, setExistingImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
-
-  const editPanelRef = useRef(null);
 
   useEffect(() => {
     fetchPosts(currentPage);
@@ -89,7 +83,6 @@ const GetPost = () => {
     setCurrentPage(page);
   };
 
-  // --- Edit (inline, no navigation) ---
   const handleEditClick = (post) => {
     setEditingId(post._id);
     setFormError("");
@@ -107,10 +100,6 @@ const GetPost = () => {
     });
     setExistingImageUrl(post.imageUrl || "");
     setPreview(null);
-
-    requestAnimationFrame(() => {
-      editPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
   };
 
   const handleCancelEdit = () => {
@@ -176,30 +165,6 @@ const GetPost = () => {
     }
   };
 
-  // --- Delete ---
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) {
-      return;
-    }
-
-    try {
-      setDeletingId(id);
-
-      await API.delete(`/posts/${id}`);
-
-      if (editingId === id) {
-        handleCancelEdit();
-      }
-
-      await fetchPosts(currentPage);
-    } catch (err) {
-      console.log(err);
-      setError(err.response?.data?.message || "Failed to delete post");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
   return (
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
@@ -212,48 +177,18 @@ const GetPost = () => {
           boxShadow: "0 10px 30px rgba(0,0,0,.1)",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>All Posts</h2>
-
-          {!editingId && (
-            <button
-              onClick={() => navigate("/admin/posts/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New Post
-            </button>
-          )}
-        </div>
+        <h2>Update Posts</h2>
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         {editingId && (
           <div
-            ref={editPanelRef}
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
               padding: "20px",
               marginBottom: "25px",
               background: "#f8fafc",
-              scrollMarginTop: "20px",
             }}
           >
             <h3 style={{ marginTop: 0 }}>Edit Post</h3>
@@ -390,123 +325,103 @@ const GetPost = () => {
           </div>
         )}
 
-        {!editingId &&
-          (loading ? (
-            <p>Loading posts...</p>
-          ) : posts.length === 0 ? (
-            <p>No posts found.</p>
-          ) : (
-            <>
-              <div style={{ overflowX: "auto", marginTop: "15px" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
-                  <thead>
-                    <tr>
-                      <th style={thStyle}>Title</th>
-                      <th style={thStyle}>Category</th>
-                      <th style={thStyle}>Language</th>
-                      <th style={thStyle}>Status</th>
-                      <th style={thStyle}>Author</th>
-                      <th style={thStyle}>Created</th>
-                      <th style={thStyle}>Actions</th>
+        {loading ? (
+          <p>Loading posts...</p>
+        ) : posts.length === 0 ? (
+          <p>No posts found.</p>
+        ) : (
+          <>
+            <div style={{ overflowX: "auto", marginTop: "15px" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}>
+                <thead>
+                  <tr>
+                    <th style={thStyle}>Title</th>
+                    <th style={thStyle}>Category</th>
+                    <th style={thStyle}>Language</th>
+                    <th style={thStyle}>Status</th>
+                    <th style={thStyle}>Author</th>
+                    <th style={thStyle}>Created</th>
+                    <th style={thStyle}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {posts.map((post) => (
+                    <tr key={post._id} style={editingId === post._id ? { background: "#eff6ff" } : undefined}>
+                      <td style={tdStyle}>{post.title}</td>
+                      <td style={tdStyle}>{post.category?.name || "—"}</td>
+                      <td style={tdStyle}>{post.language?.name || "—"}</td>
+                      <td style={tdStyle}>
+                        <span
+                          style={{
+                            padding: "3px 10px",
+                            borderRadius: "20px",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                            background: post.status === "published" ? "#dcfce7" : "#fef9c3",
+                            color: post.status === "published" ? "#166534" : "#854d0e",
+                          }}
+                        >
+                          {post.status}
+                        </span>
+                      </td>
+                      <td style={tdStyle}>{post.author?.name || "—"}</td>
+                      <td style={tdStyle}>
+                        {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "—"}
+                      </td>
+                      <td style={tdStyle}>
+                        <button
+                          onClick={() => handleEditClick(post)}
+                          style={{
+                            padding: "6px 12px",
+                            background: "#2563eb",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontSize: "13px",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {posts.map((post) => (
-                      <tr key={post._id}>
-                        <td style={tdStyle}>{post.title}</td>
-                        <td style={tdStyle}>{post.category?.name || "—"}</td>
-                        <td style={tdStyle}>{post.language?.name || "—"}</td>
-                        <td style={tdStyle}>
-                          <span
-                            style={{
-                              padding: "3px 10px",
-                              borderRadius: "20px",
-                              fontSize: "12px",
-                              fontWeight: 600,
-                              background: post.status === "published" ? "#dcfce7" : "#fef9c3",
-                              color: post.status === "published" ? "#166534" : "#854d0e",
-                            }}
-                          >
-                            {post.status}
-                          </span>
-                        </td>
-                        <td style={tdStyle}>{post.author?.name || "—"}</td>
-                        <td style={tdStyle}>
-                          {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "—"}
-                        </td>
-                        <td style={tdStyle}>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button
-                              onClick={() => handleEditClick(post)}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#2563eb",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              Edit
-                            </button>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-                            <button
-                              onClick={() => handleDelete(post._id)}
-                              disabled={deletingId === post._id}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#dc2626",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {deletingId === post._id ? "Deleting..." : "Delete"}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginTop: "25px",
-                }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+                marginTop: "25px",
+              }}
+            >
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                style={pageButtonStyle(currentPage === 1)}
               >
-                <button
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  style={pageButtonStyle(currentPage === 1)}
-                >
-                  Prev
-                </button>
+                Prev
+              </button>
 
-                <span style={{ fontSize: "14px", color: "#444" }}>
-                  Page {currentPage} of {totalPages}
-                </span>
+              <span style={{ fontSize: "14px", color: "#444" }}>
+                Page {currentPage} of {totalPages}
+              </span>
 
-                <button
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  style={pageButtonStyle(currentPage === totalPages)}
-                >
-                  Next
-                </button>
-              </div>
-            </>
-          ))}
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                style={pageButtonStyle(currentPage === totalPages)}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -535,4 +450,4 @@ const pageButtonStyle = (disabled) => ({
   cursor: disabled ? "not-allowed" : "pointer",
 });
 
-export default GetPost;
+export default UpdatePost;

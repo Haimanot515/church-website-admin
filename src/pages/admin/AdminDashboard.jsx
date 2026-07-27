@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import API from "../../api/api";
 
 const STATS = [
   { label: "Sermons Published", value: "48", note: "+2 this month", to: "/admin/skills/view" },
@@ -8,6 +9,17 @@ const STATS = [
   { label: "Giving This Month", value: "$8,240", note: "312 gifts", to: "/admin/users/view" },
   { label: "Active Ministries", value: "9", note: "1 new this quarter", to: "/admin/projects/view" },
   { label: "Testimonies Shared", value: "27", note: "3 pending review", to: "/admin/about/view" },
+];
+
+// Real, API-backed counts for the actual content models — separate from the
+// STATS above, which are placeholder/mock figures.
+const CONTENT_CONFIG = [
+  { key: "posts", label: "Posts", to: "/admin/posts/view" },
+  { key: "media", label: "Media", to: "/admin/media/view" },
+  { key: "categories", label: "Categories", to: "/admin/categories/view" },
+  { key: "languages", label: "Languages", to: "/admin/languages/view" },
+  { key: "churches", label: "Churches", to: "/admin/churches/view" },
+  { key: "churchPersons", label: "Church Persons", to: "/admin/church-persons/view" },
 ];
 
 const STATUS_ITEMS = [
@@ -101,6 +113,72 @@ const AdminDashboard = () => {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
+  const [contentCounts, setContentCounts] = useState({});
+  const [contentErrors, setContentErrors] = useState({});
+  const [contentLoading, setContentLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContentCounts();
+  }, []);
+
+  const fetchContentCounts = async () => {
+    setContentLoading(true);
+
+    const results = await Promise.allSettled([
+      API.get("/posts", { params: { page: 1, limit: 1 } }),
+      API.get("/media"),
+      API.get("/categories"),
+      API.get("/languages"),
+      API.get("/churches"),
+      API.get("/church-persons"),
+    ]);
+
+    const [postsRes, mediaRes, categoriesRes, languagesRes, churchesRes, churchPersonsRes] = results;
+
+    const nextCounts = {};
+    const nextErrors = {};
+
+    if (postsRes.status === "fulfilled") {
+      nextCounts.posts = postsRes.value.data.totalPosts ?? postsRes.value.data.posts?.length ?? 0;
+    } else {
+      nextErrors.posts = true;
+    }
+
+    if (mediaRes.status === "fulfilled") {
+      nextCounts.media = mediaRes.value.data.length ?? 0;
+    } else {
+      nextErrors.media = true;
+    }
+
+    if (categoriesRes.status === "fulfilled") {
+      nextCounts.categories = categoriesRes.value.data.length ?? 0;
+    } else {
+      nextErrors.categories = true;
+    }
+
+    if (languagesRes.status === "fulfilled") {
+      nextCounts.languages = languagesRes.value.data.length ?? 0;
+    } else {
+      nextErrors.languages = true;
+    }
+
+    if (churchesRes.status === "fulfilled") {
+      nextCounts.churches = churchesRes.value.data.length ?? 0;
+    } else {
+      nextErrors.churches = true;
+    }
+
+    if (churchPersonsRes.status === "fulfilled") {
+      nextCounts.churchPersons = churchPersonsRes.value.data.length ?? 0;
+    } else {
+      nextErrors.churchPersons = true;
+    }
+
+    setContentCounts(nextCounts);
+    setContentErrors(nextErrors);
+    setContentLoading(false);
+  };
+
   return (
     <div className="church-admin">
       <style>{`
@@ -175,8 +253,45 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
+          <h3 className="eyebrow">Content Library</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>Live counts from the database</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
+          {CONTENT_CONFIG.map(({ key, label, to }) => (
+            <Link
+              key={key}
+              to={to}
+              style={{
+                display: "block",
+                borderRadius: "10px",
+                padding: "26px 22px",
+                background: "linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%)",
+                color: "#eaf3f8",
+              }}
+            >
+              <div className="display" style={{ fontSize: "2.8rem", fontWeight: 700, lineHeight: 1 }}>
+                {contentLoading ? (
+                  <span style={{ color: "rgba(234,243,248,0.4)" }}>—</span>
+                ) : contentErrors[key] ? (
+                  <span style={{ fontSize: "1.1rem", fontFamily: "'IBM Plex Mono', monospace", color: "#e5793f" }}>
+                    Failed to load
+                  </span>
+                ) : (
+                  contentCounts[key] ?? 0
+                )}
+              </div>
+              <div style={{ fontSize: "1.05rem", fontWeight: 700, marginTop: "10px", color: "#eaf3f8" }}>
+                Total {label}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div className="section-head">
           <h3 className="eyebrow">Upcoming Events</h3>
-          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All →</Link>
+          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
         {UPCOMING_EVENTS.map((e, i) => (
           <div key={e.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "22px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
@@ -195,7 +310,7 @@ const AdminDashboard = () => {
       <section>
         <div className="section-head">
           <h3 className="eyebrow">Recent Sermons</h3>
-          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All →</Link>
+          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
         {SERMONS_PREVIEW.map((s, i) => (
           <div key={s.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
@@ -222,7 +337,7 @@ const AdminDashboard = () => {
                 color: "#eaf3f8", fontFamily: "'Cormorant Garamond', serif", fontSize: "1.5rem", fontWeight: 700,
               }}
             >
-              {label} <span style={{ color: "#f0c9c0" }}>→</span>
+              {label}
             </Link>
           ))}
         </div>
@@ -243,7 +358,7 @@ const AdminDashboard = () => {
       <section>
         <div className="section-head">
           <h3 className="eyebrow">Prayer Requests Awaiting Reply</h3>
-          <Link to="/admin/contacts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All →</Link>
+          <Link to="/admin/contacts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
           {PRAYER_REQUESTS.map((p, i) => (
@@ -259,7 +374,7 @@ const AdminDashboard = () => {
       <section>
         <div className="section-head">
           <h3 className="eyebrow">Testimonies</h3>
-          <Link to="/admin/about/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All →</Link>
+          <Link to="/admin/about/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
           {TESTIMONIES.map((t, i) => (
@@ -281,7 +396,7 @@ const AdminDashboard = () => {
       <section>
         <div className="section-head">
           <h3 className="eyebrow">Ministries & Groups</h3>
-          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>Manage →</Link>
+          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>Manage</Link>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
           {MINISTRIES.map((m) => (
@@ -296,7 +411,7 @@ const AdminDashboard = () => {
       <section>
         <div className="section-head">
           <h3 className="eyebrow">Media Library</h3>
-          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All →</Link>
+          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
         {MEDIA_LIBRARY.map((v, i) => (
           <div key={v.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>

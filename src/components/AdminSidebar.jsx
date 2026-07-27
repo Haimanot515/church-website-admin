@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  LayoutTemplate,
   Home,
   Users,
   FolderKanban,
   MessageSquare,
-  Sparkles,
   Info,
   LogOut,
   Megaphone,
@@ -18,17 +16,11 @@ import {
   Image,
   Tags,
   Languages as LanguagesIcon,
-  UserRound,
-  BookOpen,
 } from "lucide-react";
 
+const NAVBAR_HEIGHT = 78; // keep in sync with .navbar's rendered height
+
 const SECTIONS = [
-  {
-    key: "landing",
-    label: "Landing",
-    icon: LayoutTemplate,
-    links: [{ to: "/admin/landing/manage", label: "Manage Landing" }],
-  },
   {
     key: "homehero",
     label: "Home Hero",
@@ -68,8 +60,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/posts/create", label: "Create Post" },
       { to: "/admin/posts/view", label: "View Posts" },
-      { to: "/admin/posts/update", label: "Update Posts" },
-      { to: "/admin/posts/delete", label: "Delete Posts" },
     ],
   },
   {
@@ -79,8 +69,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/services/create", label: "Create Service" },
       { to: "/admin/services/view", label: "View Services" },
-      { to: "/admin/services/update", label: "Update Services" },
-      { to: "/admin/services/delete", label: "Delete Services" },
     ],
   },
   {
@@ -90,8 +78,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/media/create", label: "Create Media" },
       { to: "/admin/media/view", label: "View Media" },
-      { to: "/admin/media/update", label: "Update Media" },
-      { to: "/admin/media/delete", label: "Delete Media" },
     ],
   },
   {
@@ -101,8 +87,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/categories/create", label: "Create Category" },
       { to: "/admin/categories/view", label: "View Categories" },
-      { to: "/admin/categories/update", label: "Update Categories" },
-      { to: "/admin/categories/delete", label: "Delete Categories" },
     ],
   },
   {
@@ -112,8 +96,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/languages/create", label: "Create Language" },
       { to: "/admin/languages/view", label: "View Languages" },
-      { to: "/admin/languages/update", label: "Update Languages" },
-      { to: "/admin/languages/delete", label: "Delete Languages" },
     ],
   },
   {
@@ -126,25 +108,11 @@ const SECTIONS = [
       { to: "/admin/churches/update", label: "Update Churches" },
       { to: "/admin/churches/delete", label: "Delete Churches" },
       { to: "/admin/churches/assign", label: "Assign Church" },
-    ],
-  },
-  {
-    key: "churchpersons",
-    label: "Church Persons",
-    icon: UserRound,
-    links: [
       { to: "/admin/church-persons/create", label: "Create Person" },
       { to: "/admin/church-persons/view", label: "View Persons" },
       { to: "/admin/church-persons/update", label: "Update Persons" },
       { to: "/admin/church-persons/reorder", label: "Reorder Persons" },
       { to: "/admin/church-persons/delete", label: "Delete Persons" },
-    ],
-  },
-  {
-    key: "churchstory",
-    label: "Church Story",
-    icon: BookOpen,
-    links: [
       { to: "/admin/church-story/create", label: "Create Chapter" },
       { to: "/admin/church-story/view", label: "View Chapters" },
       { to: "/admin/church-story/update", label: "Update Chapters" },
@@ -162,39 +130,14 @@ const SECTIONS = [
     ],
   },
   {
-    key: "skills",
-    label: "Skills",
-    icon: Sparkles,
+    key: "promotions",
+    label: "Promotions",
+    icon: Megaphone,
     links: [
-      { to: "/admin/skills/create", label: "Add Skill" },
-      { to: "/admin/skills/view", label: "View Skills" },
-      { to: "/admin/skills/update", label: "Update Skills" },
-      { to: "/admin/skills/delete", label: "Delete Skills" },
+      { to: "/admin/promotions/create", label: "Create Promotion" },
+      { to: "/admin/promotions/view", label: "View Promotions" },
     ],
   },
-  {
-  key: "promotions",
-  label: "Promotions",
-  icon: Megaphone,
-  links: [
-    {
-      to: "/admin/promotions/create",
-      label: "Create Promotion",
-    },
-    {
-      to: "/admin/promotions/view",
-      label: "View Promotions",
-    },
-    {
-      to: "/admin/promotions/update",
-      label: "Update Promotions",
-    },
-    {
-      to: "/admin/promotions/delete",
-      label: "Delete Promotions",
-    },
-  ],
-},
   {
     key: "about",
     label: "About",
@@ -202,7 +145,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/about/create", label: "Create About" },
       { to: "/admin/about/view", label: "View About" },
-      { to: "/admin/about/update", label: "Update About" },
     ],
   },
 ];
@@ -215,7 +157,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     s.links.some((l) => location?.pathname?.startsWith(l.to))
   )?.key;
 
-  const [activeSection, setActiveSection] = useState(matchedSection ?? "landing");
+  const [activeSection, setActiveSection] = useState(matchedSection ?? SECTIONS[0].key);
 
   const currentSection = SECTIONS.find((s) => s.key === activeSection) ?? SECTIONS[0];
 
@@ -245,9 +187,9 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
               flexDirection: "column",
               alignItems: "center",
               flexShrink: 0,
-              height: "100vh",
+              height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
               position: "fixed",
-              top: 0,
+              top: `${NAVBAR_HEIGHT}px`,
               left: 0,
               overflow: "hidden",
               zIndex: 30,
@@ -408,9 +350,9 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
           <div
             style={{
               position: "fixed",
-              top: 0,
+              top: `${NAVBAR_HEIGHT}px`,
               left: "84px",
-              height: "100vh",
+              height: `calc(100vh - ${NAVBAR_HEIGHT}px)`,
               width: "230px",
               background: "#ffffff",
               border: "1px solid #e5e7eb",
@@ -506,7 +448,16 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
         document.body
       )}
 
-      <main style={{ marginLeft: "314px", minHeight: "100vh", padding: "32px 40px", background: "#ffffff", fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <main
+        style={{
+          marginLeft: "314px",
+          minHeight: "100vh",
+          padding: "32px 40px",
+          paddingTop: `${NAVBAR_HEIGHT + 32}px`,
+          background: "#ffffff",
+          fontFamily: "'Inter', system-ui, sans-serif",
+        }}
+      >
         <Outlet />
       </main>
     </>
