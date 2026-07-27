@@ -40,7 +40,7 @@ const Navbar = () => {
   return (
     <>
       <nav className="navbar">
-        <Link to="/home" className="navbar-logo" onClick={closeMenu}>
+        <Link to="/admin/dashboard" className="navbar-logo" onClick={closeMenu}>
           <ThornCrownLogo />
         </Link>
 

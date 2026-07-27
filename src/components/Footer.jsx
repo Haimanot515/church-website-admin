@@ -34,7 +34,6 @@ const BackToTop = () => {
   return (
     <button className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
       <span className="back-to-top-line" />
-      <span className="back-to-top-label">Back to Top</span>
       <span className="back-to-top-arrow">↑</span>
       <span className="back-to-top-line" />
     </button>
