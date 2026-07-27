@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import API from "../api/api.jsx";
+import React from "react";
 import "./Footer.css";
 
 const footerColumns = [
@@ -8,94 +7,54 @@ const footerColumns = [
   { title: "Connect", items: ["Facebook", "Instagram", "YouTube"] }
 ];
 
-const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
-  const [feedback, setFeedback] = useState("");
+const Cross = ({ width = 18, height = 26, opacity = 1 }) => {
+  const barW = Math.round(width * 0.22);
+  const barH = Math.round(height * 0.16);
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
+      <rect x={(width - barW) / 2} y="0" width={barW} height={height} fill="var(--gold)" opacity={opacity} />
+      <rect x={(width - width * 0.85) / 2} y={height * 0.24} width={width * 0.85} height={barH} fill="var(--gold)" opacity={opacity} />
+    </svg>
+  );
+};
 
-  useEffect(() => {
-    if (!feedback) return;
-    const timer = setTimeout(() => {
-      setFeedback("");
-      setStatus("idle");
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [feedback]);
+const CrossRail = ({ width = 22, height = 32 }) => (
+  <div className="cross-rail-inner">
+    <span className="cross-rail-line cross-rail-line-top" />
+    <Cross width={width} height={height} />
+    <span className="cross-rail-line cross-rail-line-bottom" />
+  </div>
+);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      setStatus("error");
-      setFeedback("Please enter your email address.");
-      return;
-    }
-
-    setStatus("loading");
-    setFeedback("");
-
-    try {
-      // Matches: app.use("/api/subscribers", subscriberRoutes) -> POST "/"
-      const res = await API.post("/subscribers", { email });
-      setStatus("success");
-      setFeedback(res.data?.msg || "Thanks for subscribing!");
-      setEmail("");
-    } catch (err) {
-      console.error("Subscribe request failed:", err);
-      setStatus("error");
-      setFeedback(err.response?.data?.msg || "Something went wrong. Please try again.");
-    }
+const BackToTop = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
+    <button className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
+      <span className="back-to-top-line" />
+      <span className="back-to-top-label">Back to Top</span>
+      <span className="back-to-top-arrow">↑</span>
+      <span className="back-to-top-line" />
+    </button>
+  );
+};
+
+const Footer = () => {
+  return (
     <footer className="site-footer">
-      <section style={{ background: 'linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%)', color: '#eaf3f8' }}>
-        <div className="wrapper" style={{ maxWidth: '640px', textAlign: 'center' }}>
-          <h3 className="display" style={{ fontSize: '2.9rem', fontWeight: 700, margin: '18px 0 18px 0' }}>
-            A short reflection, delivered every Monday.
-          </h3>
-          <p style={{ fontSize: '1.3rem', color: '#a9c2d3', marginBottom: '32px' }}>
-            One email a week — a verse, a short reflection, and this week's prayer requests.
-          </p>
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@email.com"
-              disabled={status === "loading"}
-              style={{ padding: '15px 20px', fontSize: '1.1rem', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '30px', width: '280px', maxWidth: '80vw', background: 'rgba(255,255,255,0.08)', color: '#fff' }}
-            />
-            <button
-              type="submit"
-              disabled={status === "loading"}
-              style={{ background: 'var(--gold)', color: 'var(--navy-deep)', border: 'none', padding: '15px 32px', fontWeight: 700, borderRadius: '30px', cursor: status === "loading" ? 'default' : 'pointer', fontSize: '1.05rem', opacity: status === "loading" ? 0.7 : 1 }}
-            >
-              {status === "loading" ? "Subscribing…" : "Subscribe"}
-            </button>
-          </form>
-          {feedback && (
-            <p
-              role="status"
-              style={{
-                marginTop: '16px',
-                fontSize: '0.95rem',
-                color: status === "error" ? '#ffb4b4' : '#a9e3c3',
-              }}
-            >
-              {feedback}
-            </p>
-          )}
-        </div>
-      </section>
+      <div className="footer-cross-rail footer-cross-rail-left">
+        <CrossRail width={22} height={32} />
+      </div>
+      <div className="footer-cross-rail footer-cross-rail-right">
+        <CrossRail width={22} height={32} />
+      </div>
 
       <div className="wrapper">
         <div className="footer-grid">
           <div>
-            <h4 className="display footer-brand">Harbor Light Church</h4>
+            <h4 className="display footer-brand">Ethiopian Orthodox Church</h4>
             <p className="footer-tagline">Sunday services at 9:00 & 11:00 AM. All are welcome, always.</p>
           </div>
           {footerColumns.map((col, i) => (
@@ -107,8 +66,42 @@ const Footer = () => {
             </div>
           ))}
         </div>
+
+        <div
+          className="footer-cross-divider"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "26px",
+            margin: "24px 0",
+          }}
+        >
+          <span
+            style={{
+              flex: 1,
+              maxWidth: "220px",
+              height: "2px",
+              background: "linear-gradient(90deg, rgba(207,159,63,0) 0%, rgba(207,159,63,0.55) 50%, rgba(207,159,63,0) 100%)",
+            }}
+          />
+          <Cross width={18} height={26} opacity={0.7} />
+          <Cross width={26} height={38} />
+          <Cross width={18} height={26} opacity={0.7} />
+          <span
+            style={{
+              flex: 1,
+              maxWidth: "220px",
+              height: "2px",
+              background: "linear-gradient(90deg, rgba(207,159,63,0) 0%, rgba(207,159,63,0.55) 50%, rgba(207,159,63,0) 100%)",
+            }}
+          />
+        </div>
+
+        <BackToTop />
+
         <div className="footer-bottom">
-          <p className="eyebrow footer-bottom-text">© 2026 Harbor Light Church</p>
+          <p className="eyebrow footer-bottom-text">© 2026 Ethiopian Orthodox Church</p>
           <p className="eyebrow footer-bottom-text">Privacy Policy</p>
         </div>
       </div>
