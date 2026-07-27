@@ -55,26 +55,16 @@ const Navbar = () => {
         <div className={`nav-content ${isMenuOpen ? "active" : ""}`}>
           <div className="nav-links-row">
             <div className="nav-links-primary">
-              <Link to="/about" onClick={closeMenu}>About</Link>
-              <Link to="/projects" onClick={closeMenu}>Blogs</Link>
-              <Link to="/services" onClick={closeMenu}>Services</Link>
-              <Link to="/cv" onClick={closeMenu}>Church</Link>
-              <Link to="/skill" onClick={closeMenu}>Sermon</Link>
+              <Link to="/about" onClick={closeMenu}>Help</Link>
+              <Link to="/about" onClick={closeMenu}>Policy</Link>
+
+
+              
             </div>
 
-            <div className="nav-links-middle">
-              <Link to="/news" onClick={closeMenu}>News</Link>
-              <Link to="/miracles" onClick={closeMenu}>Miracles</Link>
-              <Link to="/mezmure" onClick={closeMenu}>Mezmure</Link>
-              <Link to="/events" onClick={closeMenu}>Events</Link>
-            </div>
+          
 
-            <div className="nav-links-secondary">
-              <Link to="/testimonials" onClick={closeMenu}>Travel</Link>
-              <Link to="/contact" onClick={closeMenu}>Contact</Link>
-              <Link to="/media" onClick={closeMenu}>Media</Link>
-              <Link to="/book" onClick={closeMenu}>Books</Link>
-            </div>
+            
           </div>
         </div>
       </nav>
