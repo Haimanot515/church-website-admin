@@ -42,6 +42,10 @@ import GetPromotion from "./pages/promotions/GetPromotion";
 import UpdatePromotion from "./pages/promotions/UpdatePromotion";
 import DeletePromotion from "./pages/promotions/DeletePromotion";
 
+/* Subscribers */
+import CreateSubscriber from "./pages/subscribers/CreateSubscriber";
+import GetSubscribers from "./pages/subscribers/GetSubscribers";
+
 /* Churches */
 import CreateChurch from "./pages/churches/CreateChurch";
 import GetChurch from "./pages/churches/GetChurch";
@@ -105,12 +109,14 @@ function App() {
 
   return (
     <>
-      <Navbar
-        loggedIn={loggedIn}
-        isAdmin={isAdmin}
-        setLoggedIn={setLoggedIn}
-        setIsAdmin={setIsAdmin}
-      />
+      {loggedIn && (
+        <Navbar
+          loggedIn={loggedIn}
+          isAdmin={isAdmin}
+          setLoggedIn={setLoggedIn}
+          setIsAdmin={setIsAdmin}
+        />
+      )}
 
       <Routes>
         <Route
@@ -203,6 +209,10 @@ function App() {
           <Route path="promotions/update/:id" element={<UpdatePromotion />} />
           <Route path="promotions/delete" element={<GetPromotion />} />
           <Route path="promotions/delete/:id" element={<DeletePromotion />} />
+
+          {/* Subscribers */}
+          <Route path="subscribers/create" element={<CreateSubscriber />} />
+          <Route path="subscribers/view" element={<GetSubscribers />} />
 
           {/* Churches */}
           <Route path="churches/create" element={<CreateChurch />} />

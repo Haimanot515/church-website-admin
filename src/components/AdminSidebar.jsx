@@ -16,6 +16,7 @@ import {
   Image,
   Tags,
   Languages as LanguagesIcon,
+  Mail,
 } from "lucide-react";
 
 const NAVBAR_HEIGHT = 78; // keep in sync with .navbar's rendered height
@@ -136,6 +137,15 @@ const SECTIONS = [
     links: [
       { to: "/admin/promotions/create", label: "Create Promotion" },
       { to: "/admin/promotions/view", label: "View Promotions" },
+    ],
+  },
+  {
+    key: "subscribers",
+    label: "Subscribers",
+    icon: Mail,
+    links: [
+      { to: "/admin/subscribers/create", label: "Add Subscriber" },
+      { to: "/admin/subscribers/view", label: "View Subscribers" },
     ],
   },
   {

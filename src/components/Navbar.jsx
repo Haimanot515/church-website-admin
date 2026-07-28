@@ -32,15 +32,17 @@ const ThornCrownLogo = () => (
   </svg>
 );
 
-const Navbar = () => {
+const Navbar = ({ loggedIn, isAdmin, setLoggedIn, setIsAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const closeMenu = () => setIsMenuOpen(false);
 
+  const logoDestination = loggedIn && isAdmin ? "/admin/dashboard" : "/";
+
   return (
     <>
       <nav className="navbar">
-        <Link to="/admin/dashboard" className="navbar-logo" onClick={closeMenu}>
+        <Link to={logoDestination} className="navbar-logo" onClick={closeMenu}>
           <ThornCrownLogo />
         </Link>
 
@@ -58,13 +60,12 @@ const Navbar = () => {
               <Link to="/about" onClick={closeMenu}>Help</Link>
               <Link to="/about" onClick={closeMenu}>Policy</Link>
 
+              {loggedIn && isAdmin && (
+                <Link to="/admin/dashboard" onClick={closeMenu}>Admin Dashboard</Link>
+              )}
 
-              
             </div>
 
-          
-
-            
           </div>
         </div>
       </nav>
