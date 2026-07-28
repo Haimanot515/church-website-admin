@@ -38,6 +38,13 @@
   z-index: 1002;
 }
 
+/* Hidden on desktop/PC — sidebar shows automatically there instead */
+@media (min-width: 901px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
 /* =========================
    FULL-WIDTH DROPDOWN
 ========================= */

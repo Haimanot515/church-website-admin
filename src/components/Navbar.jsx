@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaTimes, FaBars } from "react-icons/fa";
+import { useAdminMenu } from "./AdminMenuContext";
 import "./Navbar.css";
 
 // Crown of thorns logo
@@ -34,8 +35,21 @@ const ThornCrownLogo = () => (
 
 const Navbar = ({ loggedIn, isAdmin, setLoggedIn, setIsAdmin }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const { mobileOpen, setMobileOpen } = useAdminMenu();
+
+  const onAdminRoute = isAdmin && location.pathname.startsWith("/admin");
+  const menuIsOpen = onAdminRoute ? mobileOpen : isMenuOpen;
 
   const closeMenu = () => setIsMenuOpen(false);
+
+  const handleToggle = () => {
+    if (onAdminRoute) {
+      setMobileOpen((v) => !v);
+    } else {
+      setIsMenuOpen((v) => !v);
+    }
+  };
 
   const logoDestination = loggedIn && isAdmin ? "/admin/dashboard" : "/";
 
@@ -48,29 +62,29 @@ const Navbar = ({ loggedIn, isAdmin, setLoggedIn, setIsAdmin }) => {
 
         <button
           className="menu-toggle"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={handleToggle}
           aria-label="Toggle Menu"
         >
-          {isMenuOpen ? <FaTimes /> : <FaBars />}
+          {menuIsOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        <div className={`nav-content ${isMenuOpen ? "active" : ""}`}>
-          <div className="nav-links-row">
-            <div className="nav-links-primary">
-              <Link to="/about" onClick={closeMenu}>Help</Link>
-              <Link to="/about" onClick={closeMenu}>Policy</Link>
+        {!onAdminRoute && (
+          <div className={`nav-content ${isMenuOpen ? "active" : ""}`}>
+            <div className="nav-links-row">
+              <div className="nav-links-primary">
+                <Link to="/about" onClick={closeMenu}>Help</Link>
+                <Link to="/about" onClick={closeMenu}>Policy</Link>
 
-              {loggedIn && isAdmin && (
-                <Link to="/admin/dashboard" onClick={closeMenu}>Admin Dashboard</Link>
-              )}
-
+                {loggedIn && isAdmin && (
+                  <Link to="/admin/dashboard" onClick={closeMenu}>Admin Dashboard</Link>
+                )}
+              </div>
             </div>
-
           </div>
-        </div>
+        )}
       </nav>
 
-      {isMenuOpen && <div className="nav-backdrop" onClick={closeMenu} />}
+      {!onAdminRoute && isMenuOpen && <div className="nav-backdrop" onClick={closeMenu} />}
     </>
   );
 };

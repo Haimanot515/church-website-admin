@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Routes, Route, Navigate } from "react-router-dom";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import { AdminMenuProvider } from "./components/AdminMenuContext";
 
 /* Pages */
 import LandingPage from "./pages/LandingPage";
@@ -60,7 +61,6 @@ import UpdateChurchPerson from "./pages/churchPersons/UpdateChurchPerson";
 import DeleteChurchPerson from "./pages/churchPersons/DeleteChurchPerson";
 import ReorderChurchPerson from "./pages/churchPersons/ReorderChurchPerson";
 
-
 /* Church Story */
 import CreateChurchStory from "./pages/church-story/CreateChurchStory";
 import GetChurchStory from "./pages/church-story/GetChurchStory";
@@ -116,7 +116,7 @@ function App() {
   if (loggedIn === null) return null;
 
   return (
-    <>
+    <AdminMenuProvider>
       {loggedIn && (
         <Navbar
           loggedIn={loggedIn}
@@ -281,7 +281,7 @@ function App() {
       </Routes>
 
       <Footer />
-    </>
+    </AdminMenuProvider>
   );
 }
 

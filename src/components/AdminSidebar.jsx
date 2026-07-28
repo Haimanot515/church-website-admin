@@ -16,9 +16,8 @@ import {
   Tags,
   Languages as LanguagesIcon,
   Mail,
-  Menu,
-  X,
 } from "lucide-react";
+import { useAdminMenu } from "./AdminMenuContext";
 import "./AdminSidebar.css";
 
 const NAVBAR_HEIGHT = 78; // keep in sync with .navbar's rendered height
@@ -151,7 +150,7 @@ const SECTIONS = [
 const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const { mobileOpen, setMobileOpen } = useAdminMenu(); // ← shared with Navbar now
 
   const matchedSection = SECTIONS.find((s) =>
     s.links.some((l) => location?.pathname?.startsWith(l.to))
@@ -253,15 +252,6 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
         </div>,
         document.body
       )}
-
-      <button
-        className="admin-mobile-toggle"
-        style={navbarHeightVar}
-        onClick={() => setMobileOpen((v) => !v)}
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-      >
-        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-      </button>
 
       <div
         className={`admin-mobile-backdrop${mobileOpen ? " open" : ""}`}
