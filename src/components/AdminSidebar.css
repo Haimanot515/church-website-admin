@@ -5,15 +5,15 @@ html, body { overflow-x: hidden; width: 100%; }
 .admin-portal-root {
   font-family: 'Inter', system-ui, sans-serif;
 
-  /* Drawer behavior — hidden by default, only visible once the
-     navbar hamburger sets mobile-open. Overridden back to "always
-     visible" on desktop below. */
+  /* Mobile drawer — hidden by default, only visible once the
+     navbar hamburger sets mobile-open. Slides in from the RIGHT
+     on mobile. Overridden to always-visible on desktop below. */
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  transform: translateX(-100%);
+  transform: translateX(100%);
   transition: transform 0.25s ease;
   z-index: 50;
 }
@@ -23,11 +23,11 @@ html, body { overflow-x: hidden; width: 100%; }
   pointer-events: auto;
 }
 
-/* ---------------- ICON RAIL (fixed column, left edge) ---------------- */
+/* ---------------- ICON RAIL (main menu step) ---------------- */
 .admin-icon-rail {
   width: 84px;
   background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  border-left: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,7 +35,7 @@ html, body { overflow-x: hidden; width: 100%; }
   height: 100vh;
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   overflow: hidden;
   z-index: 30;
 }
@@ -93,6 +93,7 @@ html, body { overflow-x: hidden; width: 100%; }
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.01em;
+  text-align: center;
 }
 
 .admin-rail-divider {
@@ -131,16 +132,16 @@ html, body { overflow-x: hidden; width: 100%; }
   letter-spacing: 0.01em;
 }
 
-/* ---------------- LABEL PANEL (fixed column, right of icon rail) ---------------- */
+/* ---------------- LABEL PANEL (submenu step) ---------------- */
 .admin-label-panel {
   position: fixed;
   top: 0;
-  left: 84px;
+  right: 84px;
   height: 100vh;
   width: min(230px, calc(100vw - 84px));
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-left: none;
+  border-right: none;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
   flex-shrink: 0;
   display: flex;
@@ -151,12 +152,30 @@ html, body { overflow-x: hidden; width: 100%; }
 .admin-label-header {
   padding: 20px 20px 14px;
   border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .admin-label-header span {
   color: #0f172a;
   font-weight: 700;
   font-size: 17.5px;
 }
+
+.admin-back-btn {
+  display: none; /* only shown on mobile, see below */
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+.admin-back-btn:hover { background: #f8fafc; color: #0f172a; }
 
 .admin-label-nav {
   padding: 10px;
@@ -232,20 +251,62 @@ html, body { overflow-x: hidden; width: 100%; }
 }
 
 /* ============================================================
-   SMALL SCREEN TWEAKS (drawer stays hamburger-controlled)
+   MOBILE / TABLET — two-step navigation
+   Step 1 (mobile-view-main): full-width section list, right side
+   Step 2 (mobile-view-sub): full-width links for chosen section
    ============================================================ */
+
+@media (max-width: 900px) {
+  .admin-icon-rail {
+    width: 100%;
+    display: none;
+  }
+  .admin-label-panel {
+    width: 100%;
+    right: 0;
+    display: none;
+  }
+
+  .admin-portal-root.mobile-view-main .admin-icon-rail {
+    display: flex;
+  }
+  .admin-portal-root.mobile-view-sub .admin-label-panel {
+    display: flex;
+  }
+
+  .admin-icon-rail-scroll {
+    align-items: stretch;
+  }
+
+  .admin-icon-btn,
+  .admin-logout-btn {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 0;
+  }
+  .admin-icon-btn span,
+  .admin-logout-btn span {
+    font-size: 15px;
+    text-align: left;
+  }
+
+  .admin-back-btn {
+    display: flex; /* only visible in this breakpoint */
+  }
+}
 
 @media (max-width: 480px) {
   .admin-main { padding: 16px; padding-top: calc(var(--navbar-h) + 16px); }
-  .admin-label-panel { width: min(200px, calc(100vw - 72px)); left: 72px; }
-  .admin-icon-rail { width: 72px; }
-  .admin-icon-btn, .admin-logout-btn { width: 44px; height: 44px; }
 }
 
 /* ============================================================
    DESKTOP OVERRIDE (≥901px)
-   Sidebar is always visible, no drawer/hamburger involved.
-   Restores the original always-on two-column layout.
+   Sidebar always visible, both panels shown together, left side,
+   no drawer/hamburger, no two-step navigation.
    ============================================================ */
 
 @media (min-width: 901px) {
@@ -258,10 +319,22 @@ html, body { overflow-x: hidden; width: 100%; }
     transition: none;
   }
 
-  .admin-icon-rail,
-  .admin-label-panel {
+  .admin-icon-rail {
+    left: 0;
+    right: auto;
     top: var(--navbar-h);
     height: calc(100vh - var(--navbar-h));
+    border-left: none;
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .admin-label-panel {
+    left: 84px;
+    right: auto;
+    top: var(--navbar-h);
+    height: calc(100vh - var(--navbar-h));
+    border-left: none;
+    border-right: none;
   }
 
   .admin-mobile-backdrop {

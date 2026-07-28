@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -16,6 +16,7 @@ import {
   Tags,
   Languages as LanguagesIcon,
   Mail,
+  ArrowLeft,
 } from "lucide-react";
 import { useAdminMenu } from "./AdminMenuContext";
 import "./AdminSidebar.css";
@@ -150,7 +151,11 @@ const SECTIONS = [
 const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { mobileOpen, setMobileOpen } = useAdminMenu(); // ← shared with Navbar now
+  const { mobileOpen, setMobileOpen } = useAdminMenu();
+
+  // "main" = section list (mobile step 1), "sub" = links for chosen section (mobile step 2)
+  // Only affects mobile layout — desktop always shows both panels regardless.
+  const [mobileView, setMobileView] = useState("main");
 
   const matchedSection = SECTIONS.find((s) =>
     s.links.some((l) => location?.pathname?.startsWith(l.to))
@@ -159,6 +164,11 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   const [activeSection, setActiveSection] = useState(matchedSection ?? SECTIONS[0].key);
 
   const currentSection = SECTIONS.find((s) => s.key === activeSection) ?? SECTIONS[0];
+
+  // Every time the drawer opens, start back at the main section list.
+  useEffect(() => {
+    if (mobileOpen) setMobileView("main");
+  }, [mobileOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -173,6 +183,11 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     navigate("/admin/dashboard");
   };
 
+  const selectSection = (key) => {
+    setActiveSection(key);
+    setMobileView("sub"); // drill into submenu on mobile
+  };
+
   const onDashboard = location?.pathname === "/admin/dashboard";
 
   const navbarHeightVar = { "--navbar-h": `${NAVBAR_HEIGHT}px` };
@@ -181,7 +196,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     <>
       {ReactDOM.createPortal(
         <div
-          className={`admin-portal-root${mobileOpen ? " mobile-open" : ""}`}
+          className={`admin-portal-root${mobileOpen ? " mobile-open" : ""} mobile-view-${mobileView}`}
           style={navbarHeightVar}
         >
           <div className="admin-icon-rail">
@@ -204,12 +219,12 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
                 return (
                   <button
                     key={key}
-                    onClick={() => setActiveSection(key)}
+                    onClick={() => selectSection(key)}
                     title={label}
                     className={`admin-icon-btn${isActive ? " active" : ""}`}
                   >
                     <Icon size={19} />
-                    <span>{label.length > 8 ? label.split(" ")[0] : label}</span>
+                    <span>{label}</span>
                   </button>
                 );
               })}
@@ -223,6 +238,13 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
 
           <div className="admin-label-panel">
             <div className="admin-label-header">
+              <button
+                className="admin-back-btn"
+                onClick={() => setMobileView("main")}
+                aria-label="Back to menu"
+              >
+                <ArrowLeft size={18} />
+              </button>
               <span>{currentSection.label}</span>
             </div>
 
