@@ -266,6 +266,71 @@ const AdminDashboard = () => {
           display: flex; justify-content: space-between; align-items: baseline;
           margin-bottom: 30px; flex-wrap: wrap; gap: 10px;
         }
+
+        /* ============================================================
+           RESPONSIVE + CENTERING (tablet and mobile)
+           Inline styles win specificity over plain classes, so these
+           use !important to reliably override them at these widths.
+           ============================================================ */
+
+        @media (max-width: 900px) {
+          .church-admin section { padding: 40px 0 !important; }
+
+          .church-admin .section-head {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+
+          .church-admin h1.display {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .church-admin section:first-of-type p {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+
+          .church-admin .content-card {
+            text-align: center !important;
+          }
+
+          .church-admin .quick-action-card {
+            text-align: center !important;
+          }
+
+          .church-admin .recent-post-row {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+          .church-admin .recent-post-row > div:first-child {
+            flex-direction: column !important;
+            text-align: center !important;
+          }
+
+          .church-admin .subscriber-row {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+          }
+
+          .church-admin .promo-card,
+          .church-admin .thread-card,
+          .church-admin .media-card {
+            text-align: center !important;
+          }
+          .church-admin .thread-card > div:last-child {
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .church-admin h1.display { font-size: 2.1rem !important; }
+        }
       `}</style>
 
       <section>
@@ -287,6 +352,7 @@ const AdminDashboard = () => {
             <Link
               key={key}
               to={to}
+              className="content-card"
               style={{
                 display: "block",
                 borderRadius: "10px",
@@ -331,7 +397,7 @@ const AdminDashboard = () => {
           <p style={{ color: "var(--slate)" }}>No posts yet.</p>
         ) : (
           recentPosts.map((p, i) => (
-            <div key={p._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+            <div key={p._id} className="recent-post-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "20px", flex: 1, minWidth: "260px" }}>
                 {p.imageUrl && (
                   <img
@@ -361,6 +427,7 @@ const AdminDashboard = () => {
             <Link
               key={label}
               to={to}
+              className="quick-action-card"
               style={{
                 display: "block", padding: "26px 24px", borderRadius: "10px",
                 background: i % 2 === 0 ? "linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%)" : "linear-gradient(180deg, var(--deep-red) 0%, var(--deep-red-2) 100%)",
@@ -391,7 +458,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
             {recentPromotions.map((promo) => (
-              <div key={promo._id} style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
+              <div key={promo._id} className="promo-card" style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
                 {promo.photo && (
                   <img
                     src={promo.photo}
@@ -425,7 +492,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
             {recentMedia.map((item) => (
-              <div key={item._id}>
+              <div key={item._id} className="media-card">
                 {item.mediaType === "photo" && item.mediaUrl ? (
                   <img
                     src={item.mediaUrl}
@@ -468,7 +535,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
             {recentThreads.map((t) => (
-              <div key={t._id} style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
+              <div key={t._id} className="thread-card" style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
                 <p style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 6px 0", color: "var(--navy)" }}>{t.userName}</p>
                 <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: "0 0 8px 0" }}>{t.lastMessage}</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -504,7 +571,7 @@ const AdminDashboard = () => {
           <p style={{ color: "var(--slate)" }}>No subscribers yet.</p>
         ) : (
           recentSubscribers.map((s, i) => (
-            <div key={s._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+            <div key={s._id} className="subscriber-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
               <div style={{ fontSize: "1.05rem", color: "var(--navy-deep)", fontWeight: 700 }}>{s.email}</div>
               <div style={{ fontSize: "0.95rem", color: "var(--slate)", flexShrink: 0 }}>
                 {s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString() : "—"}
