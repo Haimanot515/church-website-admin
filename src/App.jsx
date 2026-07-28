@@ -74,7 +74,10 @@ import AdminMessages from "./pages/admin/AdminContacts/AdminMessage";
 import AdminAbout from "./pages/admin/AdminAbout";
 import AdminSkills from "./pages/admin/AdminSkills";
 import AdminLanding from "./pages/admin/AdminLanding";
-import AdminHomeHero from "./pages/admin/AdminHomeHero";
+
+/* Home Hero */
+import CreateHomeHero from "./pages/admin/CreateHomeHero";
+import GetHomeHero from "./pages/admin/GetHomeHero";
 
 import "./styles.css";
 
@@ -265,10 +268,8 @@ function App() {
           <Route path="about/update" element={<AdminAbout />} />
 
           {/* Home Hero */}
-          <Route path="hero/create" element={<AdminHomeHero />} />
-          <Route path="hero/view" element={<AdminHomeHero />} />
-          <Route path="hero/update" element={<AdminHomeHero />} />
-          <Route path="hero/delete" element={<AdminHomeHero />} />
+          <Route path="hero/create" element={<CreateHomeHero />} />
+          <Route path="hero/view" element={<GetHomeHero />} />
         </Route>
 
         <Route path="*" element={<h2>404 - Page Not Found</h2>} />

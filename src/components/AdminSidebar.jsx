@@ -4,7 +4,6 @@ import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Home,
   Users,
-  FolderKanban,
   MessageSquare,
   Info,
   LogOut,
@@ -29,8 +28,6 @@ const SECTIONS = [
     links: [
       { to: "/admin/hero/create", label: "Create Home Hero" },
       { to: "/admin/hero/view", label: "View Home Hero" },
-      { to: "/admin/hero/update", label: "Update Home Hero" },
-      { to: "/admin/hero/delete", label: "Delete Home Hero" },
     ],
   },
   {
@@ -41,17 +38,6 @@ const SECTIONS = [
       { to: "/admin/users/view", label: "View Users" },
       { to: "/admin/users/update", label: "Update Users" },
       { to: "/admin/users/delete", label: "Delete Users" },
-    ],
-  },
-  {
-    key: "projects",
-    label: "Projects",
-    icon: FolderKanban,
-    links: [
-      { to: "/admin/projects/create", label: "Create Project" },
-      { to: "/admin/projects/view", label: "View Projects" },
-      { to: "/admin/projects/update", label: "Update Projects" },
-      { to: "/admin/projects/delete", label: "Delete Projects" },
     ],
   },
   {
