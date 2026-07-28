@@ -2,17 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../../api/api";
 
-const STATS = [
-  { label: "Sermons Published", value: "48", note: "+2 this month", to: "/admin/skills/view" },
-  { label: "Upcoming Events", value: "6", note: "Next: Sun 9:00 AM", to: "/admin/projects/view" },
-  { label: "New Prayer Requests", value: "11", note: "5 unread", to: "/admin/contacts/view" },
-  { label: "Giving This Month", value: "$8,240", note: "312 gifts", to: "/admin/users/view" },
-  { label: "Active Ministries", value: "9", note: "1 new this quarter", to: "/admin/projects/view" },
-  { label: "Testimonies Shared", value: "27", note: "3 pending review", to: "/admin/about/view" },
-];
-
-// Real, API-backed counts for the actual content models — separate from the
-// STATS above, which are placeholder/mock figures.
+// Every number and list below is fetched from the backend — nothing here
+// is hardcoded placeholder content. Each entry maps to a real model/route
+// that already exists elsewhere in this admin panel.
 const CONTENT_CONFIG = [
   { key: "posts", label: "Posts", to: "/admin/posts/view" },
   { key: "media", label: "Media", to: "/admin/media/view" },
@@ -20,105 +12,73 @@ const CONTENT_CONFIG = [
   { key: "languages", label: "Languages", to: "/admin/languages/view" },
   { key: "churches", label: "Churches", to: "/admin/churches/view" },
   { key: "churchPersons", label: "Church Persons", to: "/admin/church-persons/view" },
+  { key: "churchStory", label: "Church Story Chapters", to: "/admin/church-story/view" },
+  { key: "services", label: "Services", to: "/admin/services/view" },
+  { key: "promotions", label: "Promotions", to: "/admin/promotions/view" },
+  { key: "subscribers", label: "Subscribers", to: "/admin/subscribers/view" },
+  { key: "users", label: "Users", to: "/admin/users/view" },
 ];
 
-const STATUS_ITEMS = [
-  { label: "Landing Page", ok: true },
-  { label: "Sermon Series", ok: true },
-  { label: "Give Page", ok: true },
-  { label: "Events Calendar", ok: false },
-  { label: "Media Library", ok: true },
-];
-
-const SERMONS_PREVIEW = [
-  { title: "Hope in Hard Seasons", desc: "Finding steadiness in Scripture when life feels uncertain.", status: "Published", date: "Jul 13, 2026" },
-  { title: "Living Waters", desc: "A study through John, on thirst, grace, and being made new.", status: "Published", date: "Jul 6, 2026" },
-  { title: "Faith of Our Fathers", desc: "Lessons from the patriarchs on trust and obedience.", status: "Published", date: "Jun 29, 2026" },
-  { title: "Come As You Are", desc: "Welcome, belonging, and the open table of the Gospel.", status: "Published", date: "Jun 22, 2026" },
-  { title: "The Divine Liturgy", desc: "Understanding the rhythm and meaning behind our weekly worship.", status: "Draft", date: "Not scheduled" },
-];
-
-const UPCOMING_EVENTS = [
-  { title: "Sunday Worship", date: "Jul 20, 2026", time: "9:00 & 11:00 AM", location: "Main Sanctuary" },
-  { title: "Youth Retreat: Faith & Fire Pits", date: "Jul 25–27, 2026", time: "All weekend", location: "Camp Windridge" },
-  { title: "Prayer & Fasting Night", date: "Jul 29, 2026", time: "7:00 PM", location: "Chapel" },
-  { title: "Community Outreach: Food Drive", date: "Aug 2, 2026", time: "10:00 AM – 2:00 PM", location: "Fellowship Hall" },
-  { title: "Missions Team Info Session", date: "Aug 5, 2026", time: "6:30 PM", location: "Room 204" },
-  { title: "Choir & Chanters Rehearsal", date: "Aug 8, 2026", time: "5:00 PM", location: "Main Sanctuary" },
-];
+// Shared cap for every "recent" list below (Posts, Promotions, Messages,
+// Subscribers) so each section pulls the same number of items and the
+// "Showing X of Y" labels stay consistent.
+const RECENT_LIMIT = 5;
 
 const QUICK_ACTIONS = [
-  { label: "Add a Sermon", to: "/admin/skills/create" },
-  { label: "Add an Event", to: "/admin/projects/create" },
+  { label: "Create Post", to: "/admin/posts/create" },
+  { label: "Create Promotion", to: "/admin/promotions/create" },
+  { label: "Add Subscriber", to: "/admin/subscribers/create" },
   { label: "Reply to Messages", to: "/admin/contacts/view" },
-  { label: "Manage Landing Page", to: "/admin/landing/manage" },
-  { label: "Add a Ministry", to: "/admin/projects/create" },
-  { label: "Review Testimonies", to: "/admin/about/view" },
-];
-
-const GIVING_SNAPSHOT = [
-  { label: "This Month", value: "$8,240" },
-  { label: "This Quarter", value: "$21,960" },
-  { label: "Missions Fund", value: "$3,410" },
-  { label: "Building Fund", value: "$5,120" },
-  { label: "Total Donors", value: "186" },
-  { label: "Average Gift", value: "$26" },
-];
-
-const PRAYER_REQUESTS = [
-  { quote: "Please pray for my mother's recovery after surgery this week.", name: "Selam T.", time: "2 hours ago" },
-  { quote: "Traveling for missions work — safe travel and open hearts.", name: "Biniam K.", time: "Yesterday" },
-  { quote: "Give thanks — our family found housing after months of searching.", name: "Marta A.", time: "2 days ago" },
-  { quote: "Pray for wisdom as I start a new job next week.", name: "Daniel H.", time: "3 days ago" },
-];
-
-const TESTIMONIES = [
-  { quote: "This church walked with my family through our hardest year. We are forever grateful.", name: "Selam T.", role: "Member since 2019", status: "Published" },
-  { quote: "I found a home here, not just a service to attend.", name: "Biniam K.", role: "Youth Ministry", status: "Published" },
-  { quote: "The prayer circle carried me when I couldn't pray for myself.", name: "Marta A.", role: "Member since 2021", status: "Pending Review" },
-];
-
-const MINISTRIES = [
-  { name: "Youth Ministry", members: 42 },
-  { name: "Worship Team", members: 18 },
-  { name: "Community Outreach", members: 27 },
-  { name: "Prayer Circle", members: 15 },
-  { name: "Bible Study Groups", members: 33 },
-  { name: "Missions Team", members: 12 },
-  { name: "Choir & Chanters", members: 21 },
-  { name: "Women's Fellowship", members: 24 },
-  { name: "Icon Study Group", members: 9 },
-];
-
-const MEDIA_LIBRARY = [
-  { title: "Joey's Journey: A Testimony of Coming Home", views: "1.2K views", type: "Testimony" },
-  { title: "Sunday Highlights: Hope in Hard Seasons, Week 3", views: "845 views", type: "Highlight Reel" },
-  { title: "Behind the Scenes: Our Worship Team at Rehearsal", views: "612 views", type: "Behind the Scenes" },
-  { title: "Youth Retreat Recap: Faith, Fire Pits & Fellowship", views: "980 views", type: "Recap" },
-  { title: "Missions Update: Stories from the Field", views: "530 views", type: "Update" },
-];
-
-const ACTIVITY_LOG = [
-  { time: "09:42", text: "New prayer request submitted by Selam T." },
-  { time: "08:15", text: "Sermon “The Divine Liturgy” saved as draft" },
-  { time: "07:50", text: "New testimony submitted by Marta A., pending review" },
-  { time: "Yesterday", text: "3 new givers this week" },
-  { time: "Yesterday", text: "Event “Youth Retreat” updated" },
-  { time: "Yesterday", text: "Video “Missions Update” uploaded to Media Library" },
-  { time: "2 days ago", text: "Home hero image replaced" },
-  { time: "3 days ago", text: "New member joined Bible Study Groups" },
+  { label: "Create Church Story Chapter", to: "/admin/church-story/create" },
+  { label: "Create Media", to: "/admin/media/create" },
 ];
 
 const AdminDashboard = () => {
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  // Greeting is based on Ethiopian time (Africa/Addis_Ababa), not the
+  // visitor's local browser time, since this is a church admin panel
+  // for a congregation there.
+  const ethiopianHour = parseInt(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Africa/Addis_Ababa",
+      hour: "numeric",
+      hourCycle: "h23",
+    }).format(new Date()),
+    10
+  );
+
+  const greeting =
+    ethiopianHour >= 5 && ethiopianHour < 12
+      ? "Good morning"
+      : ethiopianHour >= 12 && ethiopianHour < 17
+      ? "Good afternoon"
+      : ethiopianHour >= 17 && ethiopianHour < 21
+      ? "Good evening"
+      : "Good night";
 
   const [contentCounts, setContentCounts] = useState({});
   const [contentErrors, setContentErrors] = useState({});
   const [contentLoading, setContentLoading] = useState(true);
 
+  const [recentPosts, setRecentPosts] = useState([]);
+  const [postsError, setPostsError] = useState(false);
+
+  const [recentPromotions, setRecentPromotions] = useState([]);
+  const [promotionsError, setPromotionsError] = useState(false);
+
+  const [recentThreads, setRecentThreads] = useState([]);
+  const [threadsError, setThreadsError] = useState(false);
+
+  const [recentSubscribers, setRecentSubscribers] = useState([]);
+  const [subscribersError, setSubscribersError] = useState(false);
+
+  const [recentMedia, setRecentMedia] = useState([]);
+  const [mediaError, setMediaError] = useState(false);
+
+  const [recentLoading, setRecentLoading] = useState(true);
+
   useEffect(() => {
     fetchContentCounts();
+    fetchRecentActivity();
   }, []);
 
   const fetchContentCounts = async () => {
@@ -131,9 +91,26 @@ const AdminDashboard = () => {
       API.get("/languages"),
       API.get("/churches"),
       API.get("/church-persons"),
+      API.get("/church-story", { params: { page: 1, limit: 1 } }),
+      API.get("/services"),
+      API.get("/promotions"),
+      API.get("/subscribers"),
+      API.get("/admin/users", { params: { page: 1, limit: 1 } }),
     ]);
 
-    const [postsRes, mediaRes, categoriesRes, languagesRes, churchesRes, churchPersonsRes] = results;
+    const [
+      postsRes,
+      mediaRes,
+      categoriesRes,
+      languagesRes,
+      churchesRes,
+      churchPersonsRes,
+      churchStoryRes,
+      servicesRes,
+      promotionsRes,
+      subscribersRes,
+      usersRes,
+    ] = results;
 
     const nextCounts = {};
     const nextErrors = {};
@@ -174,9 +151,85 @@ const AdminDashboard = () => {
       nextErrors.churchPersons = true;
     }
 
+    if (churchStoryRes.status === "fulfilled") {
+      nextCounts.churchStory = churchStoryRes.value.data.stories?.length ?? 0;
+    } else {
+      nextErrors.churchStory = true;
+    }
+
+    if (servicesRes.status === "fulfilled") {
+      nextCounts.services = servicesRes.value.data.length ?? 0;
+    } else {
+      nextErrors.services = true;
+    }
+
+    if (promotionsRes.status === "fulfilled") {
+      nextCounts.promotions = promotionsRes.value.data.length ?? 0;
+    } else {
+      nextErrors.promotions = true;
+    }
+
+    if (subscribersRes.status === "fulfilled") {
+      nextCounts.subscribers = subscribersRes.value.data.length ?? 0;
+    } else {
+      nextErrors.subscribers = true;
+    }
+
+    if (usersRes.status === "fulfilled") {
+      nextCounts.users = usersRes.value.data.totalUsers ?? usersRes.value.data.users?.length ?? 0;
+    } else {
+      nextErrors.users = true;
+    }
+
     setContentCounts(nextCounts);
     setContentErrors(nextErrors);
     setContentLoading(false);
+  };
+
+  const fetchRecentActivity = async () => {
+    setRecentLoading(true);
+
+    const results = await Promise.allSettled([
+      API.get("/posts", { params: { page: 1, limit: RECENT_LIMIT } }),
+      API.get("/promotions"),
+      API.get("/admin/threads", { params: { limit: RECENT_LIMIT } }),
+      API.get("/subscribers"),
+      API.get("/media"),
+    ]);
+
+    const [postsRes, promotionsRes, threadsRes, subscribersRes, mediaRes] = results;
+
+    if (postsRes.status === "fulfilled") {
+      setRecentPosts(postsRes.value.data.posts ?? []);
+    } else {
+      setPostsError(true);
+    }
+
+    if (promotionsRes.status === "fulfilled") {
+      setRecentPromotions(promotionsRes.value.data.slice(0, RECENT_LIMIT));
+    } else {
+      setPromotionsError(true);
+    }
+
+    if (threadsRes.status === "fulfilled") {
+      setRecentThreads(threadsRes.value.data.threads ?? []);
+    } else {
+      setThreadsError(true);
+    }
+
+    if (subscribersRes.status === "fulfilled") {
+      setRecentSubscribers(subscribersRes.value.data.slice(0, RECENT_LIMIT));
+    } else {
+      setSubscribersError(true);
+    }
+
+    if (mediaRes.status === "fulfilled") {
+      setRecentMedia(mediaRes.value.data.slice(0, RECENT_LIMIT));
+    } else {
+      setMediaError(true);
+    }
+
+    setRecentLoading(false);
   };
 
   return (
@@ -217,38 +270,11 @@ const AdminDashboard = () => {
 
       <section>
         <h1 className="display" style={{ fontSize: "clamp(2.6rem, 5vw, 4.2rem)", fontWeight: 700, lineHeight: 1.08, margin: "16px 0 18px 0", color: "var(--navy-deep)" }}>
-          Welcome back to Harbor&nbsp;Light
+          {greeting}
         </h1>
         <p style={{ fontSize: "1.3rem", color: "var(--slate)", lineHeight: 1.6, maxWidth: "640px" }}>
-          Here's what's happening across the church site this week — sermons, events,
-          ministries, giving, and the people we're praying for, all in one place.
+          Here's a live look at your site's content, straight from the database.
         </p>
-      </section>
-
-      <section style={{ borderBottom: "none" }}>
-        <div style={{ background: "linear-gradient(180deg, var(--deep-red) 0%, var(--deep-red-2) 100%)", borderRadius: "10px", padding: "22px 30px", display: "flex", alignItems: "center", flexWrap: "wrap", rowGap: "14px" }}>
-          <span className="eyebrow" style={{ color: "#f0c9c0", marginRight: "26px" }}>Site Status</span>
-          {STATUS_ITEMS.map((item) => (
-            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "10px", marginRight: "30px" }}>
-              <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: item.ok ? "#f0ded6" : "#e5793f", boxShadow: item.ok ? "0 0 0 4px rgba(240,222,214,0.2)" : "0 0 0 4px rgba(229,121,63,0.25)", flexShrink: 0 }} />
-              <span style={{ color: "#f7e9e4", fontSize: "1.05rem", fontWeight: 600 }}>{item.label}</span>
-            </div>
-          ))}
-          <span style={{ marginLeft: "auto", color: "#d59d90", fontSize: "0.9rem" }}>Updated just now</span>
-        </div>
-      </section>
-
-      <section>
-        <h3 className="eyebrow" style={{ marginBottom: "30px" }}>This Week, at a Glance</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
-          {STATS.map(({ label, value, note, to }) => (
-            <Link key={label} to={to} style={{ display: "block", borderRadius: "10px", padding: "26px 22px", background: "linear-gradient(160deg, var(--deep-red) 0%, var(--deep-red-2) 100%)", color: "#ffffff" }}>
-              <div className="display" style={{ fontSize: "2.8rem", fontWeight: 700, lineHeight: 1 }}>{value}</div>
-              <div style={{ fontSize: "1.05rem", fontWeight: 700, marginTop: "10px", color: "#f7e9e4" }}>{label}</div>
-              <div style={{ marginTop: "6px", fontSize: "0.78rem", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.08em", textTransform: "uppercase", color: "#e0a99c" }}>{note}</div>
-            </Link>
-          ))}
-        </div>
       </section>
 
       <section>
@@ -290,38 +316,42 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Upcoming Events</h3>
-          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <h3 className="eyebrow">Recent Posts</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>
+            {!contentLoading && !contentErrors.posts &&
+              `Showing ${Math.min(recentPosts.length, RECENT_LIMIT)} of ${contentCounts.posts ?? 0}`}
+          </span>
+          <Link to="/admin/posts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
-        {UPCOMING_EVENTS.map((e, i) => (
-          <div key={e.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "22px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: "220px" }}>
-              <h4 className="display" style={{ fontSize: "1.9rem", fontWeight: 700, margin: "0 0 4px 0", color: "var(--navy-deep)" }}>{e.title}</h4>
-              <p style={{ fontSize: "1rem", color: "var(--slate)", margin: 0 }}>{e.location}</p>
+        {recentLoading ? (
+          <p style={{ color: "var(--slate)" }}>Loading...</p>
+        ) : postsError ? (
+          <p style={{ color: "var(--deep-red)" }}>Failed to load posts.</p>
+        ) : recentPosts.length === 0 ? (
+          <p style={{ color: "var(--slate)" }}>No posts yet.</p>
+        ) : (
+          recentPosts.map((p, i) => (
+            <div key={p._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "20px", flex: 1, minWidth: "260px" }}>
+                {p.imageUrl && (
+                  <img
+                    src={p.imageUrl}
+                    alt={p.title}
+                    style={{ width: "90px", height: "70px", objectFit: "cover", borderRadius: "8px", flexShrink: 0 }}
+                  />
+                )}
+                <div>
+                  <h4 className="display" style={{ fontSize: "2.2rem", fontWeight: 700, margin: "0 0 8px 0", color: "var(--deep-red)" }}>{p.title}</h4>
+                  <p style={{ fontSize: "1.15rem", color: "var(--slate)", margin: "0 0 6px 0", lineHeight: 1.5 }}>{p.category?.name || "Uncategorized"}</p>
+                  <p className="eyebrow" style={{ margin: 0 }}>
+                    {p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "—"}
+                  </p>
+                </div>
+              </div>
+              <span className="eyebrow" style={{ flexShrink: 0, padding: "8px 16px", borderRadius: "20px", background: p.status === "published" ? "rgba(181,69,31,0.12)" : "rgba(122,16,16,0.1)", color: p.status === "published" ? "var(--accent)" : "var(--deep-red)" }}>{p.status}</span>
             </div>
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--navy)" }}>{e.date}</div>
-              <div className="eyebrow" style={{ marginTop: "4px" }}>{e.time}</div>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <section>
-        <div className="section-head">
-          <h3 className="eyebrow">Recent Sermons</h3>
-          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
-        </div>
-        {SERMONS_PREVIEW.map((s, i) => (
-          <div key={s.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: "260px" }}>
-              <h4 className="display" style={{ fontSize: "2.2rem", fontWeight: 700, margin: "0 0 8px 0", color: "var(--deep-red)" }}>{s.title}</h4>
-              <p style={{ fontSize: "1.15rem", color: "var(--slate)", margin: "0 0 6px 0", lineHeight: 1.5 }}>{s.desc}</p>
-              <p className="eyebrow" style={{ margin: 0 }}>{s.date}</p>
-            </div>
-            <span className="eyebrow" style={{ flexShrink: 0, padding: "8px 16px", borderRadius: "20px", background: s.status === "Published" ? "rgba(181,69,31,0.12)" : "rgba(122,16,16,0.1)", color: s.status === "Published" ? "var(--accent)" : "var(--deep-red)" }}>{s.status}</span>
-          </div>
-        ))}
+          ))
+        )}
       </section>
 
       <section>
@@ -344,102 +374,144 @@ const AdminDashboard = () => {
       </section>
 
       <section>
-        <h3 className="eyebrow" style={{ marginBottom: "30px" }}>Giving Snapshot</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "18px" }}>
-          {GIVING_SNAPSHOT.map((g) => (
-            <div key={g.label} style={{ borderRadius: "10px", padding: "24px 20px", background: "var(--deep-red)", color: "#ffffff", textAlign: "center" }}>
-              <div className="display" style={{ fontSize: "2.2rem", fontWeight: 700 }}>{g.value}</div>
-              <div className="eyebrow" style={{ marginTop: "8px", color: "#f0c9c0" }}>{g.label}</div>
-            </div>
-          ))}
+        <div className="section-head">
+          <h3 className="eyebrow">Recent Promotions</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>
+            {!contentLoading && !contentErrors.promotions &&
+              `Showing ${Math.min(recentPromotions.length, RECENT_LIMIT)} of ${contentCounts.promotions ?? 0}`}
+          </span>
+          <Link to="/admin/promotions/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
+        {recentLoading ? (
+          <p style={{ color: "var(--slate)" }}>Loading...</p>
+        ) : promotionsError ? (
+          <p style={{ color: "var(--deep-red)" }}>Failed to load promotions.</p>
+        ) : recentPromotions.length === 0 ? (
+          <p style={{ color: "var(--slate)" }}>No promotions yet.</p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
+            {recentPromotions.map((promo) => (
+              <div key={promo._id} style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
+                {promo.photo && (
+                  <img
+                    src={promo.photo}
+                    alt={promo.title}
+                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "14px" }}
+                  />
+                )}
+                <p style={{ fontSize: "1.15rem", fontWeight: 700, margin: "0 0 8px 0", color: "var(--navy-deep)" }}>{promo.title}</p>
+                <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: 0 }}>{promo.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Prayer Requests Awaiting Reply</h3>
+          <h3 className="eyebrow">Recent Media</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>
+            {!contentLoading && !contentErrors.media &&
+              `Showing ${Math.min(recentMedia.length, RECENT_LIMIT)} of ${contentCounts.media ?? 0}`}
+          </span>
+          <Link to="/admin/media/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+        </div>
+        {recentLoading ? (
+          <p style={{ color: "var(--slate)" }}>Loading...</p>
+        ) : mediaError ? (
+          <p style={{ color: "var(--deep-red)" }}>Failed to load media.</p>
+        ) : recentMedia.length === 0 ? (
+          <p style={{ color: "var(--slate)" }}>No media yet.</p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
+            {recentMedia.map((item) => (
+              <div key={item._id}>
+                {item.mediaType === "photo" && item.mediaUrl ? (
+                  <img
+                    src={item.mediaUrl}
+                    alt={item.title}
+                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
+                  />
+                ) : item.thumbnail ? (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
+                  />
+                ) : (
+                  <div style={{ width: "100%", height: "140px", borderRadius: "8px", marginBottom: "10px", background: "rgba(28,58,82,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span className="eyebrow">{item.mediaType || "Media"}</span>
+                  </div>
+                )}
+                <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--navy-deep)" }}>{item.title}</div>
+                <div className="eyebrow" style={{ marginTop: "4px" }}>{item.category?.name || "Uncategorized"}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section>
+        <div className="section-head">
+          <h3 className="eyebrow">Messages Awaiting Reply</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>
+            {!threadsError && !recentLoading && `Showing ${recentThreads.length} most recent`}
+          </span>
           <Link to="/admin/contacts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
-          {PRAYER_REQUESTS.map((p, i) => (
-            <div key={i} style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
-              <p className="display" style={{ fontSize: "1.4rem", fontStyle: "italic", fontWeight: 600, color: "var(--navy-deep)", lineHeight: 1.5, margin: "0 0 14px 0" }}>"{p.quote}"</p>
-              <p style={{ fontSize: "1rem", fontWeight: 700, margin: 0, color: "var(--navy)" }}>{p.name}</p>
-              <p className="eyebrow" style={{ marginTop: "2px" }}>{p.time}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="section-head">
-          <h3 className="eyebrow">Testimonies</h3>
-          <Link to="/admin/about/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
-          {TESTIMONIES.map((t, i) => (
-            <div key={i} style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
-              <p className="display" style={{ fontSize: "1.4rem", fontStyle: "italic", fontWeight: 600, color: "var(--navy-deep)", lineHeight: 1.5, margin: "0 0 14px 0" }}>"{t.quote}"</p>
-              <p style={{ fontSize: "1rem", fontWeight: 700, margin: 0, color: "var(--navy)" }}>{t.name}</p>
-              <p className="eyebrow" style={{ marginTop: "2px", marginBottom: "10px" }}>{t.role}</p>
-              <span
-                className="eyebrow"
-                style={{ padding: "6px 14px", borderRadius: "20px", background: t.status === "Published" ? "rgba(181,69,31,0.12)" : "rgba(122,16,16,0.1)", color: t.status === "Published" ? "var(--accent)" : "var(--deep-red)" }}
-              >
-                {t.status}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="section-head">
-          <h3 className="eyebrow">Ministries & Groups</h3>
-          <Link to="/admin/projects/view" className="eyebrow" style={{ color: "var(--navy)" }}>Manage</Link>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "16px" }}>
-          {MINISTRIES.map((m) => (
-            <div key={m.name} style={{ border: "1px solid rgba(28,58,82,0.15)", borderRadius: "8px", padding: "18px 20px" }}>
-              <div style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--navy-deep)" }}>{m.name}</div>
-              <div className="eyebrow" style={{ marginTop: "6px" }}>{m.members} members</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="section-head">
-          <h3 className="eyebrow">Media Library</h3>
-          <Link to="/admin/skills/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
-        </div>
-        {MEDIA_LIBRARY.map((v, i) => (
-          <div key={v.title} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
-            <div style={{ flex: 1, minWidth: "240px" }}>
-              <div style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--navy-deep)" }}>{v.title}</div>
-              <div className="eyebrow" style={{ marginTop: "4px" }}>{v.type}</div>
-            </div>
-            <div style={{ fontSize: "0.95rem", color: "var(--slate)", flexShrink: 0 }}>{v.views}</div>
+        {recentLoading ? (
+          <p style={{ color: "var(--slate)" }}>Loading...</p>
+        ) : threadsError ? (
+          <p style={{ color: "var(--deep-red)" }}>Failed to load messages.</p>
+        ) : recentThreads.length === 0 ? (
+          <p style={{ color: "var(--slate)" }}>No messages yet.</p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
+            {recentThreads.map((t) => (
+              <div key={t._id} style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
+                <p style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 6px 0", color: "var(--navy)" }}>{t.userName}</p>
+                <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: "0 0 8px 0" }}>{t.lastMessage}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span className="eyebrow">
+                    {t.lastMessageAt ? new Date(t.lastMessageAt).toLocaleString() : "—"}
+                  </span>
+                  {t.unreadForAdmin > 0 && (
+                    <span className="eyebrow" style={{ padding: "4px 10px", borderRadius: "20px", background: "rgba(122,16,16,0.1)", color: "var(--deep-red)" }}>
+                      {t.unreadForAdmin} unread
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </section>
 
-      <section>
-        <h3 className="eyebrow" style={{ marginBottom: "26px" }}>Activity Log</h3>
-        <div>
-          {ACTIVITY_LOG.map((item, i) => (
-            <div key={i} style={{ display: "flex", gap: "24px", padding: "16px 0", borderBottom: i < ACTIVITY_LOG.length - 1 ? "1px solid rgba(28,58,82,0.1)" : "none", alignItems: "baseline" }}>
-              <span className="eyebrow" style={{ width: "110px", flexShrink: 0 }}>{item.time}</span>
-              <span style={{ fontSize: "1.1rem", color: "var(--navy)" }}>{item.text}</span>
-            </div>
-          ))}
+      <section style={{ borderBottom: "none" }}>
+        <div className="section-head">
+          <h3 className="eyebrow">Recent Subscribers</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>
+            {!contentLoading && !contentErrors.subscribers &&
+              `Showing ${Math.min(recentSubscribers.length, RECENT_LIMIT)} of ${contentCounts.subscribers ?? 0}`}
+          </span>
+          <Link to="/admin/subscribers/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
         </div>
-      </section>
-
-      <section style={{ borderBottom: "none", textAlign: "center", padding: "70px 0 40px" }}>
-        <p className="display" style={{ fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 600, color: "var(--navy-deep)", margin: 0 }}>
-          Shepherding a congregation, one page at a time.
-        </p>
+        {recentLoading ? (
+          <p style={{ color: "var(--slate)" }}>Loading...</p>
+        ) : subscribersError ? (
+          <p style={{ color: "var(--deep-red)" }}>Failed to load subscribers.</p>
+        ) : recentSubscribers.length === 0 ? (
+          <p style={{ color: "var(--slate)" }}>No subscribers yet.</p>
+        ) : (
+          recentSubscribers.map((s, i) => (
+            <div key={s._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+              <div style={{ fontSize: "1.05rem", color: "var(--navy-deep)", fontWeight: 700 }}>{s.email}</div>
+              <div style={{ fontSize: "0.95rem", color: "var(--slate)", flexShrink: 0 }}>
+                {s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString() : "—"}
+              </div>
+            </div>
+          ))
+        )}
       </section>
     </div>
   );
