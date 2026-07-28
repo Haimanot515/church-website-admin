@@ -58,6 +58,8 @@ import CreateChurchPerson from "./pages/churchPersons/CreateChurchPerson";
 import GetChurchPerson from "./pages/churchPersons/GetChurchPerson";
 import UpdateChurchPerson from "./pages/churchPersons/UpdateChurchPerson";
 import DeleteChurchPerson from "./pages/churchPersons/DeleteChurchPerson";
+import ReorderChurchPerson from "./pages/churchPersons/ReorderChurchPerson";
+
 
 /* Church Story */
 import CreateChurchStory from "./pages/church-story/CreateChurchStory";
@@ -65,13 +67,16 @@ import GetChurchStory from "./pages/church-story/GetChurchStory";
 import UpdateChurchStory from "./pages/church-story/UpdateChurchStory";
 import DeleteChurchStory from "./pages/church-story/DeleteChurchStory";
 
+/* About */
+import CreateAbout from "./pages/about/CreateAbout";
+import GetAbout from "./pages/about/GetAbout";
+
 /* ADMIN */
 import AdminSidebar from "./components/AdminSidebar";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUser from "./pages/admin/AdminUser";
 import AdminProject from "./pages/admin/AdminProject";
 import AdminMessages from "./pages/admin/AdminContacts/AdminMessage";
-import AdminAbout from "./pages/admin/AdminAbout";
 import AdminSkills from "./pages/admin/AdminSkills";
 import AdminLanding from "./pages/admin/AdminLanding";
 
@@ -233,6 +238,7 @@ function App() {
           <Route path="church-persons/update/:id" element={<UpdateChurchPerson />} />
           <Route path="church-persons/delete" element={<GetChurchPerson />} />
           <Route path="church-persons/delete/:id" element={<DeleteChurchPerson />} />
+          <Route path="church-persons/reorder" element={<ReorderChurchPerson />} />
           {/* NOTE: "reorder" is in the sidebar but isn't a CRUD action —
               no ReorderChurchPerson component exists yet, so it's left
               unwired for now. */}
@@ -262,10 +268,9 @@ function App() {
           <Route path="contacts/reply" element={<AdminMessages />} />
           <Route path="contacts/delete" element={<AdminMessages />} />
 
-          {/* About (admin) */}
-          <Route path="about/create" element={<AdminAbout />} />
-          <Route path="about/view" element={<AdminAbout />} />
-          <Route path="about/update" element={<AdminAbout />} />
+          {/* About */}
+          <Route path="about/create" element={<CreateAbout />} />
+          <Route path="about/view" element={<GetAbout />} />
 
           {/* Home Hero */}
           <Route path="hero/create" element={<CreateHomeHero />} />

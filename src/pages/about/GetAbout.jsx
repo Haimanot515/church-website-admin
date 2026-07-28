@@ -2,22 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
 
-const HEROES_PER_PAGE = 10;
+const ENTRIES_PER_PAGE = 10;
 
 const emptyForm = {
   title: "",
-  subtitle: "",
+  churchLeader: "",
   description: "",
-  quote: "",
-  name: "",
-  role: "",
-  story: "",
+  image: null,
 };
 
-const GetHomeHero = () => {
+const GetAbout = () => {
   const navigate = useNavigate();
 
-  const [allHeroes, setAllHeroes] = useState([]);
+  const [allEntries, setAllEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,40 +22,36 @@ const GetHomeHero = () => {
 
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
-  const [image, setImage] = useState(null);
-  const [storyImage, setStoryImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [storyPreview, setStoryPreview] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState("");
-  const [existingStoryImageUrl, setExistingStoryImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
   const editPanelRef = useRef(null);
 
   useEffect(() => {
-    fetchHeroes();
+    fetchAbout();
   }, []);
 
-  const fetchHeroes = async () => {
+  const fetchAbout = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const res = await API.get("/homeheros");
-      setAllHeroes(Array.isArray(res.data) ? res.data : res.data ? [res.data] : []);
+      const res = await API.get("/about");
+      setAllEntries(res.data);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.msg || "Failed to load Home Hero entries");
+      setError(err.response?.data?.message || "Failed to load About entries");
     } finally {
       setLoading(false);
     }
   };
 
-  const totalPages = Math.max(1, Math.ceil(allHeroes.length / HEROES_PER_PAGE));
-  const heroes = allHeroes.slice(
-    (currentPage - 1) * HEROES_PER_PAGE,
-    currentPage * HEROES_PER_PAGE
+  const totalPages = Math.max(1, Math.ceil(allEntries.length / ENTRIES_PER_PAGE));
+  const entries = allEntries.slice(
+    (currentPage - 1) * ENTRIES_PER_PAGE,
+    currentPage * ENTRIES_PER_PAGE
   );
 
   const goToPage = (page) => {
@@ -67,24 +60,17 @@ const GetHomeHero = () => {
   };
 
   // --- Edit (inline, no navigation) ---
-  const handleEditClick = (hero) => {
-    setEditingId(hero._id);
+  const handleEditClick = (entry) => {
+    setEditingId(entry._id);
     setFormError("");
     setForm({
-      title: hero.title || "",
-      subtitle: hero.subtitle || "",
-      description: hero.description || "",
-      quote: hero.quote || "",
-      name: hero.name || "",
-      role: hero.role || "",
-      story: hero.story || "",
+      title: entry.title || "",
+      churchLeader: entry.churchLeader || "",
+      description: entry.description || "",
+      image: null,
     });
-    setExistingImageUrl(hero.image || "");
-    setExistingStoryImageUrl(hero.storyImage || "");
-    setImage(null);
-    setStoryImage(null);
+    setExistingImageUrl(entry.image || "");
     setPreview(null);
-    setStoryPreview(null);
 
     requestAnimationFrame(() => {
       editPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -94,12 +80,8 @@ const GetHomeHero = () => {
   const handleCancelEdit = () => {
     setEditingId(null);
     setForm(emptyForm);
-    setImage(null);
-    setStoryImage(null);
     setPreview(null);
-    setStoryPreview(null);
     setExistingImageUrl("");
-    setExistingStoryImageUrl("");
     setFormError("");
   };
 
@@ -108,14 +90,11 @@ const GetHomeHero = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e, type) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (type === "hero") {
-      setImage(file);
-      if (file) setPreview(URL.createObjectURL(file));
-    } else {
-      setStoryImage(file);
-      if (file) setStoryPreview(URL.createObjectURL(file));
+    setForm((prev) => ({ ...prev, image: file }));
+    if (file) {
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -130,26 +109,23 @@ const GetHomeHero = () => {
 
       const formData = new FormData();
       formData.append("title", form.title);
-      formData.append("subtitle", form.subtitle);
+      formData.append("churchLeader", form.churchLeader);
       formData.append("description", form.description);
-      formData.append("quote", form.quote);
-      formData.append("name", form.name);
-      formData.append("role", form.role);
-      formData.append("story", form.story);
 
-      if (image) formData.append("image", image);
-      if (storyImage) formData.append("storyImage", storyImage);
+      if (form.image) {
+        formData.append("image", form.image);
+      }
 
-      await API.put(`/homeheros/${editingId}`, formData, {
+      await API.put(`/about/${editingId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Home hero updated successfully");
+      alert("About entry updated successfully");
       handleCancelEdit();
-      await fetchHeroes();
+      await fetchAbout();
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.msg || "Failed to update Home Hero");
+      setFormError(err.response?.data?.message || "Failed to update About entry");
     } finally {
       setSubmitting(false);
     }
@@ -157,29 +133,30 @@ const GetHomeHero = () => {
 
   // --- Delete ---
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this Home Hero entry?")) {
+    if (!window.confirm("Are you sure you want to delete this About entry?")) {
       return;
     }
 
     try {
       setDeletingId(id);
 
-      await API.delete(`/homeheros/${id}`);
+      await API.delete(`/about/${id}`);
 
       if (editingId === id) {
         handleCancelEdit();
       }
 
-      await fetchHeroes();
+      await fetchAbout();
 
-      const remaining = allHeroes.length - 1;
-      const newTotalPages = Math.max(1, Math.ceil(remaining / HEROES_PER_PAGE));
+      // If deleting the last item on a page, step back a page
+      const remaining = allEntries.length - 1;
+      const newTotalPages = Math.max(1, Math.ceil(remaining / ENTRIES_PER_PAGE));
       if (currentPage > newTotalPages) {
         setCurrentPage(newTotalPages);
       }
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.msg || "Failed to delete Home Hero");
+      setError(err.response?.data?.message || "Failed to delete About entry");
     } finally {
       setDeletingId(null);
     }
@@ -205,11 +182,11 @@ const GetHomeHero = () => {
             marginBottom: "10px",
           }}
         >
-          <h2 style={{ margin: 0 }}>Home Hero Entries</h2>
+          <h2 style={{ margin: 0 }}>About Entries</h2>
 
           {!editingId && (
             <button
-              onClick={() => navigate("/admin/hero/create")}
+              onClick={() => navigate("/admin/about/create")}
               style={{
                 padding: "10px 18px",
                 background: "#16a34a",
@@ -222,7 +199,7 @@ const GetHomeHero = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              + New Home Hero
+              + New About
             </button>
           )}
         </div>
@@ -241,7 +218,7 @@ const GetHomeHero = () => {
               scrollMarginTop: "20px",
             }}
           >
-            <h3 style={{ marginTop: 0 }}>Edit Home Hero</h3>
+            <h3 style={{ marginTop: 0 }}>Edit About Entry</h3>
 
             {formError && <p style={{ color: "red" }}>{formError}</p>}
 
@@ -249,7 +226,7 @@ const GetHomeHero = () => {
               <input
                 type="text"
                 name="title"
-                placeholder="Hero title"
+                placeholder="Title"
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -257,82 +234,30 @@ const GetHomeHero = () => {
 
               <input
                 type="text"
-                name="subtitle"
-                placeholder="Hero subtitle"
-                value={form.subtitle}
+                name="churchLeader"
+                placeholder="Church Leader"
+                value={form.churchLeader}
                 onChange={handleChange}
               />
 
               <textarea
                 name="description"
-                placeholder="Main description"
+                placeholder="Description"
                 value={form.description}
                 onChange={handleChange}
-                rows="3"
-              />
-
-              <textarea
-                name="quote"
-                placeholder="Quote"
-                value={form.quote}
-                onChange={handleChange}
-                rows="2"
-              />
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full name"
-                  value={form.name}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="role"
-                  placeholder="Job role"
-                  value={form.role}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <textarea
-                name="story"
-                placeholder="Detailed story for about section..."
-                value={form.story}
-                onChange={handleChange}
                 rows="6"
+                required
               />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
-                <div>
-                  <label style={{ fontSize: "13px", color: "#555", display: "block", marginBottom: "6px" }}>
-                    Hero Profile Image
-                  </label>
-                  <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "hero")} />
-                  {(preview || existingImageUrl) && (
-                    <img
-                      src={preview || existingImageUrl}
-                      alt="Hero"
-                      style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "10px", marginTop: "10px" }}
-                    />
-                  )}
-                </div>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
 
-                <div>
-                  <label style={{ fontSize: "13px", color: "#555", display: "block", marginBottom: "6px" }}>
-                    Story/About Image
-                  </label>
-                  <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "story")} />
-                  {(storyPreview || existingStoryImageUrl) && (
-                    <img
-                      src={storyPreview || existingStoryImageUrl}
-                      alt="Story"
-                      style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "10px", marginTop: "10px" }}
-                    />
-                  )}
-                </div>
-              </div>
+              {(preview || existingImageUrl) && (
+                <img
+                  src={preview || existingImageUrl}
+                  alt="preview"
+                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                />
+              )}
 
               <div style={{ display: "flex", gap: "10px" }}>
                 <button
@@ -374,9 +299,9 @@ const GetHomeHero = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading Home Hero entries...</p>
-          ) : allHeroes.length === 0 ? (
-            <p>No Home Hero entries found.</p>
+            <p>Loading About entries...</p>
+          ) : allEntries.length === 0 ? (
+            <p>No About entries found.</p>
           ) : (
             <>
               <div style={{ overflowX: "auto", marginTop: "15px" }}>
@@ -384,25 +309,31 @@ const GetHomeHero = () => {
                   <thead>
                     <tr>
                       <th style={thStyle}>Title</th>
-                      <th style={thStyle}>Name</th>
-                      <th style={thStyle}>Role</th>
+                      <th style={thStyle}>Church Leader</th>
+                      <th style={thStyle}>Description</th>
                       <th style={thStyle}>Created</th>
                       <th style={thStyle}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {heroes.map((hero) => (
-                      <tr key={hero._id}>
-                        <td style={tdStyle}>{hero.title}</td>
-                        <td style={tdStyle}>{hero.name || "—"}</td>
-                        <td style={tdStyle}>{hero.role || "—"}</td>
+                    {entries.map((entry) => (
+                      <tr key={entry._id}>
+                        <td style={tdStyle}>{entry.title}</td>
+                        <td style={tdStyle}>{entry.churchLeader || "—"}</td>
                         <td style={tdStyle}>
-                          {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : "—"}
+                          {entry.description
+                            ? entry.description.length > 60
+                              ? `${entry.description.slice(0, 60)}...`
+                              : entry.description
+                            : "—"}
+                        </td>
+                        <td style={tdStyle}>
+                          {entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : "—"}
                         </td>
                         <td style={tdStyle}>
                           <div style={{ display: "flex", gap: "8px" }}>
                             <button
-                              onClick={() => handleEditClick(hero)}
+                              onClick={() => handleEditClick(entry)}
                               style={{
                                 padding: "6px 12px",
                                 background: "#2563eb",
@@ -418,8 +349,8 @@ const GetHomeHero = () => {
                             </button>
 
                             <button
-                              onClick={() => handleDelete(hero._id)}
-                              disabled={deletingId === hero._id}
+                              onClick={() => handleDelete(entry._id)}
+                              disabled={deletingId === entry._id}
                               style={{
                                 padding: "6px 12px",
                                 background: "#dc2626",
@@ -431,7 +362,7 @@ const GetHomeHero = () => {
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              {deletingId === hero._id ? "Deleting..." : "Delete"}
+                              {deletingId === entry._id ? "Deleting..." : "Delete"}
                             </button>
                           </div>
                         </td>
@@ -502,4 +433,4 @@ const pageButtonStyle = (disabled) => ({
   cursor: disabled ? "not-allowed" : "pointer",
 });
 
-export default GetHomeHero;
+export default GetAbout;

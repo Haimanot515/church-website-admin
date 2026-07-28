@@ -1,0 +1,289 @@
+/* Global safety net: never allow horizontal scroll / overflow */
+html, body { overflow-x: hidden; width: 100%; }
+*, *::before, *::after { min-width: 0; }
+
+.admin-portal-root {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ---------------- ICON RAIL (desktop: 84px fixed column) ---------------- */
+.admin-icon-rail {
+  width: 84px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  height: calc(100vh - var(--navbar-h));
+  position: fixed;
+  top: var(--navbar-h);
+  left: 0;
+  overflow: hidden;
+  z-index: 30;
+}
+
+.admin-icon-rail-scroll {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  padding-top: 16px;
+}
+
+.admin-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #e6f6ec;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.admin-icon-btn {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #64748b;
+  transition: background 0.15s ease, color 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.admin-icon-btn:hover { background: #f8fafc; }
+.admin-icon-btn.active { color: #16a34a; }
+
+.admin-icon-btn span {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.admin-rail-divider {
+  width: 36px;
+  height: 1px;
+  background: #e5e7eb;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.admin-logout-btn {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  margin-top: 6px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #64748b;
+  transition: background 0.15s ease, color 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.admin-logout-btn:hover { background: #fef2f2; color: #dc2626; }
+.admin-logout-btn span {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ---------------- LABEL PANEL (desktop: 230px fixed column) ---------------- */
+.admin-label-panel {
+  position: fixed;
+  top: var(--navbar-h);
+  left: 84px;
+  height: calc(100vh - var(--navbar-h));
+  width: 230px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: none;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+
+.admin-label-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.admin-label-header span {
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 17.5px;
+}
+
+.admin-label-nav {
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.admin-label-link {
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #475569;
+  font-weight: 500;
+  font-size: 16px;
+  background: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.admin-label-link:hover { background: #f8fafc; color: #0f172a; }
+.admin-label-link.active { color: #16a34a; font-weight: 600; }
+.admin-label-link.active:hover { background: transparent; color: #16a34a; }
+
+.admin-label-footer {
+  padding: 10px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.admin-label-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.admin-label-logout:hover { background: #fef2f2; }
+
+/* ---------------- MAIN CONTENT ---------------- */
+.admin-main {
+  margin-left: 314px;
+  min-height: 100vh;
+  padding: 32px 40px;
+  padding-top: calc(var(--navbar-h) + 32px);
+  background: #ffffff;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ---------------- MOBILE TOGGLE + BACKDROP (hidden on desktop) ---------------- */
+.admin-mobile-toggle {
+  display: none;
+}
+
+.admin-mobile-backdrop {
+  display: none;
+}
+
+/* ============================================================
+   RESPONSIVE ADDITIONS
+   Desktop (≥901px) renders identically to before: both fixed
+   columns stay visible, main keeps its 314px left margin.
+   Below 900px the two columns become a single off-canvas drawer.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  /* Wrapping this in transform gives position:fixed children a new
+     containing block scoped to this element instead of the viewport,
+     which is what lets the whole drawer slide off/on screen. Desktop
+     never sets a transform here, so above 900px this has no effect. */
+  .admin-portal-root {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 50;
+  }
+  .admin-portal-root.mobile-open {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .admin-icon-rail,
+  .admin-label-panel {
+    top: 0;
+    height: 100vh;
+  }
+
+  .admin-label-panel {
+    left: 84px;
+    width: min(230px, calc(100vw - 84px));
+  }
+
+  .admin-mobile-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: calc(var(--navbar-h) + 12px);
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+    z-index: 60;
+  }
+
+  .admin-mobile-backdrop.open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 40;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    padding: 20px;
+    padding-top: calc(var(--navbar-h) + 20px);
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-main { padding: 16px; padding-top: calc(var(--navbar-h) + 16px); }
+  .admin-label-panel { width: min(200px, calc(100vw - 72px)); left: 72px; }
+  .admin-icon-rail { width: 72px; }
+  .admin-icon-btn, .admin-logout-btn { width: 44px; height: 44px; }
+}

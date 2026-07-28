@@ -1,227 +1,284 @@
-/* ===== 1. BASE CONTAINER & TYPOGRAPHY ===== */
-.portfolio-container {
-  background-color: #ffffff;
-  color: #0f172a;
-  font-family: 'Inter', sans-serif;
+/* Global safety net: never allow horizontal scroll / overflow */
+html, body { overflow-x: hidden; width: 100%; }
+img, video { max-width: 100%; height: auto; }
+*, *::before, *::after { min-width: 0; }
+
+.admin-login-page {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: wrap;
+  border-top: 6px solid #145a32;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   overflow-x: hidden;
-  width: 100%;
 }
 
-.content-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.main-title {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -2px;
-  line-height: 1.05;
-  margin: 0 0 25px 0;
-  color: #0f172a;
-}
-
-.text-gradient {
-  display: inline-block;
-  color: #2563eb;
-  background: linear-gradient(to right, #2563eb, #60a5fa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.description {
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  color: #334155;
-  margin-bottom: 30px;
-  line-height: 1.7;
-  text-align: justify;
-  hyphens: auto;
-  word-break: break-word;
-}
-
-/* ===== 2. GRIDS & SECTIONS ===== */
-.hero-section { padding: 80px 0; }
-.video-section-top { padding: 80px 0; }
-.video-section { padding: 80px 0; }
-.owner-gallery-section { padding: 80px 0; background-color: #fcfdfe; }
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 40px;
-  align-items: center;
-}
-
-.campus-split-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  align-items: stretch; 
-}
-
-.video-grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 25px;
-}
-
-.tutorial-margin { margin-top: 0; }
-
-/* ===== 3. MEDIA CONTAINERS (UNIFIED SIZING) ===== */
-.hero-image-container {
-  width: 100%;
-  max-width: 450px;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: 24px;
-  background-color: #f8fafc;
-  border: 1px solid #f1f5f9;
-  margin: 0 auto;
-}
-
-.owner-img-hero {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.video-wrapper {
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  aspect-ratio: 16 / 9;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f5f9;
-}
-
-.gallery-item-video {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 16px;
-  overflow: hidden;
-  background-color: #f8fafc;
-  border: 1px solid #f1f5f9;
-}
-
-.media-bg-container {
-  width: 100%;
-  height: 100%;
-  background-color: #000;
+/* ---------------- LEFT PANEL ---------------- */
+.text-panel {
   position: relative;
   overflow: hidden;
+  flex: 1 1 480px;
+  background: linear-gradient(160deg, #1c3a52 0%, #0f2438 65%, #0a1a29 100%);
+  color: #eaf3f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 48px;
 }
 
-/* ===== 4. NAVBAR & HAMBURGER ===== */
-.menu-toggle {
-  display: none;
-  background: none;
+.cross-rail-left,
+.cross-rail-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+.cross-rail-left { left: 14px; }
+.cross-rail-right { right: 14px; }
+
+.rail-line-top {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(180deg, rgba(207,159,63,0) 0%, rgba(207,159,63,0.5) 100%);
+}
+.rail-line-bottom {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(180deg, rgba(207,159,63,0.5) 0%, rgba(207,159,63,0) 100%);
+}
+
+.bg-cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 320px;
+  height: 200px;
+  color: rgba(207, 159, 63, 0.07);
+  pointer-events: none;
+}
+
+.text-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.brand-name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #eaf3f8;
+}
+
+.heading {
+  font-size: 2.6rem;
+  font-weight: 700;
+  margin: 0 0 18px 0;
+  line-height: 1.15;
+}
+
+.subtext {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #a9c2d3;
+  margin-bottom: 28px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.98rem;
+  color: #a9c2d3;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cf9f3f;
+  flex-shrink: 0;
+}
+
+.footer-note {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(15,36,56,0.08);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #8b98a3;
+}
+
+/* ---------------- RIGHT PANEL ---------------- */
+.form-panel {
+  flex: 1 1 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7f9;
+  padding: 40px 24px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  padding: 44px 36px;
+  border-radius: 14px;
+  box-shadow: 0 20px 45px rgba(15,36,56,0.12);
+  border: 1px solid rgba(15,36,56,0.06);
+}
+
+.form-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #1c3a52;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+.form-title {
+  color: #111;
+  margin: 0 0 6px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+}
+.form-subtitle {
+  color: #7a8a95;
+  font-size: 0.9rem;
+  margin: 0 0 26px 0;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #3d4c58;
+}
+.input {
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  font-weight: 400;
+  color: #111;
+}
+.submit-button {
+  background: #1c3a52;
+  color: #fff;
   border: none;
-  font-size: 28px;
+  padding: 13px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 8px;
   cursor: pointer;
-  color: #333;
+  margin-top: 6px;
+  transition: background 0.2s ease;
 }
 
-/* ===== 5. RESPONSIVENESS BREAKPOINTS ===== */
-
-@media (max-width: 1100px) {
-  .navbar { justify-content: center; }
-  .menu-toggle { display: block; margin: 0 auto; }
+.success-message {
+  color: #1a7f37;
+  margin-top: 16px;
+  font-size: 0.9rem;
+}
+.error-message {
+  color: #d32f2f;
+  margin-top: 16px;
+  font-size: 0.9rem;
 }
 
-@media (max-width: 1024px) {
-  .hero-grid { gap: 30px; }
-  .content-wrapper { padding: 0 30px; }
+/* ============================================================
+   RESPONSIVE ADDITIONS
+   Desktop (≥901px) renders identically to before — the flex-wrap
+   already stacks the two panels once combined min-widths (480px
+   + 420px) no longer fit, so most of this is fine-tuning spacing,
+   type scale, and hiding decorative elements that don't fit small
+   screens rather than restructuring layout.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .text-panel { padding: 48px 36px; text-align: center; }
+  .text-inner { max-width: 100%; }
+  .brand-row { justify-content: center; }
+  .list-item { justify-content: center; }
+  .heading { font-size: 2.2rem; }
+  .cross-rail-left,
+  .cross-rail-right { display: none; }
+  .form-panel { padding: 32px 20px; }
 }
 
 @media (max-width: 768px) {
-  .hero-section { padding: 40px 0; }
-  .video-section-top { padding: 40px 0; }
-  .video-section { padding: 40px 0; }
-  .owner-gallery-section { padding: 40px 0; }
-  
-  /* ONLY CHANGE: All main titles now center on Mobile/Tablet */
-  .main-title {
-    text-align: center;
-    margin: 0 auto 25px auto;
-  }
-
-  .hero-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
-  .hero-image-wrapper {
-    order: -1; 
-    width: 100%;
-  }
-
-  .hero-text-wrapper {
-    order: 1; 
-    text-align: center; 
-  }
-
-  .hero-text-wrapper .hero-image-container {
-    margin: 20px auto;
-    max-width: 450px;
-    width: 100%;
-  }
-
-  .campus-split-grid, .video-grid-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .reverse-mobile {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-
-  .description { text-align: center; }
-  .awards-list { align-items: center; }
-
-  .contact-group {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
+  .text-panel { padding: 44px 28px; }
+  .form-card { padding: 36px 28px; }
 }
 
-@media (max-width: 480px) {
-  .content-wrapper { padding: 0 20px; }
-  .main-title { letter-spacing: -0.5px; }
-  .hero-image-container { border-radius: 16px; }
-  .video-wrapper { border-radius: 12px; }
+@media (max-width: 600px) {
+  .admin-login-page { border-top-width: 4px; }
+
+  .text-panel { padding: 36px 20px; }
+  .heading { font-size: 1.8rem; margin-bottom: 14px; }
+  .subtext { font-size: 0.95rem; margin-bottom: 20px; }
+  .bg-cross { width: 220px; height: 140px; }
+
+  .form-panel { padding: 24px 14px; }
+  .form-card { padding: 28px 20px; border-radius: 10px; }
+  .form-title { font-size: 1.4rem; }
 }
 
-/* ===== 6. FOOTER & AWARDS ===== */
-.footer-style {
-  padding: 40px 0;
-  border-top: 1px solid #f1f5f9;
+@media (max-width: 420px) {
+  .text-panel { padding: 28px 16px; }
+  .heading { font-size: 1.55rem; }
+  .brand-name { font-size: 0.9rem; }
+  .subtext { font-size: 0.9rem; }
+  .footer-note { font-size: 0.72rem; }
+
+  .form-card { padding: 22px 16px; }
+  .input { padding: 10px 12px; font-size: 0.95rem; }
+  .submit-button { padding: 12px 0; font-size: 0.95rem; }
 }
 
-.contact-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+@media (max-width: 360px) {
+  .text-panel { padding: 22px 14px; }
+  .heading { font-size: 1.35rem; margin-bottom: 10px; }
+  .subtext { font-size: 0.85rem; margin-bottom: 16px; }
+  .brand-row { gap: 8px; margin-bottom: 18px; }
+  .brand-name { font-size: 0.82rem; }
+  .bg-cross { width: 170px; height: 108px; }
+  .list-item { font-size: 0.88rem; padding: 8px 0; }
 
-.awards-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.award-item {
-  margin: 0;
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: #1e293b;
-  text-align: left;
-  line-height: 1.6;
+  .form-panel { padding: 18px 10px; }
+  .form-card { padding: 18px 14px; }
+  .form-title { font-size: 1.25rem; }
+  .form-subtitle { font-size: 0.82rem; margin-bottom: 20px; }
+  .footer-note { font-size: 0.68rem; margin-top: 16px; padding-top: 14px; }
 }
