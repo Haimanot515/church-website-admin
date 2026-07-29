@@ -9,7 +9,10 @@ const CreateChurchAssignment = () => {
     servingSince: "",
     description: "",
     isPrimary: false,
+    image: null,
   });
+
+  const [preview, setPreview] = useState(null);
 
   const [users, setUsers] = useState([]);
   const [churches, setChurches] = useState([]);
@@ -52,6 +55,14 @@ const CreateChurchAssignment = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setAssignment({ ...assignment, image: file });
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -61,23 +72,29 @@ const CreateChurchAssignment = () => {
 
       const token = localStorage.getItem("token");
 
+      const formData = new FormData();
+      formData.append("user", assignment.user);
+      formData.append("church", assignment.church);
+      formData.append("role", assignment.role);
+      if (assignment.servingSince) {
+        formData.append("servingSince", assignment.servingSince);
+      }
+      formData.append("description", assignment.description);
+      formData.append("isCurrent", true);
+      formData.append("isPrimary", assignment.isPrimary);
+
+      if (assignment.image) {
+        formData.append("image", assignment.image);
+      }
+
       // Matches POST /api/churches/assignment in churchRoutes.js,
       // handled by createAssignment in churchController.js
-      await API.post(
-        "/churches/assignment",
-        {
-          user: assignment.user,
-          church: assignment.church,
-          role: assignment.role,
-          servingSince: assignment.servingSince || undefined,
-          description: assignment.description,
-          isCurrent: true,
-          isPrimary: assignment.isPrimary,
+      await API.post("/churches/assignment", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      });
 
       alert("Church assignment saved successfully");
 
@@ -88,7 +105,9 @@ const CreateChurchAssignment = () => {
         servingSince: "",
         description: "",
         isPrimary: false,
+        image: null,
       });
+      setPreview(null);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Failed to save church assignment");
@@ -172,6 +191,21 @@ const CreateChurchAssignment = () => {
             onChange={handleChange}
             rows="4"
           />
+
+          <div>
+            <label style={{ display: "block", marginBottom: "6px", fontSize: "14px", color: "#374151" }}>
+              Leader photo
+            </label>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+          </div>
+
+          {preview && (
+            <img
+              src={preview}
+              alt="Leader preview"
+              style={{ width: "160px", height: "160px", objectFit: "cover", borderRadius: "50%" }}
+            />
+          )}
 
           {/* Drives the "Where I Serve Now" section on the public Church
               page (getLeadershipChurch requires isCurrent AND isPrimary).
