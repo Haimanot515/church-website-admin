@@ -8,6 +8,7 @@ const CreateChurchAssignment = () => {
     role: "",
     servingSince: "",
     description: "",
+    isPrimary: false,
   });
 
   const [users, setUsers] = useState([]);
@@ -44,10 +45,10 @@ const CreateChurchAssignment = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setAssignment({
       ...assignment,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -71,6 +72,7 @@ const CreateChurchAssignment = () => {
           servingSince: assignment.servingSince || undefined,
           description: assignment.description,
           isCurrent: true,
+          isPrimary: assignment.isPrimary,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -85,6 +87,7 @@ const CreateChurchAssignment = () => {
         role: "",
         servingSince: "",
         description: "",
+        isPrimary: false,
       });
     } catch (err) {
       console.log(err);
@@ -169,6 +172,29 @@ const CreateChurchAssignment = () => {
             onChange={handleChange}
             rows="4"
           />
+
+          {/* Drives the "Where I Serve Now" section on the public Church
+              page (getLeadershipChurch requires isCurrent AND isPrimary).
+              Only one assignment across all users can hold this — checking
+              it will replace whichever assignment currently holds it. */}
+          <label style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+            <input
+              type="checkbox"
+              name="isPrimary"
+              checked={assignment.isPrimary}
+              onChange={handleChange}
+              style={{ marginTop: "3px" }}
+            />
+            <span>
+              Set as Featured Leader
+              <br />
+              <small style={{ color: "#64748b" }}>
+                Shown in the "Where I Serve Now" section of the public
+                Church page. Only one assignment can hold this — checking
+                it will replace whichever assignment currently holds it.
+              </small>
+            </span>
+          </label>
 
           <button
             type="submit"
