@@ -35,11 +35,14 @@ const CreateChurchPerson = () => {
     category:"leader",
     rank:"",
     rankOrder:0,
+    language:"",
     files:[]
 
   });
 
 
+
+  const [languages,setLanguages] = useState([]);
 
   const [previews,setPreviews] = useState([]);
 
@@ -59,6 +62,37 @@ const CreateChurchPerson = () => {
     };
 
   }, [previews]);
+
+
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+
+    const fetchLanguages = async () => {
+
+      try {
+
+        const res = await API.get("/languages");
+
+        setLanguages(res.data || []);
+
+        if (res.data?.length) {
+
+          setPerson((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+
+    fetchLanguages();
+
+  }, []);
 
 
 
@@ -128,6 +162,15 @@ const CreateChurchPerson = () => {
     e.preventDefault();
 
     setError("");
+
+
+    if(!person.language){
+
+      setError("Please select a language");
+
+      return;
+
+    }
 
 
     try{
@@ -203,6 +246,13 @@ const CreateChurchPerson = () => {
 
 
 
+      formData.append(
+        "language",
+        person.language
+      );
+
+
+
       if(person.files && person.files.length > 0){
 
         person.files.forEach((file) => {
@@ -260,6 +310,7 @@ const CreateChurchPerson = () => {
         category:"leader",
         rank:"",
         rankOrder:0,
+        language: languages[0]?._id || "",
         files:[]
 
       });
@@ -401,6 +452,48 @@ onChange={handleChange}
 required
 
 />
+
+
+
+
+
+
+
+<select
+
+name="language"
+
+value={person.language}
+
+onChange={handleChange}
+
+required
+
+>
+
+
+
+<option value="" disabled>
+
+Select language
+
+</option>
+
+
+
+{languages.map((lang) => (
+
+<option key={lang._id} value={lang._id}>
+
+{lang.name} ({lang.code})
+
+</option>
+
+))}
+
+
+
+</select>
 
 
 

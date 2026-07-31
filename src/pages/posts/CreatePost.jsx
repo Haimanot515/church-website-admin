@@ -16,37 +16,77 @@ const CreatePost = () => {
   });
 
   const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+
   const [languages, setLanguages] = useState([]);
-  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [languagesLoading, setLanguagesLoading] = useState(true);
 
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories and languages from the backend on mount
+  // Fetch languages once on mount
   useEffect(() => {
-    const fetchOptions = async () => {
+    const fetchLanguages = async () => {
       try {
-        const [catRes, langRes] = await Promise.all([
-          API.get("/categories"),
-          API.get("/languages"),
-        ]);
-
-        setCategories(catRes.data);
-        setLanguages(langRes.data);
+        setLanguagesLoading(true);
+        const res = await API.get("/languages");
+        setLanguages(Array.isArray(res.data) ? res.data : res.data.languages || []);
       } catch (err) {
         console.log(err);
-        setError("Failed to load categories or languages");
+        setError("Failed to load languages");
       } finally {
-        setOptionsLoading(false);
+        setLanguagesLoading(false);
+      }
+    };
+    fetchLanguages();
+  }, []);
+
+  // Re-fetch categories whenever the selected language changes, scoped
+  // to that language specifically — since admin api.js sends no
+  // Accept-Language on its own, this header override is the only thing
+  // that decides which language's categories come back.
+  useEffect(() => {
+    if (!post.language) {
+      setCategories([]);
+      return;
+    }
+
+    const selectedLang = languages.find((l) => l._id === post.language);
+    if (!selectedLang) return;
+
+    const fetchCategoriesForLanguage = async () => {
+      try {
+        setCategoriesLoading(true);
+        const res = await API.get("/categories", {
+          headers: { "Accept-Language": selectedLang.code },
+        });
+        setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load categories for this language");
+      } finally {
+        setCategoriesLoading(false);
       }
     };
 
-    fetchOptions();
-  }, []);
+    fetchCategoriesForLanguage();
+  }, [post.language, languages]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "language") {
+      // Changing language invalidates whatever category was selected,
+      // since categories are scoped per language
+      setPost((prev) => ({
+        ...prev,
+        language: value,
+        category: "",
+      }));
+      return;
+    }
+
     setPost({
       ...post,
       [name]: type === "checkbox" ? checked : value,
@@ -156,36 +196,44 @@ const CreatePost = () => {
             required
           />
 
-          <select
-            name="category"
-            value={post.category}
-            onChange={handleChange}
-            required
-            disabled={optionsLoading}
-          >
-            <option value="">
-              {optionsLoading ? "Loading categories..." : "Select Category"}
-            </option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-
+          {/* Language now comes BEFORE category, since category options
+              depend on which language is selected */}
           <select
             name="language"
             value={post.language}
             onChange={handleChange}
             required
-            disabled={optionsLoading}
+            disabled={languagesLoading}
           >
             <option value="">
-              {optionsLoading ? "Loading languages..." : "Select Language"}
+              {languagesLoading ? "Loading languages..." : "Select Language"}
             </option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
-                {lang.name}
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="category"
+            value={post.category}
+            onChange={handleChange}
+            required
+            disabled={!post.language || categoriesLoading}
+          >
+            <option value="">
+              {!post.language
+                ? "Select a language first"
+                : categoriesLoading
+                ? "Loading categories..."
+                : categories.length === 0
+                ? "No categories for this language"
+                : "Select Category"}
+            </option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
               </option>
             ))}
           </select>
@@ -222,7 +270,7 @@ const CreatePost = () => {
 
           <button
             type="submit"
-            disabled={loading || optionsLoading}
+            disabled={loading || !post.language || !post.category}
             style={{
               padding: "14px",
               background: "#2563eb",

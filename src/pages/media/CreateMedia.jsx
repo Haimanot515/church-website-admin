@@ -12,6 +12,7 @@ const CreateMedia = () => {
     type:"photo",
     status:"published",
     category:"",
+    language:"",
     file:null
 
   });
@@ -19,6 +20,8 @@ const CreateMedia = () => {
 
 
   const [categories,setCategories] = useState([]);
+
+  const [languages,setLanguages] = useState([]);
 
   const [optionsLoading,setOptionsLoading] = useState(true);
 
@@ -31,16 +34,29 @@ const CreateMedia = () => {
   const [loading,setLoading] = useState(false);
 
 
-  // Fetch categories from the backend on mount
+  // Fetch categories and languages from the backend on mount
   useEffect(() => {
 
     const fetchOptions = async () => {
 
       try {
 
-        const catRes = await API.get("/categories");
+        const [catRes, langRes] = await Promise.all([
+
+          API.get("/categories"),
+          API.get("/languages"),
+
+        ]);
 
         setCategories(catRes.data);
+
+        setLanguages(langRes.data || []);
+
+        if(langRes.data?.length){
+
+          setMedia((prev) => ({ ...prev, language: prev.language || langRes.data[0]._id }));
+
+        }
 
       } catch (err) {
 
@@ -174,6 +190,15 @@ const CreateMedia = () => {
     setError("");
 
 
+    if(!media.language){
+
+      setError("Please select a language");
+
+      return;
+
+    }
+
+
     try{
 
 
@@ -216,6 +241,13 @@ const CreateMedia = () => {
       formData.append(
         "category",
         media.category
+      );
+
+
+
+      formData.append(
+        "language",
+        media.language
       );
 
 
@@ -270,6 +302,7 @@ const CreateMedia = () => {
         type:"photo",
         status:"published",
         category:"",
+        language:languages[0]?._id || "",
         file:null
 
       });
@@ -391,6 +424,34 @@ gap:"15px"
 }}
 
 >
+
+
+
+<select
+
+name="language"
+
+value={media.language}
+
+onChange={handleChange}
+
+required
+
+>
+
+<option value="" disabled>
+Select language
+</option>
+
+{languages.map((lang) => (
+
+<option key={lang._id} value={lang._id}>
+{lang.name} ({lang.code})
+</option>
+
+))}
+
+</select>
 
 
 

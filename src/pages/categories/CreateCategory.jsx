@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 const CreateCategory = () => {
@@ -6,10 +6,33 @@ const CreateCategory = () => {
   const [category, setCategory] = useState({
     name: "",
     description: "",
+    language: "",
   });
+
+  const [languages, setLanguages] = useState([]);
+  const [languagesLoading, setLanguagesLoading] = useState(true);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Populate the language dropdown from the same collection the backend
+  // validates against
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        setLanguagesLoading(true);
+        const res = await API.get("/languages");
+        const langData = Array.isArray(res.data) ? res.data : res.data.languages;
+        setLanguages(langData || []);
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load languages");
+      } finally {
+        setLanguagesLoading(false);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleChange = (e) => {
 
@@ -48,6 +71,8 @@ const CreateCategory = () => {
 
           description: category.description,
 
+          language: category.language,
+
         }
 
       );
@@ -59,6 +84,8 @@ const CreateCategory = () => {
         name: "",
 
         description: "",
+
+        language: "",
 
       });
 
@@ -188,11 +215,55 @@ const CreateCategory = () => {
 
 
 
+          <select
+
+            name="language"
+
+            value={category.language}
+
+            onChange={handleChange}
+
+            required
+
+            disabled={languagesLoading}
+
+            style={{
+
+              padding: "12px",
+
+              borderRadius: "8px",
+
+              border: "1px solid #ccc",
+
+            }}
+
+          >
+
+            <option value="" disabled>
+
+              {languagesLoading ? "Loading languages..." : "Select a language"}
+
+            </option>
+
+            {languages.map((lang) => (
+
+              <option key={lang._id} value={lang._id}>
+
+                {lang.name} ({lang.code})
+
+              </option>
+
+            ))}
+
+          </select>
+
+
+
           <button
 
             type="submit"
 
-            disabled={loading}
+            disabled={loading || languagesLoading}
 
             style={{
 

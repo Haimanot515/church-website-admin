@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 
@@ -12,6 +12,7 @@ const CreateService = () => {
     day: "",
     time: "",
     category: "Other",
+    language: "",
     location: "",
     isFeatured: false,
     image: null
@@ -19,6 +20,7 @@ const CreateService = () => {
   });
 
 
+  const [languages, setLanguages] = useState([]);
 
   const [preview, setPreview] = useState(null);
 
@@ -37,6 +39,39 @@ const CreateService = () => {
     "Outreach",
     "Other"
   ];
+
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+
+    const fetchLanguages = async () => {
+
+      try {
+
+        const res = await API.get("/languages");
+
+        setLanguages(res.data || []);
+
+        if (res.data?.length) {
+
+          setService((prev) => ({
+            ...prev,
+            language: prev.language || res.data[0]._id
+          }));
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+
+    fetchLanguages();
+
+  }, []);
 
 
   const handleChange = (e) => {
@@ -88,6 +123,16 @@ const CreateService = () => {
 
     e.preventDefault();
 
+    setError("");
+
+    if (!service.language) {
+
+      setError("Please select a language");
+
+      return;
+
+    }
+
 
     try {
 
@@ -136,6 +181,13 @@ const CreateService = () => {
       formData.append(
         "category",
         service.category
+      );
+
+
+
+      formData.append(
+        "language",
+        service.language
       );
 
 
@@ -202,6 +254,7 @@ const CreateService = () => {
         day: "",
         time: "",
         category: "Other",
+        language: languages[0]?._id || "",
         location: "",
         isFeatured: false,
         image: null
@@ -315,6 +368,33 @@ const CreateService = () => {
           }}
 
         >
+
+
+          <select
+
+            name="language"
+
+            value={service.language}
+
+            onChange={handleChange}
+
+            required
+
+          >
+
+            <option value="" disabled>
+              Select language
+            </option>
+
+            {languages.map((lang) => (
+
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+
+            ))}
+
+          </select>
 
 
           <input

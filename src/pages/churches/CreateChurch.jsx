@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 const CreateChurch = () => {
@@ -9,14 +9,32 @@ const CreateChurch = () => {
     address: "",
     serviceDays: "",
     serviceTime: "",
+    language: "",
     isFeatured: false,
     isPrimary: false,
     image: null,
   });
 
+  const [languages, setLanguages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await API.get("/languages");
+        setLanguages(res.data || []);
+        if (res.data?.length) {
+          setChurch((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,6 +56,11 @@ const CreateChurch = () => {
     e.preventDefault();
     setError("");
 
+    if (!church.language) {
+      setError("Please select a language");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -48,6 +71,7 @@ const CreateChurch = () => {
       formData.append("address", church.address);
       formData.append("serviceDays", church.serviceDays);
       formData.append("serviceTime", church.serviceTime);
+      formData.append("language", church.language);
       formData.append("isFeatured", church.isFeatured);
       formData.append("isPrimary", church.isPrimary);
 
@@ -69,6 +93,7 @@ const CreateChurch = () => {
         address: "",
         serviceDays: "",
         serviceTime: "",
+        language: languages[0]?._id || "",
         isFeatured: false,
         isPrimary: false,
         image: null,
@@ -100,6 +125,17 @@ const CreateChurch = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <select name="language" value={church.language} onChange={handleChange} required>
+            <option value="" disabled>
+              Select language
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             name="churchName"
@@ -186,9 +222,10 @@ const CreateChurch = () => {
               Set as Main Church
               <br />
               <small style={{ color: "#64748b" }}>
-                Shown in the hero section of the public Church page. Only one
-                church can hold this — selecting it will replace whichever
-                church currently holds it.
+                Shown in the hero section of the public Church page, for this
+                language. Only one church per language can hold this —
+                selecting it will replace whichever church currently holds it
+                for the selected language.
               </small>
             </span>
           </label>

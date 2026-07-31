@@ -15,17 +15,50 @@ const CreateChurchStory = () => {
     servedBy:"",
     order:0,
     year:"",
+    language:"",
     file:null
 
   });
 
 
+  const [languages,setLanguages] = useState([]);
 
   const [preview,setPreview] = useState(null);
 
   const [error,setError] = useState("");
 
   const [loading,setLoading] = useState(false);
+
+
+  // Fetch available languages so the chapter can be tied to one
+  useEffect(() => {
+
+    const fetchLanguages = async () => {
+
+      try{
+
+        const res = await API.get("/languages");
+
+        setLanguages(res.data || []);
+
+        if(res.data?.length){
+
+          setStory((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+
+        }
+
+      }
+      catch(err){
+
+        console.log(err);
+
+      }
+
+    };
+
+    fetchLanguages();
+
+  }, []);
 
 
 
@@ -110,6 +143,15 @@ const CreateChurchStory = () => {
     setError("");
 
 
+    if(!story.language){
+
+      setError("Please select a language");
+
+      return;
+
+    }
+
+
     try{
 
 
@@ -166,6 +208,13 @@ const CreateChurchStory = () => {
       formData.append(
         "order",
         story.order
+      );
+
+
+
+      formData.append(
+        "language",
+        story.language
       );
 
 
@@ -236,6 +285,7 @@ const CreateChurchStory = () => {
         servedBy:"",
         order:0,
         year:"",
+        language:languages[0]?._id || "",
         file:null
 
       });
@@ -358,6 +408,33 @@ gap:"15px"
 
 >
 
+
+
+<select
+
+name="language"
+
+value={story.language}
+
+onChange={handleChange}
+
+required
+
+>
+
+<option value="" disabled>
+Select language
+</option>
+
+{languages.map((lang) => (
+
+<option key={lang._id} value={lang._id}>
+{lang.name} ({lang.code})
+</option>
+
+))}
+
+</select>
 
 
 

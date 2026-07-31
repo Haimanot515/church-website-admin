@@ -5,6 +5,7 @@ import API from "../../api/api";
 const emptyForm = {
   name: "",
   description: "",
+  language: "",
 };
 
 const GetCategory = () => {
@@ -15,6 +16,14 @@ const GetCategory = () => {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
+  const [languages, setLanguages] = useState([]);
+  const [languagesLoading, setLanguagesLoading] = useState(true);
+
+  // Which language's categories the admin is currently viewing.
+  // Since the admin api.js sends no Accept-Language header on its own,
+  // this dropdown is the ONLY thing that decides which language gets fetched.
+  const [filterLanguageCode, setFilterLanguageCode] = useState("");
+
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
@@ -22,24 +31,57 @@ const GetCategory = () => {
 
   const editPanelRef = useRef(null);
 
+  // Load the language list once, then default the viewing filter to the
+  // first one available
   useEffect(() => {
-    fetchCategories();
+    const fetchLanguages = async () => {
+      try {
+        setLanguagesLoading(true);
+        const res = await API.get("/languages");
+        const langData = Array.isArray(res.data) ? res.data : res.data.languages;
+        setLanguages(langData || []);
+
+        if (langData && langData.length > 0) {
+          setFilterLanguageCode(langData[0].code);
+        }
+      } catch (err) {
+        console.log(err);
+        setError("Failed to load languages");
+      } finally {
+        setLanguagesLoading(false);
+      }
+    };
+    fetchLanguages();
   }, []);
 
-  const fetchCategories = async () => {
+  // Re-fetch categories whenever the viewing language changes
+  useEffect(() => {
+    if (!filterLanguageCode) return;
+    fetchCategories(filterLanguageCode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterLanguageCode]);
+
+  const fetchCategories = async (languageCode) => {
     try {
       setLoading(true);
       setError("");
 
-      const res = await API.get("/categories");
+      const res = await API.get("/categories", {
+        headers: { "Accept-Language": languageCode },
+      });
 
-      setCategories(res.data);
+      setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Failed to load categories");
     } finally {
       setLoading(false);
     }
+  };
+
+  const getLanguageLabel = (languageId) => {
+    const match = languages.find((l) => l._id === languageId);
+    return match ? `${match.name} (${match.code})` : "—";
   };
 
   // --- Edit (inline, no navigation) ---
@@ -49,6 +91,7 @@ const GetCategory = () => {
     setForm({
       name: category.name || "",
       description: category.description || "",
+      language: category.language || "",
     });
 
     requestAnimationFrame(() => {
@@ -79,11 +122,12 @@ const GetCategory = () => {
       await API.put(`/categories/${editingId}`, {
         name: form.name,
         description: form.description,
+        language: form.language,
       });
 
       alert("Category updated successfully");
       handleCancelEdit();
-      await fetchCategories();
+      await fetchCategories(filterLanguageCode);
     } catch (err) {
       console.log(err);
       setFormError(err.response?.data?.message || "Failed to update category");
@@ -108,7 +152,7 @@ const GetCategory = () => {
         handleCancelEdit();
       }
 
-      await fetchCategories();
+      await fetchCategories(filterLanguageCode);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Failed to delete category");
@@ -135,6 +179,8 @@ const GetCategory = () => {
             justifyContent: "space-between",
             alignItems: "center",
             marginBottom: "10px",
+            flexWrap: "wrap",
+            gap: "10px",
           }}
         >
           <h2 style={{ margin: 0 }}>All Categories</h2>
@@ -158,6 +204,31 @@ const GetCategory = () => {
             </button>
           )}
         </div>
+
+        {!editingId && (
+          <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
+            <label htmlFor="viewing-language" style={{ fontSize: "14px", color: "#555" }}>
+              Viewing categories in:
+            </label>
+            <select
+              id="viewing-language"
+              value={filterLanguageCode}
+              onChange={(e) => setFilterLanguageCode(e.target.value)}
+              disabled={languagesLoading}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+              }}
+            >
+              {languages.map((lang) => (
+                <option key={lang._id} value={lang.code}>
+                  {lang.name} ({lang.code})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -194,6 +265,27 @@ const GetCategory = () => {
                 onChange={handleChange}
                 rows="5"
               />
+
+              <select
+                name="language"
+                value={form.language}
+                onChange={handleChange}
+                required
+                style={{
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="" disabled>
+                  Select a language
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang._id} value={lang._id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
               <div style={{ display: "flex", gap: "10px" }}>
                 <button
@@ -237,7 +329,7 @@ const GetCategory = () => {
           (loading ? (
             <p>Loading categories...</p>
           ) : categories.length === 0 ? (
-            <p>No categories found.</p>
+            <p>No categories found for this language.</p>
           ) : (
             <div style={{ overflowX: "auto", marginTop: "15px" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "600px" }}>
@@ -245,6 +337,7 @@ const GetCategory = () => {
                   <tr>
                     <th style={thStyle}>Name</th>
                     <th style={thStyle}>Description</th>
+                    <th style={thStyle}>Language</th>
                     <th style={thStyle}>Actions</th>
                   </tr>
                 </thead>
@@ -253,6 +346,7 @@ const GetCategory = () => {
                     <tr key={cat._id}>
                       <td style={tdStyle}>{cat.name}</td>
                       <td style={tdStyle}>{cat.description || "—"}</td>
+                      <td style={tdStyle}>{getLanguageLabel(cat.language)}</td>
                       <td style={tdStyle}>
                         <div style={{ display: "flex", gap: "8px" }}>
                           <button

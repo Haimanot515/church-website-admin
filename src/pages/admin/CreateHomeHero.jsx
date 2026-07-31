@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 const CreateHomeHero = () => {
@@ -10,8 +10,10 @@ const CreateHomeHero = () => {
     name: "",
     role: "",
     story: "",
+    language: "",
   });
 
+  const [languages, setLanguages] = useState([]);
   const [image, setImage] = useState(null);
   const [storyImage, setStoryImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -19,6 +21,23 @@ const CreateHomeHero = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await API.get("/languages");
+        setLanguages(res.data || []);
+        // Default to the first language if none selected yet
+        if (res.data?.length) {
+          setFormData((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +59,11 @@ const CreateHomeHero = () => {
     e.preventDefault();
     setError("");
 
+    if (!formData.language) {
+      setError("Please select a language");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -51,6 +75,7 @@ const CreateHomeHero = () => {
       data.append("name", formData.name);
       data.append("role", formData.role);
       data.append("story", formData.story);
+      data.append("language", formData.language);
 
       if (image) {
         data.append("image", image);
@@ -75,6 +100,7 @@ const CreateHomeHero = () => {
         name: "",
         role: "",
         story: "",
+        language: languages[0]?._id || "",
       });
 
       setImage(null);
@@ -106,6 +132,22 @@ const CreateHomeHero = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <select
+            name="language"
+            value={formData.language}
+            onChange={handleChange}
+            required
+          >
+            <option value="" disabled>
+              Select language
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             name="title"

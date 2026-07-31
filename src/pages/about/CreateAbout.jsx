@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 const CreateAbout = () => {
@@ -6,12 +6,30 @@ const CreateAbout = () => {
     title: "",
     churchLeader: "",
     description: "",
+    language: "",
     image: null,
   });
 
+  const [languages, setLanguages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await API.get("/languages");
+        setLanguages(res.data || []);
+        if (res.data?.length) {
+          setAbout((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +48,11 @@ const CreateAbout = () => {
     e.preventDefault();
     setError("");
 
+    if (!about.language) {
+      setError("Please select a language");
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -37,6 +60,7 @@ const CreateAbout = () => {
       formData.append("title", about.title);
       formData.append("churchLeader", about.churchLeader);
       formData.append("description", about.description);
+      formData.append("language", about.language);
 
       if (about.image) {
         formData.append("image", about.image);
@@ -53,6 +77,7 @@ const CreateAbout = () => {
         title: "",
         churchLeader: "",
         description: "",
+        language: languages[0]?._id || "",
         image: null,
       });
 
@@ -82,6 +107,17 @@ const CreateAbout = () => {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <select name="language" value={about.language} onChange={handleChange} required>
+            <option value="" disabled>
+              Select language
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             name="title"

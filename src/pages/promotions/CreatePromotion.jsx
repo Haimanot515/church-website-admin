@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
 
@@ -7,13 +7,45 @@ const CreatePromotion = () => {
   const [promotion, setPromotion] = useState({
     title: "",
     description: "",
+    language: "",
     photo: null
   });
 
 
+  const [languages, setLanguages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+
+  // Fetch available languages so the entry can be tied to one
+  useEffect(() => {
+
+    const fetchLanguages = async () => {
+
+      try {
+
+        const res = await API.get("/languages");
+
+        setLanguages(res.data || []);
+
+        if (res.data?.length) {
+
+          setPromotion((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+
+        }
+
+      } catch (err) {
+
+        console.log(err);
+
+      }
+
+    };
+
+    fetchLanguages();
+
+  }, []);
 
 
 
@@ -57,11 +89,21 @@ const CreatePromotion = () => {
 
     e.preventDefault();
 
+    setError("");
+
+
+    if(!promotion.language){
+
+      setError("Please select a language");
+
+      return;
+
+    }
+
 
     try {
 
       setLoading(true);
-      setError("");
 
       const token = localStorage.getItem("token");
 
@@ -78,6 +120,12 @@ const CreatePromotion = () => {
       formData.append(
         "description",
         promotion.description
+      );
+
+
+      formData.append(
+        "language",
+        promotion.language
       );
 
 
@@ -128,6 +176,7 @@ const CreatePromotion = () => {
 
         title:"",
         description:"",
+        language: languages[0]?._id || "",
         photo:null
 
       });
@@ -214,6 +263,45 @@ const CreatePromotion = () => {
             gap:"15px"
           }}
         >
+
+
+
+          <select
+
+            name="language"
+
+            value={promotion.language}
+
+            onChange={handleChange}
+
+            required
+
+          >
+
+
+
+            <option value="" disabled>
+
+              Select language
+
+            </option>
+
+
+
+            {languages.map((lang) => (
+
+              <option key={lang._id} value={lang._id}>
+
+                {lang.name} ({lang.code})
+
+              </option>
+
+            ))}
+
+
+
+          </select>
+
 
 
 
