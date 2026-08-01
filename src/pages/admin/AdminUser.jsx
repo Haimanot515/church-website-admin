@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import { useTranslation } from "react-i18next";
+import "./AdminUsers.css";
 
 const PAGE_SIZE = 20;
 
 const AdminUsers = ({ mode }) => {
+  const { t } = useTranslation();
+
   const [users, setUsers] = useState([]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,18 +19,19 @@ const AdminUsers = ({ mode }) => {
   const [editUser, setEditUser] = useState({});
   const [editMode, setEditMode] = useState(false);
 
+  const [editingRowId, setEditingRowId] = useState(null);
+  const [rowDraft, setRowDraft] = useState({});
+  const [rowBusyId, setRowBusyId] = useState(null);
+
   const fetchUsersPage = async (page = 1) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await API.get(`/admin/users?page=${page}&limit=${PAGE_SIZE}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get(`/admin/users?page=${page}&limit=${PAGE_SIZE}`);
       setUsers(res.data.users);
       setTotalUsers(res.data.totalUsers);
       setCurrentPage(page);
     } catch (err) {
-      setError("Failed to fetch users");
+      setError(t("adminUsers.errors.fetchUsers"));
     } finally {
       setLoading(false);
     }
@@ -35,10 +40,7 @@ const AdminUsers = ({ mode }) => {
   const handleSearch = async () => {
     if (!searchQuery) return;
     try {
-      const token = localStorage.getItem("token");
-      const res = await API.get(`/admin/users/?search=${searchQuery}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await API.get(`/admin/users/?search=${searchQuery}`);
       if (res.data.users.length > 0) {
         const user = res.data.users[0];
         setSearchResult(user);
@@ -51,20 +53,17 @@ const AdminUsers = ({ mode }) => {
         });
         setEditMode(true);
       } else {
-        alert("No user found");
+        alert(t("adminUsers.alerts.noUserFound"));
       }
     } catch {
-      setError("Search Failed");
+      setError(t("adminUsers.errors.search"));
     }
   };
 
   const handleUpdate = async () => {
     if (!searchResult) return;
-    const token = localStorage.getItem("token");
-    await API.put(`/admin/users/${searchResult._id}`, editUser, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    alert("User updated successfully");
+    await API.put(`/admin/users/${searchResult._id}`, editUser);
+    alert(t("adminUsers.alerts.userUpdated"));
     setSearchQuery("");
     setSearchResult(null);
     setEditMode(false);
@@ -73,16 +72,93 @@ const AdminUsers = ({ mode }) => {
 
   const handleDelete = async () => {
     if (!searchResult) return;
-    if (!window.confirm("Are you sure?")) return;
-    const token = localStorage.getItem("token");
-    await API.delete(`/admin/delete/${searchResult._id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    alert("User deleted successfully");
+    if (!window.confirm(t("adminUsers.alerts.confirmDelete"))) return;
+    await API.delete(`/admin/delete/${searchResult._id}`);
+    alert(t("adminUsers.alerts.userDeleted"));
     setSearchQuery("");
     setSearchResult(null);
     setEditMode(false);
     fetchUsersPage(currentPage);
+  };
+
+  const startRowEdit = (user) => {
+    setEditingRowId(user._id);
+    setRowDraft({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+      address: user.address || "",
+    });
+  };
+
+  const cancelRowEdit = () => {
+    setEditingRowId(null);
+    setRowDraft({});
+  };
+
+  const saveRowEdit = async (user) => {
+    try {
+      setRowBusyId(user._id);
+      await API.put(`/admin/users/${user._id}`, rowDraft);
+      setUsers((prev) =>
+        prev.map((u) => (u._id === user._id ? { ...u, ...rowDraft } : u))
+      );
+      setEditingRowId(null);
+      setRowDraft({});
+    } catch {
+      alert(t("adminUsers.errors.fetchUsers"));
+    } finally {
+      setRowBusyId(null);
+    }
+  };
+
+  const deleteRowUser = async (user) => {
+    if (!window.confirm(t("adminUsers.alerts.confirmDelete"))) return;
+    try {
+      setRowBusyId(user._id);
+      await API.delete(`/admin/delete/${user._id}`);
+      alert(t("adminUsers.alerts.userDeleted"));
+      fetchUsersPage(currentPage);
+    } catch {
+      alert(t("adminUsers.errors.fetchUsers"));
+    } finally {
+      setRowBusyId(null);
+    }
+  };
+
+  const toggleAdminRow = async (user) => {
+    const nextIsAdmin = !(user.isAdmin === true || user.isAdmin === "true");
+    try {
+      setRowBusyId(user._id);
+      await API.put(`/admin/users/${user._id}`, { isAdmin: nextIsAdmin });
+      setUsers((prev) =>
+        prev.map((u) => (u._id === user._id ? { ...u, isAdmin: nextIsAdmin } : u))
+      );
+      alert(t("adminUsers.alerts.roleUpdated"));
+    } catch {
+      alert(t("adminUsers.errors.fetchUsers"));
+    } finally {
+      setRowBusyId(null);
+    }
+  };
+
+  const toggleActiveRow = async (user) => {
+    const nextIsActive = !(user.isActive === false || user.isActive === "false");
+    const willBeActive = !nextIsActive ? false : true;
+    // nextIsActive currently represents "current active state"; compute target explicitly:
+    const targetIsActive = !(user.isActive === false || user.isActive === "false") ? false : true;
+    try {
+      setRowBusyId(user._id);
+      await API.put(`/admin/users/${user._id}`, { isActive: targetIsActive });
+      setUsers((prev) =>
+        prev.map((u) => (u._id === user._id ? { ...u, isActive: targetIsActive } : u))
+      );
+      alert(t("adminUsers.alerts.statusUpdated"));
+    } catch {
+      alert(t("adminUsers.errors.fetchUsers"));
+    } finally {
+      setRowBusyId(null);
+    }
   };
 
   useEffect(() => {
@@ -90,55 +166,152 @@ const AdminUsers = ({ mode }) => {
   }, []);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px", fontFamily: "Segoe UI" }}>
+    <div className="admin-users-page">
 
       {/* ================= VIEW USERS ================= */}
       {mode === "/admin/users/view" && (
-        <div style={{ background: "#fff", padding: "25px", borderRadius: "14px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)" }}>
-          <h1 style={{ textAlign: "center", color: "#1e293b" }}>Welcome to Users Data</h1>
-          <h2 style={{ textAlign: "center", color: "#475569" }}>Total Users: {totalUsers}</h2>
+        <div className="au-card">
+          <h1 className="au-title">{t("adminUsers.view.welcome")}</h1>
+          <h2 className="au-subtitle">{t("adminUsers.view.totalUsers", { count: totalUsers })}</h2>
 
-          {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+          {error && <p className="au-error">{error}</p>}
 
           {loading ? (
-            <p style={{ textAlign: "center" }}>Loading users...</p>
+            <p className="au-loading">{t("adminUsers.view.loading")}</p>
           ) : (
             <>
-              <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
-                <thead>
-                  <tr style={{ background: "#2563eb", color: "#fff" }}>
-                    <th style={{ padding: "12px" }}>Name</th>
-                    <th style={{ padding: "12px" }}>Email</th>
-                    <th style={{ padding: "12px" }}>Admin</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((u) => (
-                    <tr key={u._id} style={{ textAlign: "center", borderBottom: "1px solid #e5e7eb" }}>
-                      <td style={{ padding: "10px" }}>{u.name}</td>
-                      <td style={{ padding: "10px" }}>{u.email}</td>
-                      <td style={{ padding: "10px", fontWeight: "bold", color: u.isAdmin ? "#16a34a" : "#1e40af" }}>
-                        {u.isAdmin=="true"||u.isAdmin===true ? "Yes" : "No"}
-                      </td>
+              <div className="au-table-wrap">
+                <table className="au-table">
+                  <thead>
+                    <tr>
+                      <th>{t("adminUsers.view.table.name")}</th>
+                      <th>{t("adminUsers.view.table.email")}</th>
+                      <th>{t("adminUsers.view.table.admin")}</th>
+                      <th>{t("adminUsers.view.table.status")}</th>
+                      <th>{t("adminUsers.view.table.actions")}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {users.map((u) => {
+                      const isAdmin = u.isAdmin === true || u.isAdmin === "true";
+                      const isActive = !(u.isActive === false || u.isActive === "false");
+                      const isEditingRow = editingRowId === u._id;
+                      const isBusy = rowBusyId === u._id;
 
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+                      return (
+                        <tr key={u._id}>
+                          <td data-label={t("adminUsers.view.table.name")}>
+                            {isEditingRow ? (
+                              <input
+                                className="au-edit-input"
+                                value={rowDraft.name}
+                                onChange={(e) => setRowDraft({ ...rowDraft, name: e.target.value })}
+                              />
+                            ) : (
+                              u.name
+                            )}
+                          </td>
+                          <td data-label={t("adminUsers.view.table.email")}>
+                            {isEditingRow ? (
+                              <input
+                                className="au-edit-input"
+                                value={rowDraft.email}
+                                onChange={(e) => setRowDraft({ ...rowDraft, email: e.target.value })}
+                              />
+                            ) : (
+                              u.email
+                            )}
+                          </td>
+                          <td
+                            data-label={t("adminUsers.view.table.admin")}
+                            className={isAdmin ? "au-role-yes" : "au-role-no"}
+                          >
+                            {isAdmin ? t("adminUsers.view.table.yes") : t("adminUsers.view.table.no")}
+                          </td>
+                          <td
+                            data-label={t("adminUsers.view.table.status")}
+                            className={isActive ? "au-status-active" : "au-status-inactive"}
+                          >
+                            {isActive ? t("adminUsers.view.table.active") : t("adminUsers.view.table.inactive")}
+                          </td>
+                          <td data-label={t("adminUsers.view.table.actions")}>
+                            <div className="au-actions">
+                              {isEditingRow ? (
+                                <>
+                                  <button
+                                    className="au-btn au-btn-save"
+                                    disabled={isBusy}
+                                    onClick={() => saveRowEdit(u)}
+                                  >
+                                    {t("adminUsers.view.save")}
+                                  </button>
+                                  <button
+                                    className="au-btn au-btn-cancel"
+                                    disabled={isBusy}
+                                    onClick={cancelRowEdit}
+                                  >
+                                    {t("adminUsers.view.cancel")}
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <button
+                                    className="au-btn au-btn-edit"
+                                    disabled={isBusy}
+                                    onClick={() => startRowEdit(u)}
+                                  >
+                                    {t("adminUsers.view.edit")}
+                                  </button>
+                                  <button
+                                    className={`au-btn ${isAdmin ? "au-btn-admin-off" : "au-btn-admin-on"}`}
+                                    disabled={isBusy}
+                                    onClick={() => toggleAdminRow(u)}
+                                  >
+                                    {isAdmin
+                                      ? t("adminUsers.view.removeAdmin")
+                                      : t("adminUsers.view.makeAdmin")}
+                                  </button>
+                                  <button
+                                    className={`au-btn ${isActive ? "au-btn-active-off" : "au-btn-active-on"}`}
+                                    disabled={isBusy}
+                                    onClick={() => toggleActiveRow(u)}
+                                  >
+                                    {isActive
+                                      ? t("adminUsers.view.makeInactive")
+                                      : t("adminUsers.view.makeActive")}
+                                  </button>
+                                  <button
+                                    className="au-btn au-btn-delete"
+                                    disabled={isBusy}
+                                    onClick={() => deleteRowUser(u)}
+                                  >
+                                    {t("adminUsers.view.delete")}
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="au-pagination">
                 <button
-                  style={{ padding: "10px 18px", borderRadius: "10px", background: "#2563eb", color: "#fff", border: "none" }}
+                  className="au-page-btn"
                   onClick={() => fetchUsersPage(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
-                  Previous
+                  {t("adminUsers.view.previous")}
                 </button>
 
                 <button
-                  style={{ padding: "10px 18px", borderRadius: "10px", background: "#2563eb", color: "#fff", border: "none" }}
+                  className="au-page-btn"
                   onClick={() => fetchUsersPage(currentPage + 1)}
                 >
-                  Next
+                  {t("adminUsers.view.next")}
                 </button>
               </div>
             </>
@@ -146,79 +319,83 @@ const AdminUsers = ({ mode }) => {
         </div>
       )}
 
-      {/* ================= DELETE USERS ================= */}
+      {/* ================= DELETE USERS (unchanged, separate mode) ================= */}
       {mode === "/admin/users/delete" && (
-        <div style={{ marginTop: "30px", background: "#fff", padding: "25px", borderRadius: "14px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)", textAlign: "center" }}>
-          <h3>Delete Users</h3>
+        <div className="au-search-panel">
+          <h3>{t("adminUsers.delete.heading")}</h3>
           <input
-            style={{ width: "500px", padding: "14px", borderRadius: "10px", border: "1px solid #cbd5f5" }}
-            placeholder="Search user by name or email"
+            className="au-search-input"
+            placeholder={t("adminUsers.delete.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <br /><br />
           <button
-            style={{ padding: "12px 20px", borderRadius: "10px", background: "#dc2626", color: "#fff", border: "none" }}
+            className="au-search-btn"
+            style={{ background: "#dc2626" }}
             onClick={handleSearch}
           >
-            Search
+            {t("adminUsers.delete.search")}
           </button>
 
           {editMode && searchResult && (
             <>
-              <h4>User Found: {searchResult.name}</h4>
+              <h4>{t("adminUsers.delete.userFound", { name: searchResult.name })}</h4>
               <button
-                style={{ padding: "12px 20px", borderRadius: "10px", background: "#b91c1c", color: "#fff", border: "none" }}
+                className="au-search-btn"
+                style={{ background: "#b91c1c" }}
                 onClick={handleDelete}
               >
-                Delete User
+                {t("adminUsers.delete.deleteUser")}
               </button>
             </>
           )}
         </div>
       )}
 
-      {/* ================= UPDATE USERS ================= */}
+      {/* ================= UPDATE USERS (unchanged, separate mode) ================= */}
       {mode === "/admin/users/update" && (
-        <div style={{ marginTop: "30px", background: "#fff", padding: "25px", borderRadius: "14px", boxShadow: "0 10px 30px rgba(0,0,0,0.08)", textAlign: "center" }}>
-          <h3>Update Users</h3>
+        <div className="au-search-panel">
+          <h3>{t("adminUsers.update.heading")}</h3>
 
           <input
-            style={{ width: "500px", padding: "14px", borderRadius: "10px", border: "1px solid #cbd5f5" }}
-            placeholder="Search user by name or email"
+            className="au-search-input"
+            placeholder={t("adminUsers.update.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <br /><br />
           <button
-            style={{ padding: "12px 20px", borderRadius: "10px", background: "#16a34a", color: "#fff", border: "none" }}
+            className="au-search-btn"
+            style={{ background: "#16a34a" }}
             onClick={handleSearch}
           >
-            Search
+            {t("adminUsers.update.search")}
           </button>
 
           {editUser && searchResult && (
-            <div style={{display:"flex",marginTop: "20px", padding: "20px", background: "#f8fafc", borderRadius: "12px" }}>
-              <h4>User Found: {searchResult.name}</h4>
+            <div className="au-edit-form">
+              <h4 style={{ width: "100%" }}>{t("adminUsers.update.userFound", { name: searchResult.name })}</h4>
 
-              <input value={editUser.name} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} placeholder="Name" style={{ padding: "10px", margin: "5px" }} />
-              <input value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} placeholder="Email" style={{ padding: "10px", margin: "5px" }} />
+              <input value={editUser.name} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} placeholder={t("adminUsers.update.namePlaceholder")} />
+              <input value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} placeholder={t("adminUsers.update.emailPlaceholder")} />
 
-              <select value={String(editUser.isAdmin)} onChange={(e) => setEditUser({ ...editUser, isAdmin: e.target.value })} style={{ padding: "10px", margin: "5px" }}>
-                <option value="true">Admin</option>
-                <option value="false">User</option>
+              <select value={String(editUser.isAdmin)} onChange={(e) => setEditUser({ ...editUser, isAdmin: e.target.value })}>
+                <option value="true">{t("adminUsers.update.roleAdmin")}</option>
+                <option value="false">{t("adminUsers.update.roleUser")}</option>
               </select>
 
-              <input value={editUser.phone} onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })} placeholder="Phone" style={{ padding: "10px", margin: "5px" }} />
-              <input value={editUser.address} onChange={(e) => setEditUser({ ...editUser, address: e.target.value })} placeholder="Address" style={{ padding: "10px", margin: "5px" }} />
+              <input value={editUser.phone} onChange={(e) => setEditUser({ ...editUser, phone: e.target.value })} placeholder={t("adminUsers.update.phonePlaceholder")} />
+              <input value={editUser.address} onChange={(e) => setEditUser({ ...editUser, address: e.target.value })} placeholder={t("adminUsers.update.addressPlaceholder")} />
 
-              <br />
-              <button
-                style={{ marginTop: "10px", padding: "12px 20px", borderRadius: "10px", background: "#2563eb", color: "#fff", border: "none" }}
-                onClick={handleUpdate}
-              >
-                Update User
-              </button>
+              <div style={{ width: "100%" }}>
+                <button
+                  style={{ marginTop: "10px", padding: "12px 20px", borderRadius: "10px", background: "#2563eb", color: "#fff", border: "none" }}
+                  onClick={handleUpdate}
+                >
+                  {t("adminUsers.update.updateUser")}
+                </button>
+              </div>
             </div>
           )}
         </div>

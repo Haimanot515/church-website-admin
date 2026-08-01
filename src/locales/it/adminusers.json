@@ -1,0 +1,60 @@
+{
+  "view": {
+    "welcome": "Benvenuto nei Dati degli Utenti",
+    "totalUsers": "Utenti Totali: {{count}}",
+    "loading": "Caricamento utenti...",
+    "table": {
+      "name": "Nome",
+      "email": "Email",
+      "admin": "Amministratore",
+      "status": "Stato",
+      "active": "Attivo",
+      "inactive": "Inattivo",
+      "yes": "Sì",
+      "no": "No",
+      "actions": "Azioni"
+    },
+    "previous": "Precedente",
+    "next": "Successivo",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "makeAdmin": "Rendi Amministratore",
+    "removeAdmin": "Rimuovi Amministratore",
+    "makeInactive": "Rendi Inattivo",
+    "makeActive": "Rendi Attivo",
+    "save": "Salva",
+    "cancel": "Annulla"
+  },
+  "delete": {
+    "heading": "Elimina Utenti",
+    "searchPlaceholder": "Cerca utente per nome o email",
+    "search": "Cerca",
+    "userFound": "Utente Trovato: {{name}}",
+    "deleteUser": "Elimina Utente"
+  },
+  "update": {
+    "heading": "Aggiorna Utenti",
+    "searchPlaceholder": "Cerca utente per nome o email",
+    "search": "Cerca",
+    "userFound": "Utente Trovato: {{name}}",
+    "namePlaceholder": "Nome",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Telefono",
+    "addressPlaceholder": "Indirizzo",
+    "roleAdmin": "Amministratore",
+    "roleUser": "Utente",
+    "updateUser": "Aggiorna Utente"
+  },
+  "alerts": {
+    "noUserFound": "Nessun utente trovato",
+    "userUpdated": "Utente aggiornato con successo",
+    "userDeleted": "Utente eliminato con successo",
+    "confirmDelete": "Sei sicuro?",
+    "roleUpdated": "Ruolo utente aggiornato con successo",
+    "statusUpdated": "Stato utente aggiornato con successo"
+  },
+  "errors": {
+    "fetchUsers": "Impossibile recuperare gli utenti",
+    "search": "Ricerca fallita"
+  }
+}

@@ -26,6 +26,7 @@ import enGetAbout from "../locales/en/getabout.json";
 import enAdminSidebar from "../locales/en/adminsidebar.json";
 import enAdminLogin from "../locales/en/adminlogin.json";
 import enFooter from "../locales/en/footer.json";
+import enAdminUsers from "../locales/en/adminusers.json";
 
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
@@ -51,6 +52,7 @@ import amGetAbout from "../locales/am/getabout.json";
 import amAdminSidebar from "../locales/am/adminsidebar.json";
 import amAdminLogin from "../locales/am/adminlogin.json";
 import amFooter from "../locales/am/footer.json";
+import amAdminUsers from "../locales/am/adminusers.json";
 
 // Italian
 import itNavbar from "../locales/it/navbar.json";
@@ -76,6 +78,7 @@ import itGetAbout from "../locales/it/getabout.json";
 import itAdminSidebar from "../locales/it/adminsidebar.json";
 import itAdminLogin from "../locales/it/adminlogin.json";
 import itFooter from "../locales/it/footer.json";
+import itAdminUsers from "../locales/it/adminusers.json";
 
 i18n
   .use(LanguageDetector)
@@ -107,6 +110,7 @@ i18n
           adminSidebar: enAdminSidebar,
           adminLogin: enAdminLogin,
           footer: enFooter,
+          adminUsers: enAdminUsers,
         },
       },
 
@@ -135,6 +139,7 @@ i18n
           adminSidebar: amAdminSidebar,
           adminLogin: amAdminLogin,
           footer: amFooter,
+          adminUsers: amAdminUsers,
         },
       },
 
@@ -163,6 +168,7 @@ i18n
           adminSidebar: itAdminSidebar,
           adminLogin: itAdminLogin,
           footer: itFooter,
+          adminUsers: itAdminUsers,
         },
       },
     },

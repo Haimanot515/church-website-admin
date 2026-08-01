@@ -1,0 +1,60 @@
+{
+  "view": {
+    "welcome": "እንኳን ወደ ተጠቃሚዎች ውሂብ በደህና መጡ",
+    "totalUsers": "አጠቃላይ ተጠቃሚዎች: {{count}}",
+    "loading": "ተጠቃሚዎችን በመጫን ላይ...",
+    "table": {
+      "name": "ስም",
+      "email": "ኢሜይል",
+      "admin": "አስተዳዳሪ",
+      "status": "ሁኔታ",
+      "active": "ንቁ",
+      "inactive": "ቦዘኑ",
+      "yes": "አዎ",
+      "no": "አይ",
+      "actions": "ተግባራት"
+    },
+    "previous": "ቀዳሚ",
+    "next": "ቀጣይ",
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "makeAdmin": "አስተዳዳሪ አድርግ",
+    "removeAdmin": "አስተዳዳሪነት አንሳ",
+    "makeInactive": "እንቅስቃሴ አልባ አድርግ",
+    "makeActive": "አንቁ",
+    "save": "አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "delete": {
+    "heading": "ተጠቃሚዎችን ሰርዝ",
+    "searchPlaceholder": "ተጠቃሚን በስም ወይም በኢሜይል ይፈልጉ",
+    "search": "ፈልግ",
+    "userFound": "ተጠቃሚ ተገኝቷል: {{name}}",
+    "deleteUser": "ተጠቃሚ ሰርዝ"
+  },
+  "update": {
+    "heading": "ተጠቃሚዎችን አዘምን",
+    "searchPlaceholder": "ተጠቃሚን በስም ወይም በኢሜይል ይፈልጉ",
+    "search": "ፈልግ",
+    "userFound": "ተጠቃሚ ተገኝቷል: {{name}}",
+    "namePlaceholder": "ስም",
+    "emailPlaceholder": "ኢሜይል",
+    "phonePlaceholder": "ስልክ",
+    "addressPlaceholder": "አድራሻ",
+    "roleAdmin": "አስተዳዳሪ",
+    "roleUser": "ተጠቃሚ",
+    "updateUser": "ተጠቃሚ አዘምን"
+  },
+  "alerts": {
+    "noUserFound": "ምንም ተጠቃሚ አልተገኘም",
+    "userUpdated": "ተጠቃሚው በተሳካ ሁኔታ ተዘምኗል",
+    "userDeleted": "ተጠቃሚው በተሳካ ሁኔታ ተሰርዟል",
+    "confirmDelete": "እርግጠኛ ነዎት?",
+    "roleUpdated": "የተጠቃሚው ሚና በተሳካ ሁኔታ ተዘምኗል",
+    "statusUpdated": "የተጠቃሚው ሁኔታ በተሳካ ሁኔታ ተዘምኗል"
+  },
+  "errors": {
+    "fetchUsers": "ተጠቃሚዎችን ማምጣት አልተሳካም",
+    "search": "ፍለጋ አልተሳካም"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "view": {
+    "welcome": "Welcome to Users Data",
+    "totalUsers": "Total Users: {{count}}",
+    "loading": "Loading users...",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "admin": "Admin",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "yes": "Yes",
+      "no": "No",
+      "actions": "Actions"
+    },
+    "previous": "Previous",
+    "next": "Next",
+    "edit": "Edit",
+    "delete": "Delete",
+    "makeAdmin": "Make Admin",
+    "removeAdmin": "Remove Admin",
+    "makeInactive": "Make Inactive",
+    "makeActive": "Make Active",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "delete": {
+    "heading": "Delete Users",
+    "searchPlaceholder": "Search user by name or email",
+    "search": "Search",
+    "userFound": "User Found: {{name}}",
+    "deleteUser": "Delete User"
+  },
+  "update": {
+    "heading": "Update Users",
+    "searchPlaceholder": "Search user by name or email",
+    "search": "Search",
+    "userFound": "User Found: {{name}}",
+    "namePlaceholder": "Name",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Phone",
+    "addressPlaceholder": "Address",
+    "roleAdmin": "Admin",
+    "roleUser": "User",
+    "updateUser": "Update User"
+  },
+  "alerts": {
+    "noUserFound": "No user found",
+    "userUpdated": "User updated successfully",
+    "userDeleted": "User deleted successfully",
+    "confirmDelete": "Are you sure?",
+    "roleUpdated": "User role updated successfully",
+    "statusUpdated": "User status updated successfully"
+  },
+  "errors": {
+    "fetchUsers": "Failed to fetch users",
+    "search": "Search Failed"
+  }
+}
