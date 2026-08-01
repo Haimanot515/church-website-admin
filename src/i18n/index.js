@@ -55,12 +55,12 @@ import amFooter from "../locales/am/footer.json";
 // Italian
 import itNavbar from "../locales/it/navbar.json";
 import itDashboard from "../locales/it/dashboard.json";
-import itCreateHomeHero from "../locales/it/createHomeHero.json";
-import itGetHomeHero from "../locales/it/getHomeHero.json";
+import itCreateHomeHero from "../locales/it/createhomehero.json";
+import itGetHomeHero from "../locales/it/gethomehero.json";
 import itPost from "../locales/it/post.json";
-import itCreatePost from "../locales/it/createPost.json";
-import itGetService from "../locales/it/getService.json";
-import itCreateService from "../locales/it/createService.json";
+import itCreatePost from "../locales/it/createpost.json";
+import itGetService from "../locales/it/getservice.json";
+import itCreateService from "../locales/it/createservice.json";
 import itGetMedia from "../locales/it/getmedia.json";
 import itCreateMedia from "../locales/it/createmedia.json";
 import itGetCategory from "../locales/it/getcategory.json";
