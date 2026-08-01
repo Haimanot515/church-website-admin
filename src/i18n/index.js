@@ -8,7 +8,7 @@ import enDashboard from "../locales/en/dashboard.json";
 import enCreateHomeHero from "../locales/en/createhomehero.json";
 import enGetHomeHero from "../locales/en/gethomehero.json";
 import enPost from "../locales/en/post.json";
-import enCreatePost from "../locales/en/createPost.json";
+import enCreatePost from "../locales/en/createpost.json";
 import enGetService from "../locales/en/getService.json";
 import enCreateService from "../locales/en/createService.json";
 import enGetMedia from "../locales/en/getmedia.json";
