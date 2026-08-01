@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetPost.css";
 
 const POSTS_PER_PAGE = 10;
 
@@ -19,6 +21,7 @@ const emptyForm = {
 
 const GetPost = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,13 +59,14 @@ const GetPost = () => {
         setLanguages(langRes.data);
       } catch (err) {
         console.log(err);
-        setError((prev) => prev || "Failed to load categories or languages");
+        setError((prev) => prev || t("post.errors.loadOptions"));
       } finally {
         setOptionsLoading(false);
       }
     };
 
     fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchPosts = async (page) => {
@@ -78,7 +82,7 @@ const GetPost = () => {
       setTotalPages(res.data.totalPages);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load posts");
+      setError(err.response?.data?.message || t("post.errors.loadPosts"));
     } finally {
       setLoading(false);
     }
@@ -165,12 +169,12 @@ const GetPost = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Post updated successfully");
+      alert(t("post.updateSuccess"));
       handleCancelEdit();
       await fetchPosts(currentPage);
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to update post");
+      setFormError(err.response?.data?.message || t("post.errors.update"));
     } finally {
       setSubmitting(false);
     }
@@ -178,7 +182,7 @@ const GetPost = () => {
 
   // --- Delete ---
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this post?")) {
+    if (!window.confirm(t("post.confirmDelete"))) {
       return;
     }
 
@@ -194,77 +198,38 @@ const GetPost = () => {
       await fetchPosts(currentPage);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to delete post");
+      setError(err.response?.data?.message || t("post.errors.delete"));
     } finally {
       setDeletingId(null);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>All Posts</h2>
+    <div className="gp-page">
+      <div className="gp-card">
+        <div className="gp-header">
+          <h2>{t("post.heading")}</h2>
 
           {!editingId && (
-            <button
-              onClick={() => navigate("/admin/posts/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New Post
+            <button className="gp-btn-new" onClick={() => navigate("/admin/posts/create")}>
+              {t("post.newPost")}
             </button>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="gp-error">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Post</h3>
+          <div ref={editPanelRef} className="gp-edit-panel">
+            <h3>{t("post.editHeading")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="gp-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="gp-form">
               <input
                 type="text"
                 name="title"
-                placeholder="Post title"
+                placeholder={t("post.form.titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -272,7 +237,7 @@ const GetPost = () => {
 
               <textarea
                 name="description"
-                placeholder="Post description"
+                placeholder={t("post.form.descriptionPlaceholder")}
                 value={form.description}
                 onChange={handleChange}
                 rows="3"
@@ -281,7 +246,7 @@ const GetPost = () => {
 
               <textarea
                 name="content"
-                placeholder="Post content"
+                placeholder={t("post.form.contentPlaceholder")}
                 value={form.content}
                 onChange={handleChange}
                 rows="8"
@@ -296,7 +261,7 @@ const GetPost = () => {
                 disabled={optionsLoading}
               >
                 <option value="">
-                  {optionsLoading ? "Loading categories..." : "Select Category"}
+                  {optionsLoading ? t("post.form.loadingCategories") : t("post.form.selectCategory")}
                 </option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>
@@ -313,7 +278,7 @@ const GetPost = () => {
                 disabled={optionsLoading}
               >
                 <option value="">
-                  {optionsLoading ? "Loading languages..." : "Select Language"}
+                  {optionsLoading ? t("post.form.loadingLanguages") : t("post.form.selectLanguage")}
                 </option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
@@ -325,65 +290,46 @@ const GetPost = () => {
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
               {(preview || existingImageUrl) && (
-                <img
-                  src={preview || existingImageUrl}
-                  alt="preview"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
+                <img src={preview || existingImageUrl} alt="preview" className="gp-file-preview" />
               )}
 
               <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
+                <option value="draft">{t("post.form.draft")}</option>
+                <option value="published">{t("post.form.published")}</option>
               </select>
 
-              <label>
+              <label className="gp-checkbox-label">
                 <input type="checkbox" name="isTrending" checked={form.isTrending} onChange={handleChange} />
-                Trending
+                {t("post.form.trending")}
               </label>
 
-              <label>
+              <label className="gp-checkbox-label">
                 <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
-                Featured
+                {t("post.form.featured")}
               </label>
 
-              <label>
-                <input type="checkbox" name="isRecommended" checked={form.isRecommended} onChange={handleChange} />
-                Recommended
+              <label className="gp-checkbox-label">
+                <input
+                  type="checkbox"
+                  name="isRecommended"
+                  checked={form.isRecommended}
+                  onChange={handleChange}
+                />
+                {t("post.form.recommended")}
               </label>
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting || optionsLoading}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="gp-form-actions">
+                <button type="submit" disabled={submitting || optionsLoading} className="gp-btn-primary">
+                  {submitting ? t("post.form.saving") : t("post.form.saveChanges")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="gp-btn-cancel"
                 >
-                  Cancel
+                  {t("post.form.cancel")}
                 </button>
               </div>
             </form>
@@ -392,81 +338,55 @@ const GetPost = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading posts...</p>
+            <p>{t("post.loadingPosts")}</p>
           ) : posts.length === 0 ? (
-            <p>No posts found.</p>
+            <p>{t("post.noPosts")}</p>
           ) : (
             <>
-              <div style={{ overflowX: "auto", marginTop: "15px" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
+              <div className="gp-table-wrap">
+                <table className="gp-table">
                   <thead>
                     <tr>
-                      <th style={thStyle}>Title</th>
-                      <th style={thStyle}>Category</th>
-                      <th style={thStyle}>Language</th>
-                      <th style={thStyle}>Status</th>
-                      <th style={thStyle}>Author</th>
-                      <th style={thStyle}>Created</th>
-                      <th style={thStyle}>Actions</th>
+                      <th>{t("post.table.title")}</th>
+                      <th>{t("post.table.category")}</th>
+                      <th>{t("post.table.language")}</th>
+                      <th>{t("post.table.status")}</th>
+                      <th>{t("post.table.author")}</th>
+                      <th>{t("post.table.created")}</th>
+                      <th>{t("post.table.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {posts.map((post) => (
                       <tr key={post._id}>
-                        <td style={tdStyle}>{post.title}</td>
-                        <td style={tdStyle}>{post.category?.name || "—"}</td>
-                        <td style={tdStyle}>{post.language?.name || "—"}</td>
-                        <td style={tdStyle}>
+                        <td data-label={t("post.table.title")}>{post.title}</td>
+                        <td data-label={t("post.table.category")}>{post.category?.name || "—"}</td>
+                        <td data-label={t("post.table.language")}>{post.language?.name || "—"}</td>
+                        <td data-label={t("post.table.status")}>
                           <span
-                            style={{
-                              padding: "3px 10px",
-                              borderRadius: "20px",
-                              fontSize: "12px",
-                              fontWeight: 600,
-                              background: post.status === "published" ? "#dcfce7" : "#fef9c3",
-                              color: post.status === "published" ? "#166534" : "#854d0e",
-                            }}
+                            className={`gp-status-badge ${
+                              post.status === "published" ? "gp-status-published" : "gp-status-draft"
+                            }`}
                           >
-                            {post.status}
+                            {post.status === "published" ? t("post.form.published") : t("post.form.draft")}
                           </span>
                         </td>
-                        <td style={tdStyle}>{post.author?.name || "—"}</td>
-                        <td style={tdStyle}>
+                        <td data-label={t("post.table.author")}>{post.author?.name || "—"}</td>
+                        <td data-label={t("post.table.created")}>
                           {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "—"}
                         </td>
-                        <td style={tdStyle}>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button
-                              onClick={() => handleEditClick(post)}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#2563eb",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              Edit
+                        <td data-label={t("post.table.actions")}>
+                          <div className="gp-row-actions">
+                            <button className="gp-btn-edit" onClick={() => handleEditClick(post)}>
+                              {t("post.actions.edit")}
                             </button>
 
                             <button
+                              className="gp-btn-delete"
                               onClick={() => handleDelete(post._id)}
                               disabled={deletingId === post._id}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#dc2626",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
                             >
-                              {deletingId === post._id ? "Deleting..." : "Delete"}
+                              {deletingId === post._id ? t("post.actions.deleting") : t("post.actions.delete")}
                             </button>
                           </div>
                         </td>
@@ -476,33 +396,25 @@ const GetPost = () => {
                 </table>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginTop: "25px",
-                }}
-              >
+              <div className="gp-pagination">
                 <button
+                  className="gp-page-btn"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  style={pageButtonStyle(currentPage === 1)}
                 >
-                  Prev
+                  {t("post.pagination.prev")}
                 </button>
 
-                <span style={{ fontSize: "14px", color: "#444" }}>
-                  Page {currentPage} of {totalPages}
+                <span className="gp-page-info">
+                  {t("post.pagination.pageOf", { current: currentPage, total: totalPages })}
                 </span>
 
                 <button
+                  className="gp-page-btn"
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  style={pageButtonStyle(currentPage === totalPages)}
                 >
-                  Next
+                  {t("post.pagination.next")}
                 </button>
               </div>
             </>
@@ -511,28 +423,5 @@ const GetPost = () => {
     </div>
   );
 };
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
-};
-
-const pageButtonStyle = (disabled) => ({
-  padding: "8px 16px",
-  background: disabled ? "#e5e7eb" : "#2563eb",
-  color: disabled ? "#999" : "#fff",
-  border: "none",
-  borderRadius: "6px",
-  cursor: disabled ? "not-allowed" : "pointer",
-});
 
 export default GetPost;

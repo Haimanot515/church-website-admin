@@ -1,0 +1,22 @@
+{
+  "brandName": "Abune Gebre Menfes Kidus Church",
+  "heading": "Admin Console",
+  "subtext": "This area is reserved for site administrators. Sign in with your admin credentials to manage content, users, and settings.",
+  "list": {
+    "manageContent": "Manage published content",
+    "reviewActivity": "Review user activity",
+    "configureSettings": "Configure site settings"
+  },
+  "formTitle": "Admin Login",
+  "formSubtitle": "Enter your credentials to continue",
+  "emailLabel": "Email",
+  "emailPlaceholder": "you@church.org",
+  "passwordLabel": "Password",
+  "submitButton": "Log In",
+  "footerNote": "Having trouble signing in? Contact the church office for help regaining access.",
+  "successMessage": "Login successful! Redirecting...",
+  "errors": {
+    "notAdmin": "This account does not have admin access.",
+    "generic": "Something went wrong"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "heading": "Manage Services",
+  "loading": "Loading services...",
+  "noServices": "No services found.",
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "makeActive": "Make active",
+    "makeInactive": "Make inactive"
+  },
+  "status": {
+    "active": "active",
+    "inactive": "inactive"
+  },
+  "confirmDelete": "Delete this service?",
+  "errors": {
+    "load": "Failed to load services",
+    "delete": "Failed to delete service",
+    "updateStatus": "Failed to update status"
+  }
+}

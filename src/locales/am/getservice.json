@@ -1,0 +1,21 @@
+{
+  "heading": "አገልግሎቶችን ያስተዳድሩ",
+  "loading": "አገልግሎቶችን በመጫን ላይ...",
+  "noServices": "ምንም አገልግሎት አልተገኘም።",
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "makeActive": "ንቁ አድርግ",
+    "makeInactive": "ንቁ ያልሆነ አድርግ"
+  },
+  "status": {
+    "active": "ንቁ",
+    "inactive": "ንቁ ያልሆነ"
+  },
+  "confirmDelete": "ይህን አገልግሎት መሰረዝ ይፈልጋሉ?",
+  "errors": {
+    "load": "አገልግሎቶችን መጫን አልተሳካም",
+    "delete": "አገልግሎቱን መሰረዝ አልተሳካም",
+    "updateStatus": "ሁኔታውን ማዘመን አልተሳካም"
+  }
+}

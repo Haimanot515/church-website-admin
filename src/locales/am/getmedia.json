@@ -1,0 +1,51 @@
+{
+  "heading": "ሁሉም ሚዲያ",
+  "newMedia": "+ አዲስ ሚዲያ",
+  "loadingMedia": "ሚዲያ በመጫን ላይ...",
+  "noMedia": "ምንም ሚዲያ አልተገኘም።",
+  "editHeading": "ሚዲያ አርትዕ",
+  "form": {
+    "titlePlaceholder": "የሚዲያ ርዕስ",
+    "descriptionPlaceholder": "የሚዲያ መግለጫ",
+    "typePhoto": "ፎቶ",
+    "typeVideo": "ቪዲዮ",
+    "typeAudio": "ድምጽ",
+    "typeDocument": "መጽሐፍ / ፒዲኤፍ",
+    "loadingCategories": "ምድቦችን በመጫን ላይ...",
+    "selectCategory": "ምድብ ይምረጡ",
+    "saveDraft": "እንደ ረቂቅ አስቀምጥ",
+    "publish": "አትም",
+    "keepFileHint": "የአሁኑን ፋይል ለማቆየት ባዶ ይተዉት።",
+    "viewCurrentFile": "የአሁኑን ፋይል ይመልከቱ",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveChanges": "ለውጦችን አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "table": {
+    "file": "ፋይል",
+    "title": "ርዕስ",
+    "type": "ዓይነት",
+    "category": "ምድብ",
+    "status": "ሁኔታ",
+    "created": "የተፈጠረበት",
+    "actions": "ተግባራት"
+  },
+  "status": {
+    "draft": "ረቂቅ",
+    "published": "የታተመ"
+  },
+  "viewFile": "ፋይል ይመልከቱ",
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "confirmDelete": "\"{{title}}\" ይሰረዝ? ይህ ተግባር መመለስ አይቻልም።",
+  "updateSuccess": "ሚዲያው በተሳካ ሁኔታ ተስተካክሏል",
+  "errors": {
+    "loadMedia": "ሚዲያን መጫን አልተሳካም",
+    "loadCategories": "ምድቦችን መጫን አልተሳካም",
+    "update": "ሚዲያውን ማዘመን አልተሳካም",
+    "delete": "ሚዲያውን መሰረዝ አልተሳካም"
+  }
+}

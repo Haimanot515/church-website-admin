@@ -1,0 +1,21 @@
+{
+  "heading": "Gestisci Servizi",
+  "loading": "Caricamento servizi...",
+  "noServices": "Nessun servizio trovato.",
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "makeActive": "Rendi attivo",
+    "makeInactive": "Rendi inattivo"
+  },
+  "status": {
+    "active": "attivo",
+    "inactive": "inattivo"
+  },
+  "confirmDelete": "Eliminare questo servizio?",
+  "errors": {
+    "load": "Impossibile caricare i servizi",
+    "delete": "Impossibile eliminare il servizio",
+    "updateStatus": "Impossibile aggiornare lo stato"
+  }
+}

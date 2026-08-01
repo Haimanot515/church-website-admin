@@ -1,0 +1,35 @@
+{
+  "heading": "ሁሉም ምድቦች",
+  "newCategory": "+ አዲስ ምድብ",
+  "viewingLanguage": "ምድቦችን በዚህ ቋንቋ በመመልከት ላይ:",
+  "loadingCategories": "ምድቦችን በመጫን ላይ...",
+  "noCategories": "ለዚህ ቋንቋ ምድብ አልተገኘም።",
+  "editHeading": "ምድብ አርትዕ",
+  "form": {
+    "namePlaceholder": "የምድብ ስም",
+    "descriptionPlaceholder": "የምድብ መግለጫ",
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveChanges": "ለውጦችን አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "table": {
+    "name": "ስም",
+    "description": "መግለጫ",
+    "language": "ቋንቋ",
+    "actions": "ተግባራት"
+  },
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "confirmDelete": "\"{{name}}\" ይሰረዝ? ይህ ተግባር መመለስ አይቻልም።",
+  "updateSuccess": "ምድቡ በተሳካ ሁኔታ ተስተካክሏል",
+  "errors": {
+    "loadLanguages": "ቋንቋዎችን መጫን አልተሳካም",
+    "loadCategories": "ምድቦችን መጫን አልተሳካም",
+    "update": "ምድቡን ማዘመን አልተሳካም",
+    "delete": "ምድቡን መሰረዝ አልተሳካም"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "heading": "Aggiungi Iscritto",
+  "form": {
+    "emailPlaceholder": "subscriber@example.com",
+    "adding": "Aggiunta...",
+    "addButton": "Aggiungi Iscritto"
+  },
+  "successMessage": "Iscrizione avvenuta con successo",
+  "errors": {
+    "create": "Impossibile aggiungere l'iscritto"
+  }
+}

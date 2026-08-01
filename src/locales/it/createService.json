@@ -1,0 +1,29 @@
+{
+  "heading": "Crea Servizio della Chiesa",
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "titlePlaceholder": "Titolo del servizio",
+    "descriptionPlaceholder": "Descrizione del servizio",
+    "dayPlaceholder": "Esempio: Domeniche e Festività",
+    "timePlaceholder": "Esempio: 6:00 - 9:00",
+    "locationPlaceholder": "Luogo (es. Sala Principale)",
+    "markFeatured": "Contrassegna come in evidenza",
+    "creating": "Creazione...",
+    "create": "Crea Servizio"
+  },
+  "categories": {
+    "Worship": "Culto",
+    "Teaching": "Insegnamento",
+    "Prayer": "Preghiera",
+    "Music": "Musica",
+    "Youth": "Giovani",
+    "Ministry": "Ministero",
+    "Outreach": "Evangelizzazione",
+    "Other": "Altro"
+  },
+  "createSuccess": "Servizio creato con successo",
+  "errors": {
+    "selectLanguage": "Seleziona una lingua",
+    "create": "Impossibile creare il servizio"
+  }
+}

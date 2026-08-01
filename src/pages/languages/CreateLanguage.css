@@ -1,0 +1,179 @@
+/* ===== Page shell ===== */
+.cl-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.cl-card {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cl-card h2 {
+  margin-top: 0;
+}
+
+.cl-error {
+  color: red;
+}
+
+/* ===== Form ===== */
+.cl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cl-form input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.cl-code-input {
+  text-transform: uppercase;
+}
+
+.cl-btn-primary {
+  padding: 14px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cl-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Examples ===== */
+.cl-examples {
+  margin-top: 30px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.cl-examples h4 {
+  margin-top: 0;
+}
+
+.cl-table-wrap {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.cl-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 300px;
+}
+
+.cl-table th {
+  text-align: left;
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.cl-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .cl-page {
+    padding: 20px;
+  }
+
+  .cl-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .cl-page {
+    padding: 12px;
+  }
+
+  .cl-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .cl-btn-primary {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  /* Card-style table on small screens instead of horizontal scroll */
+  .cl-table thead {
+    display: none;
+  }
+
+  .cl-table,
+  .cl-table tbody,
+  .cl-table tr,
+  .cl-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cl-table tr {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+
+  .cl-table td {
+    border: none;
+    padding: 6px 4px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .cl-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    flex-shrink: 0;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .cl-page {
+    padding: 8px;
+  }
+
+  .cl-card {
+    padding: 12px;
+  }
+}

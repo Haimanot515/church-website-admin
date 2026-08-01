@@ -1,0 +1,35 @@
+{
+  "heading": "Crea Categoria",
+  "form": {
+    "namePlaceholder": "Nome Categoria",
+    "descriptionPlaceholder": "Descrizione Categoria",
+    "selectLanguage": "Seleziona una lingua",
+    "loadingLanguages": "Caricamento lingue...",
+    "creating": "Creazione...",
+    "createButton": "Crea Categoria"
+  },
+  "examples": {
+    "heading": "Categorie di Esempio",
+    "table": {
+      "category": "Categoria",
+      "description": "Descrizione"
+    },
+    "sermons": {
+      "name": "Sermoni",
+      "description": "Sermoni e insegnamenti settimanali della chiesa."
+    },
+    "events": {
+      "name": "Eventi",
+      "description": "Eventi della chiesa e programmi futuri."
+    },
+    "testimonies": {
+      "name": "Testimonianze",
+      "description": "Testimonianze ispiratrici dei credenti."
+    }
+  },
+  "successMessage": "Categoria creata con successo",
+  "errors": {
+    "loadLanguages": "Impossibile caricare le lingue",
+    "create": "Impossibile creare la categoria"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "pageTitle": "የመነሻ ገጽ ጀግና ግቤቶች",
+  "createTitle": "የመነሻ ገጽ ጀግና ፍጠር",
+  "newButton": "+ አዲስ የመነሻ ገጽ ጀግና",
+  "loading": "የመነሻ ገጽ ጀግና ግቤቶችን በመጫን ላይ...",
+  "noEntries": "ምንም የመነሻ ገጽ ጀግና ግቤት አልተገኘም።",
+  "editTitle": "የመነሻ ገጽ ጀግናን አርትዕ",
+  "form": {
+    "selectLanguagePlaceholder": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "የጀግና ርዕስ",
+    "subtitlePlaceholder": "የጀግና ንዑስ ርዕስ",
+    "descriptionPlaceholder": "ዋና መግለጫ",
+    "quotePlaceholder": "ጥቅስ",
+    "namePlaceholder": "ሙሉ ስም",
+    "rolePlaceholder": "የስራ ድርሻ",
+    "storyPlaceholder": "ለስለ ገጽ ዝርዝር ታሪክ...",
+    "heroImageLabel": "የጀግና መገለጫ ምስል",
+    "storyImageLabel": "የታሪክ/ስለ ምስል"
+  },
+  "buttons": {
+    "save": "ለውጦችን አስቀምጥ",
+    "saving": "በማስቀመጥ ላይ...",
+    "cancel": "ሰርዝ",
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ...",
+    "confirmDelete": "ሰርዝ",
+    "create": "የመነሻ ገጽ ጀግና ፍጠር",
+    "creating": "በመፍጠር ላይ..."
+  },
+  "table": {
+    "title": "ርዕስ",
+    "name": "ስም",
+    "role": "ድርሻ",
+    "created": "የተፈጠረበት",
+    "actions": "እርምጃዎች",
+    "notAvailable": "—"
+  },
+  "pagination": {
+    "prev": "ቀዳሚ",
+    "next": "ቀጣይ",
+    "pageOf": "ገጽ {{current}} ከ {{total}}"
+  },
+  "messages": {
+    "confirmDelete": "ይህን የመነሻ ገጽ ጀግና ግቤት መሰረዝ ይፈልጋሉ?",
+    "confirmDeleteTitle": "የመነሻ ገጽ ጀግናን ሰርዝ",
+    "confirmDeleteNamed": "\"{{title}}\" ን መሰረዝ ይፈልጋሉ? ይህ ተግባር ወደ ኋላ ሊመለስ አይችልም።",
+    "updateSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተዘምኗል",
+    "updateError": "የመነሻ ገጽ ጀግናን ማዘመን አልተሳካም",
+    "deleteError": "የመነሻ ገጽ ጀግናን መሰረዝ አልተሳካም",
+    "loadError": "የመነሻ ገጽ ጀግና ግቤቶችን መጫን አልተሳካም",
+    "selectLanguage": "እባክዎ ቋንቋ ይምረጡ",
+    "createSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተፈጥሯል",
+    "createError": "የመነሻ ገጽ ጀግናን መፍጠር አልተሳካም"
+  }
+}

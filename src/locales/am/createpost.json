@@ -1,0 +1,27 @@
+{
+  "heading": "ልጥፍ ፍጠር",
+  "form": {
+    "titlePlaceholder": "የልጥፍ ርዕስ",
+    "descriptionPlaceholder": "የልጥፍ መግለጫ",
+    "contentPlaceholder": "የልጥፍ ይዘት",
+    "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "selectLanguageFirst": "መጀመሪያ ቋንቋ ይምረጡ",
+    "loadingCategories": "ምድቦችን በመጫን ላይ...",
+    "noCategoriesForLanguage": "ለዚህ ቋንቋ ምድብ የለም",
+    "selectCategory": "ምድብ ይምረጡ",
+    "draft": "ረቂቅ",
+    "published": "የታተመ",
+    "trending": "ተወዳጅ",
+    "featured": "ተለይቶ የቀረበ",
+    "recommended": "የሚመከር",
+    "creating": "በመፍጠር ላይ...",
+    "create": "ልጥፍ ፍጠር"
+  },
+  "createSuccess": "ልጥፉ በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "loadLanguages": "ቋንቋዎችን መጫን አልተሳካም",
+    "loadCategories": "ለዚህ ቋንቋ ምድቦችን መጫን አልተሳካም",
+    "create": "ልጥፉን መፍጠር አልተሳካም"
+  }
+}

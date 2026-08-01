@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaTimes, FaBars } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
+import { FaTimes, FaBars, FaGlobe } from "react-icons/fa";
 import { useAdminMenu } from "./AdminMenuContext";
 import "./Navbar.css";
 
@@ -33,7 +34,71 @@ const ThornCrownLogo = () => (
   </svg>
 );
 
+const LANGUAGES = [
+  { code: "am", label: "አማርኛ" },
+  { code: "it", label: "Italiano" },
+  { code: "en", label: "English" },
+];
+
+const LanguageDropdown = () => {
+  const { i18n } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+
+  const current =
+    LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
+
+  const selectLanguage = (code) => {
+    i18n.changeLanguage(code);
+    setOpen(false);
+  };
+
+  return (
+    <div className="lang-dropdown" ref={wrapRef}>
+      <button
+        type="button"
+        className="lang-dropdown-toggle"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <FaGlobe style={{ marginRight: 6 }} />
+        {current.label}
+      </button>
+
+      {open && (
+        <ul className="lang-dropdown-menu" role="listbox">
+          {LANGUAGES.map((lng) => (
+            <li key={lng.code}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={lng.code === current.code}
+                className={`lang-dropdown-item${lng.code === current.code ? " active" : ""}`}
+                onClick={() => selectLanguage(lng.code)}
+              >
+                {lng.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 const Navbar = ({ loggedIn, isAdmin, setLoggedIn, setIsAdmin }) => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { mobileOpen, setMobileOpen } = useAdminMenu();
@@ -60,23 +125,27 @@ const Navbar = ({ loggedIn, isAdmin, setLoggedIn, setIsAdmin }) => {
           <ThornCrownLogo />
         </Link>
 
-        <button
-          className="menu-toggle"
-          onClick={handleToggle}
-          aria-label="Toggle Menu"
-        >
-          {menuIsOpen ? <FaTimes /> : <FaBars />}
-        </button>
+        <div className="navbar-right">
+          <LanguageDropdown />
+
+          <button
+            className="menu-toggle"
+            onClick={handleToggle}
+            aria-label={t("navbar.toggleMenuAriaLabel")}
+          >
+            {menuIsOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
 
         {!onAdminRoute && (
           <div className={`nav-content ${isMenuOpen ? "active" : ""}`}>
             <div className="nav-links-row">
               <div className="nav-links-primary">
-                <Link to="/about" onClick={closeMenu}>Help</Link>
-                <Link to="/about" onClick={closeMenu}>Policy</Link>
+                <Link to="/about" onClick={closeMenu}>{t("navbar.help")}</Link>
+                <Link to="/about" onClick={closeMenu}>{t("navbar.policy")}</Link>
 
                 {loggedIn && isAdmin && (
-                  <Link to="/admin/dashboard" onClick={closeMenu}>Admin Dashboard</Link>
+                  <Link to="/admin/dashboard" onClick={closeMenu}>{t("navbar.adminDashboard")}</Link>
                 )}
               </div>
             </div>

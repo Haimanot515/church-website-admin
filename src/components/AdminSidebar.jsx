@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Home,
   Users,
@@ -23,135 +24,135 @@ import "./AdminSidebar.css";
 
 const NAVBAR_HEIGHT = 78; // keep in sync with .navbar's rendered height
 
-const SECTIONS = [
+const SECTION_DEFS = [
   {
     key: "homehero",
-    label: "Home Hero",
     icon: Home,
     links: [
-      { to: "/admin/hero/create", label: "Create Home Hero" },
-      { to: "/admin/hero/view", label: "View Home Hero" },
+      { to: "/admin/hero/create", labelKey: "create" },
+      { to: "/admin/hero/view", labelKey: "view" },
     ],
   },
   {
     key: "users",
-    label: "Users",
     icon: Users,
     links: [
-      { to: "/admin/users/view", label: "View Users" },
-      { to: "/admin/users/update", label: "Update Users" },
-      { to: "/admin/users/delete", label: "Delete Users" },
+      { to: "/admin/users/view", labelKey: "view" },
+      { to: "/admin/users/update", labelKey: "update" },
+      { to: "/admin/users/delete", labelKey: "delete" },
     ],
   },
   {
     key: "posts",
-    label: "Posts",
     icon: FileText,
     links: [
-      { to: "/admin/posts/create", label: "Create Post" },
-      { to: "/admin/posts/view", label: "View Posts" },
+      { to: "/admin/posts/create", labelKey: "create" },
+      { to: "/admin/posts/view", labelKey: "view" },
     ],
   },
   {
     key: "services",
-    label: "Services",
     icon: Wrench,
     links: [
-      { to: "/admin/services/create", label: "Create Service" },
-      { to: "/admin/services/view", label: "View Services" },
+      { to: "/admin/services/create", labelKey: "create" },
+      { to: "/admin/services/view", labelKey: "view" },
     ],
   },
   {
     key: "media",
-    label: "Media",
     icon: Image,
     links: [
-      { to: "/admin/media/create", label: "Create Media" },
-      { to: "/admin/media/view", label: "View Media" },
+      { to: "/admin/media/create", labelKey: "create" },
+      { to: "/admin/media/view", labelKey: "view" },
     ],
   },
   {
     key: "categories",
-    label: "Categories",
     icon: Tags,
     links: [
-      { to: "/admin/categories/create", label: "Create Category" },
-      { to: "/admin/categories/view", label: "View Categories" },
+      { to: "/admin/categories/create", labelKey: "create" },
+      { to: "/admin/categories/view", labelKey: "view" },
     ],
   },
   {
     key: "languages",
-    label: "Languages",
     icon: LanguagesIcon,
     links: [
-      { to: "/admin/languages/create", label: "Create Language" },
-      { to: "/admin/languages/view", label: "View Languages" },
+      { to: "/admin/languages/create", labelKey: "create" },
+      { to: "/admin/languages/view", labelKey: "view" },
     ],
   },
   {
     key: "churches",
-    label: "Churches",
     icon: Church,
     links: [
-      { to: "/admin/churches/create", label: "Create Church" },
-      { to: "/admin/churches/view", label: "View Churches" },
-      { to: "/admin/churches/update", label: "Update Churches" },
-      { to: "/admin/churches/delete", label: "Delete Churches" },
-      { to: "/admin/churches/assign", label: "Assign Church" },
-      { to: "/admin/church-persons/create", label: "Create Person" },
-      { to: "/admin/church-persons/view", label: "View Persons" },
-      { to: "/admin/church-persons/update", label: "Update Persons" },
-      { to: "/admin/church-persons/reorder", label: "Reorder Persons" },
-      { to: "/admin/church-persons/delete", label: "Delete Persons" },
-      { to: "/admin/church-story/create", label: "Create Chapter" },
-      { to: "/admin/church-story/view", label: "View Chapters" },
-      { to: "/admin/church-story/update", label: "Update Chapters" },
-      { to: "/admin/church-story/delete", label: "Delete Chapters" },
+      { to: "/admin/churches/create", labelKey: "create" },
+      { to: "/admin/churches/view", labelKey: "view" },
+      { to: "/admin/churches/update", labelKey: "update" },
+      { to: "/admin/churches/delete", labelKey: "delete" },
+      { to: "/admin/churches/assign", labelKey: "assign" },
+      { to: "/admin/church-persons/create", labelKey: "personCreate" },
+      { to: "/admin/church-persons/view", labelKey: "personView" },
+      { to: "/admin/church-persons/update", labelKey: "personUpdate" },
+      { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
+      { to: "/admin/church-persons/delete", labelKey: "personDelete" },
+      { to: "/admin/church-story/create", labelKey: "chapterCreate" },
+      { to: "/admin/church-story/view", labelKey: "chapterView" },
+      { to: "/admin/church-story/update", labelKey: "chapterUpdate" },
+      { to: "/admin/church-story/delete", labelKey: "chapterDelete" },
     ],
   },
   {
     key: "contacts",
-    label: "Contacts",
     icon: MessageSquare,
     links: [
-      { to: "/admin/contacts/view", label: "View Messages" },
-      { to: "/admin/contacts/reply", label: "Reply Messages" },
-      { to: "/admin/contacts/delete", label: "Delete Messages" },
+      { to: "/admin/contacts/view", labelKey: "view" },
+      { to: "/admin/contacts/reply", labelKey: "reply" },
+      { to: "/admin/contacts/delete", labelKey: "delete" },
     ],
   },
   {
     key: "promotions",
-    label: "Promotions",
     icon: Megaphone,
     links: [
-      { to: "/admin/promotions/create", label: "Create Promotion" },
-      { to: "/admin/promotions/view", label: "View Promotions" },
+      { to: "/admin/promotions/create", labelKey: "create" },
+      { to: "/admin/promotions/view", labelKey: "view" },
     ],
   },
   {
     key: "subscribers",
-    label: "Subscribers",
     icon: Mail,
     links: [
-      { to: "/admin/subscribers/create", label: "Add Subscriber" },
-      { to: "/admin/subscribers/view", label: "View Subscribers" },
+      { to: "/admin/subscribers/create", labelKey: "create" },
+      { to: "/admin/subscribers/view", labelKey: "view" },
     ],
   },
   {
     key: "about",
-    label: "About",
     icon: Info,
     links: [
-      { to: "/admin/about/create", label: "Create About" },
-      { to: "/admin/about/view", label: "View About" },
+      { to: "/admin/about/create", labelKey: "create" },
+      { to: "/admin/about/view", labelKey: "view" },
     ],
   },
 ];
 
 const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { mobileOpen, setMobileOpen } = useAdminMenu();
+
+  // Build the translated sections from the static structure + i18n labels
+  const SECTIONS = SECTION_DEFS.map((section) => ({
+    key: section.key,
+    icon: section.icon,
+    label: t(`adminSidebar.sections.${section.key}.label`),
+    links: section.links.map((link) => ({
+      to: link.to,
+      label: t(`adminSidebar.sections.${section.key}.links.${link.labelKey}`),
+    })),
+  }));
 
   // "main" = section list (mobile step 1), "sub" = links for chosen section (mobile step 2)
   // Only affects mobile layout — desktop always shows both panels regardless.
@@ -205,11 +206,11 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
 
               <button
                 onClick={goToDashboard}
-                title="Dashboard"
+                title={t("adminSidebar.dashboard")}
                 className={`admin-icon-btn${onDashboard ? " active" : ""}`}
               >
                 <LayoutDashboard size={19} />
-                <span>Dashboard</span>
+                <span>{t("adminSidebar.dashboard")}</span>
               </button>
 
               <div className="admin-rail-divider" />
@@ -230,9 +231,9 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
               })}
             </div>
 
-            <button onClick={handleLogout} title="Logout" className="admin-logout-btn">
+            <button onClick={handleLogout} title={t("adminSidebar.logout")} className="admin-logout-btn">
               <LogOut size={19} />
-              <span>Logout</span>
+              <span>{t("adminSidebar.logout")}</span>
             </button>
           </div>
 
@@ -241,7 +242,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
               <button
                 className="admin-back-btn"
                 onClick={() => setMobileView("main")}
-                aria-label="Back to menu"
+                aria-label={t("adminSidebar.dashboard")}
               >
                 <ArrowLeft size={18} />
               </button>
@@ -267,7 +268,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
             <div className="admin-label-footer">
               <button onClick={handleLogout} className="admin-label-logout">
                 <LogOut size={16} />
-                Logout
+                {t("adminSidebar.logout")}
               </button>
             </div>
           </div>

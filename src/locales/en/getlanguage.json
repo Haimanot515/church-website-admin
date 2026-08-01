@@ -1,0 +1,31 @@
+{
+  "heading": "All Languages",
+  "newLanguage": "+ New Language",
+  "loadingLanguages": "Loading languages...",
+  "noLanguages": "No languages found.",
+  "editHeading": "Edit Language",
+  "form": {
+    "namePlaceholder": "Language Name",
+    "codePlaceholder": "Language Code (EN, AM, IT)",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "table": {
+    "name": "Name",
+    "code": "Code",
+    "actions": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "confirmDelete": "Delete \"{{name}}\" ({{code}})? This action cannot be undone.",
+  "updateSuccess": "Language updated successfully",
+  "errors": {
+    "loadLanguages": "Failed to load languages",
+    "update": "Failed to update language",
+    "delete": "Failed to delete language"
+  }
+}

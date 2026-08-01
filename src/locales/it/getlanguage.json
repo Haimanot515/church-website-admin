@@ -1,0 +1,31 @@
+{
+  "heading": "Tutte le Lingue",
+  "newLanguage": "+ Nuova Lingua",
+  "loadingLanguages": "Caricamento lingue...",
+  "noLanguages": "Nessuna lingua trovata.",
+  "editHeading": "Modifica Lingua",
+  "form": {
+    "namePlaceholder": "Nome Lingua",
+    "codePlaceholder": "Codice Lingua (EN, AM, IT)",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "cancel": "Annulla"
+  },
+  "table": {
+    "name": "Nome",
+    "code": "Codice",
+    "actions": "Azioni"
+  },
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "confirmDelete": "Eliminare \"{{name}}\" ({{code}})? Questa azione non può essere annullata.",
+  "updateSuccess": "Lingua aggiornata con successo",
+  "errors": {
+    "loadLanguages": "Impossibile caricare le lingue",
+    "update": "Impossibile aggiornare la lingua",
+    "delete": "Impossibile eliminare la lingua"
+  }
+}

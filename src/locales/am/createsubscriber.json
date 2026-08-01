@@ -1,0 +1,12 @@
+{
+  "heading": "ተመዝጋቢ ጨምር",
+  "form": {
+    "emailPlaceholder": "subscriber@example.com",
+    "adding": "በመጨመር ላይ...",
+    "addButton": "ተመዝጋቢ ጨምር"
+  },
+  "successMessage": "በተሳካ ሁኔታ ተመዝግቧል",
+  "errors": {
+    "create": "ተመዝጋቢ መጨመር አልተሳካም"
+  }
+}

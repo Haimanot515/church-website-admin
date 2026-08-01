@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from "react";
 import { useLocation, Routes, Route, Navigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { AdminMenuProvider } from "./components/AdminMenuContext";
@@ -91,6 +93,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { pathname } = useLocation();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -126,7 +129,15 @@ function App() {
         />
       )}
 
-      <Routes>
+      {/*
+        key={i18n.language} forces React to unmount/remount the entire
+        active route subtree whenever the language changes. Every
+        useEffect(() => { fetchX() }, []) inside whatever page is
+        currently mounted re-runs as if freshly loaded — no full
+        browser reload, no manual [i18n.language] dependency needed
+        in every single component.
+      */}
+      <Routes key={i18n.language}>
         <Route
           path="/"
           element={

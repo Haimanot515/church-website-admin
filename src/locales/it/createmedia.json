@@ -1,0 +1,24 @@
+{
+  "heading": "Crea Media",
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "titlePlaceholder": "Titolo del media",
+    "descriptionPlaceholder": "Descrizione del media",
+    "typePhoto": "Foto",
+    "typeVideo": "Video",
+    "typeAudio": "Audio",
+    "typeDocument": "Libro / PDF",
+    "loadingCategories": "Caricamento categorie...",
+    "selectCategory": "Seleziona Categoria",
+    "saveDraft": "Salva come Bozza",
+    "publish": "Pubblica",
+    "uploading": "Caricamento...",
+    "upload": "Carica Media"
+  },
+  "uploadSuccess": "Media caricato con successo",
+  "errors": {
+    "selectLanguage": "Seleziona una lingua",
+    "loadCategories": "Impossibile caricare le categorie",
+    "upload": "Impossibile caricare il media"
+  }
+}

@@ -1,0 +1,301 @@
+/* ===== Page shell ===== */
+.gc-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.gc-card {
+  max-width: 900px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gc-header h2 {
+  margin: 0;
+}
+
+.gc-error {
+  color: red;
+}
+
+.gc-btn-new {
+  padding: 10px 18px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ===== Language filter (kept as a plain control, not a card, at every size) ===== */
+.gc-filter-row {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gc-filter-label {
+  font-size: 14px;
+  color: #555;
+}
+
+.gc-filter-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== Edit panel ===== */
+.gc-edit-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background: #f8fafc;
+  scroll-margin-top: 20px;
+}
+
+.gc-edit-panel h3 {
+  margin-top: 0;
+}
+
+.gc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gc-form input[type="text"],
+.gc-form select,
+.gc-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.gc-form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gc-btn-primary {
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gc-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gc-btn-cancel {
+  padding: 14px;
+  background: #e5e7eb;
+  color: #334155;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gc-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Table ===== */
+.gc-table-wrap {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.gc-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.gc-table th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  font-size: 13px;
+  color: #555;
+}
+
+.gc-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.gc-row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.gc-btn-edit {
+  padding: 6px 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.gc-btn-delete {
+  padding: 6px 12px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.gc-btn-delete:disabled,
+.gc-btn-edit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .gc-page {
+    padding: 20px;
+  }
+
+  .gc-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .gc-page {
+    padding: 12px;
+  }
+
+  .gc-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .gc-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gc-btn-new {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gc-btn-primary,
+  .gc-btn-cancel {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .gc-form-actions {
+    flex-direction: column;
+  }
+
+  /* Card-style table on small screens instead of horizontal scroll.
+     The language filter select above is NOT part of the table, so it
+     is left untouched and keeps its normal dropdown layout. */
+  .gc-table thead {
+    display: none;
+  }
+
+  .gc-table,
+  .gc-table tbody,
+  .gc-table tr,
+  .gc-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .gc-table tr {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+
+  .gc-table td {
+    border-bottom: none;
+    padding: 6px 4px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .gc-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    flex-shrink: 0;
+  }
+
+  .gc-row-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .gc-page {
+    padding: 8px;
+  }
+
+  .gc-card {
+    padding: 12px;
+  }
+
+  .gc-filter-select {
+    flex: 1;
+  }
+}

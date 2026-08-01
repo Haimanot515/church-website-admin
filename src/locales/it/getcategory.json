@@ -1,0 +1,35 @@
+{
+  "heading": "Tutte le Categorie",
+  "newCategory": "+ Nuova Categoria",
+  "viewingLanguage": "Visualizzazione categorie in:",
+  "loadingCategories": "Caricamento categorie...",
+  "noCategories": "Nessuna categoria trovata per questa lingua.",
+  "editHeading": "Modifica Categoria",
+  "form": {
+    "namePlaceholder": "Nome Categoria",
+    "descriptionPlaceholder": "Descrizione Categoria",
+    "selectLanguage": "Seleziona una lingua",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "cancel": "Annulla"
+  },
+  "table": {
+    "name": "Nome",
+    "description": "Descrizione",
+    "language": "Lingua",
+    "actions": "Azioni"
+  },
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "confirmDelete": "Eliminare \"{{name}}\"? Questa azione non può essere annullata.",
+  "updateSuccess": "Categoria aggiornata con successo",
+  "errors": {
+    "loadLanguages": "Impossibile caricare le lingue",
+    "loadCategories": "Impossibile caricare le categorie",
+    "update": "Impossibile aggiornare la categoria",
+    "delete": "Impossibile eliminare la categoria"
+  }
+}

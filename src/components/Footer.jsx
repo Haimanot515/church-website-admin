@@ -1,11 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "./Footer.css";
-
-const footerColumns = [
-  { title: "Visit", items: ["Service Times", "Directions", "What to Expect"] },
-  { title: "Get Involved", items: ["Ministries", "Volunteer", "Give", "Missions"] },
-  { title: "Connect", items: ["Facebook", "Instagram", "YouTube"] }
-];
 
 const Cross = ({ width = 18, height = 26, opacity = 1 }) => {
   const barW = Math.round(width * 0.22);
@@ -26,13 +21,13 @@ const CrossRail = ({ width = 22, height = 32 }) => (
   </div>
 );
 
-const BackToTop = () => {
+const BackToTop = ({ label }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <button className="back-to-top" onClick={scrollToTop} aria-label="Back to top">
+    <button className="back-to-top" onClick={scrollToTop} aria-label={label}>
       <span className="back-to-top-line" />
       <span className="back-to-top-arrow">↑</span>
       <span className="back-to-top-line" />
@@ -41,6 +36,9 @@ const BackToTop = () => {
 };
 
 const Footer = () => {
+  const { t } = useTranslation();
+  const footerColumns = t("footer.columns", { returnObjects: true });
+
   return (
     <footer className="site-footer">
       <div className="footer-cross-rail footer-cross-rail-left">
@@ -53,8 +51,8 @@ const Footer = () => {
       <div className="wrapper">
         <div className="footer-grid">
           <div>
-            <h4 className="display footer-brand">Ethiopian Orthodox Church</h4>
-            <p className="footer-tagline">Sunday services at 9:00 & 11:00 AM. All are welcome, always.</p>
+            <h4 className="display footer-brand">{t("footer.brand")}</h4>
+            <p className="footer-tagline">{t("footer.tagline")}</p>
           </div>
           {footerColumns.map((col, i) => (
             <div key={i}>
@@ -97,11 +95,11 @@ const Footer = () => {
           />
         </div>
 
-        <BackToTop />
+        <BackToTop label={t("footer.backToTop")} />
 
         <div className="footer-bottom">
-          <p className="eyebrow footer-bottom-text">© 2026 Ethiopian Orthodox Church</p>
-          <p className="eyebrow footer-bottom-text">Privacy Policy</p>
+          <p className="eyebrow footer-bottom-text">{t("footer.copyright")}</p>
+          <p className="eyebrow footer-bottom-text">{t("footer.privacyPolicy")}</p>
         </div>
       </div>
     </footer>

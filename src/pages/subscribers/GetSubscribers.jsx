@@ -1,196 +1,106 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-
+import "./GetSubscribers.css";
 
 const GetSubscribers = () => {
+  const { t, i18n } = useTranslation();
 
   const [subscribers, setSubscribers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [removingEmail, setRemovingEmail] = useState(null);
 
-
   const fetchSubscribers = async () => {
-
     try {
-
       setLoading(true);
 
       const token = localStorage.getItem("token");
 
       // Matches GET /api/subscribers -> getAllSubscribers
       const res = await API.get("/subscribers", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       setSubscribers(res.data);
-
     } catch (err) {
-
       console.log(err);
-
-      setError(
-        err.response?.data?.msg ||
-        "Failed to load subscribers"
-      );
-
+      setError(err.response?.data?.msg || t("getSubscribers.errors.load"));
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
 
   useEffect(() => {
     fetchSubscribers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const handleUnsubscribe = async (id, email) => {
-
-    const confirmed = window.confirm(
-      `Unsubscribe "${email}"? This cannot be undone.`
-    );
-
+    const confirmed = window.confirm(t("getSubscribers.confirmUnsubscribe", { email }));
     if (!confirmed) return;
 
     try {
-
       setRemovingEmail(email);
 
       // Matches GET /api/subscribers/unsubscribe -> unsubscribe
       await API.get("/subscribers/unsubscribe", {
-        params: { email }
+        params: { email },
       });
 
-      setSubscribers((prev) =>
-        prev.filter((s) => s._id !== id)
-      );
-
+      setSubscribers((prev) => prev.filter((s) => s._id !== id));
     } catch (err) {
-
       console.log(err);
-
-      alert(
-        err.response?.data?.msg ||
-        "Failed to unsubscribe"
-      );
-
+      alert(err.response?.data?.msg || t("getSubscribers.errors.unsubscribe"));
     } finally {
-
       setRemovingEmail(null);
-
     }
-
   };
 
-
-  if (loading) return <p style={{ padding: "30px" }}>Loading subscribers...</p>;
-
+  if (loading) return <p className="gs-loading">{t("getSubscribers.loadingSubscribers")}</p>;
 
   return (
+    <div className="gs-page">
+      <div className="gs-card">
+        <div className="gs-header">
+          <h2>{t("getSubscribers.heading")}</h2>
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        padding: "30px"
-      }}
-    >
-
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)"
-        }}
-      >
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px"
-          }}
-        >
-
-          <h2 style={{ margin: 0 }}>Subscribers</h2>
-
-          <span style={{ color: "#64748b", fontSize: "14px" }}>
-            {subscribers.length} active
+          <span className="gs-count">
+            {t("getSubscribers.activeCount", { count: subscribers.length })}
           </span>
-
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="gs-error">{error}</p>}
 
-        {subscribers.length === 0 && !error && <p>No subscribers yet.</p>}
+        {subscribers.length === 0 && !error && <p>{t("getSubscribers.noSubscribers")}</p>}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-
+        <div className="gs-list">
           {subscribers.map((s) => (
-
-            <div
-              key={s._id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                border: "1px solid #e2e8f0",
-                borderRadius: "10px",
-                padding: "14px 16px"
-              }}
-            >
-
-              <div>
-
+            <div key={s._id} className="gs-row">
+              <div className="gs-row-text">
                 <strong>{s.email}</strong>
-
-                <div
-                  style={{
-                    color: "#64748b",
-                    fontSize: "13px"
-                  }}
-                >
-                  Subscribed {new Date(s.subscribedAt).toLocaleDateString()}
+                <div className="gs-subscribed-date">
+                  {t("getSubscribers.subscribedOn", {
+                    date: new Date(s.subscribedAt).toLocaleDateString(i18n.language),
+                  })}
                 </div>
-
               </div>
 
               <button
+                className="gs-btn-unsubscribe"
                 onClick={() => handleUnsubscribe(s._id, s.email)}
                 disabled={removingEmail === s.email}
-                style={{
-                  padding: "8px 14px",
-                  background: "#fee2e2",
-                  color: "#b91c1c",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: "pointer"
-                }}
               >
-                {removingEmail === s.email ? "Removing..." : "Unsubscribe"}
+                {removingEmail === s.email
+                  ? t("getSubscribers.actions.removing")
+                  : t("getSubscribers.actions.unsubscribe")}
               </button>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
-
 
 export default GetSubscribers;

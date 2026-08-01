@@ -1,0 +1,24 @@
+{
+  "heading": "Create Media",
+  "form": {
+    "selectLanguage": "Select language",
+    "titlePlaceholder": "Media title",
+    "descriptionPlaceholder": "Media description",
+    "typePhoto": "Photo",
+    "typeVideo": "Video",
+    "typeAudio": "Audio",
+    "typeDocument": "Book / PDF",
+    "loadingCategories": "Loading categories...",
+    "selectCategory": "Select Category",
+    "saveDraft": "Save as Draft",
+    "publish": "Publish",
+    "uploading": "Uploading...",
+    "upload": "Upload Media"
+  },
+  "uploadSuccess": "Media uploaded successfully",
+  "errors": {
+    "selectLanguage": "Please select a language",
+    "loadCategories": "Failed to load categories",
+    "upload": "Failed to upload media"
+  }
+}

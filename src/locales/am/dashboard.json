@@ -1,0 +1,88 @@
+{
+  "greeting": {
+    "morning": "እንደምን አደሩ",
+    "afternoon": "እንደምን ዋሉ",
+    "evening": "እንደምን ከሰኑ",
+    "night": "መልካም ሌሊት"
+  },
+  "subtitle": "ይህ ከውሂብ ጎታው በቀጥታ የተወሰደ የድረ-ገጽዎ ይዘት ቅጽበታዊ እይታ ነው።",
+
+  "contentLibrary": {
+    "heading": "የይዘት ቤተ-መጽሐፍት",
+    "subheading": "ከውሂብ ጎታው በቀጥታ የተገኙ ቁጥሮች",
+    "failedToLoad": "መጫን አልተሳካም",
+    "totalPrefix": "ጠቅላላ"
+  },
+
+  "content": {
+    "posts": "ልጥፎች",
+    "media": "ሚዲያ",
+    "categories": "ምድቦች",
+    "languages": "ቋንቋዎች",
+    "churches": "አብያተ ክርስቲያናት",
+    "churchPersons": "የቤተክርስቲያን አገልጋዮች",
+    "churchStory": "የቤተክርስቲያን ታሪክ ምዕራፎች",
+    "services": "አገልግሎቶች",
+    "promotions": "ማስተዋወቂያዎች",
+    "subscribers": "ተመዝጋቢዎች",
+    "users": "ተጠቃሚዎች"
+  },
+
+  "recentPosts": {
+    "heading": "የቅርብ ጊዜ ልጥፎች",
+    "showing": "ከ{{total}} ውስጥ {{shown}} እየታየ ነው",
+    "viewAll": "ሁሉንም ይመልከቱ",
+    "loading": "በመጫን ላይ...",
+    "failedToLoad": "ልጥፎችን መጫን አልተሳካም።",
+    "none": "እስካሁን ልጥፎች የሉም።",
+    "uncategorized": "ምድብ አልተሰጠውም"
+  },
+
+  "quickActions": {
+    "heading": "ፈጣን ተግባራት",
+    "createPost": "ልጥፍ ፍጠር",
+    "createPromotion": "ማስተዋወቂያ ፍጠር",
+    "addSubscriber": "ተመዝጋቢ ጨምር",
+    "replyToMessages": "መልዕክቶችን መልስ",
+    "createChurchStoryChapter": "የቤተክርስቲያን ታሪክ ምዕራፍ ፍጠር",
+    "createMedia": "ሚዲያ ፍጠር"
+  },
+
+  "recentPromotions": {
+    "heading": "የቅርብ ጊዜ ማስተዋወቂያዎች",
+    "showing": "ከ{{total}} ውስጥ {{shown}} እየታየ ነው",
+    "viewAll": "ሁሉንም ይመልከቱ",
+    "loading": "በመጫን ላይ...",
+    "failedToLoad": "ማስተዋወቂያዎችን መጫን አልተሳካም።",
+    "none": "እስካሁን ማስተዋወቂያዎች የሉም።"
+  },
+
+  "recentMedia": {
+    "heading": "የቅርብ ጊዜ ሚዲያ",
+    "showing": "ከ{{total}} ውስጥ {{shown}} እየታየ ነው",
+    "viewAll": "ሁሉንም ይመልከቱ",
+    "loading": "በመጫን ላይ...",
+    "failedToLoad": "ሚዲያ መጫን አልተሳካም።",
+    "none": "እስካሁን ሚዲያ የለም።",
+    "uncategorized": "ምድብ አልተሰጠውም"
+  },
+
+  "messages": {
+    "heading": "ምላሽ የሚጠብቁ መልዕክቶች",
+    "showingRecent": "የቅርብ ጊዜ {{count}} እየታየ ነው",
+    "viewAll": "ሁሉንም ይመልከቱ",
+    "loading": "በመጫን ላይ...",
+    "failedToLoad": "መልዕክቶችን መጫን አልተሳካም።",
+    "none": "እስካሁን መልዕክቶች የሉም።",
+    "unread": "{{count}} ያልተነበቡ"
+  },
+
+  "recentSubscribers": {
+    "heading": "የቅርብ ጊዜ ተመዝጋቢዎች",
+    "showing": "ከ{{total}} ውስጥ {{shown}} እየታየ ነው",
+    "viewAll": "ሁሉንም ይመልከቱ",
+    "loading": "በመጫን ላይ...",
+    "failedToLoad": "ተመዝጋቢዎችን መጫን አልተሳካም።",
+    "none": "እስካሁን ተመዝጋቢዎች የሉም።"
+  }
+}

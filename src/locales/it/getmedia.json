@@ -1,0 +1,51 @@
+{
+  "heading": "Tutti i Media",
+  "newMedia": "+ Nuovo Media",
+  "loadingMedia": "Caricamento media...",
+  "noMedia": "Nessun media trovato.",
+  "editHeading": "Modifica Media",
+  "form": {
+    "titlePlaceholder": "Titolo del media",
+    "descriptionPlaceholder": "Descrizione del media",
+    "typePhoto": "Foto",
+    "typeVideo": "Video",
+    "typeAudio": "Audio",
+    "typeDocument": "Libro / PDF",
+    "loadingCategories": "Caricamento categorie...",
+    "selectCategory": "Seleziona Categoria",
+    "saveDraft": "Salva come Bozza",
+    "publish": "Pubblica",
+    "keepFileHint": "Lascia vuoto per mantenere il file attuale.",
+    "viewCurrentFile": "Visualizza file attuale",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "cancel": "Annulla"
+  },
+  "table": {
+    "file": "File",
+    "title": "Titolo",
+    "type": "Tipo",
+    "category": "Categoria",
+    "status": "Stato",
+    "created": "Creato",
+    "actions": "Azioni"
+  },
+  "status": {
+    "draft": "bozza",
+    "published": "pubblicato"
+  },
+  "viewFile": "Visualizza file",
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "confirmDelete": "Eliminare \"{{title}}\"? Questa azione non può essere annullata.",
+  "updateSuccess": "Media aggiornato con successo",
+  "errors": {
+    "loadMedia": "Impossibile caricare i media",
+    "loadCategories": "Impossibile caricare le categorie",
+    "update": "Impossibile aggiornare il media",
+    "delete": "Impossibile eliminare il media"
+  }
+}

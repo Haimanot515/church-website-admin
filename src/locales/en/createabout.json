@@ -1,0 +1,17 @@
+{
+  "heading": "Create About",
+  "form": {
+    "selectLanguage": "Select language",
+    "titlePlaceholder": "Title",
+    "churchLeaderPlaceholder": "Church Leader",
+    "descriptionPlaceholder": "Description",
+    "creating": "Creating...",
+    "createButton": "Create About"
+  },
+  "previewAlt": "preview",
+  "successMessage": "About entry created successfully",
+  "errors": {
+    "languageRequired": "Please select a language",
+    "create": "Failed to create About entry"
+  }
+}

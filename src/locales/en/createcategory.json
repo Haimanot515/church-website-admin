@@ -1,0 +1,35 @@
+{
+  "heading": "Create Category",
+  "form": {
+    "namePlaceholder": "Category Name",
+    "descriptionPlaceholder": "Category Description",
+    "selectLanguage": "Select a language",
+    "loadingLanguages": "Loading languages...",
+    "creating": "Creating...",
+    "createButton": "Create Category"
+  },
+  "examples": {
+    "heading": "Example Categories",
+    "table": {
+      "category": "Category",
+      "description": "Description"
+    },
+    "sermons": {
+      "name": "Sermons",
+      "description": "Weekly church sermons and teachings."
+    },
+    "events": {
+      "name": "Events",
+      "description": "Church events and upcoming programs."
+    },
+    "testimonies": {
+      "name": "Testimonies",
+      "description": "Inspiring testimonies from believers."
+    }
+  },
+  "successMessage": "Category created successfully",
+  "errors": {
+    "loadLanguages": "Failed to load languages",
+    "create": "Failed to create category"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "heading": "Create Church Service",
+  "form": {
+    "selectLanguage": "Select language",
+    "titlePlaceholder": "Service title",
+    "descriptionPlaceholder": "Service description",
+    "dayPlaceholder": "Example: Sundays & Feast Days",
+    "timePlaceholder": "Example: 6:00 - 9:00 AM",
+    "locationPlaceholder": "Location (e.g. Main Hall)",
+    "markFeatured": "Mark as Featured",
+    "creating": "Creating...",
+    "create": "Create Service"
+  },
+  "categories": {
+    "Worship": "Worship",
+    "Teaching": "Teaching",
+    "Prayer": "Prayer",
+    "Music": "Music",
+    "Youth": "Youth",
+    "Ministry": "Ministry",
+    "Outreach": "Outreach",
+    "Other": "Other"
+  },
+  "createSuccess": "Service created successfully",
+  "errors": {
+    "selectLanguage": "Please select a language",
+    "create": "Failed to create service"
+  }
+}

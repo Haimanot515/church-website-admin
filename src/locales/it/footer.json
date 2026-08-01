@@ -1,0 +1,12 @@
+{
+  "brand": "Chiesa Ortodossa Etiope",
+  "tagline": "Funzioni domenicali alle 9:00 e alle 11:00. Tutti sono sempre i benvenuti.",
+  "columns": [
+    { "title": "Visita", "items": ["Orari delle funzioni", "Indicazioni", "Cosa aspettarsi"] },
+    { "title": "Partecipa", "items": ["Ministeri", "Volontariato", "Dona", "Missioni"] },
+    { "title": "Connettiti", "items": ["Facebook", "Instagram", "YouTube"] }
+  ],
+  "backToTop": "Torna su",
+  "copyright": "© 2026 Chiesa Ortodossa Etiope",
+  "privacyPolicy": "Informativa sulla privacy"
+}

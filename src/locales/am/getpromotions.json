@@ -1,0 +1,16 @@
+{
+  "heading": "ማስተዋወቂያዎች",
+  "newPromotion": "+ አዲስ ማስተዋወቂያ",
+  "loadingPromotions": "ማስተዋወቂያዎችን በመጫን ላይ...",
+  "noPromotions": "እስካሁን ምንም ማስተዋወቂያ የለም።",
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "confirmDelete": "ማስተዋወቂያ \"{{title}}\" ይሰረዝ? ይህ መመለስ አይቻልም።",
+  "errors": {
+    "load": "ማስተዋወቂያዎችን መጫን አልተሳካም",
+    "delete": "ማስተዋወቂያውን መሰረዝ አልተሳካም"
+  }
+}

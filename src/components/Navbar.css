@@ -26,6 +26,16 @@
 }
 
 /* =========================
+   RIGHT-SIDE GROUP (language dropdown + hamburger)
+========================= */
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* =========================
    HAMBURGER BUTTON
 ========================= */
 
@@ -43,6 +53,70 @@
   .menu-toggle {
     display: none;
   }
+}
+
+/* =========================
+   LANGUAGE DROPDOWN
+========================= */
+
+.lang-dropdown {
+  position: relative;
+  z-index: 1002;
+}
+
+.lang-dropdown-toggle {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lang-dropdown-toggle:hover {
+  background: #fff;
+  color: #111;
+}
+
+.lang-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 140px;
+  background: #4d0000;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  padding: 6px;
+  list-style: none;
+  margin: 0;
+  z-index: 1003;
+}
+
+.lang-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+}
+
+.lang-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.lang-dropdown-item.active {
+  font-weight: 700;
+  color: #2e7d32;
 }
 
 /* =========================

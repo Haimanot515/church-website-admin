@@ -1,172 +1,67 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-
+import "./CreateSubscriber.css";
 
 const CreateSubscriber = () => {
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   const handleChange = (e) => {
-
     setEmail(e.target.value);
-
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     try {
-
       setLoading(true);
       setError("");
       setSuccess("");
 
       // Matches POST /api/subscribers -> subscribe
-      const res = await API.post(
-        "/subscribers",
-        { email }
-      );
+      const res = await API.post("/subscribers", { email });
 
-      setSuccess(
-        res.data?.msg ||
-        "Subscribed successfully"
-      );
-
+      setSuccess(res.data?.msg || t("createSubscriber.successMessage"));
       setEmail("");
-
     } catch (error) {
-
       console.log(error);
-
-      setError(
-        error.response?.data?.msg ||
-        "Failed to add subscriber"
-      );
-
+      setError(error.response?.data?.msg || t("createSubscriber.errors.create"));
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
-
   return (
+    <div className="cs-page">
+      <div className="cs-card">
+        <h2>{t("createSubscriber.heading")}</h2>
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        padding: "30px"
-      }}
-    >
+        {error && <p className="cs-error">{error}</p>}
 
-      <div
-        style={{
-          maxWidth: "650px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)"
-        }}
-      >
+        {success && <p className="cs-success">{success}</p>}
 
-        <h2>
-          Add Subscriber
-        </h2>
-
-        {
-          error &&
-
-          <p style={{ color: "red" }}>
-            {error}
-          </p>
-
-        }
-
-        {
-          success &&
-
-          <p style={{ color: "#16a34a" }}>
-            {success}
-          </p>
-
-        }
-
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px"
-          }}
-        >
-
+        <form onSubmit={handleSubmit} className="cs-form">
           <input
-
             type="email"
-
             name="email"
-
-            placeholder="subscriber@example.com"
-
+            placeholder={t("createSubscriber.form.emailPlaceholder")}
             value={email}
-
             onChange={handleChange}
-
             required
-
           />
 
-          <button
-
-            type="submit"
-
-            disabled={loading}
-
-            style={{
-
-              padding: "14px",
-
-              background: "#16a34a",
-
-              color: "#fff",
-
-              border: "none",
-
-              borderRadius: "10px",
-
-              cursor: "pointer"
-
-            }}
-
-          >
-
-            {
-              loading
-              ? "Adding..."
-              : "Add Subscriber"
-            }
-
+          <button type="submit" disabled={loading} className="cs-btn-primary">
+            {loading ? t("createSubscriber.form.adding") : t("createSubscriber.form.addButton")}
           </button>
-
         </form>
-
       </div>
-
     </div>
-
   );
-
 };
-
 
 export default CreateSubscriber;

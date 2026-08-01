@@ -1,0 +1,46 @@
+{
+  "pageTitle": "የመነሻ ገጽ ጀግና ግቤቶች",
+  "newButton": "+ አዲስ የመነሻ ገጽ ጀግና",
+  "loading": "የመነሻ ገጽ ጀግና ግቤቶችን በመጫን ላይ...",
+  "noEntries": "ምንም የመነሻ ገጽ ጀግና ግቤት አልተገኘም።",
+  "editTitle": "የመነሻ ገጽ ጀግናን አርትዕ",
+  "form": {
+    "titlePlaceholder": "የጀግና ርዕስ",
+    "subtitlePlaceholder": "የጀግና ንዑስ ርዕስ",
+    "descriptionPlaceholder": "ዋና መግለጫ",
+    "quotePlaceholder": "ጥቅስ",
+    "namePlaceholder": "ሙሉ ስም",
+    "rolePlaceholder": "የስራ ድርሻ",
+    "storyPlaceholder": "ለስለ ገጽ ዝርዝር ታሪክ...",
+    "heroImageLabel": "የጀግና መገለጫ ምስል",
+    "storyImageLabel": "የታሪክ/ስለ ምስል"
+  },
+  "buttons": {
+    "save": "ለውጦችን አስቀምጥ",
+    "saving": "በማስቀመጥ ላይ...",
+    "cancel": "ሰርዝ",
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "table": {
+    "title": "ርዕስ",
+    "name": "ስም",
+    "role": "ድርሻ",
+    "created": "የተፈጠረበት",
+    "actions": "እርምጃዎች",
+    "notAvailable": "—"
+  },
+  "pagination": {
+    "prev": "ቀዳሚ",
+    "next": "ቀጣይ",
+    "pageOf": "ገጽ {{current}} ከ {{total}}"
+  },
+  "messages": {
+    "confirmDelete": "ይህን የመነሻ ገጽ ጀግና ግቤት መሰረዝ ይፈልጋሉ?",
+    "updateSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተዘምኗል",
+    "updateError": "የመነሻ ገጽ ጀግናን ማዘመን አልተሳካም",
+    "deleteError": "የመነሻ ገጽ ጀግናን መሰረዝ አልተሳካም",
+    "loadError": "የመነሻ ገጽ ጀግና ግቤቶችን መጫን አልተሳካም"
+  }
+}

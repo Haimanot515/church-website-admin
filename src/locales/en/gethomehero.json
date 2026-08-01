@@ -1,0 +1,46 @@
+{
+  "pageTitle": "Home Hero Entries",
+  "newButton": "+ New Home Hero",
+  "loading": "Loading Home Hero entries...",
+  "noEntries": "No Home Hero entries found.",
+  "editTitle": "Edit Home Hero",
+  "form": {
+    "titlePlaceholder": "Hero title",
+    "subtitlePlaceholder": "Hero subtitle",
+    "descriptionPlaceholder": "Main description",
+    "quotePlaceholder": "Quote",
+    "namePlaceholder": "Full name",
+    "rolePlaceholder": "Job role",
+    "storyPlaceholder": "Detailed story for about section...",
+    "heroImageLabel": "Hero Profile Image",
+    "storyImageLabel": "Story/About Image"
+  },
+  "buttons": {
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "table": {
+    "title": "Title",
+    "name": "Name",
+    "role": "Role",
+    "created": "Created",
+    "actions": "Actions",
+    "notAvailable": "—"
+  },
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "pageOf": "Page {{current}} of {{total}}"
+  },
+  "messages": {
+    "confirmDelete": "Are you sure you want to delete this Home Hero entry?",
+    "updateSuccess": "Home hero updated successfully",
+    "updateError": "Failed to update Home Hero",
+    "deleteError": "Failed to delete Home Hero",
+    "loadError": "Failed to load Home Hero entries"
+  }
+}

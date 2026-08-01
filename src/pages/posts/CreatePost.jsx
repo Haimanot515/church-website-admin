@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreatePost.css";
 
 const CreatePost = () => {
+  const { t } = useTranslation();
+
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -34,12 +38,13 @@ const CreatePost = () => {
         setLanguages(Array.isArray(res.data) ? res.data : res.data.languages || []);
       } catch (err) {
         console.log(err);
-        setError("Failed to load languages");
+        setError(t("createPost.errors.loadLanguages"));
       } finally {
         setLanguagesLoading(false);
       }
     };
     fetchLanguages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Re-fetch categories whenever the selected language changes, scoped
@@ -64,13 +69,14 @@ const CreatePost = () => {
         setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
       } catch (err) {
         console.log(err);
-        setError("Failed to load categories for this language");
+        setError(t("createPost.errors.loadCategories"));
       } finally {
         setCategoriesLoading(false);
       }
     };
 
     fetchCategoriesForLanguage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post.language, languages]);
 
   const handleChange = (e) => {
@@ -128,7 +134,7 @@ const CreatePost = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Post created successfully");
+      alert(t("createPost.createSuccess"));
 
       setPost({
         title: "",
@@ -146,33 +152,24 @@ const CreatePost = () => {
       setPreview(null);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to create post");
+      setError(err.response?.data?.message || t("createPost.errors.create"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Create Post</h2>
+    <div className="cp-page">
+      <div className="cp-card">
+        <h2 className="cp-title">{t("createPost.heading")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="cp-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+        <form onSubmit={handleSubmit} className="cp-form">
           <input
             type="text"
             name="title"
-            placeholder="Post title"
+            placeholder={t("createPost.form.titlePlaceholder")}
             value={post.title}
             onChange={handleChange}
             required
@@ -180,7 +177,7 @@ const CreatePost = () => {
 
           <textarea
             name="description"
-            placeholder="Post description"
+            placeholder={t("createPost.form.descriptionPlaceholder")}
             value={post.description}
             onChange={handleChange}
             rows="3"
@@ -189,14 +186,14 @@ const CreatePost = () => {
 
           <textarea
             name="content"
-            placeholder="Post content"
+            placeholder={t("createPost.form.contentPlaceholder")}
             value={post.content}
             onChange={handleChange}
             rows="8"
             required
           />
 
-          {/* Language now comes BEFORE category, since category options
+          {/* Language comes BEFORE category, since category options
               depend on which language is selected */}
           <select
             name="language"
@@ -206,7 +203,7 @@ const CreatePost = () => {
             disabled={languagesLoading}
           >
             <option value="">
-              {languagesLoading ? "Loading languages..." : "Select Language"}
+              {languagesLoading ? t("createPost.form.loadingLanguages") : t("createPost.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
@@ -224,12 +221,12 @@ const CreatePost = () => {
           >
             <option value="">
               {!post.language
-                ? "Select a language first"
+                ? t("createPost.form.selectLanguageFirst")
                 : categoriesLoading
-                ? "Loading categories..."
+                ? t("createPost.form.loadingCategories")
                 : categories.length === 0
-                ? "No categories for this language"
-                : "Select Category"}
+                ? t("createPost.form.noCategoriesForLanguage")
+                : t("createPost.form.selectCategory")}
             </option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
@@ -240,47 +237,39 @@ const CreatePost = () => {
 
           <input type="file" accept="image/*" onChange={handleFileChange} />
 
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-            />
-          )}
+          {preview && <img src={preview} alt="preview" className="cp-file-preview" />}
 
           <select name="status" value={post.status} onChange={handleChange}>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="draft">{t("createPost.form.draft")}</option>
+            <option value="published">{t("createPost.form.published")}</option>
           </select>
 
-          <label>
+          <label className="cp-checkbox-label">
             <input type="checkbox" name="isTrending" checked={post.isTrending} onChange={handleChange} />
-            Trending
+            {t("createPost.form.trending")}
           </label>
 
-          <label>
+          <label className="cp-checkbox-label">
             <input type="checkbox" name="isFeatured" checked={post.isFeatured} onChange={handleChange} />
-            Featured
+            {t("createPost.form.featured")}
           </label>
 
-          <label>
-            <input type="checkbox" name="isRecommended" checked={post.isRecommended} onChange={handleChange} />
-            Recommended
+          <label className="cp-checkbox-label">
+            <input
+              type="checkbox"
+              name="isRecommended"
+              checked={post.isRecommended}
+              onChange={handleChange}
+            />
+            {t("createPost.form.recommended")}
           </label>
 
           <button
             type="submit"
             disabled={loading || !post.language || !post.category}
-            style={{
-              padding: "14px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
+            className="cp-btn-primary"
           >
-            {loading ? "Creating..." : "Create Post"}
+            {loading ? t("createPost.form.creating") : t("createPost.form.create")}
           </button>
         </form>
       </div>

@@ -1,0 +1,16 @@
+{
+  "heading": "Iscritti",
+  "activeCount": "{{count}} attivi",
+  "loadingSubscribers": "Caricamento iscritti...",
+  "noSubscribers": "Nessun iscritto ancora.",
+  "subscribedOn": "Iscritto il {{date}}",
+  "actions": {
+    "unsubscribe": "Annulla iscrizione",
+    "removing": "Rimozione..."
+  },
+  "confirmUnsubscribe": "Annullare l'iscrizione di \"{{email}}\"? Non può essere annullato.",
+  "errors": {
+    "load": "Impossibile caricare gli iscritti",
+    "unsubscribe": "Impossibile annullare l'iscrizione"
+  }
+}

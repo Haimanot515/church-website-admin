@@ -1,245 +1,115 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-
+import "./GetPromotions.css";
 
 const GetPromotions = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [promotions, setPromotions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
-  const navigate = useNavigate();
-
-
   const fetchPromotions = async () => {
-
     try {
-
       setLoading(true);
 
       // Matches GET /api/promotions -> getPromotion
       const res = await API.get("/promotions");
 
       setPromotions(res.data);
-
     } catch (err) {
-
       console.log(err);
-
-      setError(
-        err.response?.data?.message ||
-        "Failed to load promotions"
-      );
-
+      setError(err.response?.data?.message || t("getPromotions.errors.load"));
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
 
   useEffect(() => {
     fetchPromotions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   const handleDelete = async (id, title) => {
-
-    const confirmed = window.confirm(
-      `Delete promotion "${title}"? This cannot be undone.`
-    );
-
+    const confirmed = window.confirm(t("getPromotions.confirmDelete", { title }));
     if (!confirmed) return;
 
     try {
-
       setDeletingId(id);
 
       const token = localStorage.getItem("token");
 
       // Matches DELETE /api/promotions/:id -> deletePromotion
       await API.delete(`/promotions/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      setPromotions((prev) =>
-        prev.filter((p) => p._id !== id)
-      );
-
+      setPromotions((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
-
       console.log(err);
-
-      alert(
-        err.response?.data?.message ||
-        "Failed to delete promotion"
-      );
-
+      alert(err.response?.data?.message || t("getPromotions.errors.delete"));
     } finally {
-
       setDeletingId(null);
-
     }
-
   };
 
-
-  if (loading) return <p style={{ padding: "30px" }}>Loading promotions...</p>;
-
+  if (loading) return <p className="gp-loading">{t("getPromotions.loadingPromotions")}</p>;
 
   return (
+    <div className="gp-page">
+      <div className="gp-card">
+        <div className="gp-header">
+          <h2>{t("getPromotions.heading")}</h2>
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        padding: "30px"
-      }}
-    >
-
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)"
-        }}
-      >
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px"
-          }}
-        >
-
-          <h2 style={{ margin: 0 }}>Promotions</h2>
-
-          <button
-            onClick={() => navigate("/admin/promotions/new")}
-            style={{
-              padding: "10px 16px",
-              background: "#16a34a",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer"
-            }}
-          >
-            + New Promotion
+          <button className="gp-btn-new" onClick={() => navigate("/admin/promotions/new")}>
+            {t("getPromotions.newPromotion")}
           </button>
-
         </div>
 
+        {error && <p className="gp-error">{error}</p>}
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {promotions.length === 0 && !error && <p>{t("getPromotions.noPromotions")}</p>}
 
-        {promotions.length === 0 && !error && <p>No promotions yet.</p>}
-
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-
+        <div className="gp-list">
           {promotions.map((p) => (
+            <div key={p._id} className="gp-row">
+              <div className="gp-row-info">
+                {p.photo && <img src={p.photo} alt={p.title} className="gp-thumb" />}
 
-            <div
-              key={p._id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                border: "1px solid #e2e8f0",
-                borderRadius: "10px",
-                padding: "14px 16px"
-              }}
-            >
-
-              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-
-                {p.photo && (
-                  <img
-                    src={p.photo}
-                    alt={p.title}
-                    style={{
-                      width: "70px",
-                      height: "56px",
-                      objectFit: "cover",
-                      borderRadius: "8px"
-                    }}
-                  />
-                )}
-
-                <div>
+                <div className="gp-row-text">
                   <strong>{p.title}</strong>
-                  <div
-                    style={{
-                      color: "#64748b",
-                      fontSize: "13px",
-                      maxWidth: "480px",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {p.description}
-                  </div>
+                  <div className="gp-description">{p.description}</div>
                 </div>
-
               </div>
 
-
-              <div style={{ display: "flex", gap: "8px" }}>
-
+              <div className="gp-row-actions">
                 <button
+                  className="gp-btn-edit"
                   onClick={() => navigate(`/admin/promotions/${p._id}/edit`)}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#e2e8f0",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer"
-                  }}
                 >
-                  Edit
+                  {t("getPromotions.actions.edit")}
                 </button>
 
                 <button
+                  className="gp-btn-delete"
                   onClick={() => handleDelete(p._id, p.title)}
                   disabled={deletingId === p._id}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#fee2e2",
-                    color: "#b91c1c",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer"
-                  }}
                 >
-                  {deletingId === p._id ? "Deleting..." : "Delete"}
+                  {deletingId === p._id
+                    ? t("getPromotions.actions.deleting")
+                    : t("getPromotions.actions.delete")}
                 </button>
-
               </div>
-
             </div>
-
           ))}
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
-
 
 export default GetPromotions;

@@ -1,0 +1,23 @@
+{
+  "heading": "Crea Lingua",
+  "form": {
+    "namePlaceholder": "Nome Lingua",
+    "codePlaceholder": "Codice Lingua (EN, AM, IT)",
+    "creating": "Creazione...",
+    "createButton": "Crea Lingua"
+  },
+  "examples": {
+    "heading": "Lingue di Esempio",
+    "table": {
+      "name": "Nome",
+      "code": "Codice"
+    },
+    "english": "Inglese",
+    "amharic": "Amarico",
+    "italian": "Italiano"
+  },
+  "successMessage": "Lingua creata con successo",
+  "errors": {
+    "create": "Impossibile creare la lingua"
+  }
+}

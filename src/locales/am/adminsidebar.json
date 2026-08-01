@@ -1,0 +1,104 @@
+{
+  "dashboard": "ዳሽቦርድ",
+  "logout": "ውጣ",
+  "sections": {
+    "homehero": {
+      "label": "የመነሻ ገጽ",
+      "links": {
+        "create": "የመነሻ ገጽ ፍጠር",
+        "view": "የመነሻ ገጽ ይመልከቱ"
+      }
+    },
+    "users": {
+      "label": "ተጠቃሚዎች",
+      "links": {
+        "view": "ተጠቃሚዎችን ይመልከቱ",
+        "update": "ተጠቃሚዎችን አዘምን",
+        "delete": "ተጠቃሚዎችን ሰርዝ"
+      }
+    },
+    "posts": {
+      "label": "ልጥፎች",
+      "links": {
+        "create": "ልጥፍ ፍጠር",
+        "view": "ልጥፎችን ይመልከቱ"
+      }
+    },
+    "services": {
+      "label": "አገልግሎቶች",
+      "links": {
+        "create": "አገልግሎት ፍጠር",
+        "view": "አገልግሎቶችን ይመልከቱ"
+      }
+    },
+    "media": {
+      "label": "ሚዲያ",
+      "links": {
+        "create": "ሚዲያ ፍጠር",
+        "view": "ሚዲያ ይመልከቱ"
+      }
+    },
+    "categories": {
+      "label": "ምድቦች",
+      "links": {
+        "create": "ምድብ ፍጠር",
+        "view": "ምድቦችን ይመልከቱ"
+      }
+    },
+    "languages": {
+      "label": "ቋንቋዎች",
+      "links": {
+        "create": "ቋንቋ ፍጠር",
+        "view": "ቋንቋዎችን ይመልከቱ"
+      }
+    },
+    "churches": {
+      "label": "አብያተ ክርስቲያናት",
+      "links": {
+        "create": "ቤተክርስቲያን ፍጠር",
+        "view": "አብያተ ክርስቲያናትን ይመልከቱ",
+        "update": "አብያተ ክርስቲያናትን አዘምን",
+        "delete": "አብያተ ክርስቲያናትን ሰርዝ",
+        "assign": "ቤተክርስቲያን መድብ",
+        "personCreate": "ሰው ፍጠር",
+        "personView": "ሰዎችን ይመልከቱ",
+        "personUpdate": "ሰዎችን አዘምን",
+        "personReorder": "ሰዎችን አደራጅ",
+        "personDelete": "ሰዎችን ሰርዝ",
+        "chapterCreate": "ምዕራፍ ፍጠር",
+        "chapterView": "ምዕራፎችን ይመልከቱ",
+        "chapterUpdate": "ምዕራፎችን አዘምን",
+        "chapterDelete": "ምዕራፎችን ሰርዝ"
+      }
+    },
+    "contacts": {
+      "label": "አድራሻዎች",
+      "links": {
+        "view": "መልዕክቶችን ይመልከቱ",
+        "reply": "መልዕክቶችን መልስ",
+        "delete": "መልዕክቶችን ሰርዝ"
+      }
+    },
+    "promotions": {
+      "label": "ማስተዋወቂያዎች",
+      "links": {
+        "create": "ማስተዋወቂያ ፍጠር",
+        "view": "ማስተዋወቂያዎችን ይመልከቱ"
+      }
+    },
+    "subscribers": {
+      "label": "ተመዝጋቢዎች",
+      "links": {
+        "create": "ተመዝጋቢ ጨምር",
+        "view": "ተመዝጋቢዎችን ይመልከቱ"
+      }
+    },
+    "about": {
+      "label": "ስለ እኛ",
+      "links": {
+        "create": "ስለ እኛ ፍጠር",
+        "view": "ስለ እኛ ይመልከቱ"
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "pageTitle": "Voci Home Hero",
+  "newButton": "+ Nuovo Home Hero",
+  "loading": "Caricamento voci Home Hero...",
+  "noEntries": "Nessuna voce Home Hero trovata.",
+  "editTitle": "Modifica Home Hero",
+  "form": {
+    "titlePlaceholder": "Titolo hero",
+    "subtitlePlaceholder": "Sottotitolo hero",
+    "descriptionPlaceholder": "Descrizione principale",
+    "quotePlaceholder": "Citazione",
+    "namePlaceholder": "Nome completo",
+    "rolePlaceholder": "Ruolo lavorativo",
+    "storyPlaceholder": "Storia dettagliata per la sezione informazioni...",
+    "heroImageLabel": "Immagine profilo hero",
+    "storyImageLabel": "Immagine storia/informazioni"
+  },
+  "buttons": {
+    "save": "Salva modifiche",
+    "saving": "Salvataggio...",
+    "cancel": "Annulla",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "table": {
+    "title": "Titolo",
+    "name": "Nome",
+    "role": "Ruolo",
+    "created": "Creato",
+    "actions": "Azioni",
+    "notAvailable": "—"
+  },
+  "pagination": {
+    "prev": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {{current}} di {{total}}"
+  },
+  "messages": {
+    "confirmDelete": "Sei sicuro di voler eliminare questa voce Home Hero?",
+    "updateSuccess": "Home hero aggiornato con successo",
+    "updateError": "Impossibile aggiornare Home Hero",
+    "deleteError": "Impossibile eliminare Home Hero",
+    "loadError": "Impossibile caricare le voci Home Hero"
+  }
+}

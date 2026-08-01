@@ -1,0 +1,24 @@
+{
+  "heading": "ሚዲያ ፍጠር",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "የሚዲያ ርዕስ",
+    "descriptionPlaceholder": "የሚዲያ መግለጫ",
+    "typePhoto": "ፎቶ",
+    "typeVideo": "ቪዲዮ",
+    "typeAudio": "ድምጽ",
+    "typeDocument": "መጽሐፍ / ፒዲኤፍ",
+    "loadingCategories": "ምድቦችን በመጫን ላይ...",
+    "selectCategory": "ምድብ ይምረጡ",
+    "saveDraft": "እንደ ረቂቅ አስቀምጥ",
+    "publish": "አትም",
+    "uploading": "በመላክ ላይ...",
+    "upload": "ሚዲያ ስቀል"
+  },
+  "uploadSuccess": "ሚዲያው በተሳካ ሁኔታ ተልኳል",
+  "errors": {
+    "selectLanguage": "እባክዎ ቋንቋ ይምረጡ",
+    "loadCategories": "ምድቦችን መጫን አልተሳካም",
+    "upload": "ሚዲያውን መላክ አልተሳካም"
+  }
+}

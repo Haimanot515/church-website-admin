@@ -1,0 +1,104 @@
+{
+  "dashboard": "Dashboard",
+  "logout": "Logout",
+  "sections": {
+    "homehero": {
+      "label": "Home Hero",
+      "links": {
+        "create": "Create Home Hero",
+        "view": "View Home Hero"
+      }
+    },
+    "users": {
+      "label": "Users",
+      "links": {
+        "view": "View Users",
+        "update": "Update Users",
+        "delete": "Delete Users"
+      }
+    },
+    "posts": {
+      "label": "Posts",
+      "links": {
+        "create": "Create Post",
+        "view": "View Posts"
+      }
+    },
+    "services": {
+      "label": "Services",
+      "links": {
+        "create": "Create Service",
+        "view": "View Services"
+      }
+    },
+    "media": {
+      "label": "Media",
+      "links": {
+        "create": "Create Media",
+        "view": "View Media"
+      }
+    },
+    "categories": {
+      "label": "Categories",
+      "links": {
+        "create": "Create Category",
+        "view": "View Categories"
+      }
+    },
+    "languages": {
+      "label": "Languages",
+      "links": {
+        "create": "Create Language",
+        "view": "View Languages"
+      }
+    },
+    "churches": {
+      "label": "Churches",
+      "links": {
+        "create": "Create Church",
+        "view": "View Churches",
+        "update": "Update Churches",
+        "delete": "Delete Churches",
+        "assign": "Assign Church",
+        "personCreate": "Create Person",
+        "personView": "View Persons",
+        "personUpdate": "Update Persons",
+        "personReorder": "Reorder Persons",
+        "personDelete": "Delete Persons",
+        "chapterCreate": "Create Chapter",
+        "chapterView": "View Chapters",
+        "chapterUpdate": "Update Chapters",
+        "chapterDelete": "Delete Chapters"
+      }
+    },
+    "contacts": {
+      "label": "Contacts",
+      "links": {
+        "view": "View Messages",
+        "reply": "Reply Messages",
+        "delete": "Delete Messages"
+      }
+    },
+    "promotions": {
+      "label": "Promotions",
+      "links": {
+        "create": "Create Promotion",
+        "view": "View Promotions"
+      }
+    },
+    "subscribers": {
+      "label": "Subscribers",
+      "links": {
+        "create": "Add Subscriber",
+        "view": "View Subscribers"
+      }
+    },
+    "about": {
+      "label": "About",
+      "links": {
+        "create": "Create About",
+        "view": "View About"
+      }
+    }
+  }
+}

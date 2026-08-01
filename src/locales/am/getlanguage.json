@@ -1,0 +1,31 @@
+{
+  "heading": "ሁሉም ቋንቋዎች",
+  "newLanguage": "+ አዲስ ቋንቋ",
+  "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
+  "noLanguages": "ምንም ቋንቋ አልተገኘም።",
+  "editHeading": "ቋንቋ አርትዕ",
+  "form": {
+    "namePlaceholder": "የቋንቋ ስም",
+    "codePlaceholder": "የቋንቋ ኮድ (EN, AM, IT)",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveChanges": "ለውጦችን አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "table": {
+    "name": "ስም",
+    "code": "ኮድ",
+    "actions": "ተግባራት"
+  },
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "confirmDelete": "\"{{name}}\" ({{code}}) ይሰረዝ? ይህ ተግባር መመለስ አይቻልም።",
+  "updateSuccess": "ቋንቋው በተሳካ ሁኔታ ተስተካክሏል",
+  "errors": {
+    "loadLanguages": "ቋንቋዎችን መጫን አልተሳካም",
+    "update": "ቋንቋውን ማዘመን አልተሳካም",
+    "delete": "ቋንቋውን መሰረዝ አልተሳካም"
+  }
+}

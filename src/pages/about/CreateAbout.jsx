@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreateAbout.css";
 
 const CreateAbout = () => {
+  const { t } = useTranslation();
+
   const [about, setAbout] = useState({
     title: "",
     churchLeader: "",
@@ -33,12 +37,12 @@ const CreateAbout = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAbout({ ...about, [name]: value });
+    setAbout((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setAbout({ ...about, image: file });
+    setAbout((prev) => ({ ...prev, image: file }));
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
@@ -49,7 +53,7 @@ const CreateAbout = () => {
     setError("");
 
     if (!about.language) {
-      setError("Please select a language");
+      setError(t("createAbout.errors.languageRequired"));
       return;
     }
 
@@ -71,7 +75,7 @@ const CreateAbout = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("About entry created successfully");
+      alert(t("createAbout.successMessage"));
 
       setAbout({
         title: "",
@@ -84,32 +88,29 @@ const CreateAbout = () => {
       setPreview(null);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to create About entry");
+      setError(err.response?.data?.message || t("createAbout.errors.create"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Create About</h2>
+    <div className="ca-page">
+      <div className="ca-card">
+        <h2>{t("createAbout.heading")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="ca-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <select name="language" value={about.language} onChange={handleChange} required>
+        <form onSubmit={handleSubmit} className="ca-form">
+          <select
+            name="language"
+            value={about.language}
+            onChange={handleChange}
+            required
+            className="ca-select"
+          >
             <option value="" disabled>
-              Select language
+              {t("createAbout.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
@@ -121,7 +122,7 @@ const CreateAbout = () => {
           <input
             type="text"
             name="title"
-            placeholder="Title"
+            placeholder={t("createAbout.form.titlePlaceholder")}
             value={about.title}
             onChange={handleChange}
             required
@@ -130,43 +131,28 @@ const CreateAbout = () => {
           <input
             type="text"
             name="churchLeader"
-            placeholder="Church Leader"
+            placeholder={t("createAbout.form.churchLeaderPlaceholder")}
             value={about.churchLeader}
             onChange={handleChange}
           />
 
           <textarea
             name="description"
-            placeholder="Description"
+            placeholder={t("createAbout.form.descriptionPlaceholder")}
             value={about.description}
             onChange={handleChange}
             rows="8"
             required
           />
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <input type="file" accept="image/*" onChange={handleFileChange} className="ca-file-input" />
 
           {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-            />
+            <img src={preview} alt={t("createAbout.previewAlt")} className="ca-preview" />
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              padding: "14px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
-          >
-            {loading ? "Creating..." : "Create About"}
+          <button type="submit" disabled={loading} className="ca-btn-primary">
+            {loading ? t("createAbout.form.creating") : t("createAbout.form.createButton")}
           </button>
         </form>
       </div>

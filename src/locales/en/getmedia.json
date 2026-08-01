@@ -1,0 +1,51 @@
+{
+  "heading": "All Media",
+  "newMedia": "+ New Media",
+  "loadingMedia": "Loading media...",
+  "noMedia": "No media found.",
+  "editHeading": "Edit Media",
+  "form": {
+    "titlePlaceholder": "Media title",
+    "descriptionPlaceholder": "Media description",
+    "typePhoto": "Photo",
+    "typeVideo": "Video",
+    "typeAudio": "Audio",
+    "typeDocument": "Book / PDF",
+    "loadingCategories": "Loading categories...",
+    "selectCategory": "Select Category",
+    "saveDraft": "Save as Draft",
+    "publish": "Publish",
+    "keepFileHint": "Leave empty to keep the current file.",
+    "viewCurrentFile": "View current file",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "table": {
+    "file": "File",
+    "title": "Title",
+    "type": "Type",
+    "category": "Category",
+    "status": "Status",
+    "created": "Created",
+    "actions": "Actions"
+  },
+  "status": {
+    "draft": "draft",
+    "published": "published"
+  },
+  "viewFile": "View file",
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "confirmDelete": "Delete \"{{title}}\"? This action cannot be undone.",
+  "updateSuccess": "Media updated successfully",
+  "errors": {
+    "loadMedia": "Failed to load media",
+    "loadCategories": "Failed to load categories",
+    "update": "Failed to update media",
+    "delete": "Failed to delete media"
+  }
+}

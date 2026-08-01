@@ -1,0 +1,40 @@
+{
+  "heading": "ስለ እኛ ግቤቶች",
+  "newAbout": "+ አዲስ ስለ እኛ",
+  "loadingEntries": "ስለ እኛ ግቤቶችን በመጫን ላይ...",
+  "noEntries": "ምንም ስለ እኛ ግቤት አልተገኘም።",
+  "editHeading": "ስለ እኛ ግቤት አርትዕ",
+  "form": {
+    "titlePlaceholder": "ርዕስ",
+    "churchLeaderPlaceholder": "የቤተክርስቲያን መሪ",
+    "descriptionPlaceholder": "መግለጫ",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveChanges": "ለውጦችን አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "previewAlt": "ቅድመ እይታ",
+  "table": {
+    "title": "ርዕስ",
+    "churchLeader": "የቤተክርስቲያን መሪ",
+    "description": "መግለጫ",
+    "created": "የተፈጠረበት",
+    "actions": "ተግባራት"
+  },
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "confirmDelete": "ይህን የስለ እኛ ግቤት መሰረዝ እርግጠኛ ነዎት?",
+  "updateSuccess": "የስለ እኛ ግቤት በተሳካ ሁኔታ ተስተካክሏል",
+  "pagination": {
+    "prev": "ቀዳሚ",
+    "next": "ቀጣይ",
+    "pageOf": "ገጽ {{current}} ከ {{total}}"
+  },
+  "errors": {
+    "load": "የስለ እኛ ግቤቶችን መጫን አልተሳካም",
+    "update": "የስለ እኛ ግቤት ማዘመን አልተሳካም",
+    "delete": "የስለ እኛ ግቤት መሰረዝ አልተሳካም"
+  }
+}

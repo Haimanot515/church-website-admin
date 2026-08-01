@@ -1,0 +1,51 @@
+{
+  "heading": "Tutti gli Articoli",
+  "newPost": "+ Nuovo Articolo",
+  "loadingPosts": "Caricamento articoli...",
+  "noPosts": "Nessun articolo trovato.",
+  "editHeading": "Modifica Articolo",
+  "form": {
+    "titlePlaceholder": "Titolo dell'articolo",
+    "descriptionPlaceholder": "Descrizione dell'articolo",
+    "contentPlaceholder": "Contenuto dell'articolo",
+    "loadingCategories": "Caricamento categorie...",
+    "selectCategory": "Seleziona Categoria",
+    "loadingLanguages": "Caricamento lingue...",
+    "selectLanguage": "Seleziona Lingua",
+    "draft": "Bozza",
+    "published": "Pubblicato",
+    "trending": "Di tendenza",
+    "featured": "In evidenza",
+    "recommended": "Consigliato",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "cancel": "Annulla"
+  },
+  "table": {
+    "title": "Titolo",
+    "category": "Categoria",
+    "language": "Lingua",
+    "status": "Stato",
+    "author": "Autore",
+    "created": "Creato",
+    "actions": "Azioni"
+  },
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "pagination": {
+    "prev": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {{current}} di {{total}}"
+  },
+  "confirmDelete": "Sei sicuro di voler eliminare questo articolo?",
+  "updateSuccess": "Articolo aggiornato con successo",
+  "errors": {
+    "loadPosts": "Impossibile caricare gli articoli",
+    "loadOptions": "Impossibile caricare categorie o lingue",
+    "update": "Impossibile aggiornare l'articolo",
+    "delete": "Impossibile eliminare l'articolo"
+  }
+}

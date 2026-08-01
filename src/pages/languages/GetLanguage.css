@@ -1,0 +1,288 @@
+/* ===== Page shell ===== */
+.gl-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.gl-card {
+  max-width: 700px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gl-header h2 {
+  margin: 0;
+}
+
+.gl-error {
+  color: red;
+}
+
+.gl-btn-new {
+  padding: 10px 18px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ===== Edit panel ===== */
+.gl-edit-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background: #f8fafc;
+  scroll-margin-top: 20px;
+}
+
+.gl-edit-panel h3 {
+  margin-top: 0;
+}
+
+.gl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gl-form input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.gl-code-input {
+  text-transform: uppercase;
+}
+
+.gl-form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gl-btn-primary {
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gl-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gl-btn-cancel {
+  padding: 14px;
+  background: #e5e7eb;
+  color: #334155;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gl-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Code badge ===== */
+.gl-code-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* ===== Table ===== */
+.gl-table-wrap {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.gl-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.gl-table th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  font-size: 13px;
+  color: #555;
+}
+
+.gl-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.gl-row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.gl-btn-edit {
+  padding: 6px 12px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.gl-btn-delete {
+  padding: 6px 12px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.gl-btn-delete:disabled,
+.gl-btn-edit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .gl-page {
+    padding: 20px;
+  }
+
+  .gl-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .gl-page {
+    padding: 12px;
+  }
+
+  .gl-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .gl-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gl-btn-new {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gl-btn-primary,
+  .gl-btn-cancel {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .gl-form-actions {
+    flex-direction: column;
+  }
+
+  /* Card-style table on small screens instead of horizontal scroll */
+  .gl-table thead {
+    display: none;
+  }
+
+  .gl-table,
+  .gl-table tbody,
+  .gl-table tr,
+  .gl-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .gl-table tr {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+  }
+
+  .gl-table td {
+    border-bottom: none;
+    padding: 6px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+
+  .gl-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #555;
+    flex-shrink: 0;
+  }
+
+  .gl-row-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .gl-page {
+    padding: 8px;
+  }
+
+  .gl-card {
+    padding: 12px;
+  }
+}

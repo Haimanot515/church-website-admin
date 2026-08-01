@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetAbout.css";
 
 const ENTRIES_PER_PAGE = 10;
 
@@ -13,6 +15,7 @@ const emptyForm = {
 
 const GetAbout = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const [allEntries, setAllEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +34,7 @@ const GetAbout = () => {
 
   useEffect(() => {
     fetchAbout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAbout = async () => {
@@ -42,7 +46,7 @@ const GetAbout = () => {
       setAllEntries(res.data);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load About entries");
+      setError(err.response?.data?.message || t("getAbout.errors.load"));
     } finally {
       setLoading(false);
     }
@@ -120,12 +124,12 @@ const GetAbout = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("About entry updated successfully");
+      alert(t("getAbout.updateSuccess"));
       handleCancelEdit();
       await fetchAbout();
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to update About entry");
+      setFormError(err.response?.data?.message || t("getAbout.errors.update"));
     } finally {
       setSubmitting(false);
     }
@@ -133,7 +137,7 @@ const GetAbout = () => {
 
   // --- Delete ---
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this About entry?")) {
+    if (!window.confirm(t("getAbout.confirmDelete"))) {
       return;
     }
 
@@ -156,77 +160,38 @@ const GetAbout = () => {
       }
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to delete About entry");
+      setError(err.response?.data?.message || t("getAbout.errors.delete"));
     } finally {
       setDeletingId(null);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>About Entries</h2>
+    <div className="ga-page">
+      <div className="ga-card">
+        <div className="ga-header">
+          <h2>{t("getAbout.heading")}</h2>
 
           {!editingId && (
-            <button
-              onClick={() => navigate("/admin/about/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New About
+            <button className="ga-btn-new" onClick={() => navigate("/admin/about/create")}>
+              {t("getAbout.newAbout")}
             </button>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="ga-error">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit About Entry</h3>
+          <div ref={editPanelRef} className="ga-edit-panel">
+            <h3>{t("getAbout.editHeading")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="ga-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="ga-form">
               <input
                 type="text"
                 name="title"
-                placeholder="Title"
+                placeholder={t("getAbout.form.titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -235,62 +200,42 @@ const GetAbout = () => {
               <input
                 type="text"
                 name="churchLeader"
-                placeholder="Church Leader"
+                placeholder={t("getAbout.form.churchLeaderPlaceholder")}
                 value={form.churchLeader}
                 onChange={handleChange}
               />
 
               <textarea
                 name="description"
-                placeholder="Description"
+                placeholder={t("getAbout.form.descriptionPlaceholder")}
                 value={form.description}
                 onChange={handleChange}
                 rows="6"
                 required
               />
 
-              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input type="file" accept="image/*" onChange={handleFileChange} className="ga-file-input" />
 
               {(preview || existingImageUrl) && (
                 <img
                   src={preview || existingImageUrl}
-                  alt="preview"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                  alt={t("getAbout.previewAlt")}
+                  className="ga-preview"
                 />
               )}
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="ga-form-actions">
+                <button type="submit" disabled={submitting} className="ga-btn-primary">
+                  {submitting ? t("getAbout.form.saving") : t("getAbout.form.saveChanges")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="ga-btn-cancel"
                 >
-                  Cancel
+                  {t("getAbout.form.cancel")}
                 </button>
               </div>
             </form>
@@ -299,70 +244,53 @@ const GetAbout = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading About entries...</p>
+            <p>{t("getAbout.loadingEntries")}</p>
           ) : allEntries.length === 0 ? (
-            <p>No About entries found.</p>
+            <p>{t("getAbout.noEntries")}</p>
           ) : (
             <>
-              <div style={{ overflowX: "auto", marginTop: "15px" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}>
+              <div className="ga-table-wrap">
+                <table className="ga-table">
                   <thead>
                     <tr>
-                      <th style={thStyle}>Title</th>
-                      <th style={thStyle}>Church Leader</th>
-                      <th style={thStyle}>Description</th>
-                      <th style={thStyle}>Created</th>
-                      <th style={thStyle}>Actions</th>
+                      <th>{t("getAbout.table.title")}</th>
+                      <th>{t("getAbout.table.churchLeader")}</th>
+                      <th>{t("getAbout.table.description")}</th>
+                      <th>{t("getAbout.table.created")}</th>
+                      <th>{t("getAbout.table.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {entries.map((entry) => (
                       <tr key={entry._id}>
-                        <td style={tdStyle}>{entry.title}</td>
-                        <td style={tdStyle}>{entry.churchLeader || "—"}</td>
-                        <td style={tdStyle}>
+                        <td data-label={t("getAbout.table.title")}>{entry.title}</td>
+                        <td data-label={t("getAbout.table.churchLeader")}>{entry.churchLeader || "—"}</td>
+                        <td data-label={t("getAbout.table.description")}>
                           {entry.description
                             ? entry.description.length > 60
                               ? `${entry.description.slice(0, 60)}...`
                               : entry.description
                             : "—"}
                         </td>
-                        <td style={tdStyle}>
-                          {entry.createdAt ? new Date(entry.createdAt).toLocaleDateString() : "—"}
+                        <td data-label={t("getAbout.table.created")}>
+                          {entry.createdAt
+                            ? new Date(entry.createdAt).toLocaleDateString(i18n.language)
+                            : "—"}
                         </td>
-                        <td style={tdStyle}>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button
-                              onClick={() => handleEditClick(entry)}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#2563eb",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              Edit
+                        <td data-label={t("getAbout.table.actions")}>
+                          <div className="ga-row-actions">
+                            <button className="ga-btn-edit" onClick={() => handleEditClick(entry)}>
+                              {t("getAbout.actions.edit")}
                             </button>
 
                             <button
+                              className="ga-btn-delete"
                               onClick={() => handleDelete(entry._id)}
                               disabled={deletingId === entry._id}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#dc2626",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
                             >
-                              {deletingId === entry._id ? "Deleting..." : "Delete"}
+                              {deletingId === entry._id
+                                ? t("getAbout.actions.deleting")
+                                : t("getAbout.actions.delete")}
                             </button>
                           </div>
                         </td>
@@ -373,33 +301,25 @@ const GetAbout = () => {
               </div>
 
               {totalPages > 1 && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginTop: "25px",
-                  }}
-                >
+                <div className="ga-pagination">
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    style={pageButtonStyle(currentPage === 1)}
+                    className="ga-page-btn"
                   >
-                    Prev
+                    {t("getAbout.pagination.prev")}
                   </button>
 
-                  <span style={{ fontSize: "14px", color: "#444" }}>
-                    Page {currentPage} of {totalPages}
+                  <span className="ga-page-info">
+                    {t("getAbout.pagination.pageOf", { current: currentPage, total: totalPages })}
                   </span>
 
                   <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    style={pageButtonStyle(currentPage === totalPages)}
+                    className="ga-page-btn"
                   >
-                    Next
+                    {t("getAbout.pagination.next")}
                   </button>
                 </div>
               )}
@@ -409,28 +329,5 @@ const GetAbout = () => {
     </div>
   );
 };
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
-};
-
-const pageButtonStyle = (disabled) => ({
-  padding: "8px 16px",
-  background: disabled ? "#e5e7eb" : "#2563eb",
-  color: disabled ? "#999" : "#fff",
-  border: "none",
-  borderRadius: "6px",
-  cursor: disabled ? "not-allowed" : "pointer",
-});
 
 export default GetAbout;

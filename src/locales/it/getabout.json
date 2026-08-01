@@ -1,0 +1,40 @@
+{
+  "heading": "Voci Chi Siamo",
+  "newAbout": "+ Nuova Voce",
+  "loadingEntries": "Caricamento voci Chi Siamo...",
+  "noEntries": "Nessuna voce Chi Siamo trovata.",
+  "editHeading": "Modifica Voce Chi Siamo",
+  "form": {
+    "titlePlaceholder": "Titolo",
+    "churchLeaderPlaceholder": "Leader della Chiesa",
+    "descriptionPlaceholder": "Descrizione",
+    "saving": "Salvataggio...",
+    "saveChanges": "Salva Modifiche",
+    "cancel": "Annulla"
+  },
+  "previewAlt": "anteprima",
+  "table": {
+    "title": "Titolo",
+    "churchLeader": "Leader della Chiesa",
+    "description": "Descrizione",
+    "created": "Creato",
+    "actions": "Azioni"
+  },
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "confirmDelete": "Sei sicuro di voler eliminare questa voce Chi Siamo?",
+  "updateSuccess": "Voce Chi Siamo aggiornata con successo",
+  "pagination": {
+    "prev": "Prec",
+    "next": "Succ",
+    "pageOf": "Pagina {{current}} di {{total}}"
+  },
+  "errors": {
+    "load": "Impossibile caricare le voci Chi Siamo",
+    "update": "Impossibile aggiornare la voce Chi Siamo",
+    "delete": "Impossibile eliminare la voce Chi Siamo"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "night": "Good night"
+  },
+  "subtitle": "Here's a live look at your site's content, straight from the database.",
+
+  "contentLibrary": {
+    "heading": "Content Library",
+    "subheading": "Live counts from the database",
+    "failedToLoad": "Failed to load",
+    "totalPrefix": "Total"
+  },
+
+  "content": {
+    "posts": "Posts",
+    "media": "Media",
+    "categories": "Categories",
+    "languages": "Languages",
+    "churches": "Churches",
+    "churchPersons": "Church Persons",
+    "churchStory": "Church Story Chapters",
+    "services": "Services",
+    "promotions": "Promotions",
+    "subscribers": "Subscribers",
+    "users": "Users"
+  },
+
+  "recentPosts": {
+    "heading": "Recent Posts",
+    "showing": "Showing {{shown}} of {{total}}",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load posts.",
+    "none": "No posts yet.",
+    "uncategorized": "Uncategorized"
+  },
+
+  "quickActions": {
+    "heading": "Quick Actions",
+    "createPost": "Create Post",
+    "createPromotion": "Create Promotion",
+    "addSubscriber": "Add Subscriber",
+    "replyToMessages": "Reply to Messages",
+    "createChurchStoryChapter": "Create Church Story Chapter",
+    "createMedia": "Create Media"
+  },
+
+  "recentPromotions": {
+    "heading": "Recent Promotions",
+    "showing": "Showing {{shown}} of {{total}}",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load promotions.",
+    "none": "No promotions yet."
+  },
+
+  "recentMedia": {
+    "heading": "Recent Media",
+    "showing": "Showing {{shown}} of {{total}}",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load media.",
+    "none": "No media yet.",
+    "uncategorized": "Uncategorized"
+  },
+
+  "messages": {
+    "heading": "Messages Awaiting Reply",
+    "showingRecent": "Showing {{count}} most recent",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load messages.",
+    "none": "No messages yet.",
+    "unread": "{{count}} unread"
+  },
+
+  "recentSubscribers": {
+    "heading": "Recent Subscribers",
+    "showing": "Showing {{shown}} of {{total}}",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "failedToLoad": "Failed to load subscribers.",
+    "none": "No subscribers yet."
+  }
+}

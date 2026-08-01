@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 
 // Every number and list below is fetched from the backend — nothing here
 // is hardcoded placeholder content. Each entry maps to a real model/route
 // that already exists elsewhere in this admin panel.
 const CONTENT_CONFIG = [
-  { key: "posts", label: "Posts", to: "/admin/posts/view" },
-  { key: "media", label: "Media", to: "/admin/media/view" },
-  { key: "categories", label: "Categories", to: "/admin/categories/view" },
-  { key: "languages", label: "Languages", to: "/admin/languages/view" },
-  { key: "churches", label: "Churches", to: "/admin/churches/view" },
-  { key: "churchPersons", label: "Church Persons", to: "/admin/church-persons/view" },
-  { key: "churchStory", label: "Church Story Chapters", to: "/admin/church-story/view" },
-  { key: "services", label: "Services", to: "/admin/services/view" },
-  { key: "promotions", label: "Promotions", to: "/admin/promotions/view" },
-  { key: "subscribers", label: "Subscribers", to: "/admin/subscribers/view" },
-  { key: "users", label: "Users", to: "/admin/users/view" },
+  { key: "posts", to: "/admin/posts/view" },
+  { key: "media", to: "/admin/media/view" },
+  { key: "categories", to: "/admin/categories/view" },
+  { key: "languages", to: "/admin/languages/view" },
+  { key: "churches", to: "/admin/churches/view" },
+  { key: "churchPersons", to: "/admin/church-persons/view" },
+  { key: "churchStory", to: "/admin/church-story/view" },
+  { key: "services", to: "/admin/services/view" },
+  { key: "promotions", to: "/admin/promotions/view" },
+  { key: "subscribers", to: "/admin/subscribers/view" },
+  { key: "users", to: "/admin/users/view" },
 ];
 
 // Shared cap for every "recent" list below (Posts, Promotions, Messages,
@@ -25,15 +26,17 @@ const CONTENT_CONFIG = [
 const RECENT_LIMIT = 5;
 
 const QUICK_ACTIONS = [
-  { label: "Create Post", to: "/admin/posts/create" },
-  { label: "Create Promotion", to: "/admin/promotions/create" },
-  { label: "Add Subscriber", to: "/admin/subscribers/create" },
-  { label: "Reply to Messages", to: "/admin/contacts/view" },
-  { label: "Create Church Story Chapter", to: "/admin/church-story/create" },
-  { label: "Create Media", to: "/admin/media/create" },
+  { key: "createPost", to: "/admin/posts/create" },
+  { key: "createPromotion", to: "/admin/promotions/create" },
+  { key: "addSubscriber", to: "/admin/subscribers/create" },
+  { key: "replyToMessages", to: "/admin/contacts/view" },
+  { key: "createChurchStoryChapter", to: "/admin/church-story/create" },
+  { key: "createMedia", to: "/admin/media/create" },
 ];
 
 const AdminDashboard = () => {
+  const { t } = useTranslation();
+
   // Greeting is based on Ethiopian time (Africa/Addis_Ababa), not the
   // visitor's local browser time, since this is a church admin panel
   // for a congregation there.
@@ -48,12 +51,12 @@ const AdminDashboard = () => {
 
   const greeting =
     ethiopianHour >= 5 && ethiopianHour < 12
-      ? "Good morning"
+      ? t("dashboard.greeting.morning")
       : ethiopianHour >= 12 && ethiopianHour < 17
-      ? "Good afternoon"
+      ? t("dashboard.greeting.afternoon")
       : ethiopianHour >= 17 && ethiopianHour < 21
-      ? "Good evening"
-      : "Good night";
+      ? t("dashboard.greeting.evening")
+      : t("dashboard.greeting.night");
 
   const [contentCounts, setContentCounts] = useState({});
   const [contentErrors, setContentErrors] = useState({});
@@ -338,17 +341,17 @@ const AdminDashboard = () => {
           {greeting}
         </h1>
         <p style={{ fontSize: "1.3rem", color: "var(--slate)", lineHeight: 1.6, maxWidth: "640px" }}>
-          Here's a live look at your site's content, straight from the database.
+          {t("dashboard.subtitle")}
         </p>
       </section>
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Content Library</h3>
-          <span className="eyebrow" style={{ color: "var(--slate)" }}>Live counts from the database</span>
+          <h3 className="eyebrow">{t("dashboard.contentLibrary.heading")}</h3>
+          <span className="eyebrow" style={{ color: "var(--slate)" }}>{t("dashboard.contentLibrary.subheading")}</span>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
-          {CONTENT_CONFIG.map(({ key, label, to }) => (
+          {CONTENT_CONFIG.map(({ key, to }) => (
             <Link
               key={key}
               to={to}
@@ -366,14 +369,14 @@ const AdminDashboard = () => {
                   <span style={{ color: "rgba(234,243,248,0.4)" }}>—</span>
                 ) : contentErrors[key] ? (
                   <span style={{ fontSize: "1.1rem", fontFamily: "'IBM Plex Mono', monospace", color: "#e5793f" }}>
-                    Failed to load
+                    {t("dashboard.contentLibrary.failedToLoad")}
                   </span>
                 ) : (
                   contentCounts[key] ?? 0
                 )}
               </div>
               <div style={{ fontSize: "1.05rem", fontWeight: 700, marginTop: "10px", color: "#eaf3f8" }}>
-                Total {label}
+                {t("dashboard.contentLibrary.totalPrefix")} {t(`dashboard.content.${key}`)}
               </div>
             </Link>
           ))}
@@ -382,19 +385,19 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Recent Posts</h3>
+          <h3 className="eyebrow">{t("dashboard.recentPosts.heading")}</h3>
           <span className="eyebrow" style={{ color: "var(--slate)" }}>
             {!contentLoading && !contentErrors.posts &&
-              `Showing ${Math.min(recentPosts.length, RECENT_LIMIT)} of ${contentCounts.posts ?? 0}`}
+              t("dashboard.recentPosts.showing", { shown: Math.min(recentPosts.length, RECENT_LIMIT), total: contentCounts.posts ?? 0 })}
           </span>
-          <Link to="/admin/posts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <Link to="/admin/posts/view" className="eyebrow" style={{ color: "var(--navy)" }}>{t("dashboard.recentPosts.viewAll")}</Link>
         </div>
         {recentLoading ? (
-          <p style={{ color: "var(--slate)" }}>Loading...</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentPosts.loading")}</p>
         ) : postsError ? (
-          <p style={{ color: "var(--deep-red)" }}>Failed to load posts.</p>
+          <p style={{ color: "var(--deep-red)" }}>{t("dashboard.recentPosts.failedToLoad")}</p>
         ) : recentPosts.length === 0 ? (
-          <p style={{ color: "var(--slate)" }}>No posts yet.</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentPosts.none")}</p>
         ) : (
           recentPosts.map((p, i) => (
             <div key={p._id} className="recent-post-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
@@ -408,7 +411,7 @@ const AdminDashboard = () => {
                 )}
                 <div>
                   <h4 className="display" style={{ fontSize: "2.2rem", fontWeight: 700, margin: "0 0 8px 0", color: "var(--deep-red)" }}>{p.title}</h4>
-                  <p style={{ fontSize: "1.15rem", color: "var(--slate)", margin: "0 0 6px 0", lineHeight: 1.5 }}>{p.category?.name || "Uncategorized"}</p>
+                  <p style={{ fontSize: "1.15rem", color: "var(--slate)", margin: "0 0 6px 0", lineHeight: 1.5 }}>{p.category?.name || t("dashboard.recentPosts.uncategorized")}</p>
                   <p className="eyebrow" style={{ margin: 0 }}>
                     {p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "—"}
                   </p>
@@ -421,11 +424,11 @@ const AdminDashboard = () => {
       </section>
 
       <section>
-        <h3 className="eyebrow" style={{ marginBottom: "30px" }}>Quick Actions</h3>
+        <h3 className="eyebrow" style={{ marginBottom: "30px" }}>{t("dashboard.quickActions.heading")}</h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "18px" }}>
-          {QUICK_ACTIONS.map(({ label, to }, i) => (
+          {QUICK_ACTIONS.map(({ key, to }, i) => (
             <Link
-              key={label}
+              key={key}
               to={to}
               className="quick-action-card"
               style={{
@@ -434,7 +437,7 @@ const AdminDashboard = () => {
                 color: "#eaf3f8", fontFamily: "'Cormorant Garamond', serif", fontSize: "1.5rem", fontWeight: 700,
               }}
             >
-              {label}
+              {t(`dashboard.quickActions.${key}`)}
             </Link>
           ))}
         </div>
@@ -442,19 +445,19 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Recent Promotions</h3>
+          <h3 className="eyebrow">{t("dashboard.recentPromotions.heading")}</h3>
           <span className="eyebrow" style={{ color: "var(--slate)" }}>
             {!contentLoading && !contentErrors.promotions &&
-              `Showing ${Math.min(recentPromotions.length, RECENT_LIMIT)} of ${contentCounts.promotions ?? 0}`}
+              t("dashboard.recentPromotions.showing", { shown: Math.min(recentPromotions.length, RECENT_LIMIT), total: contentCounts.promotions ?? 0 })}
           </span>
-          <Link to="/admin/promotions/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <Link to="/admin/promotions/view" className="eyebrow" style={{ color: "var(--navy)" }}>{t("dashboard.recentPromotions.viewAll")}</Link>
         </div>
         {recentLoading ? (
-          <p style={{ color: "var(--slate)" }}>Loading...</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentPromotions.loading")}</p>
         ) : promotionsError ? (
-          <p style={{ color: "var(--deep-red)" }}>Failed to load promotions.</p>
+          <p style={{ color: "var(--deep-red)" }}>{t("dashboard.recentPromotions.failedToLoad")}</p>
         ) : recentPromotions.length === 0 ? (
-          <p style={{ color: "var(--slate)" }}>No promotions yet.</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentPromotions.none")}</p>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
             {recentPromotions.map((promo) => (
@@ -476,19 +479,19 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Recent Media</h3>
+          <h3 className="eyebrow">{t("dashboard.recentMedia.heading")}</h3>
           <span className="eyebrow" style={{ color: "var(--slate)" }}>
             {!contentLoading && !contentErrors.media &&
-              `Showing ${Math.min(recentMedia.length, RECENT_LIMIT)} of ${contentCounts.media ?? 0}`}
+              t("dashboard.recentMedia.showing", { shown: Math.min(recentMedia.length, RECENT_LIMIT), total: contentCounts.media ?? 0 })}
           </span>
-          <Link to="/admin/media/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <Link to="/admin/media/view" className="eyebrow" style={{ color: "var(--navy)" }}>{t("dashboard.recentMedia.viewAll")}</Link>
         </div>
         {recentLoading ? (
-          <p style={{ color: "var(--slate)" }}>Loading...</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentMedia.loading")}</p>
         ) : mediaError ? (
-          <p style={{ color: "var(--deep-red)" }}>Failed to load media.</p>
+          <p style={{ color: "var(--deep-red)" }}>{t("dashboard.recentMedia.failedToLoad")}</p>
         ) : recentMedia.length === 0 ? (
-          <p style={{ color: "var(--slate)" }}>No media yet.</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentMedia.none")}</p>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
             {recentMedia.map((item) => (
@@ -507,11 +510,11 @@ const AdminDashboard = () => {
                   />
                 ) : (
                   <div style={{ width: "100%", height: "140px", borderRadius: "8px", marginBottom: "10px", background: "rgba(28,58,82,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span className="eyebrow">{item.mediaType || "Media"}</span>
+                    <span className="eyebrow">{item.mediaType || t("dashboard.recentMedia.uncategorized")}</span>
                   </div>
                 )}
                 <div style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--navy-deep)" }}>{item.title}</div>
-                <div className="eyebrow" style={{ marginTop: "4px" }}>{item.category?.name || "Uncategorized"}</div>
+                <div className="eyebrow" style={{ marginTop: "4px" }}>{item.category?.name || t("dashboard.recentMedia.uncategorized")}</div>
               </div>
             ))}
           </div>
@@ -520,31 +523,31 @@ const AdminDashboard = () => {
 
       <section>
         <div className="section-head">
-          <h3 className="eyebrow">Messages Awaiting Reply</h3>
+          <h3 className="eyebrow">{t("dashboard.messages.heading")}</h3>
           <span className="eyebrow" style={{ color: "var(--slate)" }}>
-            {!threadsError && !recentLoading && `Showing ${recentThreads.length} most recent`}
+            {!threadsError && !recentLoading && t("dashboard.messages.showingRecent", { count: recentThreads.length })}
           </span>
-          <Link to="/admin/contacts/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <Link to="/admin/contacts/view" className="eyebrow" style={{ color: "var(--navy)" }}>{t("dashboard.messages.viewAll")}</Link>
         </div>
         {recentLoading ? (
-          <p style={{ color: "var(--slate)" }}>Loading...</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.messages.loading")}</p>
         ) : threadsError ? (
-          <p style={{ color: "var(--deep-red)" }}>Failed to load messages.</p>
+          <p style={{ color: "var(--deep-red)" }}>{t("dashboard.messages.failedToLoad")}</p>
         ) : recentThreads.length === 0 ? (
-          <p style={{ color: "var(--slate)" }}>No messages yet.</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.messages.none")}</p>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
-            {recentThreads.map((t) => (
-              <div key={t._id} className="thread-card" style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
-                <p style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 6px 0", color: "var(--navy)" }}>{t.userName}</p>
-                <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: "0 0 8px 0" }}>{t.lastMessage}</p>
+            {recentThreads.map((th) => (
+              <div key={th._id} className="thread-card" style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
+                <p style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 6px 0", color: "var(--navy)" }}>{th.userName}</p>
+                <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: "0 0 8px 0" }}>{th.lastMessage}</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span className="eyebrow">
-                    {t.lastMessageAt ? new Date(t.lastMessageAt).toLocaleString() : "—"}
+                    {th.lastMessageAt ? new Date(th.lastMessageAt).toLocaleString() : "—"}
                   </span>
-                  {t.unreadForAdmin > 0 && (
+                  {th.unreadForAdmin > 0 && (
                     <span className="eyebrow" style={{ padding: "4px 10px", borderRadius: "20px", background: "rgba(122,16,16,0.1)", color: "var(--deep-red)" }}>
-                      {t.unreadForAdmin} unread
+                      {t("dashboard.messages.unread", { count: th.unreadForAdmin })}
                     </span>
                   )}
                 </div>
@@ -556,19 +559,19 @@ const AdminDashboard = () => {
 
       <section style={{ borderBottom: "none" }}>
         <div className="section-head">
-          <h3 className="eyebrow">Recent Subscribers</h3>
+          <h3 className="eyebrow">{t("dashboard.recentSubscribers.heading")}</h3>
           <span className="eyebrow" style={{ color: "var(--slate)" }}>
             {!contentLoading && !contentErrors.subscribers &&
-              `Showing ${Math.min(recentSubscribers.length, RECENT_LIMIT)} of ${contentCounts.subscribers ?? 0}`}
+              t("dashboard.recentSubscribers.showing", { shown: Math.min(recentSubscribers.length, RECENT_LIMIT), total: contentCounts.subscribers ?? 0 })}
           </span>
-          <Link to="/admin/subscribers/view" className="eyebrow" style={{ color: "var(--navy)" }}>View All</Link>
+          <Link to="/admin/subscribers/view" className="eyebrow" style={{ color: "var(--navy)" }}>{t("dashboard.recentSubscribers.viewAll")}</Link>
         </div>
         {recentLoading ? (
-          <p style={{ color: "var(--slate)" }}>Loading...</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentSubscribers.loading")}</p>
         ) : subscribersError ? (
-          <p style={{ color: "var(--deep-red)" }}>Failed to load subscribers.</p>
+          <p style={{ color: "var(--deep-red)" }}>{t("dashboard.recentSubscribers.failedToLoad")}</p>
         ) : recentSubscribers.length === 0 ? (
-          <p style={{ color: "var(--slate)" }}>No subscribers yet.</p>
+          <p style={{ color: "var(--slate)" }}>{t("dashboard.recentSubscribers.none")}</p>
         ) : (
           recentSubscribers.map((s, i) => (
             <div key={s._id} className="subscriber-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>

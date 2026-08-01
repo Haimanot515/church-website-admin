@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreateCategory.css";
 
 const CreateCategory = () => {
+  const { t } = useTranslation();
 
   const [category, setCategory] = useState({
     name: "",
@@ -26,395 +29,124 @@ const CreateCategory = () => {
         setLanguages(langData || []);
       } catch (err) {
         console.log(err);
-        setError("Failed to load languages");
+        setError(t("createCategory.errors.loadLanguages"));
       } finally {
         setLanguagesLoading(false);
       }
     };
     fetchLanguages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
-
-    setCategory({
-
-      ...category,
-
-      [name]: value,
-
-    });
-
+    setCategory((prev) => ({ ...prev, [name]: value }));
   };
 
-
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
     try {
-
       setLoading(true);
-
       setError("");
 
       // Auth header is already attached globally by the API interceptor
-      await API.post(
-
-        "/categories",
-
-        {
-
-          name: category.name,
-
-          description: category.description,
-
-          language: category.language,
-
-        }
-
-      );
-
-      alert("Category created successfully");
-
-      setCategory({
-
-        name: "",
-
-        description: "",
-
-        language: "",
-
+      await API.post("/categories", {
+        name: category.name,
+        description: category.description,
+        language: category.language,
       });
 
-    }
-
-    catch (err) {
-
+      alert(t("createCategory.successMessage"));
+      setCategory({ name: "", description: "", language: "" });
+    } catch (err) {
       console.log(err);
-
-      setError(
-
-        err.response?.data?.message ||
-
-        "Failed to create category"
-
-      );
-
-    }
-
-    finally {
-
+      setError(err.response?.data?.message || t("createCategory.errors.create"));
+    } finally {
       setLoading(false);
-
     }
-
   };
 
-
+  const examples = [
+    { name: t("createCategory.examples.sermons.name"), description: t("createCategory.examples.sermons.description") },
+    { name: t("createCategory.examples.events.name"), description: t("createCategory.examples.events.description") },
+    { name: t("createCategory.examples.testimonies.name"), description: t("createCategory.examples.testimonies.description") },
+  ];
 
   return (
+    <div className="cc-page">
+      <div className="cc-card">
+        <h2>{t("createCategory.heading")}</h2>
 
-    <div
+        {error && <p className="cc-error">{error}</p>}
 
-      style={{
-
-        minHeight: "100vh",
-
-        background: "#f1f5f9",
-
-        padding: "30px",
-
-      }}
-
-    >
-
-      <div
-
-        style={{
-
-          maxWidth: "650px",
-
-          margin: "auto",
-
-          background: "#fff",
-
-          padding: "30px",
-
-          borderRadius: "15px",
-
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-
-        }}
-
-      >
-
-        <h2>Create Category</h2>
-
-        {
-
-          error &&
-
-          <p style={{ color: "red" }}>
-
-            {error}
-
-          </p>
-
-        }
-
-        <form
-
-          onSubmit={handleSubmit}
-
-          style={{
-
-            display: "flex",
-
-            flexDirection: "column",
-
-            gap: "15px",
-
-          }}
-
-        >
-
+        <form onSubmit={handleSubmit} className="cc-form">
           <input
-
             type="text"
-
             name="name"
-
-            placeholder="Category Name"
-
+            placeholder={t("createCategory.form.namePlaceholder")}
             value={category.name}
-
             onChange={handleChange}
-
             required
-
           />
-
-
 
           <textarea
-
             name="description"
-
-            placeholder="Category Description"
-
+            placeholder={t("createCategory.form.descriptionPlaceholder")}
             value={category.description}
-
             onChange={handleChange}
-
             rows="5"
-
           />
 
-
-
           <select
-
             name="language"
-
             value={category.language}
-
             onChange={handleChange}
-
             required
-
             disabled={languagesLoading}
-
-            style={{
-
-              padding: "12px",
-
-              borderRadius: "8px",
-
-              border: "1px solid #ccc",
-
-            }}
-
+            className="cc-select"
           >
-
             <option value="" disabled>
-
-              {languagesLoading ? "Loading languages..." : "Select a language"}
-
+              {languagesLoading
+                ? t("createCategory.form.loadingLanguages")
+                : t("createCategory.form.selectLanguage")}
             </option>
-
             {languages.map((lang) => (
-
               <option key={lang._id} value={lang._id}>
-
                 {lang.name} ({lang.code})
-
               </option>
-
             ))}
-
           </select>
 
-
-
-          <button
-
-            type="submit"
-
-            disabled={loading || languagesLoading}
-
-            style={{
-
-              padding: "14px",
-
-              background: "#2563eb",
-
-              color: "#fff",
-
-              border: "none",
-
-              borderRadius: "10px",
-
-              cursor: "pointer",
-
-            }}
-
-          >
-
-            {
-
-              loading
-
-                ?
-
-                "Creating..."
-
-                :
-
-                "Create Category"
-
-            }
-
+          <button type="submit" disabled={loading || languagesLoading} className="cc-btn-primary">
+            {loading ? t("createCategory.form.creating") : t("createCategory.form.createButton")}
           </button>
-
         </form>
 
+        <div className="cc-examples">
+          <h4>{t("createCategory.examples.heading")}</h4>
 
-
-        <div
-
-          style={{
-
-            marginTop: "30px",
-
-            padding: "15px",
-
-            background: "#f8fafc",
-
-            borderRadius: "10px",
-
-          }}
-
-        >
-
-          <h4>Example Categories</h4>
-
-          <table
-
-            style={{
-
-              width: "100%",
-
-              borderCollapse: "collapse",
-
-            }}
-
-          >
-
-            <thead>
-
-              <tr>
-
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Category
-
-                </th>
-
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Description
-
-                </th>
-
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              <tr>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Sermons
-
-                </td>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Weekly church sermons and teachings.
-
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Events
-
-                </td>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Church events and upcoming programs.
-
-                </td>
-
-              </tr>
-
-              <tr>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Testimonies
-
-                </td>
-
-                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-
-                  Inspiring testimonies from believers.
-
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
+          <div className="cc-table-wrap">
+            <table className="cc-table">
+              <thead>
+                <tr>
+                  <th>{t("createCategory.examples.table.category")}</th>
+                  <th>{t("createCategory.examples.table.description")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {examples.map((ex) => (
+                  <tr key={ex.name}>
+                    <td data-label={t("createCategory.examples.table.category")}>{ex.name}</td>
+                    <td data-label={t("createCategory.examples.table.description")}>{ex.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-
       </div>
-
     </div>
-
   );
-
 };
 
 export default CreateCategory;

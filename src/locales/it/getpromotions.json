@@ -1,0 +1,16 @@
+{
+  "heading": "Promozioni",
+  "newPromotion": "+ Nuova Promozione",
+  "loadingPromotions": "Caricamento promozioni...",
+  "noPromotions": "Nessuna promozione ancora.",
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione..."
+  },
+  "confirmDelete": "Eliminare la promozione \"{{title}}\"? Non può essere annullata.",
+  "errors": {
+    "load": "Impossibile caricare le promozioni",
+    "delete": "Impossibile eliminare la promozione"
+  }
+}

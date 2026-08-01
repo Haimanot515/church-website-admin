@@ -1,0 +1,16 @@
+{
+  "heading": "ተመዝጋቢዎች",
+  "activeCount": "{{count}} ንቁ",
+  "loadingSubscribers": "ተመዝጋቢዎችን በመጫን ላይ...",
+  "noSubscribers": "እስካሁን ምንም ተመዝጋቢ የለም።",
+  "subscribedOn": "የተመዘገበው {{date}}",
+  "actions": {
+    "unsubscribe": "ምዝገባ ሰርዝ",
+    "removing": "በማስወገድ ላይ..."
+  },
+  "confirmUnsubscribe": "\"{{email}}\" ምዝገባ ይሰረዝ? ይህ መመለስ አይቻልም።",
+  "errors": {
+    "load": "ተመዝጋቢዎችን መጫን አልተሳካም",
+    "unsubscribe": "ምዝገባ መሰረዝ አልተሳካም"
+  }
+}

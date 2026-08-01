@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetService.css";
 
-const ManageServices = () => {
+const GetService = () => {
+  const { t } = useTranslation();
 
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,9 +16,10 @@ const ManageServices = () => {
     try {
       setLoading(true);
       const res = await API.get("/services");
-      setServices(res.data);
+      // API may return a bare array or an object like { services: [...] }
+      setServices(Array.isArray(res.data) ? res.data : res.data.services || []);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to load services");
+      setError(err.response?.data?.message || t("getService.errors.load"));
     } finally {
       setLoading(false);
     }
@@ -23,18 +27,19 @@ const ManageServices = () => {
 
   useEffect(() => {
     fetchServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this service?")) return;
+    if (!window.confirm(t("getService.confirmDelete"))) return;
 
     try {
       await API.delete(`/services/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       setServices(services.filter((s) => s._id !== id));
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete service");
+      alert(err.response?.data?.message || t("getService.errors.delete"));
     }
   };
 
@@ -48,11 +53,9 @@ const ManageServices = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setServices(
-        services.map((s) => (s._id === service._id ? res.data : s))
-      );
+      setServices(services.map((s) => (s._id === service._id ? res.data : s)));
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to update status");
+      alert(err.response?.data?.message || t("getService.errors.updateStatus"));
     }
   };
 
@@ -60,97 +63,61 @@ const ManageServices = () => {
     window.location.href = `/admin/services/update/${id}`;
   };
 
-  if (loading) return <p>Loading services...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p className="ms-page">{t("getService.loading")}</p>;
+  if (error) return <p className="ms-page ms-error">{error}</p>;
 
   return (
-    <div style={{ padding: "30px", maxWidth: "900px", margin: "auto" }}>
-
-      <h2>Manage Services</h2>
+    <div className="ms-page">
+      <h2 className="ms-heading">{t("getService.heading")}</h2>
 
       {services.length === 0 ? (
-        <p>No services found.</p>
+        <p>{t("getService.noServices")}</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px" }}>
-
+        <div className="ms-list">
           {services.map((service) => (
-            <div
-              key={service._id}
-              style={{
-                background: "#fff",
-                border: "1px solid #eee",
-                borderRadius: "10px",
-                padding: "16px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-              }}
-            >
-
+            <div key={service._id} className="ms-card">
               <div>
-                <h3 style={{ margin: "0 0 4px" }}>{service.title}</h3>
-                <p style={{ margin: 0, fontSize: "0.85rem", color: "#666" }}>
+                <h3 className="ms-card-title">{service.title}</h3>
+                <p className="ms-card-meta">
                   {service.schedule} · {service.category} ·{" "}
-                  <strong style={{ color: service.status === "active" ? "green" : "gray" }}>
-                    {service.status}
+                  <strong
+                    className={
+                      service.status === "active" ? "ms-status-active" : "ms-status-inactive"
+                    }
+                  >
+                    {service.status === "active"
+                      ? t("getService.status.active")
+                      : t("getService.status.inactive")}
                   </strong>
                 </p>
               </div>
 
-              <div style={{ display: "flex", gap: "8px" }}>
-
-                <button
-                  onClick={() => handleEdit(service._id)}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#2563eb",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer"
-                  }}
-                >
-                  Edit
+              <div className="ms-card-actions">
+                <button className="ms-btn ms-btn-edit" onClick={() => handleEdit(service._id)}>
+                  {t("getService.actions.edit")}
                 </button>
 
                 <button
+                  className={`ms-btn ${
+                    service.status === "active" ? "ms-btn-toggle-active" : "ms-btn-toggle-inactive"
+                  }`}
                   onClick={() => handleToggleStatus(service)}
-                  style={{
-                    padding: "8px 14px",
-                    background: service.status === "active" ? "#f59e0b" : "#10b981",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer"
-                  }}
                 >
-                  {service.status === "active" ? "Make inactive" : "Make active"}
+                  {service.status === "active"
+                    ? t("getService.actions.makeInactive")
+                    : t("getService.actions.makeActive")}
                 </button>
 
-                <button
-                  onClick={() => handleDelete(service._id)}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#dc2626",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer"
-                  }}
-                >
-                  Delete
+                <button className="ms-btn ms-btn-delete" onClick={() => handleDelete(service._id)}>
+                  {t("getService.actions.delete")}
                 </button>
-
               </div>
-
             </div>
           ))}
-
         </div>
       )}
-
     </div>
   );
 };
 
-export default ManageServices;
+export default GetService;

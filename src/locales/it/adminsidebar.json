@@ -1,0 +1,104 @@
+{
+  "dashboard": "Dashboard",
+  "logout": "Esci",
+  "sections": {
+    "homehero": {
+      "label": "Home Hero",
+      "links": {
+        "create": "Crea Home Hero",
+        "view": "Visualizza Home Hero"
+      }
+    },
+    "users": {
+      "label": "Utenti",
+      "links": {
+        "view": "Visualizza Utenti",
+        "update": "Aggiorna Utenti",
+        "delete": "Elimina Utenti"
+      }
+    },
+    "posts": {
+      "label": "Articoli",
+      "links": {
+        "create": "Crea Articolo",
+        "view": "Visualizza Articoli"
+      }
+    },
+    "services": {
+      "label": "Servizi",
+      "links": {
+        "create": "Crea Servizio",
+        "view": "Visualizza Servizi"
+      }
+    },
+    "media": {
+      "label": "Media",
+      "links": {
+        "create": "Crea Media",
+        "view": "Visualizza Media"
+      }
+    },
+    "categories": {
+      "label": "Categorie",
+      "links": {
+        "create": "Crea Categoria",
+        "view": "Visualizza Categorie"
+      }
+    },
+    "languages": {
+      "label": "Lingue",
+      "links": {
+        "create": "Crea Lingua",
+        "view": "Visualizza Lingue"
+      }
+    },
+    "churches": {
+      "label": "Chiese",
+      "links": {
+        "create": "Crea Chiesa",
+        "view": "Visualizza Chiese",
+        "update": "Aggiorna Chiese",
+        "delete": "Elimina Chiese",
+        "assign": "Assegna Chiesa",
+        "personCreate": "Crea Persona",
+        "personView": "Visualizza Persone",
+        "personUpdate": "Aggiorna Persone",
+        "personReorder": "Riordina Persone",
+        "personDelete": "Elimina Persone",
+        "chapterCreate": "Crea Capitolo",
+        "chapterView": "Visualizza Capitoli",
+        "chapterUpdate": "Aggiorna Capitoli",
+        "chapterDelete": "Elimina Capitoli"
+      }
+    },
+    "contacts": {
+      "label": "Contatti",
+      "links": {
+        "view": "Visualizza Messaggi",
+        "reply": "Rispondi ai Messaggi",
+        "delete": "Elimina Messaggi"
+      }
+    },
+    "promotions": {
+      "label": "Promozioni",
+      "links": {
+        "create": "Crea Promozione",
+        "view": "Visualizza Promozioni"
+      }
+    },
+    "subscribers": {
+      "label": "Iscritti",
+      "links": {
+        "create": "Aggiungi Iscritto",
+        "view": "Visualizza Iscritti"
+      }
+    },
+    "about": {
+      "label": "Chi Siamo",
+      "links": {
+        "create": "Crea Chi Siamo",
+        "view": "Visualizza Chi Siamo"
+      }
+    }
+  }
+}

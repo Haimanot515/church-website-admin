@@ -1,0 +1,12 @@
+{
+  "heading": "Add Subscriber",
+  "form": {
+    "emailPlaceholder": "subscriber@example.com",
+    "adding": "Adding...",
+    "addButton": "Add Subscriber"
+  },
+  "successMessage": "Subscribed successfully",
+  "errors": {
+    "create": "Failed to add subscriber"
+  }
+}

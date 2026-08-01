@@ -1,0 +1,40 @@
+{
+  "heading": "About Entries",
+  "newAbout": "+ New About",
+  "loadingEntries": "Loading About entries...",
+  "noEntries": "No About entries found.",
+  "editHeading": "Edit About Entry",
+  "form": {
+    "titlePlaceholder": "Title",
+    "churchLeaderPlaceholder": "Church Leader",
+    "descriptionPlaceholder": "Description",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "previewAlt": "preview",
+  "table": {
+    "title": "Title",
+    "churchLeader": "Church Leader",
+    "description": "Description",
+    "created": "Created",
+    "actions": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "confirmDelete": "Are you sure you want to delete this About entry?",
+  "updateSuccess": "About entry updated successfully",
+  "pagination": {
+    "prev": "Prev",
+    "next": "Next",
+    "pageOf": "Page {{current}} of {{total}}"
+  },
+  "errors": {
+    "load": "Failed to load About entries",
+    "update": "Failed to update About entry",
+    "delete": "Failed to delete About entry"
+  }
+}

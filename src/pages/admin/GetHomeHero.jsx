@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetHomeHero.css";
 
 const HEROES_PER_PAGE = 10;
 
@@ -16,6 +18,7 @@ const emptyForm = {
 
 const GetHomeHero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [allHeroes, setAllHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +26,7 @@ const GetHomeHero = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [deletingId, setDeletingId] = useState(null);
 
+  // --- Inline edit panel state ---
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [image, setImage] = useState(null);
@@ -34,7 +38,11 @@ const GetHomeHero = () => {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
+  // --- Inline delete-confirm panel state ---
+  const [pendingDeleteHero, setPendingDeleteHero] = useState(null);
+
   const editPanelRef = useRef(null);
+  const deletePanelRef = useRef(null);
 
   useEffect(() => {
     fetchHeroes();
@@ -49,7 +57,7 @@ const GetHomeHero = () => {
       setAllHeroes(Array.isArray(res.data) ? res.data : res.data ? [res.data] : []);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.msg || "Failed to load Home Hero entries");
+      setError(err.response?.data?.msg || t("getHomeHero.messages.loadError"));
     } finally {
       setLoading(false);
     }
@@ -66,8 +74,11 @@ const GetHomeHero = () => {
     setCurrentPage(page);
   };
 
-  // --- Edit (inline, no navigation) ---
+  // --- Edit panel open/close ---
   const handleEditClick = (hero) => {
+    // Close any open delete-confirm panel first
+    setPendingDeleteHero(null);
+
     setEditingId(hero._id);
     setFormError("");
     setForm({
@@ -144,22 +155,36 @@ const GetHomeHero = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Home hero updated successfully");
+      alert(t("getHomeHero.messages.updateSuccess"));
       handleCancelEdit();
       await fetchHeroes();
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.msg || "Failed to update Home Hero");
+      setFormError(err.response?.data?.msg || t("getHomeHero.messages.updateError"));
     } finally {
       setSubmitting(false);
     }
   };
 
-  // --- Delete ---
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this Home Hero entry?")) {
-      return;
-    }
+  // --- Delete panel open/close ---
+  const handleDeleteClick = (hero) => {
+    // Close any open edit panel first
+    handleCancelEdit();
+
+    setPendingDeleteHero(hero);
+
+    requestAnimationFrame(() => {
+      deletePanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const cancelDelete = () => {
+    setPendingDeleteHero(null);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDeleteHero) return;
+    const id = pendingDeleteHero._id;
 
     try {
       setDeletingId(id);
@@ -179,77 +204,40 @@ const GetHomeHero = () => {
       }
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.msg || "Failed to delete Home Hero");
+      setError(err.response?.data?.msg || t("getHomeHero.messages.deleteError"));
     } finally {
       setDeletingId(null);
+      setPendingDeleteHero(null);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Home Hero Entries</h2>
+    <div className="hh-page">
+      <div className="hh-card">
+        <div className="hh-header">
+          <h2 className="hh-title">{t("getHomeHero.pageTitle")}</h2>
 
-          {!editingId && (
-            <button
-              onClick={() => navigate("/admin/hero/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New Home Hero
+          {!editingId && !pendingDeleteHero && (
+            <button className="hh-new-btn" onClick={() => navigate("/admin/hero/create")}>
+              {t("getHomeHero.newButton")}
             </button>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="hh-error">{error}</p>}
 
+        {/* ===== Inline full-width edit panel ===== */}
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Home Hero</h3>
+          <div ref={editPanelRef} className="hh-panel">
+            <h3 className="hh-panel-title">{t("getHomeHero.editTitle")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="hh-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="hh-form">
               <input
                 type="text"
                 name="title"
-                placeholder="Hero title"
+                placeholder={t("getHomeHero.form.titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -258,14 +246,14 @@ const GetHomeHero = () => {
               <input
                 type="text"
                 name="subtitle"
-                placeholder="Hero subtitle"
+                placeholder={t("getHomeHero.form.subtitlePlaceholder")}
                 value={form.subtitle}
                 onChange={handleChange}
               />
 
               <textarea
                 name="description"
-                placeholder="Main description"
+                placeholder={t("getHomeHero.form.descriptionPlaceholder")}
                 value={form.description}
                 onChange={handleChange}
                 rows="3"
@@ -273,24 +261,24 @@ const GetHomeHero = () => {
 
               <textarea
                 name="quote"
-                placeholder="Quote"
+                placeholder={t("getHomeHero.form.quotePlaceholder")}
                 value={form.quote}
                 onChange={handleChange}
                 rows="2"
               />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+              <div className="hh-form-grid-2">
                 <input
                   type="text"
                   name="name"
-                  placeholder="Full name"
+                  placeholder={t("getHomeHero.form.namePlaceholder")}
                   value={form.name}
                   onChange={handleChange}
                 />
                 <input
                   type="text"
                   name="role"
-                  placeholder="Job role"
+                  placeholder={t("getHomeHero.form.rolePlaceholder")}
                   value={form.role}
                   onChange={handleChange}
                 />
@@ -298,140 +286,119 @@ const GetHomeHero = () => {
 
               <textarea
                 name="story"
-                placeholder="Detailed story for about section..."
+                placeholder={t("getHomeHero.form.storyPlaceholder")}
                 value={form.story}
                 onChange={handleChange}
                 rows="6"
               />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+              <div className="hh-form-grid-2">
                 <div>
-                  <label style={{ fontSize: "13px", color: "#555", display: "block", marginBottom: "6px" }}>
-                    Hero Profile Image
-                  </label>
+                  <label className="hh-file-label">{t("getHomeHero.form.heroImageLabel")}</label>
                   <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "hero")} />
                   {(preview || existingImageUrl) && (
-                    <img
-                      src={preview || existingImageUrl}
-                      alt="Hero"
-                      style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "10px", marginTop: "10px" }}
-                    />
+                    <img src={preview || existingImageUrl} alt="Hero" className="hh-file-preview" />
                   )}
                 </div>
 
                 <div>
-                  <label style={{ fontSize: "13px", color: "#555", display: "block", marginBottom: "6px" }}>
-                    Story/About Image
-                  </label>
+                  <label className="hh-file-label">{t("getHomeHero.form.storyImageLabel")}</label>
                   <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "story")} />
                   {(storyPreview || existingStoryImageUrl) && (
-                    <img
-                      src={storyPreview || existingStoryImageUrl}
-                      alt="Story"
-                      style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "10px", marginTop: "10px" }}
-                    />
+                    <img src={storyPreview || existingStoryImageUrl} alt="Story" className="hh-file-preview" />
                   )}
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="hh-form-actions">
+                <button type="submit" disabled={submitting} className="hh-btn-primary">
+                  {submitting ? t("getHomeHero.buttons.saving") : t("getHomeHero.buttons.save")}
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  Cancel
+                <button type="button" onClick={handleCancelEdit} disabled={submitting} className="hh-btn-secondary">
+                  {t("getHomeHero.buttons.cancel")}
                 </button>
               </div>
             </form>
           </div>
         )}
 
+        {/* ===== Inline full-width delete-confirm panel ===== */}
+        {pendingDeleteHero && (
+          <div ref={deletePanelRef} className="hh-panel hh-delete-panel">
+            <h3 className="hh-panel-title">{t("getHomeHero.messages.confirmDeleteTitle")}</h3>
+
+            <p className="hh-panel-body-text">
+              {pendingDeleteHero?.title
+                ? t("getHomeHero.messages.confirmDeleteNamed", { title: pendingDeleteHero.title })
+                : t("getHomeHero.messages.confirmDelete")}
+            </p>
+
+            <div className="hh-form-actions">
+              <button
+                className="hh-btn-danger"
+                onClick={confirmDelete}
+                disabled={deletingId === pendingDeleteHero?._id}
+              >
+                {deletingId === pendingDeleteHero?._id
+                  ? t("getHomeHero.buttons.deleting")
+                  : t("getHomeHero.buttons.confirmDelete")}
+              </button>
+
+              <button
+                className="hh-btn-secondary"
+                onClick={cancelDelete}
+                disabled={deletingId === pendingDeleteHero?._id}
+              >
+                {t("getHomeHero.buttons.cancel")}
+              </button>
+            </div>
+          </div>
+        )}
+
         {!editingId &&
+          !pendingDeleteHero &&
           (loading ? (
-            <p>Loading Home Hero entries...</p>
+            <p>{t("getHomeHero.loading")}</p>
           ) : allHeroes.length === 0 ? (
-            <p>No Home Hero entries found.</p>
+            <p>{t("getHomeHero.noEntries")}</p>
           ) : (
             <>
-              <div style={{ overflowX: "auto", marginTop: "15px" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}>
+              {/* ===== Desktop table (hidden <= 820px via CSS) ===== */}
+              <div className="hh-table-wrap">
+                <table className="hh-table">
                   <thead>
                     <tr>
-                      <th style={thStyle}>Title</th>
-                      <th style={thStyle}>Name</th>
-                      <th style={thStyle}>Role</th>
-                      <th style={thStyle}>Created</th>
-                      <th style={thStyle}>Actions</th>
+                      <th className="hh-th">{t("getHomeHero.table.title")}</th>
+                      <th className="hh-th">{t("getHomeHero.table.name")}</th>
+                      <th className="hh-th">{t("getHomeHero.table.role")}</th>
+                      <th className="hh-th">{t("getHomeHero.table.created")}</th>
+                      <th className="hh-th">{t("getHomeHero.table.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {heroes.map((hero) => (
                       <tr key={hero._id}>
-                        <td style={tdStyle}>{hero.title}</td>
-                        <td style={tdStyle}>{hero.name || "—"}</td>
-                        <td style={tdStyle}>{hero.role || "—"}</td>
-                        <td style={tdStyle}>
-                          {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : "—"}
+                        <td className="hh-td">{hero.title}</td>
+                        <td className="hh-td">{hero.name || t("getHomeHero.table.notAvailable")}</td>
+                        <td className="hh-td">{hero.role || t("getHomeHero.table.notAvailable")}</td>
+                        <td className="hh-td">
+                          {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
                         </td>
-                        <td style={tdStyle}>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button
-                              onClick={() => handleEditClick(hero)}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#2563eb",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              Edit
+                        <td className="hh-td">
+                          <div className="hh-actions">
+                            <button className="hh-btn hh-btn-edit" onClick={() => handleEditClick(hero)}>
+                              {t("getHomeHero.buttons.edit")}
                             </button>
 
                             <button
-                              onClick={() => handleDelete(hero._id)}
+                              className="hh-btn hh-btn-delete"
+                              onClick={() => handleDeleteClick(hero)}
                               disabled={deletingId === hero._id}
-                              style={{
-                                padding: "6px 12px",
-                                background: "#dc2626",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: "6px",
-                                cursor: "pointer",
-                                fontSize: "13px",
-                                whiteSpace: "nowrap",
-                              }}
                             >
-                              {deletingId === hero._id ? "Deleting..." : "Delete"}
+                              {deletingId === hero._id
+                                ? t("getHomeHero.buttons.deleting")
+                                : t("getHomeHero.buttons.delete")}
                             </button>
                           </div>
                         </td>
@@ -441,34 +408,67 @@ const GetHomeHero = () => {
                 </table>
               </div>
 
+              {/* ===== Mobile/tablet card list (shown <= 820px via CSS) ===== */}
+              <div className="hh-cards">
+                {heroes.map((hero) => (
+                  <div className="hh-card-item" key={hero._id}>
+                    <div className="hh-card-row">
+                      <span className="hh-card-label">{t("getHomeHero.table.title")}</span>
+                      <span className="hh-card-value">{hero.title}</span>
+                    </div>
+                    <div className="hh-card-row">
+                      <span className="hh-card-label">{t("getHomeHero.table.name")}</span>
+                      <span className="hh-card-value">{hero.name || t("getHomeHero.table.notAvailable")}</span>
+                    </div>
+                    <div className="hh-card-row">
+                      <span className="hh-card-label">{t("getHomeHero.table.role")}</span>
+                      <span className="hh-card-value">{hero.role || t("getHomeHero.table.notAvailable")}</span>
+                    </div>
+                    <div className="hh-card-row">
+                      <span className="hh-card-label">{t("getHomeHero.table.created")}</span>
+                      <span className="hh-card-value">
+                        {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
+                      </span>
+                    </div>
+
+                    <div className="hh-card-actions">
+                      <button className="hh-btn hh-btn-edit" onClick={() => handleEditClick(hero)}>
+                        {t("getHomeHero.buttons.edit")}
+                      </button>
+                      <button
+                        className="hh-btn hh-btn-delete"
+                        onClick={() => handleDeleteClick(hero)}
+                        disabled={deletingId === hero._id}
+                      >
+                        {deletingId === hero._id
+                          ? t("getHomeHero.buttons.deleting")
+                          : t("getHomeHero.buttons.delete")}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               {totalPages > 1 && (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginTop: "25px",
-                  }}
-                >
+                <div className="hh-pagination">
                   <button
+                    className="hh-page-btn"
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    style={pageButtonStyle(currentPage === 1)}
                   >
-                    Prev
+                    {t("getHomeHero.pagination.prev")}
                   </button>
 
-                  <span style={{ fontSize: "14px", color: "#444" }}>
-                    Page {currentPage} of {totalPages}
+                  <span className="hh-page-info">
+                    {t("getHomeHero.pagination.pageOf", { current: currentPage, total: totalPages })}
                   </span>
 
                   <button
+                    className="hh-page-btn"
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    style={pageButtonStyle(currentPage === totalPages)}
                   >
-                    Next
+                    {t("getHomeHero.pagination.next")}
                   </button>
                 </div>
               )}
@@ -478,28 +478,5 @@ const GetHomeHero = () => {
     </div>
   );
 };
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
-};
-
-const pageButtonStyle = (disabled) => ({
-  padding: "8px 16px",
-  background: disabled ? "#e5e7eb" : "#2563eb",
-  color: disabled ? "#999" : "#fff",
-  border: "none",
-  borderRadius: "6px",
-  cursor: disabled ? "not-allowed" : "pointer",
-});
 
 export default GetHomeHero;

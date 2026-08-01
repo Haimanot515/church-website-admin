@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetCategory.css";
 
 const emptyForm = {
   name: "",
@@ -10,6 +12,7 @@ const emptyForm = {
 
 const GetCategory = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,12 +49,13 @@ const GetCategory = () => {
         }
       } catch (err) {
         console.log(err);
-        setError("Failed to load languages");
+        setError(t("getCategory.errors.loadLanguages"));
       } finally {
         setLanguagesLoading(false);
       }
     };
     fetchLanguages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Re-fetch categories whenever the viewing language changes
@@ -73,7 +77,7 @@ const GetCategory = () => {
       setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load categories");
+      setError(err.response?.data?.message || t("getCategory.errors.loadCategories"));
     } finally {
       setLoading(false);
     }
@@ -125,12 +129,12 @@ const GetCategory = () => {
         language: form.language,
       });
 
-      alert("Category updated successfully");
+      alert(t("getCategory.updateSuccess"));
       handleCancelEdit();
       await fetchCategories(filterLanguageCode);
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to update category");
+      setFormError(err.response?.data?.message || t("getCategory.errors.update"));
     } finally {
       setSubmitting(false);
     }
@@ -138,9 +142,7 @@ const GetCategory = () => {
 
   // --- Delete ---
   const handleDelete = async (category) => {
-    const confirmed = window.confirm(
-      `Delete "${category.name}"? This action cannot be undone.`
-    );
+    const confirmed = window.confirm(t("getCategory.confirmDelete", { name: category.name }));
     if (!confirmed) return;
 
     try {
@@ -155,71 +157,36 @@ const GetCategory = () => {
       await fetchCategories(filterLanguageCode);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to delete category");
+      setError(err.response?.data?.message || t("getCategory.errors.delete"));
     } finally {
       setDeletingId(null);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-            flexWrap: "wrap",
-            gap: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>All Categories</h2>
+    <div className="gc-page">
+      <div className="gc-card">
+        <div className="gc-header">
+          <h2>{t("getCategory.heading")}</h2>
 
           {!editingId && (
-            <button
-              onClick={() => navigate("/admin/categories/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New Category
+            <button className="gc-btn-new" onClick={() => navigate("/admin/categories/create")}>
+              {t("getCategory.newCategory")}
             </button>
           )}
         </div>
 
         {!editingId && (
-          <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "10px" }}>
-            <label htmlFor="viewing-language" style={{ fontSize: "14px", color: "#555" }}>
-              Viewing categories in:
+          <div className="gc-filter-row">
+            <label htmlFor="viewing-language" className="gc-filter-label">
+              {t("getCategory.viewingLanguage")}
             </label>
             <select
               id="viewing-language"
+              className="gc-filter-select"
               value={filterLanguageCode}
               onChange={(e) => setFilterLanguageCode(e.target.value)}
               disabled={languagesLoading}
-              style={{
-                padding: "8px 12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-              }}
             >
               {languages.map((lang) => (
                 <option key={lang._id} value={lang.code}>
@@ -230,29 +197,19 @@ const GetCategory = () => {
           </div>
         )}
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="gc-error">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Category</h3>
+          <div ref={editPanelRef} className="gc-edit-panel">
+            <h3>{t("getCategory.editHeading")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="gc-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="gc-form">
               <input
                 type="text"
                 name="name"
-                placeholder="Category Name"
+                placeholder={t("getCategory.form.namePlaceholder")}
                 value={form.name}
                 onChange={handleChange}
                 required
@@ -260,25 +217,15 @@ const GetCategory = () => {
 
               <textarea
                 name="description"
-                placeholder="Category Description"
+                placeholder={t("getCategory.form.descriptionPlaceholder")}
                 value={form.description}
                 onChange={handleChange}
                 rows="5"
               />
 
-              <select
-                name="language"
-                value={form.language}
-                onChange={handleChange}
-                required
-                style={{
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                }}
-              >
+              <select name="language" value={form.language} onChange={handleChange} required>
                 <option value="" disabled>
-                  Select a language
+                  {t("getCategory.form.selectLanguage")}
                 </option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
@@ -287,38 +234,18 @@ const GetCategory = () => {
                 ))}
               </select>
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="gc-form-actions">
+                <button type="submit" disabled={submitting} className="gc-btn-primary">
+                  {submitting ? t("getCategory.form.saving") : t("getCategory.form.saveChanges")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="gc-btn-cancel"
                 >
-                  Cancel
+                  {t("getCategory.form.cancel")}
                 </button>
               </div>
             </form>
@@ -327,59 +254,40 @@ const GetCategory = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading categories...</p>
+            <p>{t("getCategory.loadingCategories")}</p>
           ) : categories.length === 0 ? (
-            <p>No categories found for this language.</p>
+            <p>{t("getCategory.noCategories")}</p>
           ) : (
-            <div style={{ overflowX: "auto", marginTop: "15px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "600px" }}>
+            <div className="gc-table-wrap">
+              <table className="gc-table">
                 <thead>
                   <tr>
-                    <th style={thStyle}>Name</th>
-                    <th style={thStyle}>Description</th>
-                    <th style={thStyle}>Language</th>
-                    <th style={thStyle}>Actions</th>
+                    <th>{t("getCategory.table.name")}</th>
+                    <th>{t("getCategory.table.description")}</th>
+                    <th>{t("getCategory.table.language")}</th>
+                    <th>{t("getCategory.table.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {categories.map((cat) => (
                     <tr key={cat._id}>
-                      <td style={tdStyle}>{cat.name}</td>
-                      <td style={tdStyle}>{cat.description || "—"}</td>
-                      <td style={tdStyle}>{getLanguageLabel(cat.language)}</td>
-                      <td style={tdStyle}>
-                        <div style={{ display: "flex", gap: "8px" }}>
-                          <button
-                            onClick={() => handleEditClick(cat)}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#2563eb",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            Edit
+                      <td data-label={t("getCategory.table.name")}>{cat.name}</td>
+                      <td data-label={t("getCategory.table.description")}>{cat.description || "—"}</td>
+                      <td data-label={t("getCategory.table.language")}>{getLanguageLabel(cat.language)}</td>
+                      <td data-label={t("getCategory.table.actions")}>
+                        <div className="gc-row-actions">
+                          <button className="gc-btn-edit" onClick={() => handleEditClick(cat)}>
+                            {t("getCategory.actions.edit")}
                           </button>
 
                           <button
+                            className="gc-btn-delete"
                             onClick={() => handleDelete(cat)}
                             disabled={deletingId === cat._id}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#dc2626",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: deletingId === cat._id ? "not-allowed" : "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
                           >
-                            {deletingId === cat._id ? "Deleting..." : "Delete"}
+                            {deletingId === cat._id
+                              ? t("getCategory.actions.deleting")
+                              : t("getCategory.actions.delete")}
                           </button>
                         </div>
                       </td>
@@ -392,20 +300,6 @@ const GetCategory = () => {
       </div>
     </div>
   );
-};
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
 };
 
 export default GetCategory;

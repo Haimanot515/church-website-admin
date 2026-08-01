@@ -1,0 +1,17 @@
+{
+  "heading": "Crea Chi Siamo",
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "titlePlaceholder": "Titolo",
+    "churchLeaderPlaceholder": "Leader della Chiesa",
+    "descriptionPlaceholder": "Descrizione",
+    "creating": "Creazione...",
+    "createButton": "Crea Chi Siamo"
+  },
+  "previewAlt": "anteprima",
+  "successMessage": "Voce Chi Siamo creata con successo",
+  "errors": {
+    "languageRequired": "Seleziona una lingua",
+    "create": "Impossibile creare la voce Chi Siamo"
+  }
+}

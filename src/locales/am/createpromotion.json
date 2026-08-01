@@ -1,0 +1,16 @@
+{
+  "heading": "ማስተዋወቂያ ፍጠር",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "ንግድዎን ወደፊት ያራምዱ በዘርፍ-መሪ ግንዛቤዎች",
+    "descriptionPlaceholder": "በ2026 ተወዳዳሪ ጥቅም እንዲኖርዎት የተነደፉ ልዩ ስልቶችን እና በመረጃ የተደገፉ ሪፖርቶችን ይክፈቱ።",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ማስተዋወቂያ ፍጠር"
+  },
+  "previewAlt": "የማስተዋወቂያ ቅድመ እይታ",
+  "successMessage": "ማስተዋወቂያው በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "languageRequired": "እባክዎ ቋንቋ ይምረጡ",
+    "create": "ማስተዋወቂያውን መፍጠር አልተሳካም"
+  }
+}

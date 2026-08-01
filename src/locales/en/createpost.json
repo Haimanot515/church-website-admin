@@ -1,0 +1,27 @@
+{
+  "heading": "Create Post",
+  "form": {
+    "titlePlaceholder": "Post title",
+    "descriptionPlaceholder": "Post description",
+    "contentPlaceholder": "Post content",
+    "loadingLanguages": "Loading languages...",
+    "selectLanguage": "Select Language",
+    "selectLanguageFirst": "Select a language first",
+    "loadingCategories": "Loading categories...",
+    "noCategoriesForLanguage": "No categories for this language",
+    "selectCategory": "Select Category",
+    "draft": "Draft",
+    "published": "Published",
+    "trending": "Trending",
+    "featured": "Featured",
+    "recommended": "Recommended",
+    "creating": "Creating...",
+    "create": "Create Post"
+  },
+  "createSuccess": "Post created successfully",
+  "errors": {
+    "loadLanguages": "Failed to load languages",
+    "loadCategories": "Failed to load categories for this language",
+    "create": "Failed to create post"
+  }
+}

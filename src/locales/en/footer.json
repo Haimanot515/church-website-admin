@@ -1,0 +1,12 @@
+{
+  "brand": "Ethiopian Orthodox Church",
+  "tagline": "Sunday services at 9:00 & 11:00 AM. All are welcome, always.",
+  "columns": [
+    { "title": "Visit", "items": ["Service Times", "Directions", "What to Expect"] },
+    { "title": "Get Involved", "items": ["Ministries", "Volunteer", "Give", "Missions"] },
+    { "title": "Connect", "items": ["Facebook", "Instagram", "YouTube"] }
+  ],
+  "backToTop": "Back to top",
+  "copyright": "© 2026 Ethiopian Orthodox Church",
+  "privacyPolicy": "Privacy Policy"
+}

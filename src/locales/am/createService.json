@@ -1,0 +1,29 @@
+{
+  "heading": "የቤተክርስቲያን አገልግሎት ፍጠር",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "የአገልግሎት ርዕስ",
+    "descriptionPlaceholder": "የአገልግሎት መግለጫ",
+    "dayPlaceholder": "ምሳሌ: እሁድ እና በዓላት",
+    "timePlaceholder": "ምሳሌ: 6:00 - 9:00 ጥዋት",
+    "locationPlaceholder": "ቦታ (ለምሳሌ ዋና አዳራሽ)",
+    "markFeatured": "እንደ ተለይቶ የቀረበ ምልክት አድርግ",
+    "creating": "በመፍጠር ላይ...",
+    "create": "አገልግሎት ፍጠር"
+  },
+  "categories": {
+    "Worship": "አምልኮ",
+    "Teaching": "ትምህርት",
+    "Prayer": "ጸሎት",
+    "Music": "ሙዚቃ",
+    "Youth": "ወጣቶች",
+    "Ministry": "አገልግሎት",
+    "Outreach": "ተልእኮ",
+    "Other": "ሌላ"
+  },
+  "createSuccess": "አገልግሎቱ በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "selectLanguage": "እባክዎ ቋንቋ ይምረጡ",
+    "create": "አገልግሎቱን መፍጠር አልተሳካም"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "heading": "Crea Articolo",
+  "form": {
+    "titlePlaceholder": "Titolo dell'articolo",
+    "descriptionPlaceholder": "Descrizione dell'articolo",
+    "contentPlaceholder": "Contenuto dell'articolo",
+    "loadingLanguages": "Caricamento lingue...",
+    "selectLanguage": "Seleziona Lingua",
+    "selectLanguageFirst": "Seleziona prima una lingua",
+    "loadingCategories": "Caricamento categorie...",
+    "noCategoriesForLanguage": "Nessuna categoria per questa lingua",
+    "selectCategory": "Seleziona Categoria",
+    "draft": "Bozza",
+    "published": "Pubblicato",
+    "trending": "Di tendenza",
+    "featured": "In evidenza",
+    "recommended": "Consigliato",
+    "creating": "Creazione...",
+    "create": "Crea Articolo"
+  },
+  "createSuccess": "Articolo creato con successo",
+  "errors": {
+    "loadLanguages": "Impossibile caricare le lingue",
+    "loadCategories": "Impossibile caricare le categorie per questa lingua",
+    "create": "Impossibile creare l'articolo"
+  }
+}

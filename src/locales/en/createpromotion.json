@@ -1,0 +1,16 @@
+{
+  "heading": "Create Promotion",
+  "form": {
+    "selectLanguage": "Select language",
+    "titlePlaceholder": "Drive Your Business Forward with Industry-Leading Insights",
+    "descriptionPlaceholder": "Unlock exclusive strategies and data-driven reports designed to give you a competitive edge in 2026.",
+    "creating": "Creating...",
+    "createButton": "Create Promotion"
+  },
+  "previewAlt": "promotion preview",
+  "successMessage": "Promotion created successfully",
+  "errors": {
+    "languageRequired": "Please select a language",
+    "create": "Failed to create promotion"
+  }
+}

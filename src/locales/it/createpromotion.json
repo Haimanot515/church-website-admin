@@ -1,0 +1,16 @@
+{
+  "heading": "Crea Promozione",
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "titlePlaceholder": "Fai Crescere la Tua Azienda con Approfondimenti di Settore",
+    "descriptionPlaceholder": "Sblocca strategie esclusive e report basati sui dati progettati per darti un vantaggio competitivo nel 2026.",
+    "creating": "Creazione...",
+    "createButton": "Crea Promozione"
+  },
+  "previewAlt": "anteprima promozione",
+  "successMessage": "Promozione creata con successo",
+  "errors": {
+    "languageRequired": "Seleziona una lingua",
+    "create": "Impossibile creare la promozione"
+  }
+}

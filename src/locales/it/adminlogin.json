@@ -1,0 +1,22 @@
+{
+  "brandName": "Chiesa Abune Gebre Menfes Kidus",
+  "heading": "Console Amministratore",
+  "subtext": "Quest'area è riservata agli amministratori del sito. Accedi con le tue credenziali di amministratore per gestire contenuti, utenti e impostazioni.",
+  "list": {
+    "manageContent": "Gestisci i contenuti pubblicati",
+    "reviewActivity": "Rivedi l'attività degli utenti",
+    "configureSettings": "Configura le impostazioni del sito"
+  },
+  "formTitle": "Accesso Amministratore",
+  "formSubtitle": "Inserisci le tue credenziali per continuare",
+  "emailLabel": "Email",
+  "emailPlaceholder": "you@church.org",
+  "passwordLabel": "Password",
+  "submitButton": "Accedi",
+  "footerNote": "Problemi ad accedere? Contatta l'ufficio della chiesa per assistenza nel recupero dell'accesso.",
+  "successMessage": "Accesso riuscito! Reindirizzamento in corso...",
+  "errors": {
+    "notAdmin": "Questo account non ha accesso amministrativo.",
+    "generic": "Qualcosa è andato storto"
+  }
+}

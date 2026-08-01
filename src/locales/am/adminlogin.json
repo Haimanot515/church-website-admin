@@ -1,0 +1,22 @@
+{
+  "brandName": "አቡነ ገብረ መንፈስ ቅዱስ ቤተክርስቲያን",
+  "heading": "የአስተዳዳሪ ኮንሶል",
+  "subtext": "ይህ ቦታ ለድህረ ገጽ አስተዳዳሪዎች የተያዘ ነው። ይዘትን፣ ተጠቃሚዎችን እና ቅንብሮችን ለማስተዳደር በአስተዳዳሪ መረጃዎ ይግቡ።",
+  "list": {
+    "manageContent": "የታተመ ይዘት ያስተዳድሩ",
+    "reviewActivity": "የተጠቃሚ እንቅስቃሴን ይገምግሙ",
+    "configureSettings": "የድህረ ገጽ ቅንብሮችን ያዋቅሩ"
+  },
+  "formTitle": "የአስተዳዳሪ መግቢያ",
+  "formSubtitle": "ለመቀጠል መረጃዎን ያስገቡ",
+  "emailLabel": "ኢሜይል",
+  "emailPlaceholder": "you@church.org",
+  "passwordLabel": "የይለፍ ቃል",
+  "submitButton": "ግባ",
+  "footerNote": "ለመግባት ችግር ገጥሞዎታል? መዳረሻ መልሶ ለማግኘት የቤተክርስቲያኑን ቢሮ ያነጋግሩ።",
+  "successMessage": "በተሳካ ሁኔታ ገብተዋል! በማዘዋወር ላይ...",
+  "errors": {
+    "notAdmin": "ይህ አካውንት የአስተዳዳሪ መዳረሻ የለውም።",
+    "generic": "የሆነ ስህተት ተከስቷል"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "greeting": {
+    "morning": "Buongiorno",
+    "afternoon": "Buon pomeriggio",
+    "evening": "Buonasera",
+    "night": "Buonanotte"
+  },
+  "subtitle": "Ecco una panoramica in tempo reale dei contenuti del tuo sito, direttamente dal database.",
+
+  "contentLibrary": {
+    "heading": "Libreria contenuti",
+    "subheading": "Conteggi in tempo reale dal database",
+    "failedToLoad": "Caricamento non riuscito",
+    "totalPrefix": "Totale"
+  },
+
+  "content": {
+    "posts": "Articoli",
+    "media": "Media",
+    "categories": "Categorie",
+    "languages": "Lingue",
+    "churches": "Chiese",
+    "churchPersons": "Persone della chiesa",
+    "churchStory": "Capitoli della storia della chiesa",
+    "services": "Servizi",
+    "promotions": "Promozioni",
+    "subscribers": "Iscritti",
+    "users": "Utenti"
+  },
+
+  "recentPosts": {
+    "heading": "Articoli recenti",
+    "showing": "Visualizzazione di {{shown}} su {{total}}",
+    "viewAll": "Vedi tutti",
+    "loading": "Caricamento...",
+    "failedToLoad": "Caricamento articoli non riuscito.",
+    "none": "Ancora nessun articolo.",
+    "uncategorized": "Senza categoria"
+  },
+
+  "quickActions": {
+    "heading": "Azioni rapide",
+    "createPost": "Crea articolo",
+    "createPromotion": "Crea promozione",
+    "addSubscriber": "Aggiungi iscritto",
+    "replyToMessages": "Rispondi ai messaggi",
+    "createChurchStoryChapter": "Crea capitolo della storia della chiesa",
+    "createMedia": "Crea media"
+  },
+
+  "recentPromotions": {
+    "heading": "Promozioni recenti",
+    "showing": "Visualizzazione di {{shown}} su {{total}}",
+    "viewAll": "Vedi tutte",
+    "loading": "Caricamento...",
+    "failedToLoad": "Caricamento promozioni non riuscito.",
+    "none": "Ancora nessuna promozione."
+  },
+
+  "recentMedia": {
+    "heading": "Media recenti",
+    "showing": "Visualizzazione di {{shown}} su {{total}}",
+    "viewAll": "Vedi tutti",
+    "loading": "Caricamento...",
+    "failedToLoad": "Caricamento media non riuscito.",
+    "none": "Ancora nessun media.",
+    "uncategorized": "Senza categoria"
+  },
+
+  "messages": {
+    "heading": "Messaggi in attesa di risposta",
+    "showingRecent": "Visualizzazione dei {{count}} più recenti",
+    "viewAll": "Vedi tutti",
+    "loading": "Caricamento...",
+    "failedToLoad": "Caricamento messaggi non riuscito.",
+    "none": "Ancora nessun messaggio.",
+    "unread": "{{count}} non letti"
+  },
+
+  "recentSubscribers": {
+    "heading": "Iscritti recenti",
+    "showing": "Visualizzazione di {{shown}} su {{total}}",
+    "viewAll": "Vedi tutti",
+    "loading": "Caricamento...",
+    "failedToLoad": "Caricamento iscritti non riuscito.",
+    "none": "Ancora nessun iscritto."
+  }
+}

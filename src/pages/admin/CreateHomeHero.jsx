@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreateHomeHero.css";
 
 const CreateHomeHero = () => {
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     title: "",
     subtitle: "",
@@ -60,7 +64,7 @@ const CreateHomeHero = () => {
     setError("");
 
     if (!formData.language) {
-      setError("Please select a language");
+      setError(t("createHomeHero.messages.selectLanguage"));
       return;
     }
 
@@ -90,7 +94,7 @@ const CreateHomeHero = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Home hero created successfully");
+      alert(t("createHomeHero.messages.createSuccess"));
 
       setFormData({
         title: "",
@@ -109,37 +113,23 @@ const CreateHomeHero = () => {
       setStoryPreview(null);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.msg || "Failed to create home hero");
+      setError(err.response?.data?.msg || t("createHomeHero.messages.createError"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Create Home Hero</h2>
+    <div className="hh-page">
+      <div className="hh-card">
+        <h2 className="hh-title">{t("createHomeHero.createTitle")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="hh-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <select
-            name="language"
-            value={formData.language}
-            onChange={handleChange}
-            required
-          >
+        <form onSubmit={handleSubmit} className="hh-form">
+          <select name="language" value={formData.language} onChange={handleChange} required>
             <option value="" disabled>
-              Select language
+              {t("createHomeHero.form.selectLanguagePlaceholder")}
             </option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
@@ -151,7 +141,7 @@ const CreateHomeHero = () => {
           <input
             type="text"
             name="title"
-            placeholder="Hero title"
+            placeholder={t("createHomeHero.form.titlePlaceholder")}
             value={formData.title}
             onChange={handleChange}
             required
@@ -160,14 +150,14 @@ const CreateHomeHero = () => {
           <input
             type="text"
             name="subtitle"
-            placeholder="Hero subtitle"
+            placeholder={t("createHomeHero.form.subtitlePlaceholder")}
             value={formData.subtitle}
             onChange={handleChange}
           />
 
           <textarea
             name="description"
-            placeholder="Main description"
+            placeholder={t("createHomeHero.form.descriptionPlaceholder")}
             value={formData.description}
             onChange={handleChange}
             rows="3"
@@ -175,70 +165,55 @@ const CreateHomeHero = () => {
 
           <textarea
             name="quote"
-            placeholder="Quote"
+            placeholder={t("createHomeHero.form.quotePlaceholder")}
             value={formData.quote}
             onChange={handleChange}
             rows="2"
           />
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Full name"
-            value={formData.name}
-            onChange={handleChange}
-          />
+          <div className="hh-form-grid-2">
+            <input
+              type="text"
+              name="name"
+              placeholder={t("createHomeHero.form.namePlaceholder")}
+              value={formData.name}
+              onChange={handleChange}
+            />
 
-          <input
-            type="text"
-            name="role"
-            placeholder="Job role"
-            value={formData.role}
-            onChange={handleChange}
-          />
+            <input
+              type="text"
+              name="role"
+              placeholder={t("createHomeHero.form.rolePlaceholder")}
+              value={formData.role}
+              onChange={handleChange}
+            />
+          </div>
 
           <textarea
             name="story"
-            placeholder="Detailed story for about section..."
+            placeholder={t("createHomeHero.form.storyPlaceholder")}
             value={formData.story}
             onChange={handleChange}
             rows="6"
           />
 
-          <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "hero")} />
+          <div>
+            <label className="hh-file-label">{t("createHomeHero.form.heroImageLabel")}</label>
+            <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "hero")} />
+            {preview && <img src={preview} alt="preview" className="hh-file-preview" />}
+          </div>
 
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-            />
-          )}
+          <div>
+            <label className="hh-file-label">{t("createHomeHero.form.storyImageLabel")}</label>
+            <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "story")} />
+            {storyPreview && <img src={storyPreview} alt="story preview" className="hh-file-preview" />}
+          </div>
 
-          <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "story")} />
-
-          {storyPreview && (
-            <img
-              src={storyPreview}
-              alt="story preview"
-              style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-            />
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              padding: "14px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
-          >
-            {loading ? "Creating..." : "Create Home Hero"}
-          </button>
+          <div className="hh-form-actions">
+            <button type="submit" disabled={loading} className="hh-btn-primary">
+              {loading ? t("createHomeHero.buttons.creating") : t("createHomeHero.buttons.create")}
+            </button>
+          </div>
         </form>
       </div>
     </div>

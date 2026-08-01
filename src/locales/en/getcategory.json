@@ -1,0 +1,35 @@
+{
+  "heading": "All Categories",
+  "newCategory": "+ New Category",
+  "viewingLanguage": "Viewing categories in:",
+  "loadingCategories": "Loading categories...",
+  "noCategories": "No categories found for this language.",
+  "editHeading": "Edit Category",
+  "form": {
+    "namePlaceholder": "Category Name",
+    "descriptionPlaceholder": "Category Description",
+    "selectLanguage": "Select a language",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "cancel": "Cancel"
+  },
+  "table": {
+    "name": "Name",
+    "description": "Description",
+    "language": "Language",
+    "actions": "Actions"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "confirmDelete": "Delete \"{{name}}\"? This action cannot be undone.",
+  "updateSuccess": "Category updated successfully",
+  "errors": {
+    "loadLanguages": "Failed to load languages",
+    "loadCategories": "Failed to load categories",
+    "update": "Failed to update category",
+    "delete": "Failed to delete category"
+  }
+}

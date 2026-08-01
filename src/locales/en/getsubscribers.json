@@ -1,0 +1,16 @@
+{
+  "heading": "Subscribers",
+  "activeCount": "{{count}} active",
+  "loadingSubscribers": "Loading subscribers...",
+  "noSubscribers": "No subscribers yet.",
+  "subscribedOn": "Subscribed {{date}}",
+  "actions": {
+    "unsubscribe": "Unsubscribe",
+    "removing": "Removing..."
+  },
+  "confirmUnsubscribe": "Unsubscribe \"{{email}}\"? This cannot be undone.",
+  "errors": {
+    "load": "Failed to load subscribers",
+    "unsubscribe": "Failed to unsubscribe"
+  }
+}

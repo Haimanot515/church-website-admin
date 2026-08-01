@@ -1,0 +1,23 @@
+{
+  "heading": "Create Language",
+  "form": {
+    "namePlaceholder": "Language Name",
+    "codePlaceholder": "Language Code (EN, AM, IT)",
+    "creating": "Creating...",
+    "createButton": "Create Language"
+  },
+  "examples": {
+    "heading": "Example Languages",
+    "table": {
+      "name": "Name",
+      "code": "Code"
+    },
+    "english": "English",
+    "amharic": "Amharic",
+    "italian": "Italian"
+  },
+  "successMessage": "Language created successfully",
+  "errors": {
+    "create": "Failed to create language"
+  }
+}

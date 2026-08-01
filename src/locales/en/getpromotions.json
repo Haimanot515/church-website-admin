@@ -1,0 +1,16 @@
+{
+  "heading": "Promotions",
+  "newPromotion": "+ New Promotion",
+  "loadingPromotions": "Loading promotions...",
+  "noPromotions": "No promotions yet.",
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "confirmDelete": "Delete promotion \"{{title}}\"? This cannot be undone.",
+  "errors": {
+    "load": "Failed to load promotions",
+    "delete": "Failed to delete promotion"
+  }
+}

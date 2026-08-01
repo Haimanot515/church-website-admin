@@ -1,0 +1,23 @@
+{
+  "heading": "ቋንቋ ፍጠር",
+  "form": {
+    "namePlaceholder": "የቋንቋ ስም",
+    "codePlaceholder": "የቋንቋ ኮድ (EN, AM, IT)",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ቋንቋ ፍጠር"
+  },
+  "examples": {
+    "heading": "የናሙና ቋንቋዎች",
+    "table": {
+      "name": "ስም",
+      "code": "ኮድ"
+    },
+    "english": "እንግሊዝኛ",
+    "amharic": "አማርኛ",
+    "italian": "ጣሊያንኛ"
+  },
+  "successMessage": "ቋንቋው በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "create": "ቋንቋውን መፍጠር አልተሳካም"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "heading": "ሁሉም ልጥፎች",
+  "newPost": "+ አዲስ ልጥፍ",
+  "loadingPosts": "ልጥፎችን በመጫን ላይ...",
+  "noPosts": "ምንም ልጥፍ አልተገኘም።",
+  "editHeading": "ልጥፍ አርትዕ",
+  "form": {
+    "titlePlaceholder": "የልጥፍ ርዕስ",
+    "descriptionPlaceholder": "የልጥፍ መግለጫ",
+    "contentPlaceholder": "የልጥፍ ይዘት",
+    "loadingCategories": "ምድቦችን በመጫን ላይ...",
+    "selectCategory": "ምድብ ይምረጡ",
+    "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "draft": "ረቂቅ",
+    "published": "የታተመ",
+    "trending": "ተወዳጅ",
+    "featured": "ተለይቶ የቀረበ",
+    "recommended": "የሚመከር",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveChanges": "ለውጦችን አስቀምጥ",
+    "cancel": "ሰርዝ"
+  },
+  "table": {
+    "title": "ርዕስ",
+    "category": "ምድብ",
+    "language": "ቋንቋ",
+    "status": "ሁኔታ",
+    "author": "ደራሲ",
+    "created": "የተፈጠረበት",
+    "actions": "ተግባራት"
+  },
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  },
+  "pagination": {
+    "prev": "ቀዳሚ",
+    "next": "ቀጣይ",
+    "pageOf": "ገጽ {{current}} ከ {{total}}"
+  },
+  "confirmDelete": "እርግጠኛ ነዎት ይህን ልጥፍ መሰረዝ ይፈልጋሉ?",
+  "updateSuccess": "ልጥፉ በተሳካ ሁኔታ ተስተካክሏል",
+  "errors": {
+    "loadPosts": "ልጥፎችን መጫን አልተሳካም",
+    "loadOptions": "ምድቦችን ወይም ቋንቋዎችን መጫን አልተሳካም",
+    "update": "ልጥፉን ማዘመን አልተሳካም",
+    "delete": "ልጥፉን መሰረዝ አልተሳካም"
+  }
+}

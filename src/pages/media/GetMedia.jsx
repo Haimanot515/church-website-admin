@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetMedia.css";
 
 const emptyForm = {
   title: "",
@@ -19,29 +21,17 @@ const getAcceptForType = (type) => {
   return "*/*";
 };
 
-const typeBadgeStyle = (type) => {
-  const colors = {
-    photo: { bg: "#dbeafe", text: "#1d4ed8" },
-    video: { bg: "#fce7f3", text: "#be185d" },
-    audio: { bg: "#ede9fe", text: "#6d28d9" },
-    document: { bg: "#fef3c7", text: "#92400e" },
-  };
-
-  const c = colors[type] || { bg: "#e5e7eb", text: "#374151" };
-
-  return {
-    padding: "3px 10px",
-    borderRadius: "20px",
-    fontSize: "12px",
-    fontWeight: 600,
-    background: c.bg,
-    color: c.text,
-    textTransform: "capitalize",
-  };
+const typeBadgeClass = (type) => {
+  if (type === "photo") return "gm-type-badge gm-type-photo";
+  if (type === "video") return "gm-type-badge gm-type-video";
+  if (type === "audio") return "gm-type-badge gm-type-audio";
+  if (type === "document") return "gm-type-badge gm-type-document";
+  return "gm-type-badge gm-type-default";
 };
 
 const GetMedia = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [media, setMedia] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +39,9 @@ const GetMedia = () => {
   const [deletingId, setDeletingId] = useState(null);
 
   const [categories, setCategories] = useState([]);
+  const [languages, setLanguages] = useState([]);
   const [optionsLoading, setOptionsLoading] = useState(true);
+  const [languageFilter, setLanguageFilter] = useState("");
 
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -62,6 +54,7 @@ const GetMedia = () => {
 
   useEffect(() => {
     fetchMedia();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -71,13 +64,14 @@ const GetMedia = () => {
         setCategories(catRes.data);
       } catch (err) {
         console.log(err);
-        setError((prev) => prev || "Failed to load categories");
+        setError((prev) => prev || t("getMedia.errors.loadCategories"));
       } finally {
         setOptionsLoading(false);
       }
     };
 
     fetchOptions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Revoke the object URL whenever the preview changes or we unmount
@@ -100,7 +94,7 @@ const GetMedia = () => {
       setMedia(res.data);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load media");
+      setError(err.response?.data?.message || t("getMedia.errors.loadMedia"));
     } finally {
       setLoading(false);
     }
@@ -170,12 +164,12 @@ const GetMedia = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Media updated successfully");
+      alert(t("getMedia.updateSuccess"));
       handleCancelEdit();
       await fetchMedia();
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to update media");
+      setFormError(err.response?.data?.message || t("getMedia.errors.update"));
     } finally {
       setSubmitting(false);
     }
@@ -183,9 +177,7 @@ const GetMedia = () => {
 
   // --- Delete ---
   const handleDelete = async (item) => {
-    const confirmed = window.confirm(
-      `Delete "${item.title}"? This action cannot be undone.`
-    );
+    const confirmed = window.confirm(t("getMedia.confirmDelete", { title: item.title }));
     if (!confirmed) return;
 
     try {
@@ -200,7 +192,7 @@ const GetMedia = () => {
       await fetchMedia();
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to delete media");
+      setError(err.response?.data?.message || t("getMedia.errors.delete"));
     } finally {
       setDeletingId(null);
     }
@@ -208,101 +200,50 @@ const GetMedia = () => {
 
   const renderThumb = (item) => {
     if (item.mediaType === "photo" && item.mediaUrl) {
-      return (
-        <img
-          src={item.mediaUrl}
-          alt={item.title}
-          style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px" }}
-        />
-      );
+      return <img src={item.mediaUrl} alt={item.title} className="gm-thumb" />;
     }
 
     if (item.thumbnail) {
-      return (
-        <img
-          src={item.thumbnail}
-          alt={item.title}
-          style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px" }}
-        />
-      );
+      return <img src={item.thumbnail} alt={item.title} className="gm-thumb" />;
     }
 
     if (item.mediaUrl) {
       return (
-        <a href={item.mediaUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px" }}>
-          View file
+        <a href={item.mediaUrl} target="_blank" rel="noopener noreferrer" className="gm-link">
+          {t("getMedia.viewFile")}
         </a>
       );
     }
 
-    return <span style={{ color: "#94a3b8" }}>—</span>;
+    return <span className="gm-thumb-empty">—</span>;
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>All Media</h2>
+    <div className="gm-page">
+      <div className="gm-card">
+        <div className="gm-header">
+          <h2>{t("getMedia.heading")}</h2>
 
           {!editingId && (
-            <button
-              onClick={() => navigate("/admin/media/create")}
-              style={{
-                padding: "10px 18px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
-              + New Media
+            <button className="gm-btn-new" onClick={() => navigate("/admin/media/create")}>
+              {t("getMedia.newMedia")}
             </button>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="gm-error">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Media</h3>
+          <div ref={editPanelRef} className="gm-edit-panel">
+            <h3>{t("getMedia.editHeading")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="gm-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="gm-form">
               <input
                 type="text"
                 name="title"
-                placeholder="Media title"
+                placeholder={t("getMedia.form.titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
                 required
@@ -310,17 +251,17 @@ const GetMedia = () => {
 
               <textarea
                 name="description"
-                placeholder="Media description"
+                placeholder={t("getMedia.form.descriptionPlaceholder")}
                 rows="4"
                 value={form.description}
                 onChange={handleChange}
               />
 
               <select name="type" value={form.type} onChange={handleChange}>
-                <option value="photo">Photo</option>
-                <option value="video">Video</option>
-                <option value="audio">Audio</option>
-                <option value="document">Book / PDF</option>
+                <option value="photo">{t("getMedia.form.typePhoto")}</option>
+                <option value="video">{t("getMedia.form.typeVideo")}</option>
+                <option value="audio">{t("getMedia.form.typeAudio")}</option>
+                <option value="document">{t("getMedia.form.typeDocument")}</option>
               </select>
 
               <select
@@ -330,7 +271,7 @@ const GetMedia = () => {
                 disabled={optionsLoading}
               >
                 <option value="">
-                  {optionsLoading ? "Loading categories..." : "Select Category"}
+                  {optionsLoading ? t("getMedia.form.loadingCategories") : t("getMedia.form.selectCategory")}
                 </option>
                 {categories.map((cat) => (
                   <option key={cat._id} value={cat._id}>
@@ -340,81 +281,49 @@ const GetMedia = () => {
               </select>
 
               <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">Save as Draft</option>
-                <option value="published">Publish</option>
+                <option value="draft">{t("getMedia.form.saveDraft")}</option>
+                <option value="published">{t("getMedia.form.publish")}</option>
               </select>
 
-              <input
-                type="file"
-                accept={getAcceptForType(form.type)}
-                onChange={handleFileChange}
-              />
-              <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>
-                Leave empty to keep the current file.
-              </p>
+              <input type="file" accept={getAcceptForType(form.type)} onChange={handleFileChange} />
+              <p className="gm-hint">{t("getMedia.form.keepFileHint")}</p>
 
               {preview && form.type === "photo" && (
-                <img
-                  src={preview}
-                  alt="preview"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
+                <img src={preview} alt="preview" className="gm-file-preview" />
               )}
               {preview && form.type === "video" && (
-                <video src={preview} controls style={{ width: "100%" }} />
+                <video src={preview} controls className="gm-video-preview" />
               )}
               {preview && form.type === "audio" && <audio src={preview} controls />}
               {preview && form.type === "document" && (
-                <div style={{ border: "1px solid #e2e8f0", borderRadius: "10px", overflow: "hidden" }}>
-                  <iframe src={preview} title="PDF preview" style={{ width: "100%", height: "350px", border: "none" }} />
+                <div className="gm-pdf-frame-wrap">
+                  <iframe src={preview} title="PDF preview" className="gm-pdf-frame" />
                 </div>
               )}
 
               {!preview && existingUrl && form.type === "photo" && (
-                <img
-                  src={existingUrl}
-                  alt="current"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
+                <img src={existingUrl} alt="current" className="gm-file-preview" />
               )}
-              {!preview && existingUrl && (form.type === "video" || form.type === "audio" || form.type === "document") && (
-                <a href={existingUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px" }}>
-                  View current file
-                </a>
-              )}
+              {!preview &&
+                existingUrl &&
+                (form.type === "video" || form.type === "audio" || form.type === "document") && (
+                  <a href={existingUrl} target="_blank" rel="noopener noreferrer" className="gm-link">
+                    {t("getMedia.form.viewCurrentFile")}
+                  </a>
+                )}
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting || optionsLoading}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="gm-form-actions">
+                <button type="submit" disabled={submitting || optionsLoading} className="gm-btn-primary">
+                  {submitting ? t("getMedia.form.saving") : t("getMedia.form.saveChanges")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="gm-btn-cancel"
                 >
-                  Cancel
+                  {t("getMedia.form.cancel")}
                 </button>
               </div>
             </form>
@@ -423,82 +332,60 @@ const GetMedia = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading media...</p>
+            <p>{t("getMedia.loadingMedia")}</p>
           ) : media.length === 0 ? (
-            <p>No media found.</p>
+            <p>{t("getMedia.noMedia")}</p>
           ) : (
-            <div style={{ overflowX: "auto", marginTop: "15px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
+            <div className="gm-table-wrap">
+              <table className="gm-table">
                 <thead>
                   <tr>
-                    <th style={thStyle}>File</th>
-                    <th style={thStyle}>Title</th>
-                    <th style={thStyle}>Type</th>
-                    <th style={thStyle}>Category</th>
-                    <th style={thStyle}>Status</th>
-                    <th style={thStyle}>Created</th>
-                    <th style={thStyle}>Actions</th>
+                    <th>{t("getMedia.table.file")}</th>
+                    <th>{t("getMedia.table.title")}</th>
+                    <th>{t("getMedia.table.type")}</th>
+                    <th>{t("getMedia.table.category")}</th>
+                    <th>{t("getMedia.table.status")}</th>
+                    <th>{t("getMedia.table.created")}</th>
+                    <th>{t("getMedia.table.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {media.map((item) => (
                     <tr key={item._id}>
-                      <td style={tdStyle}>{renderThumb(item)}</td>
-                      <td style={tdStyle}>{item.title}</td>
-                      <td style={tdStyle}>
-                        <span style={typeBadgeStyle(item.mediaType)}>{item.mediaType}</span>
+                      <td data-label={t("getMedia.table.file")}>{renderThumb(item)}</td>
+                      <td data-label={t("getMedia.table.title")}>{item.title}</td>
+                      <td data-label={t("getMedia.table.type")}>
+                        <span className={typeBadgeClass(item.mediaType)}>{item.mediaType}</span>
                       </td>
-                      <td style={tdStyle}>{item.category?.name || "—"}</td>
-                      <td style={tdStyle}>
+                      <td data-label={t("getMedia.table.category")}>{item.category?.name || "—"}</td>
+                      <td data-label={t("getMedia.table.status")}>
                         <span
-                          style={{
-                            padding: "3px 10px",
-                            borderRadius: "20px",
-                            fontSize: "12px",
-                            fontWeight: 600,
-                            background: item.status === "published" ? "#dcfce7" : "#fef9c3",
-                            color: item.status === "published" ? "#166534" : "#854d0e",
-                          }}
+                          className={`gm-status-badge ${
+                            item.status === "published" ? "gm-status-published" : "gm-status-draft"
+                          }`}
                         >
-                          {item.status}
+                          {item.status === "published"
+                            ? t("getMedia.status.published")
+                            : t("getMedia.status.draft")}
                         </span>
                       </td>
-                      <td style={tdStyle}>
+                      <td data-label={t("getMedia.table.created")}>
                         {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}
                       </td>
-                      <td style={tdStyle}>
-                        <div style={{ display: "flex", gap: "8px" }}>
-                          <button
-                            onClick={() => handleEditClick(item)}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#2563eb",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            Edit
+                      <td data-label={t("getMedia.table.actions")}>
+                        <div className="gm-row-actions">
+                          <button className="gm-btn-edit" onClick={() => handleEditClick(item)}>
+                            {t("getMedia.actions.edit")}
                           </button>
 
                           <button
+                            className="gm-btn-delete"
                             onClick={() => handleDelete(item)}
                             disabled={deletingId === item._id}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#dc2626",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: deletingId === item._id ? "not-allowed" : "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
                           >
-                            {deletingId === item._id ? "Deleting..." : "Delete"}
+                            {deletingId === item._id
+                              ? t("getMedia.actions.deleting")
+                              : t("getMedia.actions.delete")}
                           </button>
                         </div>
                       </td>
@@ -511,20 +398,6 @@ const GetMedia = () => {
       </div>
     </div>
   );
-};
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
 };
 
 export default GetMedia;

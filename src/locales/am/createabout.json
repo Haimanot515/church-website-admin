@@ -1,0 +1,17 @@
+{
+  "heading": "ስለ እኛ ፍጠር",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "ርዕስ",
+    "churchLeaderPlaceholder": "የቤተክርስቲያን መሪ",
+    "descriptionPlaceholder": "መግለጫ",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ስለ እኛ ፍጠር"
+  },
+  "previewAlt": "ቅድመ እይታ",
+  "successMessage": "የስለ እኛ ግቤት በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "languageRequired": "እባክዎ ቋንቋ ይምረጡ",
+    "create": "የስለ እኛ ግቤት መፍጠር አልተሳካም"
+  }
+}

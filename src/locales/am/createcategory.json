@@ -1,0 +1,35 @@
+{
+  "heading": "ምድብ ፍጠር",
+  "form": {
+    "namePlaceholder": "የምድብ ስም",
+    "descriptionPlaceholder": "የምድብ መግለጫ",
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ምድብ ፍጠር"
+  },
+  "examples": {
+    "heading": "የናሙና ምድቦች",
+    "table": {
+      "category": "ምድብ",
+      "description": "መግለጫ"
+    },
+    "sermons": {
+      "name": "ስብከቶች",
+      "description": "ሳምንታዊ የቤተክርስቲያን ስብከቶች እና ትምህርቶች።"
+    },
+    "events": {
+      "name": "ዝግጅቶች",
+      "description": "የቤተክርስቲያን ዝግጅቶች እና መጪ ፕሮግራሞች።"
+    },
+    "testimonies": {
+      "name": "የምስክርነት ቃሎች",
+      "description": "አነቃቂ የምዕመናን ምስክርነቶች።"
+    }
+  },
+  "successMessage": "ምድቡ በተሳካ ሁኔታ ተፈጥሯል",
+  "errors": {
+    "loadLanguages": "ቋንቋዎችን መጫን አልተሳካም",
+    "create": "ምድቡን መፍጠር አልተሳካም"
+  }
+}

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "./LandingPage.css";
 
 const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
+  const { t } = useTranslation();
+
   const [form, setForm] = useState({ email: "", password: "" });
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -22,21 +25,21 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
       const adminFlag = payload.isAdmin === true || payload.isAdmin === "true";
 
       if (!adminFlag) {
-        setError("This account does not have admin access.");
+        setError(t("adminLogin.errors.notAdmin"));
         setSuccess("");
         return;
       }
 
       setLoggedIn(true);
       setIsAdmin(true);
-      setSuccess("Login successful! Redirecting...");
+      setSuccess(t("adminLogin.successMessage"));
       setError("");
 
       setTimeout(() => {
         navigate("/admin/dashboard");
       }, 1000);
     } catch (err) {
-      const errorMsg = err.response?.data?.msg || "Something went wrong";
+      const errorMsg = err.response?.data?.msg || t("adminLogin.errors.generic");
       setSuccess("");
       setError(errorMsg);
     }
@@ -83,26 +86,23 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
               <rect x="10" y="0" width="4" height="24" rx="1.5" fill="#cf9f3f" />
               <rect x="0" y="7" width="24" height="4" rx="1.5" fill="#cf9f3f" />
             </svg>
-            <span className="brand-name">Abune Gebre Menfes Kidus Church</span>
+            <span className="brand-name">{t("adminLogin.brandName")}</span>
           </div>
 
-          <h1 className="heading">Admin Console</h1>
-          <p className="subtext">
-            This area is reserved for site administrators. Sign in with your
-            admin credentials to manage content, users, and settings.
-          </p>
+          <h1 className="heading">{t("adminLogin.heading")}</h1>
+          <p className="subtext">{t("adminLogin.subtext")}</p>
           <ul className="list">
             <li className="list-item">
               <span className="bullet" />
-              Manage published content
+              {t("adminLogin.list.manageContent")}
             </li>
             <li className="list-item">
               <span className="bullet" />
-              Review user activity
+              {t("adminLogin.list.reviewActivity")}
             </li>
             <li className="list-item">
               <span className="bullet" />
-              Configure site settings
+              {t("adminLogin.list.configureSettings")}
             </li>
           </ul>
         </div>
@@ -123,25 +123,25 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
               <rect x="0" y="7" width="24" height="4" rx="1.5" fill="#cf9f3f" />
             </svg>
           </div>
-          <h2 className="form-title">Admin Login</h2>
-          <p className="form-subtitle">Enter your credentials to continue</p>
+          <h2 className="form-title">{t("adminLogin.formTitle")}</h2>
+          <p className="form-subtitle">{t("adminLogin.formSubtitle")}</p>
 
           <form onSubmit={handleSubmit} className="form">
             <label className="field-label">
-              Email
+              {t("adminLogin.emailLabel")}
               <input
                 name="email"
                 type="email"
                 value={form.email}
                 onChange={handleChange}
-                placeholder="you@church.org"
+                placeholder={t("adminLogin.emailPlaceholder")}
                 required
                 className="input"
               />
             </label>
 
             <label className="field-label">
-              Password
+              {t("adminLogin.passwordLabel")}
               <input
                 type="password"
                 name="password"
@@ -154,17 +154,14 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
             </label>
 
             <button type="submit" className="submit-button">
-              Log In
+              {t("adminLogin.submitButton")}
             </button>
           </form>
 
           {success && <p className="success-message">{success}</p>}
           {error && <p className="error-message">{error}</p>}
 
-          <p className="footer-note">
-            Having trouble signing in? Contact the church office for help
-            regaining access.
-          </p>
+          <p className="footer-note">{t("adminLogin.footerNote")}</p>
         </div>
       </div>
     </div>
