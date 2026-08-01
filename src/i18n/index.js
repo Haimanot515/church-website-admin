@@ -30,8 +30,8 @@ import enFooter from "../locales/en/footer.json";
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
 import amDashboard from "../locales/am/dashboard.json";
-import amCreateHomeHero from "../locales/am/createHomeHero.json";
-import amGetHomeHero from "../locales/am/getHomeHero.json";
+import amCreateHomeHero from "../locales/am/createhomehero.json";
+import amGetHomeHero from "../locales/am/gethomehero.json";
 import amPost from "../locales/am/post.json";
 import amCreatePost from "../locales/am/createpost.json";
 import amGetService from "../locales/am/getService.json";
