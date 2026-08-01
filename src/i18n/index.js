@@ -33,7 +33,7 @@ import amDashboard from "../locales/am/dashboard.json";
 import amCreateHomeHero from "../locales/am/createHomeHero.json";
 import amGetHomeHero from "../locales/am/getHomeHero.json";
 import amPost from "../locales/am/post.json";
-import amCreatePost from "../locales/am/createPost.json";
+import amCreatePost from "../locales/am/createpost.json";
 import amGetService from "../locales/am/getService.json";
 import amCreateService from "../locales/am/createService.json";
 import amGetMedia from "../locales/am/getmedia.json";
