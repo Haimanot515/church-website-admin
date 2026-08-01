@@ -5,8 +5,8 @@ import LanguageDetector from "i18next-browser-languagedetector";
 // English
 import enNavbar from "../locales/en/navbar.json";
 import enDashboard from "../locales/en/dashboard.json";
-import enCreateHomeHero from "../locales/en/createHomeHero.json";
-import enGetHomeHero from "../locales/en/getHomeHero.json";
+import enCreateHomeHero from "../locales/en/createhomehero.json";
+import enGetHomeHero from "../locales/en/gethomehero.json";
 import enPost from "../locales/en/post.json";
 import enCreatePost from "../locales/en/createPost.json";
 import enGetService from "../locales/en/getService.json";
