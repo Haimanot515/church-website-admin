@@ -6,6 +6,7 @@ import "./GetCategory.css";
 
 const emptyForm = {
   name: "",
+  slug: "",
   description: "",
   language: "",
 };
@@ -94,6 +95,7 @@ const GetCategory = () => {
     setFormError("");
     setForm({
       name: category.name || "",
+      slug: category.slug || "",
       description: category.description || "",
       language: category.language || "",
     });
@@ -114,6 +116,19 @@ const GetCategory = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // slugs are lowercase, hyphenated, no spaces/punctuation — so
+  // "Travel" and "travel " both normalize to "travel"
+  const normalizeSlug = (value) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const handleSlugChange = (e) => {
+    setForm((prev) => ({ ...prev, slug: normalizeSlug(e.target.value) }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!editingId) return;
@@ -125,6 +140,7 @@ const GetCategory = () => {
 
       await API.put(`/categories/${editingId}`, {
         name: form.name,
+        slug: form.slug,
         description: form.description,
         language: form.language,
       });
@@ -215,6 +231,18 @@ const GetCategory = () => {
                 required
               />
 
+              <input
+                type="text"
+                name="slug"
+                placeholder={t(
+                  "getCategory.form.slugPlaceholder",
+                  "Slug (e.g. travel) — same slug across all languages for this category"
+                )}
+                value={form.slug}
+                onChange={handleSlugChange}
+                required
+              />
+
               <textarea
                 name="description"
                 placeholder={t("getCategory.form.descriptionPlaceholder")}
@@ -263,6 +291,7 @@ const GetCategory = () => {
                 <thead>
                   <tr>
                     <th>{t("getCategory.table.name")}</th>
+                    <th>{t("getCategory.table.slug", "Slug")}</th>
                     <th>{t("getCategory.table.description")}</th>
                     <th>{t("getCategory.table.language")}</th>
                     <th>{t("getCategory.table.actions")}</th>
@@ -272,6 +301,13 @@ const GetCategory = () => {
                   {categories.map((cat) => (
                     <tr key={cat._id}>
                       <td data-label={t("getCategory.table.name")}>{cat.name}</td>
+                      <td data-label={t("getCategory.table.slug", "Slug")}>
+                        {cat.slug || (
+                          <span className="gc-slug-missing">
+                            {t("getCategory.table.slugMissing", "missing")}
+                          </span>
+                        )}
+                      </td>
                       <td data-label={t("getCategory.table.description")}>{cat.description || "—"}</td>
                       <td data-label={t("getCategory.table.language")}>{getLanguageLabel(cat.language)}</td>
                       <td data-label={t("getCategory.table.actions")}>
