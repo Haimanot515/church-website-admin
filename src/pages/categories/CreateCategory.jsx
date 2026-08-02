@@ -8,6 +8,9 @@ const CreateCategory = () => {
 
   const [category, setCategory] = useState({
     name: "",
+    // language-independent key shared across the same category's
+    // translations (e.g. "travel" links Travel / Viaggi / ጉዞ together)
+    slug: "",
     description: "",
     language: "",
   });
@@ -43,6 +46,19 @@ const CreateCategory = () => {
     setCategory((prev) => ({ ...prev, [name]: value }));
   };
 
+  // slugs are lowercase, hyphenated, no spaces/punctuation — so
+  // "Travel" and "travel " both normalize to "travel"
+  const normalizeSlug = (value) =>
+    value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  const handleSlugChange = (e) => {
+    setCategory((prev) => ({ ...prev, slug: normalizeSlug(e.target.value) }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -52,12 +68,13 @@ const CreateCategory = () => {
       // Auth header is already attached globally by the API interceptor
       await API.post("/categories", {
         name: category.name,
+        slug: category.slug,
         description: category.description,
         language: category.language,
       });
 
       alert(t("createCategory.successMessage"));
-      setCategory({ name: "", description: "", language: "" });
+      setCategory({ name: "", slug: "", description: "", language: "" });
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("createCategory.errors.create"));
@@ -86,6 +103,15 @@ const CreateCategory = () => {
             placeholder={t("createCategory.form.namePlaceholder")}
             value={category.name}
             onChange={handleChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="slug"
+            placeholder={t("createCategory.form.slugPlaceholder", "Slug (e.g. travel) — same slug across all languages for this category")}
+            value={category.slug}
+            onChange={handleSlugChange}
             required
           />
 
