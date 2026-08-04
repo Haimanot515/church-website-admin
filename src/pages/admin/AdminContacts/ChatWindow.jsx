@@ -12,6 +12,7 @@ const ChatWindow = ({ thread }) => {
   const [loading, setLoading] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [inputHeight, setInputHeight] = useState(56);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
 
   const textareaRef = useRef(null);
   const bodyRef = useRef(null);
@@ -25,6 +26,34 @@ const ChatWindow = ({ thread }) => {
 
   const isMobile = windowWidth <= 600;
   const isTablet = windowWidth > 600 && windowWidth <= 1024;
+
+  // Track the visual viewport (keyboard) and keep the input bar above it
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const handleViewportChange = () => {
+      // How much of the layout viewport is covered (by keyboard, browser chrome, etc.)
+      const offset = window.innerHeight - vv.height - vv.offsetTop;
+      setKeyboardOffset(offset > 0 ? offset : 0);
+
+      // Keep view scrolled to bottom when keyboard opens/closes
+      if (bodyRef.current) {
+        requestAnimationFrame(() => {
+          bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
+        });
+      }
+    };
+
+    vv.addEventListener("resize", handleViewportChange);
+    vv.addEventListener("scroll", handleViewportChange);
+    handleViewportChange();
+
+    return () => {
+      vv.removeEventListener("resize", handleViewportChange);
+      vv.removeEventListener("scroll", handleViewportChange);
+    };
+  }, []);
 
   // Load messages when thread changes
   useEffect(() => {
@@ -58,7 +87,7 @@ const ChatWindow = ({ thread }) => {
     if (inputContainerRef.current) {
       setInputHeight(inputContainerRef.current.offsetHeight);
     }
-  }, [text, isMobile, isTablet]);
+  }, [text, isMobile, isTablet, keyboardOffset]);
 
   // Auto-grow textarea
   const handleTextChange = (e) => {
@@ -221,7 +250,8 @@ const ChatWindow = ({ thread }) => {
       position: "absolute",
       left: 0,
       right: 0,
-      bottom: 0,
+      bottom: keyboardOffset, // shifts up above the keyboard
+      transition: "bottom 0.1s ease-out",
       display: "flex",
       alignItems: "flex-end",
       padding: isMobile ? "8px 8px" : "8px 12px",
