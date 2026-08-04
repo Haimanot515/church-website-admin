@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-import "./reorderChurchPerson.css";
+import "./ReorderChurchPerson.css";
 
 const CATEGORY_KEYS = ["leader", "specialThanks", "testimony"];
 
