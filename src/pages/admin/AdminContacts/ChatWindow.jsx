@@ -11,9 +11,11 @@ const ChatWindow = ({ thread }) => {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [inputHeight, setInputHeight] = useState(56);
 
   const textareaRef = useRef(null);
   const bodyRef = useRef(null);
+  const inputContainerRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -51,6 +53,13 @@ const ChatWindow = ({ thread }) => {
     }
   }, [messages]);
 
+  // Keep body's bottom padding in sync with the (variable-height) fixed input bar
+  useEffect(() => {
+    if (inputContainerRef.current) {
+      setInputHeight(inputContainerRef.current.offsetHeight);
+    }
+  }, [text, isMobile, isTablet]);
+
   // Auto-grow textarea
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -58,6 +67,9 @@ const ChatWindow = ({ thread }) => {
     if (ta) {
       ta.style.height = "36px";
       ta.style.height = `${ta.scrollHeight}px`;
+    }
+    if (inputContainerRef.current) {
+      setInputHeight(inputContainerRef.current.offsetHeight);
     }
   };
 
@@ -165,11 +177,13 @@ const ChatWindow = ({ thread }) => {
     container: {
       display: "flex",
       flexDirection: "column",
-      flex: 1, // FIX: was height: "100%" — this overflowed next to the mobile back bar
+      flex: 1,
       width: "100%",
       backgroundColor: "#e6f0ff",
       boxSizing: "border-box",
       minHeight: 0,
+      position: "relative", // anchor point for the fixed input bar
+      overflow: "hidden",
     },
     header: {
       height: isMobile ? 48 : 56,
@@ -188,6 +202,8 @@ const ChatWindow = ({ thread }) => {
       flex: 1,
       overflowY: "auto",
       padding: isMobile ? "10px 10px" : isTablet ? "12px 14px" : "12px 16px",
+      // reserve space so the last message isn't hidden behind the fixed input bar
+      paddingBottom: inputHeight + (isMobile ? 12 : 16),
       display: "flex",
       flexDirection: "column",
       gap: 6,
@@ -202,6 +218,10 @@ const ChatWindow = ({ thread }) => {
       padding: "0 12px",
     },
     inputContainer: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
       display: "flex",
       alignItems: "flex-end",
       padding: isMobile ? "8px 8px" : "8px 12px",
@@ -210,6 +230,7 @@ const ChatWindow = ({ thread }) => {
       gap: 6,
       flexShrink: 0,
       boxSizing: "border-box",
+      zIndex: 5,
     },
     textarea: {
       flex: 1,
@@ -256,7 +277,7 @@ const ChatWindow = ({ thread }) => {
         )}
       </div>
 
-      <div style={styles.inputContainer}>
+      <div ref={inputContainerRef} style={styles.inputContainer}>
         <textarea
           ref={textareaRef}
           value={text}
