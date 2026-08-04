@@ -258,13 +258,6 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
                 );
               })}
             </nav>
-
-            <div className="admin-label-footer">
-              <button onClick={handleLogout} className="admin-label-logout">
-                <LogOut size={16} />
-                {t("adminSidebar.logout")}
-              </button>
-            </div>
           </div>
         </div>,
         document.body
