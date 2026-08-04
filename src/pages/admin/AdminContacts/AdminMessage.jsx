@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import InboxList from "./InboxList";
 import ChatWindow from "./ChatWindow";
 
 const AdminMessages = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activeThread, setActiveThread] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -21,19 +23,54 @@ const AdminMessages = () => {
   const showChatOnly = isMobile && !!activeThread;
 
   const styles = {
-    container: {
+    wrapper: {
       position: "fixed",
       top: 0,
       left: 0,
       width: "100vw",
       height: "100vh",
       display: "flex",
+      flexDirection: "column",
+      zIndex: 9999,
+      overflow: "hidden",
+    },
+    topBar: {
+      display: "flex",
+      alignItems: "center",
+      padding: "12px 20px",
+      backgroundColor: "#0d3b8c",
+      borderBottom: "1px solid #0a2f70",
+      flexShrink: 0,
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.15)",
+    },
+    dashboardButton: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      background: "rgba(255,255,255,0.12)",
+      border: "1px solid rgba(255,255,255,0.25)",
+      cursor: "pointer",
+      fontSize: 14,
+      fontWeight: 600,
+      color: "#ffffff",
+      padding: "8px 14px",
+      borderRadius: 8,
+      transition: "background 0.15s ease",
+    },
+    dashboardArrow: {
+      fontSize: 16,
+      lineHeight: 1,
+    },
+    container: {
+      flex: 1,
+      display: "flex",
       flexDirection: "row",
       fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       backgroundColor: "#f5f6f8",
-      zIndex: 9999,
       overflow: "hidden",
       boxSizing: "border-box",
+      minHeight: 0,
     },
     inbox: {
       display: showChatOnly ? "none" : "flex",
@@ -86,22 +123,36 @@ const AdminMessages = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.inbox}>
-        <InboxList onSelect={setActiveThread} activeThread={activeThread} />
+    <div style={styles.wrapper}>
+      <div style={styles.topBar}>
+        <button
+          style={styles.dashboardButton}
+          onClick={() => navigate("/admin/dashboard")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.22)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.12)")}
+        >
+          <span style={styles.dashboardArrow}>←</span>
+          <span>{t("adminMessages.backToDashboard")}</span>
+        </button>
       </div>
 
-      {activeThread ? (
-        <div style={styles.chat}>
-          <div style={styles.backBar} onClick={() => setActiveThread(null)}>
-            <span style={styles.backArrow}>←</span>
-            <span>{t("adminMessages.back")}</span>
-          </div>
-          <ChatWindow thread={activeThread} />
+      <div style={styles.container}>
+        <div style={styles.inbox}>
+          <InboxList onSelect={setActiveThread} activeThread={activeThread} />
         </div>
-      ) : (
-        <div style={styles.emptyChat}>{t("adminMessages.selectconversation")}</div>
-      )}
+
+        {activeThread ? (
+          <div style={styles.chat}>
+            <div style={styles.backBar} onClick={() => setActiveThread(null)}>
+              <span style={styles.backArrow}>←</span>
+              <span>{t("adminMessages.back")}</span>
+            </div>
+            <ChatWindow thread={activeThread} />
+          </div>
+        ) : (
+          <div style={styles.emptyChat}>{t("adminMessages.selectconversation")}</div>
+        )}
+      </div>
     </div>
   );
 };

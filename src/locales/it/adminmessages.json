@@ -2,6 +2,7 @@
   "title": "messaggi",
   "selectconversation": "seleziona una conversazione per iniziare a chattare",
   "back": "indietro",
+  "backToDashboard": "torna alla dashboard",
   "search": "cerca conversazioni",
   "noconversation": "nessuna conversazione ancora",
   "typemessage": "scrivi un messaggio"

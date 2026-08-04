@@ -165,7 +165,7 @@ const ChatWindow = ({ thread }) => {
     container: {
       display: "flex",
       flexDirection: "column",
-      height: "100%",
+      flex: 1, // FIX: was height: "100%" — this overflowed next to the mobile back bar
       width: "100%",
       backgroundColor: "#e6f0ff",
       boxSizing: "border-box",
