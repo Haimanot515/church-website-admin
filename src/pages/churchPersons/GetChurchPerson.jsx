@@ -1,49 +1,47 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetChurchPerson.css";
 
-const categoryBadgeStyle = (category) => {
-  const colors = {
-    leader: { bg: "#dbeafe", text: "#1d4ed8" },
-    specialThanks: { bg: "#fce7f3", text: "#be185d" },
-    testimony: { bg: "#dcfce7", text: "#166534" },
-  };
-
-  const c = colors[category] || { bg: "#e5e7eb", text: "#374151" };
-
-  return {
-    padding: "3px 10px",
-    borderRadius: "20px",
-    fontSize: "12px",
-    fontWeight: 600,
-    background: c.bg,
-    color: c.text,
-  };
-};
-
-const CATEGORY_LABELS = {
-  leader: "Leader",
-  specialThanks: "Special Thanks",
-  testimony: "Testimony",
-};
-
+// Values sent to/read from the backend stay fixed English/enum strings;
+// only the displayed label is translated via roles.<key> / ranks.<key>.
 const ROLE_OPTIONS = [
-  "",
-  "Founding Pastor",
-  "Senior Pastor",
-  "Associate Pastor",
-  "Church Elder",
-  "Ministry Assistant",
-  "Worship Leader",
-  "Small Group Leader",
-  "Food Pantry Volunteer",
-  "Worship Team Member",
-  "Sunday School Teacher",
-  "Choir Member",
-  "Usher",
-  "Treasurer",
-  "Secretary",
-  "Member",
+  { value: "", labelKey: null },
+  { value: "Founding Pastor", labelKey: "roles.foundingPastor" },
+  { value: "Senior Pastor", labelKey: "roles.seniorPastor" },
+  { value: "Associate Pastor", labelKey: "roles.associatePastor" },
+  { value: "Church Elder", labelKey: "roles.churchElder" },
+  { value: "Ministry Assistant", labelKey: "roles.ministryAssistant" },
+  { value: "Worship Leader", labelKey: "roles.worshipLeader" },
+  { value: "Small Group Leader", labelKey: "roles.smallGroupLeader" },
+  { value: "Food Pantry Volunteer", labelKey: "roles.foodPantryVolunteer" },
+  { value: "Worship Team Member", labelKey: "roles.worshipTeamMember" },
+  { value: "Sunday School Teacher", labelKey: "roles.sundaySchoolTeacher" },
+  { value: "Choir Member", labelKey: "roles.choirMember" },
+  { value: "Usher", labelKey: "roles.usher" },
+  { value: "Treasurer", labelKey: "roles.treasurer" },
+  { value: "Secretary", labelKey: "roles.secretary" },
+  { value: "Member", labelKey: "roles.member" },
+];
+
+const RANK_OPTIONS = [
+  { value: "", labelKey: null },
+  { value: "patriarch", labelKey: "ranks.patriarch" },
+  { value: "archbishop", labelKey: "ranks.archbishop" },
+  { value: "bishop", labelKey: "ranks.bishop" },
+  { value: "archpriest", labelKey: "ranks.archpriest" },
+  { value: "priest", labelKey: "ranks.priest" },
+  { value: "deacon", labelKey: "ranks.deacon" },
+  { value: "subdeacon", labelKey: "ranks.subdeacon" },
+  { value: "elder", labelKey: "ranks.elder" },
+  { value: "member", labelKey: "ranks.member" },
+];
+
+const CATEGORY_OPTIONS = [
+  { value: "leader", labelKey: "categories.leader" },
+  { value: "specialThanks", labelKey: "categories.specialThanks" },
+  { value: "testimony", labelKey: "categories.testimony" },
 ];
 
 const emptyForm = {
@@ -59,6 +57,7 @@ const emptyForm = {
 };
 
 const GetChurchPerson = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "getChurchPerson" });
   const navigate = useNavigate();
 
   const [people, setPeople] = useState([]);
@@ -101,7 +100,7 @@ const GetChurchPerson = () => {
       setPeople(res.data);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load church persons");
+      setError(err.response?.data?.message || t("errorMessage"));
     } finally {
       setLoading(false);
     }
@@ -154,7 +153,7 @@ const GetChurchPerson = () => {
   const handleRemoveExistingPhoto = async (photoUrl) => {
     if (!editingId) return;
 
-    const confirmed = window.confirm("Remove this photo?");
+    const confirmed = window.confirm(t("removePhotoConfirm"));
     if (!confirmed) return;
 
     try {
@@ -171,7 +170,7 @@ const GetChurchPerson = () => {
       );
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to remove photo");
+      setFormError(err.response?.data?.message || t("removePhotoErrorMessage"));
     } finally {
       setRemovingPhoto("");
     }
@@ -209,12 +208,12 @@ const GetChurchPerson = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Church person updated successfully");
+      alert(t("updateSuccessMessage"));
       handleCancelEdit();
       await fetchPeople(categoryFilter);
     } catch (err) {
       console.log(err);
-      setFormError(err.response?.data?.message || "Failed to update church person");
+      setFormError(err.response?.data?.message || t("updateErrorMessage"));
     } finally {
       setSubmitting(false);
     }
@@ -222,9 +221,7 @@ const GetChurchPerson = () => {
 
   // --- Delete ---
   const handleDelete = async (person) => {
-    const confirmed = window.confirm(
-      `Delete "${person.name}"? This action cannot be undone.`
-    );
+    const confirmed = window.confirm(t("deleteConfirm", { name: person.name }));
     if (!confirmed) return;
 
     try {
@@ -239,192 +236,177 @@ const GetChurchPerson = () => {
       await fetchPeople(categoryFilter);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to delete church person");
+      setError(err.response?.data?.message || t("deleteErrorMessage"));
     } finally {
       setDeletingId(null);
     }
   };
 
+  const categoryBadgeClass = (category) => {
+    if (category === "leader") return "getChurchPerson-badge getChurchPerson-badge--leader";
+    if (category === "specialThanks")
+      return "getChurchPerson-badge getChurchPerson-badge--specialThanks";
+    if (category === "testimony") return "getChurchPerson-badge getChurchPerson-badge--testimony";
+    return "getChurchPerson-badge getChurchPerson-badge--default";
+  };
+
+  const categoryLabel = (category) => {
+    const key = `categories.${category}`;
+    const translated = t(key);
+    return translated === key ? category : translated;
+  };
+
+  const rankLabel = (rank) => {
+    if (!rank) return "\u2014";
+    const key = `ranks.${rank}`;
+    const translated = t(key);
+    return translated === key ? rank : translated;
+  };
+
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "10px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Church Persons</h2>
+    <div className="getChurchPerson-page">
+      <div className="getChurchPerson-card">
+        <div className="getChurchPerson-header">
+          <h2 className="getChurchPerson-title">{t("title")}</h2>
 
           {!editingId && (
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            <div className="getChurchPerson-toolbar">
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                style={{ padding: "8px 10px", borderRadius: "8px", border: "1px solid #cbd5e1" }}
+                className="getChurchPerson-filterSelect"
               >
-                <option value="">All Categories</option>
-                <option value="leader">Leader</option>
-                <option value="specialThanks">Special Thanks</option>
-                <option value="testimony">Testimony</option>
+                <option value="">{t("allCategories")}</option>
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {t(opt.labelKey)}
+                  </option>
+                ))}
               </select>
 
               <button
                 onClick={() => navigate("/admin/church-persons/create")}
-                style={{
-                  padding: "10px 18px",
-                  background: "#16a34a",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                }}
+                className="getChurchPerson-newButton"
               >
-                + New Person
+                {t("newPersonButton")}
               </button>
             </div>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="getChurchPerson-error">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginTop: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Church Person</h3>
+          <div ref={editPanelRef} className="getChurchPerson-editPanel">
+            <h3 className="getChurchPerson-editTitle">{t("editTitle")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="getChurchPerson-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="getChurchPerson-form">
               <input
                 type="text"
                 name="name"
-                placeholder="Full name"
+                placeholder={t("namePlaceholder")}
                 value={form.name}
                 onChange={handleChange}
                 required
+                className="getChurchPerson-input"
               />
 
-              <select name="category" value={form.category} onChange={handleChange}>
-                <option value="leader">Leader</option>
-                <option value="specialThanks">Special Thanks</option>
-                <option value="testimony">Testimony</option>
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="getChurchPerson-select"
+              >
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {t(opt.labelKey)}
+                  </option>
+                ))}
               </select>
 
               <input
                 type="text"
                 name="title"
-                placeholder="Title (e.g. Associate Pastor, Small Group Leader)"
+                placeholder={t("titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
+                className="getChurchPerson-input"
               />
 
-              <select name="role" value={form.role} onChange={handleChange}>
+              <select
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                className="getChurchPerson-select"
+              >
                 {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt === "" ? "Select Role" : opt}
+                  <option key={opt.value} value={opt.value}>
+                    {opt.labelKey ? t(opt.labelKey) : t("selectRole")}
                   </option>
                 ))}
               </select>
 
-              <select name="rank" value={form.rank} onChange={handleChange}>
-                <option value="">No Rank</option>
-                <option value="patriarch">Patriarch</option>
-                <option value="archbishop">Archbishop</option>
-                <option value="bishop">Bishop</option>
-                <option value="archpriest">Archpriest</option>
-                <option value="priest">Priest</option>
-                <option value="deacon">Deacon</option>
-                <option value="subdeacon">Subdeacon</option>
-                <option value="elder">Elder</option>
-                <option value="member">Member</option>
+              <select
+                name="rank"
+                value={form.rank}
+                onChange={handleChange}
+                className="getChurchPerson-select"
+              >
+                {RANK_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.labelKey ? t(opt.labelKey) : t("noRank")}
+                  </option>
+                ))}
               </select>
 
               <input
                 type="number"
                 name="rankOrder"
-                placeholder="Rank order (lower = higher precedence)"
+                placeholder={t("rankOrderPlaceholder")}
                 value={form.rankOrder}
                 onChange={handleChange}
                 min="0"
+                className="getChurchPerson-input"
               />
 
               <textarea
                 name="description"
-                placeholder="Short bio or description"
+                placeholder={t("descriptionPlaceholder")}
                 rows="4"
                 value={form.description}
                 onChange={handleChange}
+                className="getChurchPerson-textarea"
               />
 
               <textarea
                 name="message"
-                placeholder="Message / testimony quote (used for testimonies)"
+                placeholder={t("messagePlaceholder")}
                 rows="4"
                 value={form.message}
                 onChange={handleChange}
+                className="getChurchPerson-textarea"
               />
 
               {existingPhotos.length > 0 && (
                 <div>
-                  <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
-                    Current photos — click Remove to delete individually
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                  <p className="getChurchPerson-hint">{t("currentPhotosHint")}</p>
+                  <div className="getChurchPerson-photoGrid">
                     {existingPhotos.map((url) => (
-                      <div key={url} style={{ textAlign: "center" }}>
+                      <div key={url} className="getChurchPerson-photoItem">
                         <img
                           src={url}
-                          alt="existing"
-                          style={{
-                            width: "90px",
-                            height: "90px",
-                            objectFit: "cover",
-                            borderRadius: "10px",
-                            border: "1px solid #e2e8f0",
-                          }}
+                          alt={t("existingPhotoAlt")}
+                          className="getChurchPerson-photo"
                         />
                         <button
                           type="button"
                           onClick={() => handleRemoveExistingPhoto(url)}
                           disabled={removingPhoto === url}
-                          style={{
-                            marginTop: "4px",
-                            padding: "3px 8px",
-                            fontSize: "11px",
-                            background: "#dc2626",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: removingPhoto === url ? "not-allowed" : "pointer",
-                          }}
+                          className="getChurchPerson-removeButton"
                         >
-                          {removingPhoto === url ? "Removing..." : "Remove"}
+                          {removingPhoto === url ? t("removingButton") : t("removeButton")}
                         </button>
                       </div>
                     ))}
@@ -433,63 +415,45 @@ const GetChurchPerson = () => {
               )}
 
               <div>
-                <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
-                  Add new photos (appended to the ones above)
-                </p>
-                <input type="file" accept="image/*" multiple onChange={handleFileChange} />
+                <p className="getChurchPerson-hint">{t("addPhotosHint")}</p>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className="getChurchPerson-fileInput"
+                />
               </div>
 
               {previews.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                <div className="getChurchPerson-photoGrid">
                   {previews.map((src, i) => (
                     <img
                       key={i}
                       src={src}
-                      alt={`preview-${i}`}
-                      style={{
-                        width: "90px",
-                        height: "90px",
-                        objectFit: "cover",
-                        borderRadius: "10px",
-                        border: "1px solid #e2e8f0",
-                      }}
+                      alt={t("previewAlt", { index: i })}
+                      className="getChurchPerson-photo"
                     />
                   ))}
                 </div>
               )}
 
-              <div style={{ display: "flex", gap: "10px" }}>
+              <div className="getChurchPerson-formActions">
                 <button
                   type="submit"
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="getChurchPerson-saveButton"
                 >
-                  {submitting ? "Saving..." : "Save Changes"}
+                  {submitting ? t("savingButton") : t("saveButton")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
+                  className="getChurchPerson-cancelButton"
                 >
-                  Cancel
+                  {t("cancelButton")}
                 </button>
               </div>
             </form>
@@ -498,79 +462,69 @@ const GetChurchPerson = () => {
 
         {!editingId &&
           (loading ? (
-            <p>Loading church persons...</p>
+            <p className="getChurchPerson-loading">{t("loadingMessage")}</p>
           ) : people.length === 0 ? (
-            <p>No church persons found.</p>
+            <p className="getChurchPerson-empty">{t("noResultsMessage")}</p>
           ) : (
-            <div style={{ overflowX: "auto", marginTop: "15px" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
+            <div className="getChurchPerson-tableWrap">
+              <table className="getChurchPerson-table">
                 <thead>
                   <tr>
-                    <th style={thStyle}>Photo</th>
-                    <th style={thStyle}>Name</th>
-                    <th style={thStyle}>Category</th>
-                    <th style={thStyle}>Role / Title</th>
-                    <th style={thStyle}>Rank</th>
-                    <th style={thStyle}>Rank Order</th>
-                    <th style={thStyle}>Actions</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.photo")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.name")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.category")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.roleTitle")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.rank")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.rankOrder")}</th>
+                    <th className="getChurchPerson-th">{t("tableHeaders.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {people.map((person) => (
                     <tr key={person._id}>
-                      <td style={tdStyle}>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.photo")}>
                         {person.photos && person.photos.length > 0 ? (
                           <img
                             src={person.photos[0]}
                             alt={person.name}
-                            style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "50%" }}
+                            className="getChurchPerson-avatar"
                           />
                         ) : (
-                          <span style={{ color: "#94a3b8" }}>—</span>
+                          <span className="getChurchPerson-noPhoto">&mdash;</span>
                         )}
                       </td>
-                      <td style={tdStyle}>{person.name}</td>
-                      <td style={tdStyle}>
-                        <span style={categoryBadgeStyle(person.category)}>
-                          {CATEGORY_LABELS[person.category] || person.category}
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.name")}>
+                        {person.name}
+                      </td>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.category")}>
+                        <span className={categoryBadgeClass(person.category)}>
+                          {categoryLabel(person.category)}
                         </span>
                       </td>
-                      <td style={tdStyle}>{person.title || person.role || "—"}</td>
-                      <td style={tdStyle}>{person.rank || "—"}</td>
-                      <td style={tdStyle}>{person.rankOrder}</td>
-                      <td style={tdStyle}>
-                        <div style={{ display: "flex", gap: "8px" }}>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.roleTitle")}>
+                        {person.title || person.role || "\u2014"}
+                      </td>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.rank")}>
+                        {rankLabel(person.rank)}
+                      </td>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.rankOrder")}>
+                        {person.rankOrder}
+                      </td>
+                      <td className="getChurchPerson-td" data-label={t("tableHeaders.actions")}>
+                        <div className="getChurchPerson-rowActions">
                           <button
                             onClick={() => handleEditClick(person)}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#2563eb",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
+                            className="getChurchPerson-editRowButton"
                           >
-                            Edit
+                            {t("editButton")}
                           </button>
 
                           <button
                             onClick={() => handleDelete(person)}
                             disabled={deletingId === person._id}
-                            style={{
-                              padding: "6px 12px",
-                              background: "#dc2626",
-                              color: "#fff",
-                              border: "none",
-                              borderRadius: "6px",
-                              cursor: deletingId === person._id ? "not-allowed" : "pointer",
-                              fontSize: "13px",
-                              whiteSpace: "nowrap",
-                            }}
+                            className="getChurchPerson-deleteRowButton"
                           >
-                            {deletingId === person._id ? "Deleting..." : "Delete"}
+                            {deletingId === person._id ? t("deletingButton") : t("deleteButton")}
                           </button>
                         </div>
                       </td>
@@ -583,20 +537,6 @@ const GetChurchPerson = () => {
       </div>
     </div>
   );
-};
-
-const thStyle = {
-  textAlign: "left",
-  padding: "10px",
-  borderBottom: "2px solid #e2e8f0",
-  fontSize: "13px",
-  color: "#555",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-  fontSize: "14px",
 };
 
 export default GetChurchPerson;

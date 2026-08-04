@@ -1,0 +1,18 @@
+{
+  "heading": "Create Church Story Chapter",
+  "languageSelectPlaceholder": "Select language",
+  "titlePlaceholder": "Chapter title (e.g. The Founding Years)",
+  "leaderPlaceholder": "Leader name",
+  "leaderRolePlaceholder": "Leader role (e.g. Founding Pastor)",
+  "rangePlaceholder": "Years led (e.g. 1998 - 2006)",
+  "servedByPlaceholder": "Served by / community group",
+  "orderPlaceholder": "Display order (lower = shown first)",
+  "yearPlaceholder": "Sort year (used for chronological ordering)",
+  "descPlaceholder": "Chapter description",
+  "previewAlt": "preview",
+  "submitButton": "Create Story Chapter",
+  "submitting": "Saving...",
+  "successMessage": "Church story chapter created successfully",
+  "errorLanguageRequired": "Please select a language",
+  "errorSubmit": "Failed to create church story chapter"
+}

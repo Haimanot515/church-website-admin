@@ -1,0 +1,14 @@
+{
+  "title": "Churches",
+  "newChurchButton": "+ New Church",
+  "loadingMessage": "Loading churches...",
+  "noChurchesMessage": "No churches yet.",
+  "errorMessage": "Failed to load churches",
+  "deleteErrorMessage": "Failed to delete church",
+  "deleteConfirm": "Delete \"{{churchName}}\"? This cannot be undone.",
+  "mainChurchBadge": "Main Church",
+  "featuredBadge": "Featured",
+  "editButton": "Edit",
+  "deleteButton": "Delete",
+  "deletingButton": "Deleting..."
+}

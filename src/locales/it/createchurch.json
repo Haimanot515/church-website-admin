@@ -1,0 +1,20 @@
+{
+  "title": "Crea Chiesa",
+  "selectLanguage": "Seleziona lingua",
+  "selectLanguageError": "Seleziona una lingua",
+  "churchNamePlaceholder": "Nome della chiesa",
+  "shortDescriptionPlaceholder": "Breve descrizione (usata nella scheda del campus)",
+  "descriptionPlaceholder": "Descrizione completa",
+  "addressPlaceholder": "Indirizzo",
+  "serviceDaysPlaceholder": "Giorni di funzione (es. Domenica)",
+  "serviceTimePlaceholder": "Orario di funzione (es. 9:00)",
+  "uploadImageLabel": "Carica immagine",
+  "imageAlt": "Anteprima",
+  "featured": "In evidenza",
+  "setAsMainChurch": "Imposta come Chiesa Principale",
+  "mainChurchHint": "Mostrata nella sezione hero della pagina pubblica della Chiesa, per questa lingua. Solo una chiesa per lingua pu\u00f2 avere questo ruolo \u2014 selezionandola sostituir\u00e0 la chiesa che attualmente lo detiene per la lingua selezionata.",
+  "submitButton": "Crea Chiesa",
+  "submittingButton": "Creazione in corso...",
+  "successMessage": "Chiesa creata con successo",
+  "errorMessage": "Creazione della chiesa non riuscita"
+}

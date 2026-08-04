@@ -1,0 +1,398 @@
+/* getChurchStories.css
+   Breakpoints:
+   - Mobile:  < 640px
+   - Tablet:  640px - 1023px
+   - Desktop: >= 1024px
+*/
+
+.gcsPage {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.gcsCard {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Top bar */
+.gcsTopBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gcsHeading {
+  margin: 0;
+  font-size: 21px;
+  color: #0f172a;
+}
+
+.gcsNewButton {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gcsError {
+  color: #dc2626;
+}
+
+.gcsStatusText {
+  color: #475569;
+}
+
+/* Edit panel */
+.gcsEditPanel {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  background: #f8fafc;
+  scroll-margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.gcsEditHeading {
+  margin-top: 0;
+  font-size: 17px;
+  color: #0f172a;
+}
+
+.gcsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gcsInput,
+.gcsTextarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  background: #fff;
+  color: #0f172a;
+}
+
+.gcsInput:focus,
+.gcsTextarea:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+  border-color: #2563eb;
+}
+
+.gcsTextarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.gcsFieldRow {
+  display: flex;
+  gap: 15px;
+}
+
+.gcsFieldRow > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.gcsPhotoBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gcsPhotoLabel {
+  color: #64748b;
+  font-size: 12.5px;
+}
+
+.gcsPhotoPreview {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.gcsFormActions {
+  display: flex;
+  gap: 10px;
+}
+
+.gcsSaveButton {
+  flex: 1;
+  padding: 14px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.gcsSaveButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.gcsCancelButton {
+  padding: 14px 18px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.gcsCancelButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* List */
+.gcsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gcsListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.gcsItemMain {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  flex: 1;
+}
+
+.gcsItemPhoto {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.gcsItemText {
+  min-width: 0;
+}
+
+.gcsItemTitle {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.gcsItemMeta {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.gcsItemSubline {
+  color: #64748b;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gcsItemActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.gcsEditButton {
+  padding: 8px 14px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+.gcsDeleteButton {
+  padding: 8px 14px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+.gcsDeleteButton:disabled,
+.gcsEditButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Pagination */
+.gcsPagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.gcsPageButton {
+  padding: 8px 14px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+}
+
+.gcsPageButton:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.gcsPageLabel {
+  color: #475569;
+  font-size: 14px;
+}
+
+/* -------------------- Tablet: 640px - 1023px -------------------- */
+@media (max-width: 1023px) {
+  .gcsPage {
+    padding: 22px;
+  }
+
+  .gcsCard {
+    padding: 24px;
+  }
+}
+
+/* -------------------- Mobile: < 640px -------------------- */
+@media (max-width: 639px) {
+  .gcsPage {
+    padding: 14px;
+  }
+
+  .gcsCard {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .gcsHeading {
+    font-size: 18px;
+  }
+
+  .gcsNewButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .gcsEditPanel {
+    padding: 14px;
+  }
+
+  .gcsForm {
+    gap: 12px;
+  }
+
+  .gcsInput,
+  .gcsTextarea {
+    padding: 11px 12px;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  .gcsFieldRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .gcsPhotoPreview {
+    width: 110px;
+    height: 110px;
+  }
+
+  .gcsFormActions {
+    flex-direction: column;
+  }
+
+  .gcsCancelButton {
+    width: 100%;
+  }
+
+  /* List items stack: photo+text row, then full-width actions row */
+  .gcsListItem {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .gcsItemMain {
+    width: 100%;
+  }
+
+  .gcsItemMeta {
+    display: block;
+    margin-left: 0;
+    margin-top: 2px;
+  }
+
+  .gcsItemActions {
+    width: 100%;
+  }
+
+  .gcsEditButton,
+  .gcsDeleteButton {
+    flex: 1;
+    text-align: center;
+  }
+
+  .gcsPagination {
+    gap: 8px;
+  }
+}
+
+/* -------------------- Very small phones: < 380px -------------------- */
+@media (max-width: 379px) {
+  .gcsHeading {
+    font-size: 16.5px;
+  }
+
+  .gcsItemPhoto {
+    width: 48px;
+    height: 48px;
+  }
+}

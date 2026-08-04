@@ -1,0 +1,50 @@
+{
+  "title": "ቤተ ክርስቲያን ሰው ፍጠር",
+  "namePlaceholder": "ሙሉ ስም",
+  "selectLanguage": "ቋንቋ ይምረጡ",
+  "selectLanguageError": "እባክዎ ቋንቋ ይምረጡ",
+  "titlePlaceholder": "ማዕረግ (ለምሳሌ ተባባሪ ፓስተር፣ የአነስተኛ ቡድን መሪ)",
+  "selectRole": "ሚና ይምረጡ",
+  "noRank": "ማዕረግ የለም",
+  "rankOrderPlaceholder": "የደረጃ ቅደም ተከተል (ዝቅተኛ = ከፍተኛ ቅድሚያ)",
+  "descriptionPlaceholder": "አጭር የሕይወት ታሪክ ወይም መግለጫ",
+  "messagePlaceholder": "መልእክት / የምስክርነት ጥቅስ (ለምስክርነቶች የሚያገለግል)",
+  "previewAlt": "ቅድመ እይታ-{{index}}",
+  "submitButton": "ቤተ ክርስቲያን ሰው ፍጠር",
+  "submittingButton": "በማስቀመጥ ላይ...",
+  "successMessage": "የቤተ ክርስቲያን ሰው በተሳካ ሁኔታ ተፈጥሯል",
+  "errorMessage": "የቤተ ክርስቲያን ሰው መፍጠር አልተሳካም",
+  "categories": {
+    "leader": "መሪ",
+    "specialThanks": "ልዩ ምስጋና",
+    "testimony": "ምስክርነት"
+  },
+  "roles": {
+    "foundingPastor": "መስራች ፓስተር",
+    "seniorPastor": "ከፍተኛ ፓስተር",
+    "associatePastor": "ተባባሪ ፓስተር",
+    "churchElder": "የቤተ ክርስቲያን ሽማግሌ",
+    "ministryAssistant": "የአገልግሎት ረዳት",
+    "worshipLeader": "የአምልኮ መሪ",
+    "smallGroupLeader": "የአነስተኛ ቡድን መሪ",
+    "foodPantryVolunteer": "የምግብ ድጋፍ በጎ ፈቃደኛ",
+    "worshipTeamMember": "የአምልኮ ቡድን አባል",
+    "sundaySchoolTeacher": "የሰንበት ትምህርት ቤት መምህር",
+    "choirMember": "የመዘምራን አባል",
+    "usher": "አስተናጋጅ",
+    "treasurer": "ገንዘብ ያዥ",
+    "secretary": "ጸሐፊ",
+    "member": "አባል"
+  },
+  "ranks": {
+    "patriarch": "ፓትርያርክ",
+    "archbishop": "ሊቀ ጳጳስ",
+    "bishop": "ጳጳስ",
+    "archpriest": "ሊቀ ካህናት",
+    "priest": "ካህን",
+    "deacon": "ዲያቆን",
+    "subdeacon": "ንዑስ ዲያቆን",
+    "elder": "ሽማግሌ",
+    "member": "አባል"
+  }
+}

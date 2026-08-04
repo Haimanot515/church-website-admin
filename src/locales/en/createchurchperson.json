@@ -1,0 +1,50 @@
+{
+  "title": "Create Church Person",
+  "namePlaceholder": "Full name",
+  "selectLanguage": "Select language",
+  "selectLanguageError": "Please select a language",
+  "titlePlaceholder": "Title (e.g. Associate Pastor, Small Group Leader)",
+  "selectRole": "Select Role",
+  "noRank": "No Rank",
+  "rankOrderPlaceholder": "Rank order (lower = higher precedence)",
+  "descriptionPlaceholder": "Short bio or description",
+  "messagePlaceholder": "Message / testimony quote (used for testimonies)",
+  "previewAlt": "preview-{{index}}",
+  "submitButton": "Create Church Person",
+  "submittingButton": "Saving...",
+  "successMessage": "Church person created successfully",
+  "errorMessage": "Failed to create church person",
+  "categories": {
+    "leader": "Leader",
+    "specialThanks": "Special Thanks",
+    "testimony": "Testimony"
+  },
+  "roles": {
+    "foundingPastor": "Founding Pastor",
+    "seniorPastor": "Senior Pastor",
+    "associatePastor": "Associate Pastor",
+    "churchElder": "Church Elder",
+    "ministryAssistant": "Ministry Assistant",
+    "worshipLeader": "Worship Leader",
+    "smallGroupLeader": "Small Group Leader",
+    "foodPantryVolunteer": "Food Pantry Volunteer",
+    "worshipTeamMember": "Worship Team Member",
+    "sundaySchoolTeacher": "Sunday School Teacher",
+    "choirMember": "Choir Member",
+    "usher": "Usher",
+    "treasurer": "Treasurer",
+    "secretary": "Secretary",
+    "member": "Member"
+  },
+  "ranks": {
+    "patriarch": "Patriarch",
+    "archbishop": "Archbishop",
+    "bishop": "Bishop",
+    "archpriest": "Archpriest",
+    "priest": "Priest",
+    "deacon": "Deacon",
+    "subdeacon": "Subdeacon",
+    "elder": "Elder",
+    "member": "Member"
+  }
+}

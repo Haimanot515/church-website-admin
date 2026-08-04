@@ -1,0 +1,18 @@
+{
+  "heading": "Crea Capitolo della Storia della Chiesa",
+  "languageSelectPlaceholder": "Seleziona lingua",
+  "titlePlaceholder": "Titolo del capitolo (es. Gli Anni della Fondazione)",
+  "leaderPlaceholder": "Nome del leader",
+  "leaderRolePlaceholder": "Ruolo del leader (es. Pastore Fondatore)",
+  "rangePlaceholder": "Anni di guida (es. 1998 - 2006)",
+  "servedByPlaceholder": "Servito da / gruppo comunitario",
+  "orderPlaceholder": "Ordine di visualizzazione (piu basso = mostrato per primo)",
+  "yearPlaceholder": "Anno di ordinamento (usato per l'ordine cronologico)",
+  "descPlaceholder": "Descrizione del capitolo",
+  "previewAlt": "anteprima",
+  "submitButton": "Crea Capitolo della Storia",
+  "submitting": "Salvataggio...",
+  "successMessage": "Capitolo della storia della chiesa creato con successo",
+  "errorLanguageRequired": "Seleziona una lingua",
+  "errorSubmit": "Impossibile creare il capitolo della storia della chiesa"
+}

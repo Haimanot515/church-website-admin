@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreateChurchAssignment.css";
 
 const CreateChurchAssignment = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "createChurchAssignment" });
+
   const [assignment, setAssignment] = useState({
     user: "",
     church: "",
@@ -38,14 +42,14 @@ const CreateChurchAssignment = () => {
         setChurches(churchRes.data);
       } catch (err) {
         console.log(err);
-        setError("Failed to load users or churches");
+        setError(t("loadOptionsErrorMessage"));
       } finally {
         setOptionsLoading(false);
       }
     };
 
     fetchOptions();
-  }, []);
+  }, [t]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -96,7 +100,7 @@ const CreateChurchAssignment = () => {
         },
       });
 
-      alert("Church assignment saved successfully");
+      alert(t("successMessage"));
 
       setAssignment({
         user: "",
@@ -110,38 +114,30 @@ const CreateChurchAssignment = () => {
       setPreview(null);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to save church assignment");
+      setError(err.response?.data?.message || t("errorMessage"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Assign Church</h2>
+    <div className="createChurchAssignment-page">
+      <div className="createChurchAssignment-card">
+        <h2 className="createChurchAssignment-title">{t("title")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="createChurchAssignment-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+        <form onSubmit={handleSubmit} className="createChurchAssignment-form">
           <select
             name="user"
             value={assignment.user}
             onChange={handleChange}
             required
             disabled={optionsLoading}
+            className="createChurchAssignment-select"
           >
             <option value="">
-              {optionsLoading ? "Loading users..." : "Select User"}
+              {optionsLoading ? t("loadingUsersMessage") : t("selectUserPlaceholder")}
             </option>
             {users.map((u) => (
               <option key={u._id} value={u._id}>
@@ -156,9 +152,10 @@ const CreateChurchAssignment = () => {
             onChange={handleChange}
             required
             disabled={optionsLoading}
+            className="createChurchAssignment-select"
           >
             <option value="">
-              {optionsLoading ? "Loading churches..." : "Select Church"}
+              {optionsLoading ? t("loadingChurchesMessage") : t("selectChurchPlaceholder")}
             </option>
             {churches.map((c) => (
               <option key={c._id} value={c._id}>
@@ -170,79 +167,68 @@ const CreateChurchAssignment = () => {
           <input
             type="text"
             name="role"
-            placeholder="Role (e.g. Pastor, Worship Leader, Member)"
+            placeholder={t("rolePlaceholder")}
             value={assignment.role}
             onChange={handleChange}
             required
+            className="createChurchAssignment-input"
           />
 
           <input
             type="date"
             name="servingSince"
-            placeholder="Serving since"
             value={assignment.servingSince}
             onChange={handleChange}
+            className="createChurchAssignment-input"
           />
 
           <textarea
             name="description"
-            placeholder="Description shown on the 'Where I Serve Now' card"
+            placeholder={t("descriptionPlaceholder")}
             value={assignment.description}
             onChange={handleChange}
             rows="4"
+            className="createChurchAssignment-textarea"
           />
 
-          <div>
-            <label style={{ display: "block", marginBottom: "6px", fontSize: "14px", color: "#374151" }}>
-              Leader photo
-            </label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+          <div className="createChurchAssignment-fileGroup">
+            <label className="createChurchAssignment-fileLabel">{t("leaderPhotoLabel")}</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="createChurchAssignment-fileInput"
+            />
           </div>
 
           {preview && (
-            <img
-              src={preview}
-              alt="Leader preview"
-              style={{ width: "160px", height: "160px", objectFit: "cover", borderRadius: "50%" }}
-            />
+            <img src={preview} alt={t("imageAlt")} className="createChurchAssignment-preview" />
           )}
 
           {/* Drives the "Where I Serve Now" section on the public Church
               page (getLeadershipChurch requires isCurrent AND isPrimary).
               Only one assignment across all users can hold this — checking
               it will replace whichever assignment currently holds it. */}
-          <label style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          <label className="createChurchAssignment-checkboxLabel">
             <input
               type="checkbox"
               name="isPrimary"
               checked={assignment.isPrimary}
               onChange={handleChange}
-              style={{ marginTop: "3px" }}
+              className="createChurchAssignment-checkbox"
             />
             <span>
-              Set as Featured Leader
-              <br />
-              <small style={{ color: "#64748b" }}>
-                Shown in the "Where I Serve Now" section of the public
-                Church page. Only one assignment can hold this — checking
-                it will replace whichever assignment currently holds it.
-              </small>
+              {t("setAsFeaturedLeader")}
+              <small className="createChurchAssignment-hint">{t("featuredLeaderHint")}</small>
             </span>
           </label>
 
           <button
             type="submit"
             disabled={loading || optionsLoading}
-            style={{
-              padding: "14px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
+            className="createChurchAssignment-submitButton"
           >
-            {loading ? "Saving..." : "Save Assignment"}
+            {loading ? t("submittingButton") : t("submitButton")}
           </button>
         </form>
       </div>

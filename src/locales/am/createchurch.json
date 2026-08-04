@@ -1,0 +1,20 @@
+{
+  "title": "ቤተ ክርስቲያን ፍጠር",
+  "selectLanguage": "ቋንቋ ይምረጡ",
+  "selectLanguageError": "እባክዎ ቋንቋ ይምረጡ",
+  "churchNamePlaceholder": "የቤተ ክርስቲያን ስም",
+  "shortDescriptionPlaceholder": "አጭር መግለጫ (በካምፓስ ካርድ ላይ ጥቅም ላይ ይውላል)",
+  "descriptionPlaceholder": "ሙሉ መግለጫ",
+  "addressPlaceholder": "አድራሻ",
+  "serviceDaysPlaceholder": "የአገልግሎት ቀናት (ለምሳሌ እሁድ)",
+  "serviceTimePlaceholder": "የአገልግሎት ሰዓት (ለምሳሌ 9:00 ጠዋት)",
+  "uploadImageLabel": "ምስል ስቀል",
+  "imageAlt": "ቅድመ እይታ",
+  "featured": "ተለይቶ የቀረበ",
+  "setAsMainChurch": "እንደ ዋና ቤተ ክርስቲያን አዘጋጅ",
+  "mainChurchHint": "ለተመረጠው ቋንቋ በሕዝብ ቤተ ክርስቲያን ገጽ ላይ ባለው ዋና ክፍል ውስጥ ይታያል። በአንድ ቋንቋ አንድ ቤተ ክርስቲያን ብቻ ይህን ሊይዝ ይችላል — መምረጥ በአሁኑ ጊዜ ይህን ለያዘው ቤተ ክርስቲያን ተክቶ ይተካዋል።",
+  "submitButton": "ቤተ ክርስቲያን ፍጠር",
+  "submittingButton": "በመፍጠር ላይ...",
+  "successMessage": "ቤተ ክርስቲያን በተሳካ ሁኔታ ተፈጥሯል",
+  "errorMessage": "ቤተ ክርስቲያን መፍጠር አልተሳካም"
+}

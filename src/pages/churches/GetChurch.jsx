@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetChurch.css";
 
 const GetChurch = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "getChurch" });
+
   const [churches, setChurches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -17,7 +21,7 @@ const GetChurch = () => {
       setChurches(res.data);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to load churches");
+      setError(err.response?.data?.message || t("errorMessage"));
     } finally {
       setLoading(false);
     }
@@ -28,9 +32,7 @@ const GetChurch = () => {
   }, []);
 
   const handleDelete = async (id, churchName) => {
-    const confirmed = window.confirm(
-      `Delete "${churchName}"? This cannot be undone.`
-    );
+    const confirmed = window.confirm(t("deleteConfirm", { churchName }));
     if (!confirmed) return;
 
     try {
@@ -47,142 +49,69 @@ const GetChurch = () => {
       setChurches((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       console.log(err);
-      alert(err.response?.data?.message || "Failed to delete church");
+      alert(err.response?.data?.message || t("deleteErrorMessage"));
     } finally {
       setDeletingId(null);
     }
   };
 
-  if (loading) return <p style={{ padding: "30px" }}>Loading churches...</p>;
+  if (loading) return <p className="getChurch-loading">{t("loadingMessage")}</p>;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Churches</h2>
+    <div className="getChurch-page">
+      <div className="getChurch-card">
+        <div className="getChurch-header">
+          <h2 className="getChurch-title">{t("title")}</h2>
           <button
             onClick={() => navigate("/admin/churches/new")}
-            style={{
-              padding: "10px 16px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
+            className="getChurch-newButton"
           >
-            + New Church
+            {t("newChurchButton")}
           </button>
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="getChurch-error">{error}</p>}
 
-        {churches.length === 0 && !error && <p>No churches yet.</p>}
+        {churches.length === 0 && !error && (
+          <p className="getChurch-empty">{t("noChurchesMessage")}</p>
+        )}
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div className="getChurch-list">
           {churches.map((c) => (
-            <div
-              key={c._id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                border: "1px solid #e2e8f0",
-                borderRadius: "10px",
-                padding: "14px 16px",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div key={c._id} className="getChurch-row">
+              <div className="getChurch-info">
                 {c.image && (
-                  <img
-                    src={c.image}
-                    alt={c.churchName}
-                    style={{
-                      width: "56px",
-                      height: "56px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
-                    }}
-                  />
+                  <img src={c.image} alt={c.churchName} className="getChurch-thumb" />
                 )}
                 <div>
-                  <strong>{c.churchName}</strong>
+                  <strong className="getChurch-name">{c.churchName}</strong>
                   {c.isPrimary && (
-                    <span
-                      style={{
-                        marginLeft: "8px",
-                        fontSize: "12px",
-                        background: "#dbeafe",
-                        color: "#1d4ed8",
-                        padding: "2px 8px",
-                        borderRadius: "999px",
-                      }}
-                    >
-                      Main Church
+                    <span className="getChurch-badge getChurch-badge--main">
+                      {t("mainChurchBadge")}
                     </span>
                   )}
                   {c.isFeatured && (
-                    <span
-                      style={{
-                        marginLeft: "8px",
-                        fontSize: "12px",
-                        background: "#fef3c7",
-                        color: "#92400e",
-                        padding: "2px 8px",
-                        borderRadius: "999px",
-                      }}
-                    >
-                      Featured
+                    <span className="getChurch-badge getChurch-badge--featured">
+                      {t("featuredBadge")}
                     </span>
                   )}
-                  <div style={{ color: "#64748b", fontSize: "13px" }}>
-                    {c.address}
-                  </div>
+                  <div className="getChurch-address">{c.address}</div>
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div className="getChurch-actions">
                 <button
                   onClick={() => navigate(`/admin/churches/${c._id}/edit`)}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#e2e8f0",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                  }}
+                  className="getChurch-editButton"
                 >
-                  Edit
+                  {t("editButton")}
                 </button>
                 <button
                   onClick={() => handleDelete(c._id, c.churchName)}
                   disabled={deletingId === c._id}
-                  style={{
-                    padding: "8px 14px",
-                    background: "#fee2e2",
-                    color: "#b91c1c",
-                    border: "none",
-                    borderRadius: "8px",
-                    cursor: "pointer",
-                  }}
+                  className="getChurch-deleteButton"
                 >
-                  {deletingId === c._id ? "Deleting..." : "Delete"}
+                  {deletingId === c._id ? t("deletingButton") : t("deleteButton")}
                 </button>
               </div>
             </div>

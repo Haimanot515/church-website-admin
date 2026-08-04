@@ -27,6 +27,14 @@ import enAdminSidebar from "../locales/en/adminsidebar.json";
 import enAdminLogin from "../locales/en/adminlogin.json";
 import enFooter from "../locales/en/footer.json";
 import enAdminUsers from "../locales/en/adminusers.json";
+import enCreateChurch from "../locales/en/createchurch.json";
+import enGetChurch from "../locales/en/getchurch.json";
+import enCreateChurchAssignment from "../locales/en/createchurchassignment.json";
+import enCreateChurchPerson from "../locales/en/createchurchperson.json";
+import enGetChurchPerson from "../locales/en/getchurchperson.json";
+import enReorderChurchPerson from "../locales/en/reorderchurchperson.json";
+import enCreateChurchStory from "../locales/en/createchurchstory.json";
+import enGetChurchStories from "../locales/en/getchurchstory.json";
 
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
@@ -53,6 +61,14 @@ import amAdminSidebar from "../locales/am/adminsidebar.json";
 import amAdminLogin from "../locales/am/adminlogin.json";
 import amFooter from "../locales/am/footer.json";
 import amAdminUsers from "../locales/am/adminusers.json";
+import amCreateChurch from "../locales/am/createchurch.json";
+import amGetChurch from "../locales/am/getchurch.json";
+import amCreateChurchAssignment from "../locales/am/createchurchassignment.json";
+import amCreateChurchPerson from "../locales/am/createchurchperson.json";
+import amGetChurchPerson from "../locales/am/getchurchperson.json";
+import amReorderChurchPerson from "../locales/am/reorderchurchperson.json";
+import amCreateChurchStory from "../locales/am/createchurchstory.json";
+import amGetChurchStories from "../locales/am/getchurchstory.json";
 
 // Italian
 import itNavbar from "../locales/it/navbar.json";
@@ -79,6 +95,14 @@ import itAdminSidebar from "../locales/it/adminsidebar.json";
 import itAdminLogin from "../locales/it/adminlogin.json";
 import itFooter from "../locales/it/footer.json";
 import itAdminUsers from "../locales/it/adminusers.json";
+import itCreateChurch from "../locales/it/createchurch.json";
+import itGetChurch from "../locales/it/getchurch.json";
+import itCreateChurchAssignment from "../locales/it/createchurchassignment.json";
+import itCreateChurchPerson from "../locales/it/createchurchperson.json";
+import itGetChurchPerson from "../locales/it/getchurchperson.json";
+import itReorderChurchPerson from "../locales/it/reorderchurchperson.json";
+import itCreateChurchStory from "../locales/it/createchurchstory.json";
+import itGetChurchStories from "../locales/it/getchurchstory.json";
 
 i18n
   .use(LanguageDetector)
@@ -111,6 +135,14 @@ i18n
           adminLogin: enAdminLogin,
           footer: enFooter,
           adminUsers: enAdminUsers,
+          createChurch: enCreateChurch,
+          getChurch: enGetChurch,
+          createChurchAssignment: enCreateChurchAssignment,
+          createChurchPerson: enCreateChurchPerson,
+          getChurchPerson: enGetChurchPerson,
+          reorderChurchPerson: enReorderChurchPerson,
+          createChurchStory: enCreateChurchStory,
+          getChurchStories: enGetChurchStories,
         },
       },
 
@@ -140,6 +172,14 @@ i18n
           adminLogin: amAdminLogin,
           footer: amFooter,
           adminUsers: amAdminUsers,
+          createChurch: amCreateChurch,
+          getChurch: amGetChurch,
+          createChurchAssignment: amCreateChurchAssignment,
+          createChurchPerson: amCreateChurchPerson,
+          getChurchPerson: amGetChurchPerson,
+          reorderChurchPerson: amReorderChurchPerson,
+          createChurchStory: amCreateChurchStory,
+          getChurchStories: amGetChurchStories,
         },
       },
 
@@ -169,6 +209,14 @@ i18n
           adminLogin: itAdminLogin,
           footer: itFooter,
           adminUsers: itAdminUsers,
+          createChurch: itCreateChurch,
+          getChurch: itGetChurch,
+          createChurchAssignment: itCreateChurchAssignment,
+          createChurchPerson: itCreateChurchPerson,
+          getChurchPerson: itGetChurchPerson,
+          reorderChurchPerson: itReorderChurchPerson,
+          createChurchStory: itCreateChurchStory,
+          getChurchStories: itGetChurchStories,
         },
       },
     },

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./GetChurchStory.css";
 
 const emptyForm = {
   title: "",
@@ -16,6 +18,7 @@ const emptyForm = {
 
 const GetChurchStories = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [stories, setStories] = useState([]);
   const [page, setPage] = useState(1);
@@ -47,9 +50,7 @@ const GetChurchStories = () => {
     } catch (err) {
       console.log(err);
 
-      setError(
-        err.response?.data?.message || "Failed to load church story chapters"
-      );
+      setError(err.response?.data?.message || t("getChurchStories.errorLoad"));
     } finally {
       setLoading(false);
     }
@@ -57,6 +58,7 @@ const GetChurchStories = () => {
 
   useEffect(() => {
     fetchStories(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Revoke the preview URL whenever it changes or the component unmounts
@@ -147,15 +149,13 @@ const GetChurchStories = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Church story chapter updated successfully");
+      alert(t("getChurchStories.successUpdate"));
       handleCancelEdit();
       await fetchStories(page);
     } catch (err) {
       console.log(err);
 
-      setFormError(
-        err.response?.data?.message || "Failed to update church story chapter"
-      );
+      setFormError(err.response?.data?.message || t("getChurchStories.errorUpdate"));
     } finally {
       setSubmitting(false);
     }
@@ -163,9 +163,7 @@ const GetChurchStories = () => {
 
   // --- Delete ---
   const handleDelete = async (id, title) => {
-    const confirmed = window.confirm(
-      `Delete chapter "${title}"? This cannot be undone.`
-    );
+    const confirmed = window.confirm(t("getChurchStories.confirmDelete", { title }));
 
     if (!confirmed) return;
 
@@ -183,156 +181,124 @@ const GetChurchStories = () => {
     } catch (err) {
       console.log(err);
 
-      alert(err.response?.data?.message || "Failed to delete chapter");
+      alert(err.response?.data?.message || t("getChurchStories.errorDelete"));
     } finally {
       setDeletingId(null);
     }
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        padding: "30px",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "20px",
-          }}
-        >
-          <h2 style={{ margin: 0 }}>Church Story Chapters</h2>
+    <div className="gcsPage">
+      <div className="gcsCard">
+        <div className="gcsTopBar">
+          <h2 className="gcsHeading">{t("getChurchStories.heading")}</h2>
 
           {!editingId && (
             <button
               onClick={() => navigate("/admin/church-story/create")}
-              style={{
-                padding: "10px 16px",
-                background: "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
+              className="gcsNewButton"
             >
-              + New Chapter
+              {t("getChurchStories.newChapterButton")}
             </button>
           )}
         </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="gcsError">{error}</p>}
 
         {editingId && (
-          <div
-            ref={editPanelRef}
-            style={{
-              border: "1px solid #e2e8f0",
-              borderRadius: "10px",
-              padding: "20px",
-              marginBottom: "25px",
-              background: "#f8fafc",
-              scrollMarginTop: "20px",
-            }}
-          >
-            <h3 style={{ marginTop: 0 }}>Edit Chapter</h3>
+          <div ref={editPanelRef} className="gcsEditPanel">
+            <h3 className="gcsEditHeading">{t("getChurchStories.editHeading")}</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+            {formError && <p className="gcsError">{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <form onSubmit={handleSubmit} className="gcsForm">
               <input
                 type="text"
                 name="title"
-                placeholder="Chapter title (e.g. The Founding Years)"
+                placeholder={t("getChurchStories.titlePlaceholder")}
                 value={form.title}
                 onChange={handleChange}
                 required
+                className="gcsInput"
               />
 
-              <input
-                type="text"
-                name="leader"
-                placeholder="Leader name"
-                value={form.leader}
-                onChange={handleChange}
-              />
+              <div className="gcsFieldRow">
+                <input
+                  type="text"
+                  name="leader"
+                  placeholder={t("getChurchStories.leaderPlaceholder")}
+                  value={form.leader}
+                  onChange={handleChange}
+                  className="gcsInput"
+                />
 
-              <input
-                type="text"
-                name="leaderRole"
-                placeholder="Leader role (e.g. Founding Pastor)"
-                value={form.leaderRole}
-                onChange={handleChange}
-              />
+                <input
+                  type="text"
+                  name="leaderRole"
+                  placeholder={t("getChurchStories.leaderRolePlaceholder")}
+                  value={form.leaderRole}
+                  onChange={handleChange}
+                  className="gcsInput"
+                />
+              </div>
 
-              <input
-                type="text"
-                name="range"
-                placeholder="Years led (e.g. 1998 – 2006)"
-                value={form.range}
-                onChange={handleChange}
-              />
+              <div className="gcsFieldRow">
+                <input
+                  type="text"
+                  name="range"
+                  placeholder={t("getChurchStories.rangePlaceholder")}
+                  value={form.range}
+                  onChange={handleChange}
+                  className="gcsInput"
+                />
 
-              <input
-                type="text"
-                name="servedBy"
-                placeholder="Served by / community group"
-                value={form.servedBy}
-                onChange={handleChange}
-              />
+                <input
+                  type="text"
+                  name="servedBy"
+                  placeholder={t("getChurchStories.servedByPlaceholder")}
+                  value={form.servedBy}
+                  onChange={handleChange}
+                  className="gcsInput"
+                />
+              </div>
 
-              <input
-                type="number"
-                name="order"
-                placeholder="Display order (lower = shown first)"
-                value={form.order}
-                onChange={handleChange}
-                min="0"
-              />
+              <div className="gcsFieldRow">
+                <input
+                  type="number"
+                  name="order"
+                  placeholder={t("getChurchStories.orderPlaceholder")}
+                  value={form.order}
+                  onChange={handleChange}
+                  min="0"
+                  className="gcsInput"
+                />
 
-              <input
-                type="number"
-                name="year"
-                placeholder="Sort year (used for chronological ordering)"
-                value={form.year}
-                onChange={handleChange}
-              />
+                <input
+                  type="number"
+                  name="year"
+                  placeholder={t("getChurchStories.yearPlaceholder")}
+                  value={form.year}
+                  onChange={handleChange}
+                  className="gcsInput"
+                />
+              </div>
 
               <textarea
                 name="desc"
-                placeholder="Chapter description"
+                placeholder={t("getChurchStories.descPlaceholder")}
                 rows="5"
                 value={form.desc}
                 onChange={handleChange}
+                className="gcsTextarea"
               />
 
               {existingPhoto && !preview && (
-                <div>
-                  <small style={{ color: "#64748b" }}>Current photo:</small>
-                  <br />
+                <div className="gcsPhotoBlock">
+                  <small className="gcsPhotoLabel">{t("getChurchStories.currentPhotoLabel")}</small>
                   <img
                     src={existingPhoto}
-                    alt="current chapter"
-                    style={{
-                      width: "160px",
-                      height: "160px",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                      border: "1px solid #e2e8f0",
-                    }}
+                    alt={t("getChurchStories.currentPhotoAlt")}
+                    className="gcsPhotoPreview"
                   />
                 </div>
               )}
@@ -340,53 +306,24 @@ const GetChurchStories = () => {
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
               {preview && (
-                <div>
-                  <small style={{ color: "#64748b" }}>New photo:</small>
-                  <br />
-                  <img
-                    src={preview}
-                    alt="preview"
-                    style={{
-                      width: "160px",
-                      height: "160px",
-                      objectFit: "cover",
-                      borderRadius: "10px",
-                      border: "1px solid #e2e8f0",
-                    }}
-                  />
+                <div className="gcsPhotoBlock">
+                  <small className="gcsPhotoLabel">{t("getChurchStories.newPhotoLabel")}</small>
+                  <img src={preview} alt={t("getChurchStories.previewAlt")} className="gcsPhotoPreview" />
                 </div>
               )}
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    flex: 1,
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
+              <div className="gcsFormActions">
+                <button type="submit" disabled={submitting} className="gcsSaveButton">
+                  {submitting ? t("getChurchStories.saving") : t("getChurchStories.saveButton")}
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e2e8f0",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
+                  className="gcsCancelButton"
                 >
-                  Cancel
+                  {t("getChurchStories.cancelButton")}
                 </button>
               </div>
             </form>
@@ -396,54 +333,31 @@ const GetChurchStories = () => {
         {!editingId && (
           <>
             {loading ? (
-              <p>Loading chapters...</p>
+              <p className="gcsStatusText">{t("getChurchStories.loading")}</p>
             ) : (
               <>
-                {stories.length === 0 && !error && <p>No chapters yet.</p>}
+                {stories.length === 0 && !error && (
+                  <p className="gcsStatusText">{t("getChurchStories.empty")}</p>
+                )}
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div className="gcsList">
                   {stories.map((s) => (
-                    <div
-                      key={s._id}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        border: "1px solid #e2e8f0",
-                        borderRadius: "10px",
-                        padding: "14px 16px",
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    <div key={s._id} className="gcsListItem">
+                      <div className="gcsItemMain">
                         {s.photo && (
-                          <img
-                            src={s.photo}
-                            alt={s.title}
-                            style={{
-                              width: "56px",
-                              height: "56px",
-                              objectFit: "cover",
-                              borderRadius: "8px",
-                            }}
-                          />
+                          <img src={s.photo} alt={s.title} className="gcsItemPhoto" />
                         )}
 
-                        <div>
-                          <strong>{s.title}</strong>
-                          <span
-                            style={{
-                              marginLeft: "8px",
-                              fontSize: "12px",
-                              color: "#94a3b8",
-                            }}
-                          >
-                            order: {s.order}
+                        <div className="gcsItemText">
+                          <strong className="gcsItemTitle">{s.title}</strong>
+                          <span className="gcsItemMeta">
+                            {t("getChurchStories.orderLabel", { order: s.order })}
                             {s.year !== undefined && s.year !== null && s.year !== ""
-                              ? ` · year: ${s.year}`
+                              ? ` · ${t("getChurchStories.yearLabel", { year: s.year })}`
                               : ""}
                           </span>
 
-                          <div style={{ color: "#64748b", fontSize: "13px" }}>
+                          <div className="gcsItemSubline">
                             {s.leader && (
                               <>
                                 {s.leader}
@@ -455,33 +369,19 @@ const GetChurchStories = () => {
                         </div>
                       </div>
 
-                      <div style={{ display: "flex", gap: "8px" }}>
-                        <button
-                          onClick={() => handleEditClick(s)}
-                          style={{
-                            padding: "8px 14px",
-                            background: "#e2e8f0",
-                            border: "none",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Edit
+                      <div className="gcsItemActions">
+                        <button onClick={() => handleEditClick(s)} className="gcsEditButton">
+                          {t("getChurchStories.editButton")}
                         </button>
 
                         <button
                           onClick={() => handleDelete(s._id, s.title)}
                           disabled={deletingId === s._id}
-                          style={{
-                            padding: "8px 14px",
-                            background: "#fee2e2",
-                            color: "#b91c1c",
-                            border: "none",
-                            borderRadius: "8px",
-                            cursor: "pointer",
-                          }}
+                          className="gcsDeleteButton"
                         >
-                          {deletingId === s._id ? "Deleting..." : "Delete"}
+                          {deletingId === s._id
+                            ? t("getChurchStories.deleting")
+                            : t("getChurchStories.deleteButton")}
                         </button>
                       </div>
                     </div>
@@ -489,47 +389,25 @@ const GetChurchStories = () => {
                 </div>
 
                 {totalPages > 1 && (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "12px",
-                      marginTop: "24px",
-                    }}
-                  >
+                  <div className="gcsPagination">
                     <button
                       onClick={() => fetchStories(page - 1)}
                       disabled={page <= 1}
-                      style={{
-                        padding: "8px 14px",
-                        background: "#e2e8f0",
-                        border: "none",
-                        borderRadius: "8px",
-                        cursor: page <= 1 ? "default" : "pointer",
-                        opacity: page <= 1 ? 0.5 : 1,
-                      }}
+                      className="gcsPageButton"
                     >
-                      Previous
+                      {t("getChurchStories.previous")}
                     </button>
 
-                    <span style={{ color: "#475569", fontSize: "14px" }}>
-                      Page {page} of {totalPages}
+                    <span className="gcsPageLabel">
+                      {t("getChurchStories.pageLabel", { page, totalPages })}
                     </span>
 
                     <button
                       onClick={() => fetchStories(page + 1)}
                       disabled={page >= totalPages}
-                      style={{
-                        padding: "8px 14px",
-                        background: "#e2e8f0",
-                        border: "none",
-                        borderRadius: "8px",
-                        cursor: page >= totalPages ? "default" : "pointer",
-                        opacity: page >= totalPages ? 0.5 : 1,
-                      }}
+                      className="gcsPageButton"
                     >
-                      Next
+                      {t("getChurchStories.next")}
                     </button>
                   </div>
                 )}

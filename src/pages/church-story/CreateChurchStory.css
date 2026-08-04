@@ -1,0 +1,177 @@
+/* createChurchStory.css
+   Breakpoints:
+   - Mobile:  < 640px
+   - Tablet:  640px - 1023px
+   - Desktop: >= 1024px
+*/
+
+.ccsPage {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.ccsCard {
+  max-width: 650px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.ccsHeading {
+  margin: 0 0 4px;
+  font-size: 21px;
+  color: #0f172a;
+}
+
+.ccsError {
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.ccsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ccsSelect,
+.ccsInput,
+.ccsTextarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  background: #fff;
+  color: #0f172a;
+}
+
+.ccsSelect:focus,
+.ccsInput:focus,
+.ccsTextarea:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+  border-color: #2563eb;
+}
+
+.ccsTextarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.ccsFileInput {
+  font-size: 13.5px;
+}
+
+.ccsPreviewWrap {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ccsPreview {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.ccsSubmitButton {
+  padding: 14px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.ccsSubmitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Two-column layout for related fields on larger screens */
+.ccsFieldRow {
+  display: flex;
+  gap: 15px;
+}
+
+.ccsFieldRow > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* -------------------- Tablet: 640px - 1023px -------------------- */
+@media (max-width: 1023px) {
+  .ccsPage {
+    padding: 22px;
+  }
+
+  .ccsCard {
+    padding: 24px;
+  }
+}
+
+/* -------------------- Mobile: < 640px -------------------- */
+@media (max-width: 639px) {
+  .ccsPage {
+    padding: 14px;
+  }
+
+  .ccsCard {
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .ccsHeading {
+    font-size: 18px;
+  }
+
+  .ccsForm {
+    gap: 12px;
+  }
+
+  .ccsSelect,
+  .ccsInput,
+  .ccsTextarea {
+    padding: 11px 12px;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+  }
+
+  .ccsFieldRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .ccsPreview {
+    width: 120px;
+    height: 120px;
+  }
+
+  .ccsSubmitButton {
+    padding: 13px;
+    font-size: 14.5px;
+  }
+}
+
+/* -------------------- Very small phones: < 380px -------------------- */
+@media (max-width: 379px) {
+  .ccsHeading {
+    font-size: 16.5px;
+  }
+
+  .ccsPreview {
+    width: 100px;
+    height: 100px;
+  }
+}

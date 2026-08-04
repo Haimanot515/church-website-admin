@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./CreateChurch.css";
 
 const CreateChurch = () => {
+  const { t } = useTranslation("translation", { keyPrefix: "createChurch" });
+
   const [church, setChurch] = useState({
     churchName: "",
     shortDescription: "",
@@ -57,7 +61,7 @@ const CreateChurch = () => {
     setError("");
 
     if (!church.language) {
-      setError("Please select a language");
+      setError(t("selectLanguageError"));
       return;
     }
 
@@ -84,7 +88,7 @@ const CreateChurch = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Church created successfully");
+      alert(t("successMessage"));
 
       setChurch({
         churchName: "",
@@ -102,32 +106,29 @@ const CreateChurch = () => {
       setPreview(null);
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to create church");
+      setError(err.response?.data?.message || t("errorMessage"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Create Church</h2>
+    <div className="createChurch-page">
+      <div className="createChurch-card">
+        <h2 className="createChurch-title">{t("title")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="createChurch-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-          <select name="language" value={church.language} onChange={handleChange} required>
+        <form onSubmit={handleSubmit} className="createChurch-form">
+          <select
+            name="language"
+            value={church.language}
+            onChange={handleChange}
+            required
+            className="createChurch-select"
+          >
             <option value="" disabled>
-              Select language
+              {t("selectLanguage")}
             </option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
@@ -139,110 +140,107 @@ const CreateChurch = () => {
           <input
             type="text"
             name="churchName"
-            placeholder="Church name"
+            placeholder={t("churchNamePlaceholder")}
             value={church.churchName}
             onChange={handleChange}
             required
+            className="createChurch-input"
           />
 
           <textarea
             name="shortDescription"
-            placeholder="Short description (used on the campus card)"
+            placeholder={t("shortDescriptionPlaceholder")}
             value={church.shortDescription}
             onChange={handleChange}
             rows="2"
             required
+            className="createChurch-textarea"
           />
 
           <textarea
             name="description"
-            placeholder="Full description"
+            placeholder={t("descriptionPlaceholder")}
             value={church.description}
             onChange={handleChange}
             rows="6"
             required
+            className="createChurch-textarea"
           />
 
           <input
             type="text"
             name="address"
-            placeholder="Address"
+            placeholder={t("addressPlaceholder")}
             value={church.address}
             onChange={handleChange}
             required
+            className="createChurch-input"
           />
 
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div className="createChurch-row">
             <input
               type="text"
               name="serviceDays"
-              placeholder="Service days (e.g. Sundays)"
+              placeholder={t("serviceDaysPlaceholder")}
               value={church.serviceDays}
               onChange={handleChange}
               required
-              style={{ flex: 1 }}
+              className="createChurch-input"
             />
             <input
               type="text"
               name="serviceTime"
-              placeholder="Service time (e.g. 9:00 AM)"
+              placeholder={t("serviceTimePlaceholder")}
               value={church.serviceTime}
               onChange={handleChange}
               required
-              style={{ flex: 1 }}
+              className="createChurch-input"
             />
           </div>
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+          <label className="createChurch-fileLabel">
+            {t("uploadImageLabel")}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="createChurch-fileInput"
             />
-          )}
-
-          <label>
-            <input type="checkbox" name="isFeatured" checked={church.isFeatured} onChange={handleChange} />
-            Featured
           </label>
 
-          {/* UI-facing label reads "Main Church" — maps internally to isPrimary,
-              which drives the public hero section on the Church page. */}
-          <label style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          {preview && (
+            <img src={preview} alt={t("imageAlt")} className="createChurch-preview" />
+          )}
+
+          <label className="createChurch-checkboxLabel">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={church.isFeatured}
+              onChange={handleChange}
+              className="createChurch-checkbox"
+            />
+            {t("featured")}
+          </label>
+
+          {/* UI-facing label maps internally to isPrimary, which drives the
+              public hero section on the Church page. */}
+          <label className="createChurch-checkboxLabel">
             <input
               type="checkbox"
               name="isPrimary"
               checked={church.isPrimary}
               onChange={handleChange}
-              style={{ marginTop: "3px" }}
+              className="createChurch-checkbox"
             />
             <span>
-              Set as Main Church
-              <br />
-              <small style={{ color: "#64748b" }}>
-                Shown in the hero section of the public Church page, for this
-                language. Only one church per language can hold this —
-                selecting it will replace whichever church currently holds it
-                for the selected language.
-              </small>
+              {t("setAsMainChurch")}
+              <small className="createChurch-hint">{t("mainChurchHint")}</small>
             </span>
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              padding: "14px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "10px",
-              cursor: "pointer",
-            }}
-          >
-            {loading ? "Creating..." : "Create Church"}
+          <button type="submit" disabled={loading} className="createChurch-submitButton">
+            {loading ? t("submittingButton") : t("submitButton")}
           </button>
         </form>
       </div>

@@ -1,0 +1,21 @@
+{
+  "title": "Riordina Persone",
+  "subtitle": "Trascina una riga, oppure usa le frecce, per cambiare come le persone appaiono sul sito.",
+  "saveButton": "Salva Ordine",
+  "saving": "Salvataggio...",
+  "saved": "Salvato",
+  "categories": {
+    "leader": "Leader",
+    "specialThanks": "Ringraziamenti Speciali",
+    "testimony": "Testimonianze"
+  },
+  "loading": "Caricamento delle persone della chiesa...",
+  "empty": "Nessuna persona trovata in questa categoria.",
+  "unnamed": "Senza nome",
+  "moveUp": "Sposta su",
+  "moveDown": "Sposta giu",
+  "dragHandle": "Trascina per riordinare",
+  "successMessage": "Ordine salvato con successo",
+  "errorLoad": "Impossibile caricare le persone della chiesa",
+  "errorSave": "Impossibile salvare il nuovo ordine"
+}

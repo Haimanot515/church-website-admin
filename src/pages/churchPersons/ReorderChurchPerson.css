@@ -1,0 +1,342 @@
+/* reorderChurchPerson.css
+   Breakpoints:
+   - Mobile:  < 640px
+   - Tablet:  640px - 1023px
+   - Desktop: >= 1024px
+*/
+
+:root {
+  --rcp-green: #16a34a;
+  --rcp-green-soft: #e6f6ec;
+}
+
+.rcpPage {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+  font-family: "Inter", system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.rcpCard {
+  max-width: 820px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+/* Header */
+.rcpHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.rcpHeaderText {
+  min-width: 0;
+}
+
+.rcpTitle {
+  margin: 0;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+.rcpSubtitle {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  color: #64748b;
+}
+
+.rcpSaveButton {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+  background: var(--rcp-green);
+  color: #fff;
+  cursor: pointer;
+}
+
+.rcpSaveButton:disabled {
+  background: #e5e7eb;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Category tabs */
+.rcpTabs {
+  display: inline-flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  margin-top: 20px;
+  margin-bottom: 22px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.rcpTabButton {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.rcpTabButtonActive {
+  background: #fff;
+  color: var(--rcp-green);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Alerts */
+.rcpAlert {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+}
+
+.rcpAlertError {
+  background: #fef2f2;
+  border-left: 4px solid #dc2626;
+  color: #b91c1c;
+}
+
+.rcpAlertSuccess {
+  background: var(--rcp-green-soft);
+  border-left: 4px solid var(--rcp-green);
+  color: #15803d;
+}
+
+.rcpStatusText {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Person list */
+.rcpList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rcpRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+  cursor: grab;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.rcpRowDragOver {
+  border: 1.5px solid var(--rcp-green);
+  background: var(--rcp-green-soft);
+}
+
+.rcpDragHandle {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  color: #cbd5e1;
+  cursor: grab;
+  user-select: none;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.rcpDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  display: block;
+}
+
+.rcpRankBadge {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--rcp-green);
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rcpAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+}
+
+.rcpAvatarPlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+
+.rcpPersonInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.rcpPersonName {
+  font-weight: 600;
+  font-size: 15px;
+  color: #0f172a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rcpPersonMeta {
+  font-size: 13px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rcpArrowGroup {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rcpArrowButton {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: #fff;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.12s ease;
+}
+
+.rcpArrowButton:disabled {
+  background: #e5e7eb;
+  color: #cbd5e1;
+  border: 1px solid #e5e7eb;
+  cursor: not-allowed;
+}
+
+/* -------------------- Tablet: 640px - 1023px -------------------- */
+@media (max-width: 1023px) {
+  .rcpPage {
+    padding: 22px;
+  }
+
+  .rcpCard {
+    padding: 24px;
+  }
+}
+
+/* -------------------- Mobile: < 640px -------------------- */
+@media (max-width: 639px) {
+  .rcpPage {
+    padding: 14px;
+  }
+
+  .rcpCard {
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .rcpHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rcpSaveButton {
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px;
+  }
+
+  .rcpTitle {
+    font-size: 19px;
+  }
+
+  .rcpTabs {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .rcpTabButton {
+    flex: 1;
+    padding: 8px 10px;
+    font-size: 12.5px;
+  }
+
+  .rcpRow {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .rcpDragHandle {
+    display: none;
+  }
+
+  .rcpAvatar,
+  .rcpAvatarPlaceholder {
+    width: 38px;
+    height: 38px;
+  }
+
+  .rcpPersonInfo {
+    flex-basis: calc(100% - 100px);
+  }
+
+  .rcpArrowGroup {
+    margin-left: auto;
+  }
+
+  .rcpArrowButton {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+}
+
+/* -------------------- Very small phones: < 380px -------------------- */
+@media (max-width: 379px) {
+  .rcpPersonName {
+    font-size: 14px;
+  }
+
+  .rcpPersonMeta {
+    font-size: 12px;
+  }
+}

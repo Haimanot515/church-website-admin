@@ -1,0 +1,50 @@
+{
+  "title": "Crea Persona della Chiesa",
+  "namePlaceholder": "Nome completo",
+  "selectLanguage": "Seleziona lingua",
+  "selectLanguageError": "Seleziona una lingua",
+  "titlePlaceholder": "Titolo (es. Pastore Associato, Leader di Piccolo Gruppo)",
+  "selectRole": "Seleziona Ruolo",
+  "noRank": "Nessun Grado",
+  "rankOrderPlaceholder": "Ordine del grado (pi\u00f9 basso = precedenza pi\u00f9 alta)",
+  "descriptionPlaceholder": "Breve biografia o descrizione",
+  "messagePlaceholder": "Messaggio / citazione di testimonianza (usato per le testimonianze)",
+  "previewAlt": "anteprima-{{index}}",
+  "submitButton": "Crea Persona della Chiesa",
+  "submittingButton": "Salvataggio in corso...",
+  "successMessage": "Persona della chiesa creata con successo",
+  "errorMessage": "Impossibile creare la persona della chiesa",
+  "categories": {
+    "leader": "Leader",
+    "specialThanks": "Ringraziamenti Speciali",
+    "testimony": "Testimonianza"
+  },
+  "roles": {
+    "foundingPastor": "Pastore Fondatore",
+    "seniorPastor": "Pastore Senior",
+    "associatePastor": "Pastore Associato",
+    "churchElder": "Anziano della Chiesa",
+    "ministryAssistant": "Assistente di Ministero",
+    "worshipLeader": "Leader di Lode",
+    "smallGroupLeader": "Leader di Piccolo Gruppo",
+    "foodPantryVolunteer": "Volontario Dispensa Alimentare",
+    "worshipTeamMember": "Membro del Team di Lode",
+    "sundaySchoolTeacher": "Insegnante di Scuola Domenicale",
+    "choirMember": "Membro del Coro",
+    "usher": "Maschera",
+    "treasurer": "Tesoriere",
+    "secretary": "Segretario",
+    "member": "Membro"
+  },
+  "ranks": {
+    "patriarch": "Patriarca",
+    "archbishop": "Arcivescovo",
+    "bishop": "Vescovo",
+    "archpriest": "Arciprete",
+    "priest": "Sacerdote",
+    "deacon": "Diacono",
+    "subdeacon": "Suddiacono",
+    "elder": "Anziano",
+    "member": "Membro"
+  }
+}

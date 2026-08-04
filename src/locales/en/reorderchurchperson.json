@@ -1,0 +1,21 @@
+{
+  "title": "Reorder Persons",
+  "subtitle": "Drag a row, or use the arrows, to change how people appear on the site.",
+  "saveButton": "Save Order",
+  "saving": "Saving...",
+  "saved": "Saved",
+  "categories": {
+    "leader": "Leaders",
+    "specialThanks": "Special Thanks",
+    "testimony": "Testimonies"
+  },
+  "loading": "Loading church persons...",
+  "empty": "No church persons found in this category.",
+  "unnamed": "Unnamed",
+  "moveUp": "Move up",
+  "moveDown": "Move down",
+  "dragHandle": "Drag to reorder",
+  "successMessage": "Order saved successfully",
+  "errorLoad": "Failed to load church persons",
+  "errorSave": "Failed to save new order"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "ቤተ ክርስቲያን መድብ",
+  "selectUserPlaceholder": "ተጠቃሚ ይምረጡ",
+  "loadingUsersMessage": "ተጠቃሚዎች በመጫን ላይ...",
+  "selectChurchPlaceholder": "ቤተ ክርስቲያን ይምረጡ",
+  "loadingChurchesMessage": "አብያተ ክርስቲያናት በመጫን ላይ...",
+  "rolePlaceholder": "ሚና (ለምሳሌ ፓስተር፣ የአምልኮ መሪ፣ አባል)",
+  "descriptionPlaceholder": "በ«አሁን የማገለግልበት» ካርድ ላይ የሚታይ መግለጫ",
+  "leaderPhotoLabel": "የመሪ ፎቶ",
+  "imageAlt": "የመሪ ቅድመ እይታ",
+  "setAsFeaturedLeader": "እንደ ተለይቶ የቀረበ መሪ አዘጋጅ",
+  "featuredLeaderHint": "በሕዝብ ቤተ ክርስቲያን ገጽ ላይ ባለው «አሁን የማገለግልበት» ክፍል ውስጥ ይታያል። አንድ ምደባ ብቻ ይህን ሊይዝ ይችላል — መምረጥ በአሁኑ ጊዜ ይህን የያዘውን ምደባ ይተካል።",
+  "submitButton": "ምደባ አስቀምጥ",
+  "submittingButton": "በማስቀመጥ ላይ...",
+  "successMessage": "የቤተ ክርስቲያን ምደባ በተሳካ ሁኔታ ተቀምጧል",
+  "errorMessage": "የቤተ ክርስቲያን ምደባ ማስቀመጥ አልተሳካም",
+  "loadOptionsErrorMessage": "ተጠቃሚዎችን ወይም አብያተ ክርስቲያናትን መጫን አልተሳካም"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Assegna Chiesa",
+  "selectUserPlaceholder": "Seleziona utente",
+  "loadingUsersMessage": "Caricamento utenti...",
+  "selectChurchPlaceholder": "Seleziona chiesa",
+  "loadingChurchesMessage": "Caricamento chiese...",
+  "rolePlaceholder": "Ruolo (es. Pastore, Leader di lode, Membro)",
+  "descriptionPlaceholder": "Descrizione mostrata nella scheda \"Dove servo ora\"",
+  "leaderPhotoLabel": "Foto del leader",
+  "imageAlt": "Anteprima del leader",
+  "setAsFeaturedLeader": "Imposta come Leader in Evidenza",
+  "featuredLeaderHint": "Mostrato nella sezione \"Dove servo ora\" della pagina pubblica della Chiesa. Solo un incarico pu\u00f2 avere questo ruolo \u2014 selezionandolo sostituir\u00e0 l'incarico che attualmente lo detiene.",
+  "submitButton": "Salva Assegnazione",
+  "submittingButton": "Salvataggio in corso...",
+  "successMessage": "Assegnazione della chiesa salvata con successo",
+  "errorMessage": "Impossibile salvare l'assegnazione della chiesa",
+  "loadOptionsErrorMessage": "Impossibile caricare utenti o chiese"
+}

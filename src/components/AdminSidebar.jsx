@@ -88,18 +88,12 @@ const SECTION_DEFS = [
     links: [
       { to: "/admin/churches/create", labelKey: "create" },
       { to: "/admin/churches/view", labelKey: "view" },
-      { to: "/admin/churches/update", labelKey: "update" },
-      { to: "/admin/churches/delete", labelKey: "delete" },
       { to: "/admin/churches/assign", labelKey: "assign" },
       { to: "/admin/church-persons/create", labelKey: "personCreate" },
       { to: "/admin/church-persons/view", labelKey: "personView" },
-      { to: "/admin/church-persons/update", labelKey: "personUpdate" },
       { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
-      { to: "/admin/church-persons/delete", labelKey: "personDelete" },
       { to: "/admin/church-story/create", labelKey: "chapterCreate" },
       { to: "/admin/church-story/view", labelKey: "chapterView" },
-      { to: "/admin/church-story/update", labelKey: "chapterUpdate" },
-      { to: "/admin/church-story/delete", labelKey: "chapterDelete" },
     ],
   },
   {

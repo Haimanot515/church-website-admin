@@ -1,0 +1,268 @@
+.getChurch-page {
+  min-height: 100vh;
+  background: #f4f2ec;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+.getChurch-loading {
+  padding: 30px;
+  font-family: "Nunito Sans", sans-serif;
+  color: #0b142c;
+}
+
+.getChurch-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 14px;
+  border: 1px solid #e7e2d5;
+  box-shadow: 0 20px 45px rgba(11, 20, 44, 0.08);
+}
+
+.getChurch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.getChurch-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #0b142c;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.getChurch-newButton {
+  padding: 10px 18px;
+  background: #0b142c;
+  color: #f4e9c9;
+  border: 1px solid #0b142c;
+  border-radius: 10px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.getChurch-newButton:hover {
+  background: #172352;
+}
+
+.getChurch-error {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.95rem;
+  color: #b3261e;
+  background: #fbe9e7;
+  border: 1px solid #f2c4bd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0 0 20px;
+}
+
+.getChurch-empty {
+  font-family: "Nunito Sans", sans-serif;
+  color: #56503f;
+}
+
+.getChurch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.getChurch-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #e7e2d5;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.getChurch-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.getChurch-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.getChurch-name {
+  color: #0b142c;
+  font-size: 1rem;
+}
+
+.getChurch-badge {
+  margin-left: 8px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.7rem;
+  padding: 2px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.getChurch-badge--main {
+  background: #eef1fa;
+  color: #172352;
+}
+
+.getChurch-badge--featured {
+  background: #f6ecd2;
+  color: #8a6b1f;
+}
+
+.getChurch-address {
+  color: #7a7462;
+  font-size: 0.82rem;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.getChurch-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.getChurch-editButton,
+.getChurch-deleteButton {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.getChurch-editButton {
+  background: #ece7d9;
+  color: #0b142c;
+}
+
+.getChurch-editButton:hover {
+  background: #e0d9c4;
+}
+
+.getChurch-deleteButton {
+  background: #fbe4e2;
+  color: #a1281f;
+}
+
+.getChurch-deleteButton:hover:not(:disabled) {
+  background: #f6d1cd;
+}
+
+.getChurch-deleteButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.getChurch-newButton:focus-visible,
+.getChurch-editButton:focus-visible,
+.getChurch-deleteButton:focus-visible {
+  outline: 2px solid #c9a24b;
+  outline-offset: 2px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .getChurch-page {
+    padding: 36px 20px;
+  }
+
+  .getChurch-card {
+    max-width: 100%;
+    padding: 32px;
+  }
+
+  .getChurch-title {
+    font-size: 1.9rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .getChurch-page {
+    padding: 20px 14px;
+  }
+
+  .getChurch-card {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
+  .getChurch-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .getChurch-newButton {
+    width: 100%;
+    text-align: center;
+  }
+
+  .getChurch-title {
+    font-size: 1.6rem;
+  }
+
+  .getChurch-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .getChurch-actions {
+    width: 100%;
+  }
+
+  .getChurch-editButton,
+  .getChurch-deleteButton {
+    flex: 1;
+  }
+
+  .getChurch-address {
+    white-space: normal;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 380px) {
+  .getChurch-card {
+    padding: 18px 14px;
+  }
+
+  .getChurch-title {
+    font-size: 1.4rem;
+  }
+
+  .getChurch-thumb {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .getChurch-newButton {
+    transition: none;
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Assign Church",
+  "selectUserPlaceholder": "Select User",
+  "loadingUsersMessage": "Loading users...",
+  "selectChurchPlaceholder": "Select Church",
+  "loadingChurchesMessage": "Loading churches...",
+  "rolePlaceholder": "Role (e.g. Pastor, Worship Leader, Member)",
+  "descriptionPlaceholder": "Description shown on the \"Where I Serve Now\" card",
+  "leaderPhotoLabel": "Leader photo",
+  "imageAlt": "Leader preview",
+  "setAsFeaturedLeader": "Set as Featured Leader",
+  "featuredLeaderHint": "Shown in the \"Where I Serve Now\" section of the public Church page. Only one assignment can hold this \u2014 checking it will replace whichever assignment currently holds it.",
+  "submitButton": "Save Assignment",
+  "submittingButton": "Saving...",
+  "successMessage": "Church assignment saved successfully",
+  "errorMessage": "Failed to save church assignment",
+  "loadOptionsErrorMessage": "Failed to load users or churches"
+}

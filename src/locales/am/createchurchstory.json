@@ -1,0 +1,18 @@
+{
+  "heading": "የቤተክርስቲያን ታሪክ ምዕራፍ ፍጠር",
+  "languageSelectPlaceholder": "ቋንቋ ይምረጡ",
+  "titlePlaceholder": "የምዕራፍ ርዕስ (ለምሳሌ፦ የመመስረቻ ዓመታት)",
+  "leaderPlaceholder": "የመሪ ስም",
+  "leaderRolePlaceholder": "የመሪ ሚና (ለምሳሌ፦ መስራች ፓስተር)",
+  "rangePlaceholder": "የመሩበት ዓመታት (ለምሳሌ፦ 1998 - 2006)",
+  "servedByPlaceholder": "በእነማን አገልግሎት ተሰጠ / የማህበረሰብ ቡድን",
+  "orderPlaceholder": "የማሳያ ቅደም ተከተል (ትንሽ ቁጥር = መጀመሪያ ይታያል)",
+  "yearPlaceholder": "መደርደሪያ ዓመት (ለጊዜ ቅደም ተከተል ይያገለግላል)",
+  "descPlaceholder": "የምዕራፍ መግለጫ",
+  "previewAlt": "ቅድመ እይታ",
+  "submitButton": "የታሪክ ምዕራፍ ፍጠር",
+  "submitting": "በማስቀመጥ ላይ...",
+  "successMessage": "የቤተክርስቲያን ታሪክ ምዕራፍ በተሳካ ሁኔታ ተፈጥሯል",
+  "errorLanguageRequired": "እባክዎ ቋንቋ ይምረጡ",
+  "errorSubmit": "የቤተክርስቲያን ታሪክ ምዕራፍ መፍጠር አልተሳካም"
+}

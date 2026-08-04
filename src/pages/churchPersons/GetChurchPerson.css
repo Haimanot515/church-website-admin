@@ -1,0 +1,446 @@
+.getChurchPerson-page {
+  min-height: 100vh;
+  background: #f4f2ec;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+.getChurchPerson-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 14px;
+  border: 1px solid #e7e2d5;
+  box-shadow: 0 20px 45px rgba(11, 20, 44, 0.08);
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.getChurchPerson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.getChurchPerson-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #0b142c;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.getChurchPerson-toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.getChurchPerson-filterSelect {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #d8d2c2;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9rem;
+  background: #fdfcf9;
+  color: #0b142c;
+}
+
+.getChurchPerson-newButton {
+  padding: 10px 18px;
+  background: #0b142c;
+  color: #f4e9c9;
+  border: 1px solid #0b142c;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.getChurchPerson-newButton:hover {
+  background: #172352;
+}
+
+.getChurchPerson-error {
+  font-size: 0.95rem;
+  color: #b3261e;
+  background: #fbe9e7;
+  border: 1px solid #f2c4bd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 16px 0 0;
+}
+
+.getChurchPerson-loading,
+.getChurchPerson-empty {
+  color: #56503f;
+}
+
+/* --- Edit panel --- */
+.getChurchPerson-editPanel {
+  border: 1px solid #e7e2d5;
+  border-radius: 10px;
+  padding: 24px;
+  margin: 20px 0 25px;
+  background: #f9f7f1;
+  scroll-margin-top: 20px;
+}
+
+.getChurchPerson-editTitle {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.5rem;
+  color: #0b142c;
+  margin-top: 0;
+}
+
+.getChurchPerson-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.getChurchPerson-select,
+.getChurchPerson-input,
+.getChurchPerson-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #d8d2c2;
+  border-radius: 8px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+  color: #0b142c;
+  background: #fdfcf9;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.getChurchPerson-select:focus,
+.getChurchPerson-input:focus,
+.getChurchPerson-textarea:focus {
+  outline: none;
+  border-color: #c9a24b;
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.22);
+}
+
+.getChurchPerson-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.getChurchPerson-hint {
+  margin: 0 0 8px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  color: #7a7462;
+}
+
+.getChurchPerson-photoGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.getChurchPerson-photoItem {
+  text-align: center;
+}
+
+.getChurchPerson-photo {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e7e2d5;
+}
+
+.getChurchPerson-removeButton {
+  margin-top: 4px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  background: #b3261e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.getChurchPerson-removeButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.getChurchPerson-fileInput {
+  font-size: 0.9rem;
+}
+
+.getChurchPerson-formActions {
+  display: flex;
+  gap: 10px;
+}
+
+.getChurchPerson-saveButton,
+.getChurchPerson-cancelButton {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.getChurchPerson-saveButton {
+  background: #0b142c;
+  color: #f4e9c9;
+}
+
+.getChurchPerson-saveButton:hover:not(:disabled) {
+  background: #172352;
+}
+
+.getChurchPerson-cancelButton {
+  background: #ece7d9;
+  color: #0b142c;
+}
+
+.getChurchPerson-cancelButton:hover:not(:disabled) {
+  background: #e0d9c4;
+}
+
+.getChurchPerson-saveButton:disabled,
+.getChurchPerson-cancelButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* --- Table (desktop) --- */
+.getChurchPerson-tableWrap {
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.getChurchPerson-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.getChurchPerson-th {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 2px solid #e7e2d5;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  color: #56503f;
+}
+
+.getChurchPerson-td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #0b142c;
+}
+
+.getChurchPerson-avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.getChurchPerson-noPhoto {
+  color: #a39c88;
+}
+
+.getChurchPerson-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.getChurchPerson-badge--leader {
+  background: #eef1fa;
+  color: #172352;
+}
+
+.getChurchPerson-badge--specialThanks {
+  background: #f7e6ee;
+  color: #96235c;
+}
+
+.getChurchPerson-badge--testimony {
+  background: #e8f3e6;
+  color: #366a2e;
+}
+
+.getChurchPerson-badge--default {
+  background: #ece7d9;
+  color: #56503f;
+}
+
+.getChurchPerson-rowActions {
+  display: flex;
+  gap: 8px;
+}
+
+.getChurchPerson-editRowButton,
+.getChurchPerson-deleteRowButton {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.getChurchPerson-editRowButton {
+  background: #0b142c;
+  color: #f4e9c9;
+}
+
+.getChurchPerson-editRowButton:hover {
+  background: #172352;
+}
+
+.getChurchPerson-deleteRowButton {
+  background: #b3261e;
+  color: #fff;
+}
+
+.getChurchPerson-deleteRowButton:hover:not(:disabled) {
+  background: #921f18;
+}
+
+.getChurchPerson-deleteRowButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.getChurchPerson-newButton:focus-visible,
+.getChurchPerson-editRowButton:focus-visible,
+.getChurchPerson-deleteRowButton:focus-visible,
+.getChurchPerson-saveButton:focus-visible,
+.getChurchPerson-cancelButton:focus-visible,
+.getChurchPerson-removeButton:focus-visible {
+  outline: 2px solid #c9a24b;
+  outline-offset: 2px;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .getChurchPerson-page {
+    padding: 36px 20px;
+  }
+
+  .getChurchPerson-card {
+    max-width: 100%;
+    padding: 32px;
+  }
+
+  .getChurchPerson-title {
+    font-size: 1.9rem;
+  }
+}
+
+/* Mobile — collapse table into stacked cards */
+@media (max-width: 700px) {
+  .getChurchPerson-page {
+    padding: 20px 14px;
+  }
+
+  .getChurchPerson-card {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
+  .getChurchPerson-title {
+    font-size: 1.6rem;
+  }
+
+  .getChurchPerson-toolbar {
+    width: 100%;
+  }
+
+  .getChurchPerson-filterSelect {
+    flex: 1;
+  }
+
+  .getChurchPerson-formActions {
+    flex-direction: column;
+  }
+
+  .getChurchPerson-tableWrap {
+    overflow-x: visible;
+  }
+
+  .getChurchPerson-table,
+  .getChurchPerson-table thead,
+  .getChurchPerson-table tbody,
+  .getChurchPerson-table tr,
+  .getChurchPerson-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .getChurchPerson-table thead {
+    display: none;
+  }
+
+  .getChurchPerson-table tr {
+    border: 1px solid #e7e2d5;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .getChurchPerson-td {
+    border-bottom: none;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .getChurchPerson-td::before {
+    content: attr(data-label);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: #7a7462;
+    flex-shrink: 0;
+  }
+
+  .getChurchPerson-rowActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 380px) {
+  .getChurchPerson-card {
+    padding: 18px 14px;
+  }
+
+  .getChurchPerson-title {
+    font-size: 1.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .getChurchPerson-newButton,
+  .getChurchPerson-saveButton,
+  .getChurchPerson-cancelButton,
+  .getChurchPerson-editRowButton,
+  .getChurchPerson-deleteRowButton {
+    transition: none;
+  }
+}

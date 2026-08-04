@@ -1,0 +1,14 @@
+{
+  "title": "Chiese",
+  "newChurchButton": "+ Nuova Chiesa",
+  "loadingMessage": "Caricamento delle chiese...",
+  "noChurchesMessage": "Nessuna chiesa ancora.",
+  "errorMessage": "Impossibile caricare le chiese",
+  "deleteErrorMessage": "Impossibile eliminare la chiesa",
+  "deleteConfirm": "Eliminare \"{{churchName}}\"? Questa azione non pu\u00f2 essere annullata.",
+  "mainChurchBadge": "Chiesa Principale",
+  "featuredBadge": "In evidenza",
+  "editButton": "Modifica",
+  "deleteButton": "Elimina",
+  "deletingButton": "Eliminazione in corso..."
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Create Church",
+  "selectLanguage": "Select language",
+  "selectLanguageError": "Please select a language",
+  "churchNamePlaceholder": "Church name",
+  "shortDescriptionPlaceholder": "Short description (used on the campus card)",
+  "descriptionPlaceholder": "Full description",
+  "addressPlaceholder": "Address",
+  "serviceDaysPlaceholder": "Service days (e.g. Sundays)",
+  "serviceTimePlaceholder": "Service time (e.g. 9:00 AM)",
+  "uploadImageLabel": "Upload image",
+  "imageAlt": "Preview",
+  "featured": "Featured",
+  "setAsMainChurch": "Set as Main Church",
+  "mainChurchHint": "Shown in the hero section of the public Church page, for this language. Only one church per language can hold this \u2014 selecting it will replace whichever church currently holds it for the selected language.",
+  "submitButton": "Create Church",
+  "submittingButton": "Creating...",
+  "successMessage": "Church created successfully",
+  "errorMessage": "Failed to create church"
+}
