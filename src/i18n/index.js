@@ -35,6 +35,9 @@ import enGetChurchPerson from "../locales/en/getchurchperson.json";
 import enReorderChurchPerson from "../locales/en/reorderchurchperson.json";
 import enCreateChurchStory from "../locales/en/createchurchstory.json";
 import enGetChurchStories from "../locales/en/getchurchstory.json";
+import enAdminMessages from "../locales/en/adminmessages.json";
+import enChatWindow from "../locales/en/chatwindow.json";
+import enInboxList from "../locales/en/inboxlist.json";
 
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
@@ -69,6 +72,9 @@ import amGetChurchPerson from "../locales/am/getchurchperson.json";
 import amReorderChurchPerson from "../locales/am/reorderchurchperson.json";
 import amCreateChurchStory from "../locales/am/createchurchstory.json";
 import amGetChurchStories from "../locales/am/getchurchstory.json";
+import amAdminMessages from "../locales/am/adminmessages.json";
+import amChatWindow from "../locales/am/chatwindow.json";
+import amInboxList from "../locales/am/inboxlist.json";
 
 // Italian
 import itNavbar from "../locales/it/navbar.json";
@@ -103,6 +109,9 @@ import itGetChurchPerson from "../locales/it/getchurchperson.json";
 import itReorderChurchPerson from "../locales/it/reorderchurchperson.json";
 import itCreateChurchStory from "../locales/it/createchurchstory.json";
 import itGetChurchStories from "../locales/it/getchurchstory.json";
+import itAdminMessages from "../locales/it/adminmessages.json";
+import itChatWindow from "../locales/it/chatwindow.json";
+import itInboxList from "../locales/it/inboxlist.json";
 
 i18n
   .use(LanguageDetector)
@@ -143,6 +152,9 @@ i18n
           reorderChurchPerson: enReorderChurchPerson,
           createChurchStory: enCreateChurchStory,
           getChurchStories: enGetChurchStories,
+          adminMessages: enAdminMessages,
+          chatWindow: enChatWindow,
+          inboxList: enInboxList,
         },
       },
 
@@ -180,6 +192,9 @@ i18n
           reorderChurchPerson: amReorderChurchPerson,
           createChurchStory: amCreateChurchStory,
           getChurchStories: amGetChurchStories,
+          adminMessages: amAdminMessages,
+          chatWindow: amChatWindow,
+          inboxList: amInboxList,
         },
       },
 
@@ -217,6 +232,9 @@ i18n
           reorderChurchPerson: itReorderChurchPerson,
           createChurchStory: itCreateChurchStory,
           getChurchStories: itGetChurchStories,
+          adminMessages: itAdminMessages,
+          chatWindow: itChatWindow,
+          inboxList: itInboxList,
         },
       },
     },

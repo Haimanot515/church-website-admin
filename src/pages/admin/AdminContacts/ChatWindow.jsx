@@ -1,16 +1,28 @@
 // components/ChatWindow.jsx
 import React, { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import API from "../../../api/api"; // ensure this points to your configured axios instance
 import MessageBubble from "./MessageBubble";
 
 const ChatWindow = ({ thread }) => {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState([]);
-  const [threada,setThread]=useState(null);
+  const [threadData, setThreadData] = useState(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const textareaRef = useRef(null);
   const bodyRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = windowWidth <= 600;
+  const isTablet = windowWidth > 600 && windowWidth <= 1024;
 
   // Load messages when thread changes
   useEffect(() => {
@@ -19,10 +31,9 @@ const ChatWindow = ({ thread }) => {
     const fetchMessages = async () => {
       setLoading(true);
       try {
-        const res = await API.get(`/admin/messages/${thread._id}?limit=100`,);
+        const res = await API.get(`/admin/messages/${thread._id}?limit=100`);
         setMessages(res.data.messages || []);
-        setThread(res.data.thread);
-
+        setThreadData(res.data.thread || null);
       } catch (err) {
         console.error("Fetch messages failed:", err);
       } finally {
@@ -83,7 +94,6 @@ const ChatWindow = ({ thread }) => {
       });
 
       const returnedMsg = res.data?.adminMsg || {};
-      // Defensive patches to ensure reconciliation always works
       returnedMsg.clientId = returnedMsg.clientId || clientId;
       returnedMsg.fromAdmin = true;
       returnedMsg.createdAt = returnedMsg.createdAt || new Date().toISOString();
@@ -113,7 +123,6 @@ const ChatWindow = ({ thread }) => {
 
     try {
       setLoading(true);
-      // Mark as pending again immediately for responsive UI
       setMessages((prev) =>
         prev.map((m) =>
           m.clientId === failedMsg.clientId ? { ...m, pending: true, error: false } : m
@@ -150,55 +159,77 @@ const ChatWindow = ({ thread }) => {
     }
   };
 
+  const displayThread = threadData || thread;
+
   const styles = {
     container: {
       display: "flex",
       flexDirection: "column",
       height: "100%",
+      width: "100%",
       backgroundColor: "#e6f0ff",
+      boxSizing: "border-box",
+      minHeight: 0,
     },
     header: {
-      height: 56,
-      padding: "0 16px",
+      height: isMobile ? 48 : 56,
+      padding: isMobile ? "0 12px" : "0 16px",
       display: "flex",
       alignItems: "center",
       fontWeight: 600,
+      fontSize: isMobile ? 15 : 16,
       background: "#f8fbff",
       flexShrink: 0,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
     },
     body: {
       flex: 1,
       overflowY: "auto",
-      padding: "12px 16px",
+      padding: isMobile ? "10px 10px" : isTablet ? "12px 14px" : "12px 16px",
       display: "flex",
       flexDirection: "column",
       gap: 6,
       minHeight: 0,
+      WebkitOverflowScrolling: "touch",
+    },
+    emptyState: {
+      textAlign: "center",
+      marginTop: "20px",
+      color: "#555",
+      fontSize: isMobile ? 14 : 15,
+      padding: "0 12px",
     },
     inputContainer: {
       display: "flex",
       alignItems: "flex-end",
-      padding: "8px 12px",
+      padding: isMobile ? "8px 8px" : "8px 12px",
       borderTop: "1px solid #ccc",
       background: "#f0f4ff",
       gap: 6,
       flexShrink: 0,
+      boxSizing: "border-box",
     },
     textarea: {
-      width: "85%",
-      minHeight: 36,
-      maxHeight: 110,
-      padding: "6px 8px",
-      fontSize: 14,
+      flex: 1,
+      width: "auto",
+      minHeight: isMobile ? 40 : 36,
+      maxHeight: isMobile ? 90 : 110,
+      padding: isMobile ? "8px 10px" : "6px 8px",
+      fontSize: isMobile ? 16 : 14, // 16px prevents iOS auto-zoom on focus
       borderRadius: 6,
       border: "1px solid #ccc",
       resize: "none",
       outline: "none",
       overflowY: "auto",
+      boxSizing: "border-box",
+      fontFamily: "inherit",
     },
     button: {
-      height: 36,
-      padding: "0 16px",
+      height: isMobile ? 40 : 36,
+      padding: isMobile ? "0 14px" : "0 16px",
+      fontSize: isMobile ? 13 : 14,
       fontWeight: 600,
       background: "#0078ff",
       color: "#fff",
@@ -212,22 +243,16 @@ const ChatWindow = ({ thread }) => {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        {thread?.userName || "No thread selected"}
+        {displayThread?.userName || t("chatWindow.noconversation")}
       </div>
 
       <div ref={bodyRef} style={styles.body}>
         {thread?._id ? (
           messages.map((msg, index) => (
-            <MessageBubble
-              key={msg._id|| index}
-              msg={msg}
-              onRetry={retryMessage}
-            />
+            <MessageBubble key={msg._id || index} msg={msg} onRetry={retryMessage} />
           ))
         ) : (
-          <div style={{ textAlign: "center", marginTop: "20px", color: "#555" }}>
-            Select a thread to start messaging
-          </div>
+          <div style={styles.emptyState}>{t("chatWindow.selectconversation")}</div>
         )}
       </div>
 
@@ -236,7 +261,7 @@ const ChatWindow = ({ thread }) => {
           ref={textareaRef}
           value={text}
           onChange={handleTextChange}
-          placeholder="Type a message..."
+          placeholder={t("chatWindow.typemessage")}
           style={styles.textarea}
           disabled={loading || !thread?._id}
         />
@@ -245,7 +270,7 @@ const ChatWindow = ({ thread }) => {
           disabled={!text.trim() || loading || !thread?._id}
           style={styles.button}
         >
-          Send
+          {t("chatWindow.send")}
         </button>
       </div>
     </div>
