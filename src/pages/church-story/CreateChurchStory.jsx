@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-import "./createChurchStory.css";
+import "./CreateChurchStory.css";
 
 const CreateChurchStory = () => {
   const { t } = useTranslation();
