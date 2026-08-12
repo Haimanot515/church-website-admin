@@ -45,6 +45,7 @@ import enCreateMissionVision from "../locales/en/createmissionvision.json";
 import enGetMissionVision from "../locales/en/getmissionvision.json";
 import enCreateFaq from "../locales/en/createfaq.json";
 import enGetFaq from "../locales/en/getfaq.json";
+import enMeta from "../locales/en/meta.json";
 
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
@@ -89,6 +90,7 @@ import amCreateMissionVision from "../locales/am/createmissionvision.json";
 import amGetMissionVision from "../locales/am/getmissionvision.json";
 import amCreateFaq from "../locales/am/createfaq.json";
 import amGetFaq from "../locales/am/getfaq.json";
+import amMeta from "../locales/am/meta.json";
 
 // Italian
 import itNavbar from "../locales/it/navbar.json";
@@ -133,6 +135,7 @@ import itCreateMissionVision from "../locales/it/createmissionvision.json";
 import itGetMissionVision from "../locales/it/getmissionvision.json";
 import itCreateFaq from "../locales/it/createfaq.json";
 import itGetFaq from "../locales/it/getfaq.json";
+import itMeta from "../locales/it/meta.json";
 
 i18n
   .use(LanguageDetector)
@@ -183,6 +186,7 @@ i18n
           getMissionVision: enGetMissionVision,
           createFaq: enCreateFaq,
           getFaq: enGetFaq,
+          meta: enMeta,
         },
       },
 
@@ -230,6 +234,7 @@ i18n
           getMissionVision: amGetMissionVision,
           createFaq: amCreateFaq,
           getFaq: amGetFaq,
+          meta: amMeta,
         },
       },
 
@@ -277,6 +282,7 @@ i18n
           getMissionVision: itGetMissionVision,
           createFaq: itCreateFaq,
           getFaq: itGetFaq,
+          meta: itMeta,
         },
       },
     },
