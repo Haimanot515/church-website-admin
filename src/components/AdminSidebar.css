@@ -147,7 +147,7 @@ html, body { overflow-x: hidden; width: 100%; }
   top: 0;
   right: 84px;
   height: 100vh;
-  width: min(230px, calc(100vw - 84px));
+  width: min(180px, calc(100vw - 84px));
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-right: none;
@@ -360,7 +360,7 @@ html, body { overflow-x: hidden; width: 100%; }
   }
 
   .admin-main {
-    margin-left: 314px;
+    margin-left: 264px;
     padding: 32px 40px;
     padding-top: calc(var(--navbar-h) + 32px);
   }
