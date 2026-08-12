@@ -50,6 +50,15 @@ html, body { overflow-x: hidden; width: 100%; }
   overflow-x: hidden;
   min-height: 0;
   padding-top: 16px;
+
+  /* Hide scrollbar while staying scrollable */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE / old Edge */
+}
+.admin-icon-rail-scroll::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, new Edge */
+  width: 0;
+  height: 0;
 }
 
 .admin-badge {
@@ -182,6 +191,15 @@ html, body { overflow-x: hidden; width: 100%; }
   flex: 1;
   overflow-y: auto;
   min-height: 0;
+
+  /* Hide scrollbar while staying scrollable */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE / old Edge */
+}
+.admin-label-nav::-webkit-scrollbar {
+  display: none;               /* Chrome, Safari, new Edge */
+  width: 0;
+  height: 0;
 }
 
 .admin-label-link {
