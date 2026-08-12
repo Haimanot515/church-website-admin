@@ -3,24 +3,23 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./CreateFaq.css";
 
-const CATEGORIES = ["Visiting", "Kids", "Parking", "Groups"];
-
 const CreateFaq = () => {
   const { t } = useTranslation();
 
   const [faq, setFaq] = useState({
     question: "",
     answer: "",
-    category: CATEGORIES[0],
+    category: "",
     order: 0,
     language: "",
   });
 
   const [languages, setLanguages] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch available languages so the entry can be tied to one
+  // Fetch available languages
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
@@ -36,6 +35,22 @@ const CreateFaq = () => {
     fetchLanguages();
   }, []);
 
+  // Fetch valid categories from the backend (schema enum), not a local hardcoded list
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await API.get("/faq/categories");
+        setCategories(res.data || []);
+        if (res.data?.length) {
+          setFaq((prev) => ({ ...prev, category: prev.category || res.data[0] }));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFaq((prev) => ({ ...prev, [name]: value }));
@@ -49,19 +64,20 @@ const CreateFaq = () => {
       setError(t("createFaq.errors.languageRequired"));
       return;
     }
+    if (!faq.category) {
+      setError(t("createFaq.errors.categoryRequired"));
+      return;
+    }
 
     try {
       setLoading(true);
-
-      // Auth header is already attached globally by the API interceptor
       await API.post("/faq", faq);
-
       alert(t("createFaq.successMessage"));
 
       setFaq({
         question: "",
         answer: "",
-        category: CATEGORIES[0],
+        category: categories[0] || "",
         order: 0,
         language: languages[0]?._id || "",
       });
@@ -105,7 +121,10 @@ const CreateFaq = () => {
             required
             className="cfaq-select"
           >
-            {CATEGORIES.map((cat) => (
+            <option value="" disabled>
+              {t("createFaq.form.selectCategory")}
+            </option>
+            {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
               </option>
