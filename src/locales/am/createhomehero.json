@@ -13,8 +13,8 @@
     "quotePlaceholder": "ጥቅስ",
     "namePlaceholder": "ሙሉ ስም",
     "rolePlaceholder": "የስራ ድርሻ",
-    "storyPlaceholder": "ለስለ ገጽ ዝርዝር ታሪክ...",
-    "heroImageLabel": "የጀግና መገለጫ ምስል",
+    "storyPlaceholder": "ዝርዝር ታሪክ...",
+    "heroImageLabel": "መገለጫ ምስል",
     "storyImageLabel": "የታሪክ/ስለ ምስል"
   },
   "buttons": {
@@ -25,7 +25,7 @@
     "delete": "ሰርዝ",
     "deleting": "በመሰረዝ ላይ...",
     "confirmDelete": "ሰርዝ",
-    "create": "የመነሻ ገጽ ጀግና ፍጠር",
+    "create": "የመነሻ ገጽ ፍጠር",
     "creating": "በመፍጠር ላይ..."
   },
   "table": {
@@ -42,15 +42,15 @@
     "pageOf": "ገጽ {{current}} ከ {{total}}"
   },
   "messages": {
-    "confirmDelete": "ይህን የመነሻ ገጽ ጀግና ግቤት መሰረዝ ይፈልጋሉ?",
-    "confirmDeleteTitle": "የመነሻ ገጽ ጀግናን ሰርዝ",
+    "confirmDelete": "ይህን የመነሻ ገጽ ግቤት መሰረዝ ይፈልጋሉ?",
+    "confirmDeleteTitle": "የመነሻ ገጽ ሰርዝ",
     "confirmDeleteNamed": "\"{{title}}\" ን መሰረዝ ይፈልጋሉ? ይህ ተግባር ወደ ኋላ ሊመለስ አይችልም።",
-    "updateSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተዘምኗል",
-    "updateError": "የመነሻ ገጽ ጀግናን ማዘመን አልተሳካም",
-    "deleteError": "የመነሻ ገጽ ጀግናን መሰረዝ አልተሳካም",
-    "loadError": "የመነሻ ገጽ ጀግና ግቤቶችን መጫን አልተሳካም",
+    "updateSuccess": "የመነሻ ገጽ በተሳካ ሁኔታ ተዘምኗል",
+    "updateError": "የመነሻ ገጽ ማዘመን አልተሳካም",
+    "deleteError": "የመነሻ ገጽ መሰረዝ አልተሳካም",
+    "loadError": "የመነሻ ገጽ ግቤቶችን መጫን አልተሳካም",
     "selectLanguage": "እባክዎ ቋንቋ ይምረጡ",
-    "createSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተፈጥሯል",
-    "createError": "የመነሻ ገጽ ጀግናን መፍጠር አልተሳካም"
+    "createSuccess": "የመነሻ ገጽ በተሳካ ሁኔታ ተፈጥሯል",
+    "createError": "የመነሻ ገጽ መፍጠር አልተሳካም"
   }
 }

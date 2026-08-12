@@ -1,18 +1,18 @@
 {
-  "pageTitle": "የመነሻ ገጽ ጀግና ግቤቶች",
-  "newButton": "+ አዲስ የመነሻ ገጽ ጀግና",
-  "loading": "የመነሻ ገጽ ጀግና ግቤቶችን በመጫን ላይ...",
-  "noEntries": "ምንም የመነሻ ገጽ ጀግና ግቤት አልተገኘም።",
-  "editTitle": "የመነሻ ገጽ ጀግናን አርትዕ",
+  "pageTitle": "የመነሻ ገጽ ግቤቶች",
+  "newButton": "+ አዲስ የመነሻ ገጽ",
+  "loading": "የመነሻ ገጽ ግቤቶችን በመጫን ላይ...",
+  "noEntries": "ምንም የመነሻ ገጽ ግቤት አልተገኘም።",
+  "editTitle": "የመነሻ ገጽ አርትዕ",
   "form": {
-    "titlePlaceholder": "የጀግና ርዕስ",
-    "subtitlePlaceholder": "የጀግና ንዑስ ርዕስ",
+    "titlePlaceholder": "ርዕስ",
+    "subtitlePlaceholder": "ንዑስ ርዕስ",
     "descriptionPlaceholder": "ዋና መግለጫ",
     "quotePlaceholder": "ጥቅስ",
     "namePlaceholder": "ሙሉ ስም",
     "rolePlaceholder": "የስራ ድርሻ",
     "storyPlaceholder": "ለስለ ገጽ ዝርዝር ታሪክ...",
-    "heroImageLabel": "የጀግና መገለጫ ምስል",
+    "heroImageLabel": "መገለጫ ምስል",
     "storyImageLabel": "የታሪክ/ስለ ምስል"
   },
   "buttons": {
@@ -37,10 +37,10 @@
     "pageOf": "ገጽ {{current}} ከ {{total}}"
   },
   "messages": {
-    "confirmDelete": "ይህን የመነሻ ገጽ ጀግና ግቤት መሰረዝ ይፈልጋሉ?",
-    "updateSuccess": "የመነሻ ገጽ ጀግና በተሳካ ሁኔታ ተዘምኗል",
-    "updateError": "የመነሻ ገጽ ጀግናን ማዘመን አልተሳካም",
-    "deleteError": "የመነሻ ገጽ ጀግናን መሰረዝ አልተሳካም",
-    "loadError": "የመነሻ ገጽ ጀግና ግቤቶችን መጫን አልተሳካም"
+    "confirmDelete": "ይህን የመነሻ ገጽ ግቤት መሰረዝ ይፈልጋሉ?",
+    "updateSuccess": "የመነሻ ገጽ በተሳካ ሁኔታ ተዘምኗል",
+    "updateError": "የመነሻ ገጽ ማዘመን አልተሳካም",
+    "deleteError": "የመነሻ ገጽ መሰረዝ አልተሳካም",
+    "loadError": "የመነሻ ገጽ ግቤቶችን መጫን አልተሳካም"
   }
 }
