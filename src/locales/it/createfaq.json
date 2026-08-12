@@ -3,14 +3,16 @@
   "successMessage": "Domanda creata con successo.",
   "errors": {
     "languageRequired": "Seleziona una lingua.",
+    "categoryRequired": "Seleziona una categoria.",
     "create": "Impossibile creare la domanda. Riprova."
   },
   "form": {
     "selectLanguage": "Seleziona lingua",
+    "selectCategory": "Seleziona categoria",
     "questionPlaceholder": "Domanda",
     "answerPlaceholder": "Risposta",
     "orderPlaceholder": "Ordine di visualizzazione nella categoria",
     "creating": "Creazione in corso...",
     "createButton": "Crea Domanda"
   }
-}
+} 

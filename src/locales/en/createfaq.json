@@ -3,10 +3,12 @@
   "successMessage": "FAQ created successfully.",
   "errors": {
     "languageRequired": "Please select a language.",
+    "categoryRequired": "Please select a category.",
     "create": "Failed to create the FAQ. Please try again."
   },
   "form": {
     "selectLanguage": "Select language",
+    "selectCategory": "Select category",
     "questionPlaceholder": "Question",
     "answerPlaceholder": "Answer",
     "orderPlaceholder": "Display order within category",

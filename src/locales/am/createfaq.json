@@ -3,10 +3,12 @@
   "successMessage": "ጥያቄው በተሳካ ሁኔታ ተፈጥሯል።",
   "errors": {
     "languageRequired": "እባክዎ ቋንቋ ይምረጡ።",
+    "categoryRequired": "እባክዎ ምድብ ይምረጡ።",
     "create": "ጥያቄውን መፍጠር አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
   },
   "form": {
     "selectLanguage": "ቋንቋ ይምረጡ",
+    "selectCategory": "ምድብ ይምረጡ",
     "questionPlaceholder": "ጥያቄ",
     "answerPlaceholder": "መልስ",
     "orderPlaceholder": "በምድብ ውስጥ የማሳያ ቅደም ተከተል",
