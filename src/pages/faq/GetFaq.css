@@ -1,0 +1,223 @@
+/* ===== Page shell ===== */
+.gfaq-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.gfaq-card {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gfaq-card h2 {
+  margin-top: 0;
+}
+
+.gfaq-error {
+  color: red;
+}
+
+.gfaq-loading,
+.gfaq-empty {
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ===== List / Rows ===== */
+.gfaq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gfaq-row {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #f8fafc;
+}
+
+.gfaq-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gfaq-category-badge {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.gfaq-order {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.gfaq-row h3 {
+  margin: 6px 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.gfaq-row p {
+  margin: 0 0 12px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.gfaq-row-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gfaq-btn-edit,
+.gfaq-btn-delete {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gfaq-btn-edit {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.gfaq-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ===== Inline edit form ===== */
+.gfaq-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gfaq-edit-form input[type="text"],
+.gfaq-edit-form input[type="number"],
+.gfaq-edit-form textarea,
+.gfaq-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.gfaq-edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gfaq-btn-save,
+.gfaq-btn-cancel {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gfaq-btn-save {
+  background: #2563eb;
+  color: #fff;
+}
+
+.gfaq-btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gfaq-btn-cancel {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .gfaq-page {
+    padding: 20px;
+  }
+
+  .gfaq-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .gfaq-page {
+    padding: 12px;
+  }
+
+  .gfaq-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .gfaq-row {
+    padding: 14px;
+  }
+
+  .gfaq-row-actions {
+    flex-direction: column;
+  }
+
+  .gfaq-btn-edit,
+  .gfaq-btn-delete,
+  .gfaq-btn-save,
+  .gfaq-btn-cancel {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .gfaq-edit-actions {
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .gfaq-page {
+    padding: 8px;
+  }
+
+  .gfaq-card {
+    padding: 12px;
+  }
+
+  .gfaq-row {
+    padding: 12px;
+  }
+}

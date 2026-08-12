@@ -1,0 +1,16 @@
+{
+  "heading": "የተደጋጋሚ ጥያቄ ግቤት ጨምር",
+  "successMessage": "ጥያቄው በተሳካ ሁኔታ ተፈጥሯል።",
+  "errors": {
+    "languageRequired": "እባክዎ ቋንቋ ይምረጡ።",
+    "create": "ጥያቄውን መፍጠር አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
+  },
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "questionPlaceholder": "ጥያቄ",
+    "answerPlaceholder": "መልስ",
+    "orderPlaceholder": "በምድብ ውስጥ የማሳያ ቅደም ተከተል",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ጥያቄ ፍጠር"
+  }
+}

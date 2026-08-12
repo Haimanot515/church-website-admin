@@ -93,6 +93,20 @@
         "view": "Visualizza Iscritti"
       }
     },
+    "missionVision": {
+      "label": "Missione e Visione",
+      "links": {
+        "create": "Crea",
+        "view": "Visualizza"
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "links": {
+        "create": "Crea",
+        "view": "Visualizza"
+      }
+    },
     "about": {
       "label": "Chi Siamo",
       "links": {

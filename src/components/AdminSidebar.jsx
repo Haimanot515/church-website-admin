@@ -18,6 +18,8 @@ import {
   Languages as LanguagesIcon,
   Mail,
   ArrowLeft,
+  Target,
+  HelpCircle,
 } from "lucide-react";
 import API from "../api/api";
 import { useAdminMenu } from "./AdminMenuContext";
@@ -128,6 +130,22 @@ const SECTION_DEFS = [
     links: [
       { to: "/admin/about/create", labelKey: "create" },
       { to: "/admin/about/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "missionVision",
+    icon: Target,
+    links: [
+      { to: "/admin/mission-vision/create", labelKey: "create" },
+      { to: "/admin/mission-vision/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "faq",
+    icon: HelpCircle,
+    links: [
+      { to: "/admin/faq/create", labelKey: "create" },
+      { to: "/admin/faq/view", labelKey: "view" },
     ],
   },
 ];

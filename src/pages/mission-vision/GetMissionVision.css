@@ -1,0 +1,223 @@
+/* ===== Page shell ===== */
+.gmv-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.gmv-card {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.gmv-card h2 {
+  margin-top: 0;
+}
+
+.gmv-error {
+  color: red;
+}
+
+.gmv-loading,
+.gmv-empty {
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ===== List / Rows ===== */
+.gmv-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gmv-row {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #f8fafc;
+}
+
+.gmv-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.gmv-type-badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.gmv-order {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.gmv-row h3 {
+  margin: 6px 0;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.gmv-row p {
+  margin: 0 0 12px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.gmv-row-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gmv-btn-edit,
+.gmv-btn-delete {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gmv-btn-edit {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.gmv-btn-delete {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ===== Inline edit form ===== */
+.gmv-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gmv-edit-form input[type="text"],
+.gmv-edit-form input[type="number"],
+.gmv-edit-form textarea,
+.gmv-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.gmv-edit-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gmv-btn-save,
+.gmv-btn-cancel {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gmv-btn-save {
+  background: #2563eb;
+  color: #fff;
+}
+
+.gmv-btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gmv-btn-cancel {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .gmv-page {
+    padding: 20px;
+  }
+
+  .gmv-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .gmv-page {
+    padding: 12px;
+  }
+
+  .gmv-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .gmv-row {
+    padding: 14px;
+  }
+
+  .gmv-row-actions {
+    flex-direction: column;
+  }
+
+  .gmv-btn-edit,
+  .gmv-btn-delete,
+  .gmv-btn-save,
+  .gmv-btn-cancel {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .gmv-edit-actions {
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .gmv-page {
+    padding: 8px;
+  }
+
+  .gmv-card {
+    padding: 12px;
+  }
+
+  .gmv-row {
+    padding: 12px;
+  }
+}

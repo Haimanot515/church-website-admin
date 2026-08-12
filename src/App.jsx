@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useLocation, Routes, Route, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -72,6 +71,14 @@ import DeleteChurchStory from "./pages/church-story/DeleteChurchStory";
 /* About */
 import CreateAbout from "./pages/about/CreateAbout";
 import GetAbout from "./pages/about/GetAbout";
+
+/* Mission & Vision */
+import CreateMissionVision from "./pages/mission-vision/CreateMissionVision";
+import GetMissionVision from "./pages/mission-vision/GetMissionVision";
+
+/* FAQ */
+import CreateFaq from "./pages/faq/CreateFaq";
+import GetFaq from "./pages/faq/GetFaq";
 
 /* ADMIN */
 import AdminSidebar from "./components/AdminSidebar";
@@ -282,6 +289,14 @@ function App() {
           {/* About */}
           <Route path="about/create" element={<CreateAbout />} />
           <Route path="about/view" element={<GetAbout />} />
+
+          {/* Mission & Vision */}
+          <Route path="mission-vision/create" element={<CreateMissionVision />} />
+          <Route path="mission-vision/view" element={<GetMissionVision />} />
+
+          {/* FAQ */}
+          <Route path="faq/create" element={<CreateFaq />} />
+          <Route path="faq/view" element={<GetFaq />} />
 
           {/* Home Hero */}
           <Route path="hero/create" element={<CreateHomeHero />} />

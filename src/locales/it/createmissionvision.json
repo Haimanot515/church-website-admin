@@ -1,0 +1,18 @@
+{
+  "heading": "Aggiungi Voce Missione / Visione",
+  "successMessage": "Voce creata con successo.",
+  "errors": {
+    "languageRequired": "Seleziona una lingua.",
+    "create": "Impossibile creare la voce. Riprova."
+  },
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "typeMission": "Missione",
+    "typeVision": "Visione",
+    "titlePlaceholder": "Titolo (es. La Nostra Missione)",
+    "descPlaceholder": "Descrizione",
+    "orderPlaceholder": "Ordine di visualizzazione",
+    "creating": "Creazione in corso...",
+    "createButton": "Crea Voce"
+  }
+}

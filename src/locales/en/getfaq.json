@@ -1,0 +1,21 @@
+{
+  "heading": "FAQs",
+  "loading": "Loading FAQs...",
+  "empty": "No FAQ entries found.",
+  "confirmDelete": "Are you sure you want to delete this FAQ?",
+  "edit": "Edit",
+  "delete": "Delete",
+  "save": "Save",
+  "saving": "Saving...",
+  "cancel": "Cancel",
+  "form": {
+    "questionPlaceholder": "Question",
+    "answerPlaceholder": "Answer",
+    "orderPlaceholder": "Order"
+  },
+  "errors": {
+    "fetch": "Failed to load FAQ entries.",
+    "update": "Failed to update FAQ.",
+    "delete": "Failed to delete FAQ."
+  }
+}

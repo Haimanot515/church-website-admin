@@ -1,0 +1,16 @@
+{
+  "heading": "Add FAQ Entry",
+  "successMessage": "FAQ created successfully.",
+  "errors": {
+    "languageRequired": "Please select a language.",
+    "create": "Failed to create the FAQ. Please try again."
+  },
+  "form": {
+    "selectLanguage": "Select language",
+    "questionPlaceholder": "Question",
+    "answerPlaceholder": "Answer",
+    "orderPlaceholder": "Display order within category",
+    "creating": "Creating...",
+    "createButton": "Create FAQ"
+  }
+}

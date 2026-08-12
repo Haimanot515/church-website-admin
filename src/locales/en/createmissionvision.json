@@ -1,0 +1,18 @@
+{
+  "heading": "Add Mission / Vision Entry",
+  "successMessage": "Entry created successfully.",
+  "errors": {
+    "languageRequired": "Please select a language.",
+    "create": "Failed to create the entry. Please try again."
+  },
+  "form": {
+    "selectLanguage": "Select language",
+    "typeMission": "Mission",
+    "typeVision": "Vision",
+    "titlePlaceholder": "Title (e.g. Our Mission)",
+    "descPlaceholder": "Description",
+    "orderPlaceholder": "Display order",
+    "creating": "Creating...",
+    "createButton": "Create Entry"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "heading": "የተልእኮ / ራዕይ ግቤት ጨምር",
+  "successMessage": "ግቤቱ በተሳካ ሁኔታ ተፈጥሯል።",
+  "errors": {
+    "languageRequired": "እባክዎ ቋንቋ ይምረጡ።",
+    "create": "ግቤቱን መፍጠር አልተቻለም። እባክዎ እንደገና ይሞክሩ።"
+  },
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "typeMission": "ተልእኮ",
+    "typeVision": "ራዕይ",
+    "titlePlaceholder": "ርዕስ (ለምሳሌ የእኛ ተልእኮ)",
+    "descPlaceholder": "መግለጫ",
+    "orderPlaceholder": "የማሳያ ቅደም ተከተል",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "ግቤት ፍጠር"
+  }
+}

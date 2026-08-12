@@ -1,0 +1,21 @@
+{
+  "heading": "ተደጋግመው የሚጠየቁ ጥያቄዎች",
+  "loading": "ጥያቄዎችን በመጫን ላይ...",
+  "empty": "ምንም ጥያቄ አልተገኘም።",
+  "confirmDelete": "እርግጠኛ ነዎት ይህን ጥያቄ መሰረዝ ይፈልጋሉ?",
+  "edit": "አርትዕ",
+  "delete": "ሰርዝ",
+  "save": "አስቀምጥ",
+  "saving": "በማስቀመጥ ላይ...",
+  "cancel": "ተወው",
+  "form": {
+    "questionPlaceholder": "ጥያቄ",
+    "answerPlaceholder": "መልስ",
+    "orderPlaceholder": "ቅደም ተከተል"
+  },
+  "errors": {
+    "fetch": "ጥያቄዎችን መጫን አልተሳካም።",
+    "update": "ጥያቄውን ማዘመን አልተሳካም።",
+    "delete": "ጥያቄውን መሰረዝ አልተሳካም።"
+  }
+}

@@ -99,6 +99,20 @@
         "create": "Create About",
         "view": "View About"
       }
+    },
+    "missionVision": {
+      "label": "Mission & Vision",
+      "links": {
+        "create": "Create",
+        "view": "View"
+      }
+    },
+    "faq": {
+      "label": "FAQ",
+      "links": {
+        "create": "Create",
+        "view": "View"
+      }
     }
   }
 }

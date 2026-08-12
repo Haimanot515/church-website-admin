@@ -41,6 +41,10 @@ import enGetChurchStories from "../locales/en/getchurchstory.json";
 import enAdminMessages from "../locales/en/adminmessages.json";
 import enChatWindow from "../locales/en/chatwindow.json";
 import enInboxList from "../locales/en/inboxlist.json";
+import enCreateMissionVision from "../locales/en/createmissionvision.json";
+import enGetMissionVision from "../locales/en/getmissionvision.json";
+import enCreateFaq from "../locales/en/createfaq.json";
+import enGetFaq from "../locales/en/getfaq.json";
 
 // Amharic
 import amNavbar from "../locales/am/navbar.json";
@@ -81,6 +85,10 @@ import amGetChurchStories from "../locales/am/getchurchstory.json";
 import amAdminMessages from "../locales/am/adminmessages.json";
 import amChatWindow from "../locales/am/chatwindow.json";
 import amInboxList from "../locales/am/inboxlist.json";
+import amCreateMissionVision from "../locales/am/createmissionvision.json";
+import amGetMissionVision from "../locales/am/getmissionvision.json";
+import amCreateFaq from "../locales/am/createfaq.json";
+import amGetFaq from "../locales/am/getfaq.json";
 
 // Italian
 import itNavbar from "../locales/it/navbar.json";
@@ -121,6 +129,10 @@ import itGetChurchStories from "../locales/it/getchurchstory.json";
 import itAdminMessages from "../locales/it/adminmessages.json";
 import itChatWindow from "../locales/it/chatwindow.json";
 import itInboxList from "../locales/it/inboxlist.json";
+import itCreateMissionVision from "../locales/it/createmissionvision.json";
+import itGetMissionVision from "../locales/it/getmissionvision.json";
+import itCreateFaq from "../locales/it/createfaq.json";
+import itGetFaq from "../locales/it/getfaq.json";
 
 i18n
   .use(LanguageDetector)
@@ -167,6 +179,10 @@ i18n
           adminMessages: enAdminMessages,
           chatWindow: enChatWindow,
           inboxList: enInboxList,
+          createMissionVision: enCreateMissionVision,
+          getMissionVision: enGetMissionVision,
+          createFaq: enCreateFaq,
+          getFaq: enGetFaq,
         },
       },
 
@@ -210,6 +226,10 @@ i18n
           adminMessages: amAdminMessages,
           chatWindow: amChatWindow,
           inboxList: amInboxList,
+          createMissionVision: amCreateMissionVision,
+          getMissionVision: amGetMissionVision,
+          createFaq: amCreateFaq,
+          getFaq: amGetFaq,
         },
       },
 
@@ -253,6 +273,10 @@ i18n
           adminMessages: itAdminMessages,
           chatWindow: itChatWindow,
           inboxList: itInboxList,
+          createMissionVision: itCreateMissionVision,
+          getMissionVision: itGetMissionVision,
+          createFaq: itCreateFaq,
+          getFaq: itGetFaq,
         },
       },
     },

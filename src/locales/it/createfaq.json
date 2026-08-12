@@ -1,0 +1,16 @@
+{
+  "heading": "Aggiungi Domanda Frequente",
+  "successMessage": "Domanda creata con successo.",
+  "errors": {
+    "languageRequired": "Seleziona una lingua.",
+    "create": "Impossibile creare la domanda. Riprova."
+  },
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "questionPlaceholder": "Domanda",
+    "answerPlaceholder": "Risposta",
+    "orderPlaceholder": "Ordine di visualizzazione nella categoria",
+    "creating": "Creazione in corso...",
+    "createButton": "Crea Domanda"
+  }
+}

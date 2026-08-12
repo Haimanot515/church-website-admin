@@ -1,0 +1,23 @@
+{
+  "heading": "ተልእኮ እና ራዕይ",
+  "loading": "እየጫነ ነው...",
+  "empty": "ምንም የተልእኮ ወይም የራዕይ ግቤቶች አልተገኙም።",
+  "confirmDelete": "እርግጠኛ ነዎት ይህን ግቤት መሰረዝ ይፈልጋሉ?",
+  "typeMission": "ተልእኮ",
+  "typeVision": "ራዕይ",
+  "edit": "አርትዕ",
+  "delete": "ሰርዝ",
+  "save": "አስቀምጥ",
+  "saving": "በማስቀመጥ ላይ...",
+  "cancel": "ተወው",
+  "form": {
+    "titlePlaceholder": "ርዕስ",
+    "descPlaceholder": "መግለጫ",
+    "orderPlaceholder": "ቅደም ተከተል"
+  },
+  "errors": {
+    "fetch": "የተልእኮ/ራዕይ ግቤቶችን መጫን አልተሳካም።",
+    "update": "ግቤቱን ማዘመን አልተሳካም።",
+    "delete": "ግቤቱን መሰረዝ አልተሳካም።"
+  }
+}

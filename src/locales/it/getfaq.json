@@ -1,0 +1,21 @@
+{
+  "heading": "Domande Frequenti",
+  "loading": "Caricamento FAQ...",
+  "empty": "Nessuna domanda frequente trovata.",
+  "confirmDelete": "Sei sicuro di voler eliminare questa domanda?",
+  "edit": "Modifica",
+  "delete": "Elimina",
+  "save": "Salva",
+  "saving": "Salvataggio...",
+  "cancel": "Annulla",
+  "form": {
+    "questionPlaceholder": "Domanda",
+    "answerPlaceholder": "Risposta",
+    "orderPlaceholder": "Ordine"
+  },
+  "errors": {
+    "fetch": "Impossibile caricare le FAQ.",
+    "update": "Impossibile aggiornare la domanda.",
+    "delete": "Impossibile eliminare la domanda."
+  }
+}

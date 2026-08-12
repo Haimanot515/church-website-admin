@@ -1,0 +1,23 @@
+{
+  "heading": "Missione e Visione",
+  "loading": "Caricamento in corso...",
+  "empty": "Nessuna voce di missione o visione trovata.",
+  "confirmDelete": "Sei sicuro di voler eliminare questa voce?",
+  "typeMission": "Missione",
+  "typeVision": "Visione",
+  "edit": "Modifica",
+  "delete": "Elimina",
+  "save": "Salva",
+  "saving": "Salvataggio...",
+  "cancel": "Annulla",
+  "form": {
+    "titlePlaceholder": "Titolo",
+    "descPlaceholder": "Descrizione",
+    "orderPlaceholder": "Ordine"
+  },
+  "errors": {
+    "fetch": "Impossibile caricare le voci di missione/visione.",
+    "update": "Impossibile aggiornare la voce.",
+    "delete": "Impossibile eliminare la voce."
+  }
+}

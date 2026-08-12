@@ -86,6 +86,20 @@
         "view": "ማስተዋወቂያዎችን ይመልከቱ"
       }
     },
+    "missionVision": {
+      "label": "ተልዕኮ እና ራዕይ",
+      "links": {
+        "create": "ፍጠር",
+        "view": "ይመልከቱ"
+      }
+    },
+    "faq": {
+      "label": "ተደጋጋሚ ጥያቄዎች",
+      "links": {
+        "create": "ፍጠር",
+        "view": "ይመልከቱ"
+      }
+    },
     "subscribers": {
       "label": "ተመዝጋቢዎች",
       "links": {
