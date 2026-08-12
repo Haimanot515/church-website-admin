@@ -19,6 +19,7 @@ import {
   Mail,
   ArrowLeft,
 } from "lucide-react";
+import API from "../api/api";
 import { useAdminMenu } from "./AdminMenuContext";
 import "./AdminSidebar.css";
 
@@ -151,6 +152,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   // "main" = section list (mobile step 1), "sub" = links for chosen section (mobile step 2)
   // Only affects mobile layout — desktop always shows both panels regardless.
   const [mobileView, setMobileView] = useState("main");
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const matchedSection = SECTIONS.find((s) =>
     s.links.some((l) => location?.pathname?.startsWith(l.to))
@@ -165,12 +167,33 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     if (mobileOpen) setMobileView("main");
   }, [mobileOpen]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setLoggedIn(false);
-    setIsAdmin(false);
-    setMobileOpen(false);
-    navigate("/");
+  const handleLogout = async () => {
+    if (loggingOut) return;
+
+    try {
+      setLoggingOut(true);
+      const token = localStorage.getItem("token");
+
+      // Best-effort server round-trip — with stateless JWTs there's nothing
+      // for the server to invalidate today, but this keeps a real endpoint
+      // in the loop so it's ready if a blacklist/refresh-token scheme is
+      // added later. Local logout still proceeds even if this call fails
+      // (e.g. token already expired) so the user is never stuck.
+      await API.post(
+        "/auth/logout",
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      localStorage.removeItem("token");
+      setLoggedIn(false);
+      setIsAdmin(false);
+      setMobileOpen(false);
+      setLoggingOut(false);
+      navigate("/");
+    }
   };
 
   const goToDashboard = () => {
@@ -225,7 +248,12 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
               })}
             </div>
 
-            <button onClick={handleLogout} title={t("adminSidebar.logout")} className="admin-logout-btn">
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              title={t("adminSidebar.logout")}
+              className="admin-logout-btn"
+            >
               <LogOut size={19} />
               <span>{t("adminSidebar.logout")}</span>
             </button>
