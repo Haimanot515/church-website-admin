@@ -153,6 +153,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   // Only affects mobile layout — desktop always shows both panels regardless.
   const [mobileView, setMobileView] = useState("main");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
 
   const matchedSection = SECTIONS.find((s) =>
     s.links.some((l) => location?.pathname?.startsWith(l.to))
@@ -167,33 +168,66 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     if (mobileOpen) setMobileView("main");
   }, [mobileOpen]);
 
+  const clearSessionAndRedirect = () => {
+    localStorage.removeItem("token");
+    setLoggedIn(false);
+    setIsAdmin(false);
+    setMobileOpen(false);
+    navigate("/");
+  };
+
+  // Show the message for a moment before navigating away, so the user
+  // actually gets to read it instead of it flashing and vanishing.
+  const MESSAGE_DISPLAY_MS = 1500;
+
   const handleLogout = async () => {
     if (loggingOut) return;
 
+    setLoggingOut(true);
+    setLogoutError("");
+
+    let message;
+
     try {
-      setLoggingOut(true);
       const token = localStorage.getItem("token");
 
-      // Best-effort server round-trip — with stateless JWTs there's nothing
-      // for the server to invalidate today, but this keeps a real endpoint
-      // in the loop so it's ready if a blacklist/refresh-token scheme is
-      // added later. Local logout still proceeds even if this call fails
-      // (e.g. token already expired) so the user is never stuck.
       await API.post(
         "/auth/logout",
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      message = t("adminSidebar.logoutSuccess", {
+        defaultValue: "Logged out successfully.",
+      });
     } catch (err) {
       console.log(err);
-    } finally {
-      localStorage.removeItem("token");
-      setLoggedIn(false);
-      setIsAdmin(false);
-      setMobileOpen(false);
-      setLoggingOut(false);
-      navigate("/");
+
+      if (err.response) {
+        // The request reached the server, but it responded with an error
+        // (e.g. 400/401/403/500). Show whatever message the server sent.
+        message =
+          err.response.data?.msg ||
+          t("adminSidebar.logoutServerError", {
+            defaultValue: "Logout failed. Please try again.",
+          });
+      } else {
+        // No response at all — offline, DNS failure, server unreachable.
+        message = t("adminSidebar.logoutOfflineError", {
+          defaultValue: "Couldn't reach the server. Check your connection and try again.",
+        });
+      }
     }
+
+    setLogoutError(message);
+    setLoggingOut(false);
+
+    // Whether it succeeded or failed, the user still gets logged out
+    // locally and sent to the login page — just after they've had a
+    // moment to see why.
+    setTimeout(() => {
+      clearSessionAndRedirect();
+    }, MESSAGE_DISPLAY_MS);
   };
 
   const goToDashboard = () => {
@@ -255,7 +289,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
               className="admin-logout-btn"
             >
               <LogOut size={19} />
-              <span>{t("adminSidebar.logout")}</span>
+              <span>{loggingOut ? t("adminSidebar.loggingOut", { defaultValue: "Logging out..." }) : t("adminSidebar.logout")}</span>
             </button>
           </div>
 
@@ -295,6 +329,40 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
         className={`admin-mobile-backdrop${mobileOpen ? " open" : ""}`}
         onClick={() => setMobileOpen(false)}
       />
+
+      {logoutError &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(15, 36, 56, 0.45)",
+              zIndex: 9999,
+            }}
+          >
+            <div
+              role="alert"
+              style={{
+                background: "#ffffff",
+                borderRadius: "10px",
+                padding: "28px 32px",
+                maxWidth: "360px",
+                width: "90%",
+                textAlign: "center",
+                boxShadow: "0 20px 40px rgba(15, 36, 56, 0.25)",
+                fontSize: "15px",
+                color: "#1c3a52",
+                lineHeight: 1.5,
+              }}
+            >
+              {logoutError}
+            </div>
+          </div>,
+          document.body
+        )}
 
       <main className="admin-main" style={navbarHeightVar}>
         <Outlet />
