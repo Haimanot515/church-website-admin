@@ -20,6 +20,7 @@ import enCreateLanguage from "../locales/en/createlanguage.json";
 import enGetLanguage from "../locales/en/getlanguage.json";
 import enCreatePromotion from "../locales/en/createpromotion.json";
 import enGetPromotions from "../locales/en/getpromotions.json";
+import enUpdatePromotion from "../locales/en/updatepromotion.json";
 import enCreateSubscriber from "../locales/en/createsubscriber.json";
 import enGetSubscribers from "../locales/en/getsubscribers.json";
 import enCreateAbout from "../locales/en/createabout.json";
@@ -59,6 +60,7 @@ import amCreateLanguage from "../locales/am/createlanguage.json";
 import amGetLanguage from "../locales/am/getlanguage.json";
 import amCreatePromotion from "../locales/am/createpromotion.json";
 import amGetPromotions from "../locales/am/getpromotions.json";
+import amUpdatePromotion from "../locales/am/updatepromotion.json";
 import amCreateSubscriber from "../locales/am/createsubscriber.json";
 import amGetSubscribers from "../locales/am/getsubscribers.json";
 import amCreateAbout from "../locales/am/createabout.json";
@@ -98,6 +100,7 @@ import itCreateLanguage from "../locales/it/createlanguage.json";
 import itGetLanguage from "../locales/it/getlanguage.json";
 import itCreatePromotion from "../locales/it/createpromotion.json";
 import itGetPromotions from "../locales/it/getpromotions.json";
+import itUpdatePromotion from "../locales/it/updatepromotion.json";
 import itCreateSubscriber from "../locales/it/createsubscriber.json";
 import itGetSubscribers from "../locales/it/getsubscribers.json";
 import itCreateAbout from "../locales/it/createabout.json";
@@ -143,6 +146,7 @@ i18n
           getLanguage: enGetLanguage,
           createPromotion: enCreatePromotion,
           getPromotions: enGetPromotions,
+          updatePromotion: enUpdatePromotion,
           createSubscriber: enCreateSubscriber,
           getSubscribers: enGetSubscribers,
           createAbout: enCreateAbout,
@@ -185,6 +189,7 @@ i18n
           getLanguage: amGetLanguage,
           createPromotion: amCreatePromotion,
           getPromotions: amGetPromotions,
+          updatePromotion: amUpdatePromotion,
           createSubscriber: amCreateSubscriber,
           getSubscribers: amGetSubscribers,
           createAbout: amCreateAbout,
@@ -227,6 +232,7 @@ i18n
           getLanguage: itGetLanguage,
           createPromotion: itCreatePromotion,
           getPromotions: itGetPromotions,
+          updatePromotion: itUpdatePromotion,
           createSubscriber: itCreateSubscriber,
           getSubscribers: itGetSubscribers,
           createAbout: itCreateAbout,
