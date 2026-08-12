@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Routes, Route, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { AdminMenuProvider } from "./components/AdminMenuContext";
 import useDocumentMeta from "./hooks/useDocumentMeta"; // adjust path if your hook lives elsewhere
@@ -308,8 +307,6 @@ function App() {
 
         <Route path="*" element={<h2>404 - Page Not Found</h2>} />
       </Routes>
-
-      <Footer />
     </AdminMenuProvider>
   );
 }
