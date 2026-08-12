@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import { AdminMenuProvider } from "./components/AdminMenuContext";
+import useDocumentMeta from "./hooks/useDocumentMeta"; // adjust path if your hook lives elsewhere
 
 /* Pages */
 import LandingPage from "./pages/LandingPage";
@@ -101,6 +102,8 @@ function App() {
 
   const { pathname } = useLocation();
   const { i18n } = useTranslation();
+
+  useDocumentMeta(); // updates <html lang>, <title>, and meta tags whenever i18n.language changes
 
   useEffect(() => {
     const token = localStorage.getItem("token");
