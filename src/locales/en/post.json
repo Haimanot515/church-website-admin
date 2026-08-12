@@ -1,51 +1,51 @@
 {
-  "heading": "ሁሉም ልጥፎች",
-  "newPost": "+ አዲስ ልጥፍ",
-  "loadingPosts": "ልጥፎችን በመጫን ላይ...",
-  "noPosts": "ምንም ልጥፍ አልተገኘም።",
-  "editHeading": "ልጥፍ አርትዕ",
+  "heading": "All Posts",
+  "newPost": "+ New Post",
+  "loadingPosts": "Loading posts...",
+  "noPosts": "No posts found.",
+  "editHeading": "Edit Post",
   "form": {
-    "titlePlaceholder": "የልጥፍ ርዕስ",
-    "descriptionPlaceholder": "የልጥፍ መግለጫ",
-    "contentPlaceholder": "የልጥፍ ይዘት",
-    "loadingCategories": "ምድቦችን በመጫን ላይ...",
-    "selectCategory": "ምድብ ይምረጡ",
-    "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
-    "selectLanguage": "ቋንቋ ይምረጡ",
-    "draft": "ረቂቅ",
-    "published": "የታተመ",
-    "trending": "ተወዳጅ",
-    "featured": "ተለይቶ የቀረበ",
-    "recommended": "የሚመከር",
-    "saving": "በማስቀመጥ ላይ...",
-    "saveChanges": "ለውጦችን አስቀምጥ",
-    "cancel": "ሰርዝ"
+    "titlePlaceholder": "Post title",
+    "descriptionPlaceholder": "Post description",
+    "contentPlaceholder": "Post content",
+    "loadingCategories": "Loading categories...",
+    "selectCategory": "Select category",
+    "loadingLanguages": "Loading languages...",
+    "selectLanguage": "Select language",
+    "draft": "Draft",
+    "published": "Published",
+    "trending": "Trending",
+    "featured": "Featured",
+    "recommended": "Recommended",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "cancel": "Cancel"
   },
   "table": {
-    "title": "ርዕስ",
-    "category": "ምድብ",
-    "language": "ቋንቋ",
-    "status": "ሁኔታ",
-    "author": "ደራሲ",
-    "created": "የተፈጠረበት",
-    "actions": "ተግባራት"
+    "title": "Title",
+    "category": "Category",
+    "language": "Language",
+    "status": "Status",
+    "author": "Author",
+    "created": "Created",
+    "actions": "Actions"
   },
   "actions": {
-    "edit": "አርትዕ",
-    "delete": "ሰርዝ",
-    "deleting": "በመሰረዝ ላይ..."
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
   },
   "pagination": {
-    "prev": "ቀዳሚ",
-    "next": "ቀጣይ",
-    "pageOf": "ገጽ {{current}} ከ {{total}}"
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{current}} of {{total}}"
   },
-  "confirmDelete": "እርግጠኛ ነዎት ይህን ልጥፍ መሰረዝ ይፈልጋሉ?",
-  "updateSuccess": "ልጥፉ በተሳካ ሁኔታ ተስተካክሏል",
+  "confirmDelete": "Are you sure you want to delete this post?",
+  "updateSuccess": "Post updated successfully",
   "errors": {
-    "loadPosts": "ልጥፎችን መጫን አልተሳካም",
-    "loadOptions": "ምድቦችን ወይም ቋንቋዎችን መጫን አልተሳካም",
-    "update": "ልጥፉን ማዘመን አልተሳካም",
-    "delete": "ልጥፉን መሰረዝ አልተሳካም"
+    "loadPosts": "Failed to load posts",
+    "loadOptions": "Failed to load categories or languages",
+    "update": "Failed to update post",
+    "delete": "Failed to delete post"
   }
 }

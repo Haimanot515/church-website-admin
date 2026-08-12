@@ -1,0 +1,20 @@
+{
+  "heading": "Update Promotion",
+  "loadingMessage": "Loading promotion...",
+  "successMessage": "Promotion updated successfully",
+  "currentImageLabel": "Current image",
+  "previewAlt": "Promotion image preview",
+  "form": {
+    "selectLanguage": "Select Language",
+    "titlePlaceholder": "Promotion title",
+    "descriptionPlaceholder": "Promotion description",
+    "saving": "Saving...",
+    "saveButton": "Save Changes",
+    "cancelButton": "Cancel"
+  },
+  "errors": {
+    "load": "Failed to load promotion",
+    "languageRequired": "Please select a language",
+    "update": "Failed to update promotion"
+  }
+}

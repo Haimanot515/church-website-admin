@@ -1,0 +1,34 @@
+{
+  "heading": "Aggiorna Servizio",
+  "loading": "Caricamento servizio...",
+  "createSuccess": "Servizio aggiornato con successo",
+  "form": {
+    "selectLanguage": "Seleziona lingua",
+    "titlePlaceholder": "Titolo del servizio",
+    "descriptionPlaceholder": "Descrizione del servizio",
+    "dayPlaceholder": "Giorno (es. Domenica)",
+    "timePlaceholder": "Orario (es. 9:00)",
+    "locationPlaceholder": "Luogo",
+    "markFeatured": "Contrassegna come in evidenza",
+    "currentImage": "Immagine attuale",
+    "changeImage": "Scegli una nuova immagine per sostituirla",
+    "updating": "Aggiornamento...",
+    "update": "Aggiorna Servizio",
+    "cancel": "Annulla"
+  },
+  "categories": {
+    "Worship": "Culto",
+    "Teaching": "Insegnamento",
+    "Prayer": "Preghiera",
+    "Music": "Musica",
+    "Youth": "Giovani",
+    "Ministry": "Ministero",
+    "Outreach": "Evangelizzazione",
+    "Other": "Altro"
+  },
+  "errors": {
+    "load": "Impossibile caricare il servizio",
+    "selectLanguage": "Seleziona una lingua",
+    "update": "Impossibile aggiornare il servizio"
+  }
+}

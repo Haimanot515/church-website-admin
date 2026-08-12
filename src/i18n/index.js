@@ -11,6 +11,7 @@ import enPost from "../locales/en/post.json";
 import enCreatePost from "../locales/en/createpost.json";
 import enGetService from "../locales/en/getservice.json";
 import enCreateService from "../locales/en/createservice.json";
+import enUpdateService from "../locales/en/updateservice.json";
 import enGetMedia from "../locales/en/getmedia.json";
 import enCreateMedia from "../locales/en/createmedia.json";
 import enGetCategory from "../locales/en/getcategory.json";
@@ -29,6 +30,7 @@ import enFooter from "../locales/en/footer.json";
 import enAdminUsers from "../locales/en/adminusers.json";
 import enCreateChurch from "../locales/en/createchurch.json";
 import enGetChurch from "../locales/en/getchurch.json";
+import enUpdateChurch from "../locales/en/updatechurch.json";
 import enCreateChurchAssignment from "../locales/en/createchurchassignment.json";
 import enCreateChurchPerson from "../locales/en/createchurchperson.json";
 import enGetChurchPerson from "../locales/en/getchurchperson.json";
@@ -48,6 +50,7 @@ import amPost from "../locales/am/post.json";
 import amCreatePost from "../locales/am/createpost.json";
 import amGetService from "../locales/am/getservice.json";
 import amCreateService from "../locales/am/createservice.json";
+import amUpdateService from "../locales/am/updateservice.json";
 import amGetMedia from "../locales/am/getmedia.json";
 import amCreateMedia from "../locales/am/createmedia.json";
 import amGetCategory from "../locales/am/getcategory.json";
@@ -66,6 +69,7 @@ import amFooter from "../locales/am/footer.json";
 import amAdminUsers from "../locales/am/adminusers.json";
 import amCreateChurch from "../locales/am/createchurch.json";
 import amGetChurch from "../locales/am/getchurch.json";
+import amUpdateChurch from "../locales/am/updatechurch.json";
 import amCreateChurchAssignment from "../locales/am/createchurchassignment.json";
 import amCreateChurchPerson from "../locales/am/createchurchperson.json";
 import amGetChurchPerson from "../locales/am/getchurchperson.json";
@@ -85,6 +89,7 @@ import itPost from "../locales/it/post.json";
 import itCreatePost from "../locales/it/createpost.json";
 import itGetService from "../locales/it/getservice.json";
 import itCreateService from "../locales/it/createservice.json";
+import itUpdateService from "../locales/it/updateservice.json";
 import itGetMedia from "../locales/it/getmedia.json";
 import itCreateMedia from "../locales/it/createmedia.json";
 import itGetCategory from "../locales/it/getcategory.json";
@@ -103,6 +108,7 @@ import itFooter from "../locales/it/footer.json";
 import itAdminUsers from "../locales/it/adminusers.json";
 import itCreateChurch from "../locales/it/createchurch.json";
 import itGetChurch from "../locales/it/getchurch.json";
+import itUpdateChurch from "../locales/it/updatechurch.json";
 import itCreateChurchAssignment from "../locales/it/createchurchassignment.json";
 import itCreateChurchPerson from "../locales/it/createchurchperson.json";
 import itGetChurchPerson from "../locales/it/getchurchperson.json";
@@ -128,6 +134,7 @@ i18n
           createPost: enCreatePost,
           getService: enGetService,
           createService: enCreateService,
+          updateService: enUpdateService,
           getMedia: enGetMedia,
           createMedia: enCreateMedia,
           getCategory: enGetCategory,
@@ -146,6 +153,7 @@ i18n
           adminUsers: enAdminUsers,
           createChurch: enCreateChurch,
           getChurch: enGetChurch,
+          updateChurch: enUpdateChurch,
           createChurchAssignment: enCreateChurchAssignment,
           createChurchPerson: enCreateChurchPerson,
           getChurchPerson: enGetChurchPerson,
@@ -168,6 +176,7 @@ i18n
           createPost: amCreatePost,
           getService: amGetService,
           createService: amCreateService,
+          updateService: amUpdateService,
           getMedia: amGetMedia,
           createMedia: amCreateMedia,
           getCategory: amGetCategory,
@@ -186,6 +195,7 @@ i18n
           adminUsers: amAdminUsers,
           createChurch: amCreateChurch,
           getChurch: amGetChurch,
+          updateChurch: amUpdateChurch,
           createChurchAssignment: amCreateChurchAssignment,
           createChurchPerson: amCreateChurchPerson,
           getChurchPerson: amGetChurchPerson,
@@ -208,6 +218,7 @@ i18n
           createPost: itCreatePost,
           getService: itGetService,
           createService: itCreateService,
+          updateService: itUpdateService,
           getMedia: itGetMedia,
           createMedia: itCreateMedia,
           getCategory: itGetCategory,
@@ -226,6 +237,7 @@ i18n
           adminUsers: itAdminUsers,
           createChurch: itCreateChurch,
           getChurch: itGetChurch,
+          updateChurch: itUpdateChurch,
           createChurchAssignment: itCreateChurchAssignment,
           createChurchPerson: itCreateChurchPerson,
           getChurchPerson: itGetChurchPerson,
@@ -250,6 +262,7 @@ i18n
     detection: {
       order: ["localStorage", "navigator"],
       caches: ["localStorage"],
+      convertDetectedLanguage: (lng) => lng.split("-")[0], // "en-US" -> "en", "en-GB" -> "en"
     },
   });
 

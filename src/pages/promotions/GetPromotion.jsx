@@ -65,7 +65,7 @@ const GetPromotions = () => {
         <div className="gp-header">
           <h2>{t("getPromotions.heading")}</h2>
 
-          <button className="gp-btn-new" onClick={() => navigate("/admin/promotions/new")}>
+          <button className="gp-btn-new" onClick={() => navigate("/admin/promotions/create")}>
             {t("getPromotions.newPromotion")}
           </button>
         </div>
@@ -89,7 +89,7 @@ const GetPromotions = () => {
               <div className="gp-row-actions">
                 <button
                   className="gp-btn-edit"
-                  onClick={() => navigate(`/admin/promotions/${p._id}/edit`)}
+                  onClick={() => navigate(`/admin/promotions/update/${p._id}`)}
                 >
                   {t("getPromotions.actions.edit")}
                 </button>

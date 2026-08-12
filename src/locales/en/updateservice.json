@@ -1,0 +1,34 @@
+{
+  "heading": "Update Service",
+  "loading": "Loading service...",
+  "createSuccess": "Service updated successfully",
+  "form": {
+    "selectLanguage": "Select Language",
+    "titlePlaceholder": "Service title",
+    "descriptionPlaceholder": "Service description",
+    "dayPlaceholder": "Day (e.g. Sunday)",
+    "timePlaceholder": "Time (e.g. 9:00 AM)",
+    "locationPlaceholder": "Location",
+    "markFeatured": "Mark as Featured",
+    "currentImage": "Current image",
+    "changeImage": "Choose a new image to replace it",
+    "updating": "Updating...",
+    "update": "Update Service",
+    "cancel": "Cancel"
+  },
+  "categories": {
+    "Worship": "Worship",
+    "Teaching": "Teaching",
+    "Prayer": "Prayer",
+    "Music": "Music",
+    "Youth": "Youth",
+    "Ministry": "Ministry",
+    "Outreach": "Outreach",
+    "Other": "Other"
+  },
+  "errors": {
+    "load": "Failed to load service",
+    "selectLanguage": "Please select a language",
+    "update": "Failed to update service"
+  }
+}

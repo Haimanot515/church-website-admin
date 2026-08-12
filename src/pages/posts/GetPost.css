@@ -91,18 +91,25 @@
 .gp-form-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-primary {
+  display: inline-block;
   padding: 14px;
   background: #2563eb;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   flex: 1;
+  min-width: 120px;
   font-size: 14px;
   font-weight: 600;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-primary:disabled {
@@ -111,6 +118,7 @@
 }
 
 .gp-btn-cancel {
+  display: inline-block;
   padding: 14px;
   background: #e5e7eb;
   color: #334155;
@@ -118,8 +126,11 @@
   border-radius: 10px;
   cursor: pointer;
   flex: 1;
+  min-width: 120px;
   font-size: 14px;
   font-weight: 600;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-cancel:disabled {
@@ -173,9 +184,13 @@
 .gp-row-actions {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-edit {
+  display: inline-block;
   padding: 6px 12px;
   background: #2563eb;
   color: #fff;
@@ -184,9 +199,14 @@
   cursor: pointer;
   font-size: 13px;
   white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 60px;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-delete {
+  display: inline-block;
   padding: 6px 12px;
   background: #dc2626;
   color: #fff;
@@ -195,6 +215,10 @@
   cursor: pointer;
   font-size: 13px;
   white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 60px;
+  visibility: visible;
+  opacity: 1;
 }
 
 .gp-btn-delete:disabled,

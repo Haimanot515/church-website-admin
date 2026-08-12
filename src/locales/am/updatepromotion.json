@@ -1,0 +1,20 @@
+{
+  "heading": "ማስተዋወቂያ አዘምን",
+  "loadingMessage": "ማስተዋወቂያ በመጫን ላይ...",
+  "successMessage": "ማስተዋወቂያ በተሳካ ሁኔታ ተዘምኗል",
+  "currentImageLabel": "የአሁኑ ምስል",
+  "previewAlt": "የማስተዋወቂያ ምስል ቅድመ እይታ",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "የማስተዋወቂያ ርዕስ",
+    "descriptionPlaceholder": "የማስተዋወቂያ መግለጫ",
+    "saving": "በማስቀመጥ ላይ...",
+    "saveButton": "ለውጦችን አስቀምጥ",
+    "cancelButton": "ሰርዝ"
+  },
+  "errors": {
+    "load": "ማስተዋወቂያ መጫን አልተሳካም",
+    "languageRequired": "እባክዎ ቋንቋ ይምረጡ",
+    "update": "ማስተዋወቂያ ማዘመን አልተሳካም"
+  }
+}

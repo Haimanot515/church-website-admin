@@ -1,195 +1,152 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-
+import "./UpdatePromotion.css";
 
 const UpdatePromotion = () => {
-
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-
 
   const [promotion, setPromotion] = useState({
     title: "",
     description: "",
-    photo: null // new file, if replaced
+    language: "",
+    photo: null,
   });
 
-
+  const [languages, setLanguages] = useState([]);
   const [existingPhoto, setExistingPhoto] = useState(null);
   const [preview, setPreview] = useState(null);
-
-  const [fetching, setFetching] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-
-  // Load the existing promotion so the form is pre-filled.
-  // There's no GET /promotions/:id route, so we pull it out of the
-  // full list instead.
+  // Fetch languages + the existing promotion in parallel
   useEffect(() => {
-
-    const fetchPromotion = async () => {
-
+    const fetchData = async () => {
       try {
+        setLoading(true);
 
-        const res = await API.get("/promotions");
+        const [langRes, promoRes] = await Promise.all([
+          API.get("/languages"),
+          API.get(`/promotions/${id}`),
+        ]);
 
-        const found = res.data.find((p) => p._id === id);
+        setLanguages(langRes.data || []);
 
-        if (!found) {
-          setError("Promotion not found");
-          return;
-        }
+        const data = promoRes.data.promotion || promoRes.data;
 
         setPromotion({
-          title: found.title || "",
-          description: found.description || "",
-          photo: null
+          title: data.title || "",
+          description: data.description || "",
+          language: data.language?._id || data.language || "",
+          photo: null,
         });
 
-        setExistingPhoto(found.photo || null);
-
+        setExistingPhoto(data.photo || null);
       } catch (err) {
-
         console.log(err);
-
-        setError(
-          err.response?.data?.message ||
-          "Failed to load promotion"
-        );
-
+        setError(err.response?.data?.message || t("updatePromotion.errors.load"));
       } finally {
-
-        setFetching(false);
-
+        setLoading(false);
       }
-
     };
 
-    fetchPromotion();
-
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-
   const handleChange = (e) => {
-
     const { name, value } = e.target;
-
-    setPromotion({
-      ...promotion,
-      [name]: value
-    });
-
+    setPromotion((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleFileChange = (e) => {
-
     const file = e.target.files[0];
-
-    setPromotion({
-      ...promotion,
-      photo: file
-    });
+    setPromotion((prev) => ({ ...prev, photo: file }));
 
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
-
   };
 
-
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     setError("");
 
-    try {
+    if (!promotion.language) {
+      setError(t("updatePromotion.errors.languageRequired"));
+      return;
+    }
 
-      setLoading(true);
+    try {
+      setSaving(true);
+      const token = localStorage.getItem("token");
 
       const formData = new FormData();
-
       formData.append("title", promotion.title);
       formData.append("description", promotion.description);
+      formData.append("language", promotion.language);
 
-      // Only send a new photo if the admin picked one; otherwise the
-      // controller keeps the existing photo (it only overwrites when
-      // req.file is present).
+      // Only send a new photo if one was picked; otherwise backend keeps existing
       if (promotion.photo) {
         formData.append("photo", promotion.photo);
       }
 
-      const token = localStorage.getItem("token");
-
-      // Matches PUT /api/promotions/:id -> updatePromotion
       await API.put(`/promotions/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      alert("Promotion updated successfully");
-
-      navigate("/admin/promotions");
-
-    } catch (err) {
-
-      console.log(err);
-
-      setError(
-        err.response?.data?.message ||
-        "Failed to update promotion"
-      );
-
+      alert(t("updatePromotion.successMessage"));
+      navigate("/admin/promotions/view");
+    } catch (error) {
+      console.log(error);
+      setError(error.response?.data?.message || t("updatePromotion.errors.update"));
     } finally {
-
-      setLoading(false);
-
+      setSaving(false);
     }
-
   };
 
+  const handleCancel = () => {
+    navigate("/admin/promotions/view");
+  };
 
-  if (fetching) return <p style={{ padding: "30px" }}>Loading promotion...</p>;
-
+  if (loading) return <p className="up-loading">{t("updatePromotion.loadingMessage")}</p>;
 
   return (
+    <div className="up-page">
+      <div className="up-card">
+        <h2>{t("updatePromotion.heading")}</h2>
 
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        padding: "30px"
-      }}
-    >
+        {error && <p className="up-error">{error}</p>}
 
-      <div
-        style={{
-          maxWidth: "650px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)"
-        }}
-      >
-
-        <h2>Update Promotion</h2>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-        >
+        <form onSubmit={handleSubmit} className="up-form">
+          <select
+            name="language"
+            value={promotion.language}
+            onChange={handleChange}
+            required
+            className="up-select"
+          >
+            <option value="" disabled>
+              {t("updatePromotion.form.selectLanguage")}
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
 
           <input
             type="text"
             name="title"
-            placeholder="Drive Your Business Forward with Industry-Leading Insights"
+            placeholder={t("updatePromotion.form.titlePlaceholder")}
             value={promotion.title}
             onChange={handleChange}
             required
@@ -197,7 +154,7 @@ const UpdatePromotion = () => {
 
           <textarea
             name="description"
-            placeholder="Unlock exclusive strategies and data-driven reports designed to give you a competitive edge in 2026."
+            placeholder={t("updatePromotion.form.descriptionPlaceholder")}
             rows="6"
             value={promotion.description}
             onChange={handleChange}
@@ -205,86 +162,35 @@ const UpdatePromotion = () => {
           />
 
           {existingPhoto && !preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>Current photo:</small>
-              <img
-                src={existingPhoto}
-                alt="current promotion"
-                style={{
-                  width: "100%",
-                  height: "200px",
-                  objectFit: "cover",
-                  borderRadius: "10px"
-                }}
-              />
+            <div className="up-current-photo">
+              <span>{t("updatePromotion.currentImageLabel")}</span>
+              <img src={existingPhoto} alt={promotion.title} className="up-preview" />
             </div>
           )}
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
+          <input type="file" accept="image/*" onChange={handleFileChange} className="up-file-input" />
 
           {preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>New photo:</small>
-              <img
-                src={preview}
-                alt="promotion preview"
-                style={{
-                  width: "100%",
-                  height: "250px",
-                  objectFit: "cover",
-                  borderRadius: "10px"
-                }}
-              />
-            </div>
+            <img src={preview} alt={t("updatePromotion.previewAlt")} className="up-preview" />
           )}
 
-          <div style={{ display: "flex", gap: "10px" }}>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                flex: 1,
-                padding: "14px",
-                background: "#16a34a",
-                color: "#fff",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer"
-              }}
-            >
-              {loading ? "Saving..." : "Save Changes"}
+          <div className="up-button-row">
+            <button type="submit" disabled={saving} className="up-btn-primary">
+              {saving ? t("updatePromotion.form.saving") : t("updatePromotion.form.saveButton")}
             </button>
-
             <button
               type="button"
-              onClick={() => navigate("/admin/promotions")}
-              style={{
-                padding: "14px",
-                background: "#e2e8f0",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer"
-              }}
+              disabled={saving}
+              onClick={handleCancel}
+              className="up-btn-cancel"
             >
-              Cancel
+              {t("updatePromotion.form.cancelButton")}
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
-
   );
-
 };
-
 
 export default UpdatePromotion;

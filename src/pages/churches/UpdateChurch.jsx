@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import "./UpdateChurch.css";
 
 const UpdateChurch = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -10,56 +13,61 @@ const UpdateChurch = () => {
     churchName: "",
     shortDescription: "",
     description: "",
-    history: "",
     address: "",
-    phone: "",
-    email: "",
     serviceDays: "",
     serviceTime: "",
+    language: "",
     isFeatured: false,
     isPrimary: false,
-    image: null, // new file, if replaced
+    image: null,
   });
 
+  const [languages, setLanguages] = useState([]);
   const [existingImage, setExistingImage] = useState(null);
   const [preview, setPreview] = useState(null);
-
-  const [fetching, setFetching] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // Load the existing church so the form is pre-filled
+  // Fetch languages + the existing church in parallel
   useEffect(() => {
-    const fetchChurch = async () => {
+    const fetchData = async () => {
       try {
-        const res = await API.get(`/churches/${id}`);
-        const c = res.data;
+        setLoading(true);
+
+        const [langRes, churchRes] = await Promise.all([
+          API.get("/languages"),
+          API.get(`/churches/${id}`),
+        ]);
+
+        setLanguages(langRes.data || []);
+
+        const data = churchRes.data.church || churchRes.data;
 
         setChurch({
-          churchName: c.churchName || "",
-          shortDescription: c.shortDescription || "",
-          description: c.description || "",
-          history: c.history || "",
-          address: c.address || "",
-          phone: c.phone || "",
-          email: c.email || "",
-          serviceDays: c.serviceDays || "",
-          serviceTime: c.serviceTime || "",
-          isFeatured: !!c.isFeatured,
-          isPrimary: !!c.isPrimary,
+          churchName: data.churchName || "",
+          shortDescription: data.shortDescription || "",
+          description: data.description || "",
+          address: data.address || "",
+          serviceDays: data.serviceDays || "",
+          serviceTime: data.serviceTime || "",
+          language: data.language?._id || data.language || "",
+          isFeatured: !!data.isFeatured,
+          isPrimary: !!data.isPrimary,
           image: null,
         });
 
-        setExistingImage(c.image || null);
+        setExistingImage(data.image || null);
       } catch (err) {
         console.log(err);
-        setError(err.response?.data?.message || "Failed to load church");
+        setError(err.response?.data?.message || t("updateChurch.loadErrorMessage"));
       } finally {
-        setFetching(false);
+        setLoading(false);
       }
     };
 
-    fetchChurch();
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleChange = (e) => {
@@ -82,228 +90,200 @@ const UpdateChurch = () => {
     e.preventDefault();
     setError("");
 
+    if (!church.language) {
+      setError(t("updateChurch.selectLanguageError"));
+      return;
+    }
+
     try {
-      setLoading(true);
+      setSaving(true);
 
       const formData = new FormData();
       formData.append("churchName", church.churchName);
       formData.append("shortDescription", church.shortDescription);
       formData.append("description", church.description);
-      formData.append("history", church.history);
       formData.append("address", church.address);
-      formData.append("phone", church.phone);
-      formData.append("email", church.email);
       formData.append("serviceDays", church.serviceDays);
       formData.append("serviceTime", church.serviceTime);
+      formData.append("language", church.language);
       formData.append("isFeatured", church.isFeatured);
       formData.append("isPrimary", church.isPrimary);
 
-      // Only send a new image if the admin picked one; otherwise the
-      // controller keeps the existing image (it only overwrites when
-      // req.file is present).
+      // Only send a new image if one was picked; otherwise backend keeps existing
       if (church.image) {
         formData.append("image", church.image);
       }
 
-      const token = localStorage.getItem("token");
-
-      // Matches PUT /api/churches/:id in churchRoutes.js
+      // Auth header is already attached globally by the API interceptor
       await API.put(`/churches/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Church updated successfully");
-      navigate("/admin/churches");
+      alert(t("updateChurch.successMessage"));
+      navigate("/admin/churches/view");
     } catch (err) {
       console.log(err);
-      setError(err.response?.data?.message || "Failed to update church");
+      setError(err.response?.data?.message || t("updateChurch.errorMessage"));
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
-  if (fetching) return <p style={{ padding: "30px" }}>Loading church...</p>;
+  const handleCancel = () => {
+    navigate("/admin/churches/view");
+  };
+
+  if (loading) return <p className="updateChurch-loading">{t("updateChurch.loadingMessage")}</p>;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
-      <div
-        style={{
-          maxWidth: "700px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,.1)",
-        }}
-      >
-        <h2>Update Church</h2>
+    <div className="updateChurch-page">
+      <div className="updateChurch-card">
+        <h2 className="updateChurch-title">{t("updateChurch.title")}</h2>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="updateChurch-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+        <form onSubmit={handleSubmit} className="updateChurch-form">
+          <select
+            name="language"
+            value={church.language}
+            onChange={handleChange}
+            required
+            className="updateChurch-select"
+          >
+            <option value="" disabled>
+              {t("updateChurch.selectLanguage")}
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             name="churchName"
-            placeholder="Church name"
+            placeholder={t("updateChurch.churchNamePlaceholder")}
             value={church.churchName}
             onChange={handleChange}
             required
+            className="updateChurch-input"
           />
 
           <textarea
             name="shortDescription"
-            placeholder="Short description (used on the campus card)"
+            placeholder={t("updateChurch.shortDescriptionPlaceholder")}
             value={church.shortDescription}
             onChange={handleChange}
             rows="2"
             required
+            className="updateChurch-textarea"
           />
 
           <textarea
             name="description"
-            placeholder="Full description"
+            placeholder={t("updateChurch.descriptionPlaceholder")}
             value={church.description}
             onChange={handleChange}
             rows="6"
             required
-          />
-
-          <textarea
-            name="history"
-            placeholder="History"
-            value={church.history}
-            onChange={handleChange}
-            rows="4"
+            className="updateChurch-textarea"
           />
 
           <input
             type="text"
             name="address"
-            placeholder="Address"
+            placeholder={t("updateChurch.addressPlaceholder")}
             value={church.address}
             onChange={handleChange}
             required
+            className="updateChurch-input"
           />
 
-          <div style={{ display: "flex", gap: "15px" }}>
-            <input
-              type="text"
-              name="phone"
-              placeholder="Phone"
-              value={church.phone}
-              onChange={handleChange}
-              style={{ flex: 1 }}
-            />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={church.email}
-              onChange={handleChange}
-              style={{ flex: 1 }}
-            />
-          </div>
-
-          <div style={{ display: "flex", gap: "15px" }}>
+          <div className="updateChurch-row">
             <input
               type="text"
               name="serviceDays"
-              placeholder="Service days (e.g. Sundays)"
+              placeholder={t("updateChurch.serviceDaysPlaceholder")}
               value={church.serviceDays}
               onChange={handleChange}
               required
-              style={{ flex: 1 }}
+              className="updateChurch-input"
             />
             <input
               type="text"
               name="serviceTime"
-              placeholder="Service time (e.g. 9:00 AM)"
+              placeholder={t("updateChurch.serviceTimePlaceholder")}
               value={church.serviceTime}
               onChange={handleChange}
               required
-              style={{ flex: 1 }}
+              className="updateChurch-input"
             />
           </div>
 
           {existingImage && !preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>Current image:</small>
+            <div className="updateChurch-currentImage">
+              <span>{t("updateChurch.currentImageLabel")}</span>
               <img
                 src={existingImage}
-                alt="current"
-                style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "10px" }}
+                alt={church.churchName}
+                className="updateChurch-preview"
               />
             </div>
           )}
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-
-          {preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>New image:</small>
-              <img
-                src={preview}
-                alt="preview"
-                style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-              />
-            </div>
-          )}
-
-          <label>
-            <input type="checkbox" name="isFeatured" checked={church.isFeatured} onChange={handleChange} />
-            Featured
+          <label className="updateChurch-fileLabel">
+            {t("updateChurch.uploadImageLabel")}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="updateChurch-fileInput"
+            />
           </label>
 
-          <label style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          {preview && (
+            <img src={preview} alt={t("updateChurch.imageAlt")} className="updateChurch-preview" />
+          )}
+
+          <label className="updateChurch-checkboxLabel">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={church.isFeatured}
+              onChange={handleChange}
+              className="updateChurch-checkbox"
+            />
+            {t("updateChurch.featured")}
+          </label>
+
+          {/* UI-facing label maps internally to isPrimary, which drives the
+              public hero section on the Church page. */}
+          <label className="updateChurch-checkboxLabel">
             <input
               type="checkbox"
               name="isPrimary"
               checked={church.isPrimary}
               onChange={handleChange}
-              style={{ marginTop: "3px" }}
+              className="updateChurch-checkbox"
             />
             <span>
-              Set as Main Church
-              <br />
-              <small style={{ color: "#64748b" }}>
-                Shown in the hero section of the public Church page. Only one
-                church can hold this — checking it will replace whichever
-                church currently holds it.
-              </small>
+              {t("updateChurch.setAsMainChurch")}
+              <small className="updateChurch-hint">{t("updateChurch.mainChurchHint")}</small>
             </span>
           </label>
 
-          <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                flex: 1,
-                padding: "14px",
-                background: "#2563eb",
-                color: "white",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
-            >
-              {loading ? "Saving..." : "Save Changes"}
+          <div className="updateChurch-buttonRow">
+            <button type="submit" disabled={saving} className="updateChurch-submitButton">
+              {saving ? t("updateChurch.savingButton") : t("updateChurch.saveButton")}
             </button>
             <button
               type="button"
-              onClick={() => navigate("/admin/churches")}
-              style={{
-                padding: "14px",
-                background: "#e2e8f0",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer",
-              }}
+              disabled={saving}
+              onClick={handleCancel}
+              className="updateChurch-cancelButton"
             >
-              Cancel
+              {t("updateChurch.cancelButton")}
             </button>
           </div>
         </form>

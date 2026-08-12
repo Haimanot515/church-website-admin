@@ -1,0 +1,168 @@
+/* ===== Page shell ===== */
+.up-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.up-loading {
+  padding: 30px;
+  font-size: 14px;
+}
+
+.up-card {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.up-card h2 {
+  margin-top: 0;
+}
+
+.up-error {
+  color: red;
+}
+
+/* ===== Form ===== */
+.up-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.up-form input[type="text"],
+.up-form textarea,
+.up-select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.up-file-input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.up-current-photo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #555;
+}
+
+.up-preview {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.up-button-row {
+  display: flex;
+  gap: 10px;
+}
+
+.up-button-row > * {
+  flex: 1;
+}
+
+.up-btn-primary {
+  padding: 14px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.up-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.up-btn-cancel {
+  padding: 14px;
+  background: #e5e7eb;
+  color: #111;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.up-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .up-page {
+    padding: 20px;
+  }
+
+  .up-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .up-page {
+    padding: 12px;
+  }
+
+  .up-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .up-btn-primary,
+  .up-btn-cancel {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .up-preview {
+    height: 200px;
+  }
+
+  .up-button-row {
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .up-page {
+    padding: 8px;
+  }
+
+  .up-card {
+    padding: 12px;
+  }
+
+  .up-preview {
+    height: 160px;
+  }
+}

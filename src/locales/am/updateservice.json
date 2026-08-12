@@ -1,0 +1,34 @@
+{
+  "heading": "አገልግሎት አዘምን",
+  "loading": "አገልግሎት በመጫን ላይ...",
+  "createSuccess": "አገልግሎት በተሳካ ሁኔታ ተዘምኗል",
+  "form": {
+    "selectLanguage": "ቋንቋ ይምረጡ",
+    "titlePlaceholder": "የአገልግሎት ርዕስ",
+    "descriptionPlaceholder": "የአገልግሎት መግለጫ",
+    "dayPlaceholder": "ቀን (ለምሳሌ እሁድ)",
+    "timePlaceholder": "ሰዓት (ለምሳሌ 9:00 ጠዋት)",
+    "locationPlaceholder": "ቦታ",
+    "markFeatured": "እንደ ተለይቶ የሚታይ ምልክት አድርግ",
+    "currentImage": "የአሁኑ ምስል",
+    "changeImage": "ለመተካት አዲስ ምስል ይምረጡ",
+    "updating": "በማዘመን ላይ...",
+    "update": "አገልግሎት አዘምን",
+    "cancel": "ሰርዝ"
+  },
+  "categories": {
+    "Worship": "አምልኮ",
+    "Teaching": "ትምህርት",
+    "Prayer": "ጸሎት",
+    "Music": "ሙዚቃ",
+    "Youth": "ወጣቶች",
+    "Ministry": "አገልግሎት",
+    "Outreach": "ተቋቋሚ አገልግሎት",
+    "Other": "ሌላ"
+  },
+  "errors": {
+    "load": "አገልግሎት መጫን አልተሳካም",
+    "selectLanguage": "እባክዎ ቋንቋ ይምረጡ",
+    "update": "አገልግሎት ማዘመን አልተሳካም"
+  }
+}

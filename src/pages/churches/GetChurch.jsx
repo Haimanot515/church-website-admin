@@ -63,7 +63,7 @@ const GetChurch = () => {
         <div className="getChurch-header">
           <h2 className="getChurch-title">{t("title")}</h2>
           <button
-            onClick={() => navigate("/admin/churches/new")}
+            onClick={() => navigate("/admin/churches/create")}
             className="getChurch-newButton"
           >
             {t("newChurchButton")}
@@ -101,7 +101,7 @@ const GetChurch = () => {
 
               <div className="getChurch-actions">
                 <button
-                  onClick={() => navigate(`/admin/churches/${c._id}/edit`)}
+                  onClick={() => navigate(`/admin/churches/update/${c._id}`)}
                   className="getChurch-editButton"
                 >
                   {t("editButton")}

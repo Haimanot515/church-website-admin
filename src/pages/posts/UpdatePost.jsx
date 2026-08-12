@@ -287,18 +287,24 @@ const UpdatePost = () => {
                 Recommended
               </label>
 
-              <div style={{ display: "flex", gap: "10px" }}>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                 <button
                   type="submit"
                   disabled={submitting || optionsLoading}
                   style={{
+                    display: "inline-block",
                     padding: "14px",
                     background: "#2563eb",
-                    color: "white",
+                    color: "#fff",
                     border: "none",
                     borderRadius: "10px",
-                    cursor: "pointer",
+                    cursor: submitting || optionsLoading ? "not-allowed" : "pointer",
                     flex: 1,
+                    minWidth: "120px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    opacity: submitting || optionsLoading ? 0.6 : 1,
+                    visibility: "visible",
                   }}
                 >
                   {submitting ? "Saving..." : "Save Changes"}
@@ -309,13 +315,19 @@ const UpdatePost = () => {
                   onClick={handleCancelEdit}
                   disabled={submitting}
                   style={{
+                    display: "inline-block",
                     padding: "14px",
                     background: "#e5e7eb",
                     color: "#334155",
                     border: "none",
                     borderRadius: "10px",
-                    cursor: "pointer",
+                    cursor: submitting ? "not-allowed" : "pointer",
                     flex: 1,
+                    minWidth: "120px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    opacity: submitting ? 0.6 : 1,
+                    visibility: "visible",
                   }}
                 >
                   Cancel
@@ -372,6 +384,7 @@ const UpdatePost = () => {
                         <button
                           onClick={() => handleEditClick(post)}
                           style={{
+                            display: "inline-block",
                             padding: "6px 12px",
                             background: "#2563eb",
                             color: "#fff",
@@ -380,6 +393,9 @@ const UpdatePost = () => {
                             cursor: "pointer",
                             fontSize: "13px",
                             whiteSpace: "nowrap",
+                            minWidth: "60px",
+                            visibility: "visible",
+                            opacity: 1,
                           }}
                         >
                           Edit

@@ -1,0 +1,20 @@
+{
+  "heading": "Aggiorna Promozione",
+  "loadingMessage": "Caricamento promozione...",
+  "successMessage": "Promozione aggiornata con successo",
+  "currentImageLabel": "Immagine attuale",
+  "previewAlt": "Anteprima immagine promozione",
+  "form": {
+    "selectLanguage": "Seleziona Lingua",
+    "titlePlaceholder": "Titolo promozione",
+    "descriptionPlaceholder": "Descrizione promozione",
+    "saving": "Salvataggio...",
+    "saveButton": "Salva Modifiche",
+    "cancelButton": "Annulla"
+  },
+  "errors": {
+    "load": "Impossibile caricare la promozione",
+    "languageRequired": "Seleziona una lingua",
+    "update": "Impossibile aggiornare la promozione"
+  }
+}

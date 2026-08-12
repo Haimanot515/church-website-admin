@@ -1,123 +1,262 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-import "./GetService.css";
+import "./UpdateService.css";
 
-const GetService = () => {
+const UpdateService = () => {
   const { t } = useTranslation();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [service, setService] = useState({
+    title: "",
+    description: "",
+    day: "",
+    time: "",
+    category: "Other",
+    language: "",
+    location: "",
+    isFeatured: false,
+    image: null,
+  });
+
+  const [languages, setLanguages] = useState([]);
+  const [existingImage, setExistingImage] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const categories = [
+    "Worship",
+    "Teaching",
+    "Prayer",
+    "Music",
+    "Youth",
+    "Ministry",
+    "Outreach",
+    "Other",
+  ];
 
-  const fetchServices = async () => {
-    try {
-      setLoading(true);
-      const res = await API.get("/services");
-      // API may return a bare array or an object like { services: [...] }
-      setServices(Array.isArray(res.data) ? res.data : res.data.services || []);
-    } catch (err) {
-      setError(err.response?.data?.message || t("getService.errors.load"));
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Fetch languages + the existing service in parallel
   useEffect(() => {
-    fetchServices();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const [langRes, serviceRes] = await Promise.all([
+          API.get("/languages"),
+          API.get(`/services/${id}`),
+        ]);
+
+        setLanguages(langRes.data || []);
+
+        const data = serviceRes.data.service || serviceRes.data;
+
+        setService({
+          title: data.title || "",
+          description: data.description || "",
+          day: data.day || "",
+          time: data.time || "",
+          category: data.category || "Other",
+          language: data.language?._id || data.language || "",
+          location: data.location || "",
+          isFeatured: !!data.isFeatured,
+          image: null,
+        });
+
+        setExistingImage(data.image || null);
+      } catch (err) {
+        console.log(err);
+        setError(err.response?.data?.message || t("updateService.errors.load"));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm(t("getService.confirmDelete"))) return;
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setService({
+      ...service,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setService({ ...service, image: file });
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!service.language) {
+      setError(t("updateService.errors.selectLanguage"));
+      return;
+    }
 
     try {
-      await API.delete(`/services/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      setSaving(true);
+
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("title", service.title);
+      formData.append("description", service.description);
+      formData.append("day", service.day);
+      formData.append("time", service.time);
+      formData.append("category", service.category);
+      formData.append("language", service.language);
+      formData.append("location", service.location);
+      formData.append("isFeatured", service.isFeatured);
+
+      // Only send a new image if the user picked one; otherwise backend keeps existing
+      if (service.image) {
+        formData.append("image", service.image);
+      }
+
+      await API.put(`/services/${id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
-      setServices(services.filter((s) => s._id !== id));
+
+      alert(t("updateService.createSuccess"));
+      navigate("/admin/services/view");
     } catch (err) {
-      alert(err.response?.data?.message || t("getService.errors.delete"));
+      console.log(err);
+      setError(err.response?.data?.message || t("updateService.errors.update"));
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleToggleStatus = async (service) => {
-    const newStatus = service.status === "active" ? "inactive" : "active";
-
-    try {
-      const res = await API.put(
-        `/services/${service._id}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setServices(services.map((s) => (s._id === service._id ? res.data : s)));
-    } catch (err) {
-      alert(err.response?.data?.message || t("getService.errors.updateStatus"));
-    }
+  const handleCancel = () => {
+    navigate("/admin/services/view");
   };
 
-  const handleEdit = (id) => {
-    window.location.href = `/admin/services/update/${id}`;
-  };
-
-  if (loading) return <p className="ms-page">{t("getService.loading")}</p>;
-  if (error) return <p className="ms-page ms-error">{error}</p>;
+  if (loading) return <p className="ms-page">{t("updateService.loading")}</p>;
 
   return (
     <div className="ms-page">
-      <h2 className="ms-heading">{t("getService.heading")}</h2>
+      <div className="ms-edit-panel">
+        <h3>{t("updateService.heading")}</h3>
 
-      {services.length === 0 ? (
-        <p>{t("getService.noServices")}</p>
-      ) : (
-        <div className="ms-list">
-          {services.map((service) => (
-            <div key={service._id} className="ms-card">
-              <div>
-                <h3 className="ms-card-title">{service.title}</h3>
-                <p className="ms-card-meta">
-                  {service.schedule} · {service.category} ·{" "}
-                  <strong
-                    className={
-                      service.status === "active" ? "ms-status-active" : "ms-status-inactive"
-                    }
-                  >
-                    {service.status === "active"
-                      ? t("getService.status.active")
-                      : t("getService.status.inactive")}
-                  </strong>
-                </p>
-              </div>
+        {error && <p className="ms-error">{error}</p>}
 
-              <div className="ms-card-actions">
-                <button className="ms-btn ms-btn-edit" onClick={() => handleEdit(service._id)}>
-                  {t("getService.actions.edit")}
-                </button>
+        <form onSubmit={handleSubmit} className="ms-form">
+          <select name="language" value={service.language} onChange={handleChange} required>
+            <option value="" disabled>
+              {t("updateService.form.selectLanguage")}
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
+              </option>
+            ))}
+          </select>
 
-                <button
-                  className={`ms-btn ${
-                    service.status === "active" ? "ms-btn-toggle-active" : "ms-btn-toggle-inactive"
-                  }`}
-                  onClick={() => handleToggleStatus(service)}
-                >
-                  {service.status === "active"
-                    ? t("getService.actions.makeInactive")
-                    : t("getService.actions.makeActive")}
-                </button>
+          <input
+            type="text"
+            name="title"
+            placeholder={t("updateService.form.titlePlaceholder")}
+            value={service.title}
+            onChange={handleChange}
+            required
+          />
 
-                <button className="ms-btn ms-btn-delete" onClick={() => handleDelete(service._id)}>
-                  {t("getService.actions.delete")}
-                </button>
-              </div>
+          <textarea
+            name="description"
+            placeholder={t("updateService.form.descriptionPlaceholder")}
+            rows="5"
+            value={service.description}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="day"
+            placeholder={t("updateService.form.dayPlaceholder")}
+            value={service.day}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="text"
+            name="time"
+            placeholder={t("updateService.form.timePlaceholder")}
+            value={service.time}
+            onChange={handleChange}
+            required
+          />
+
+          <select name="category" value={service.category} onChange={handleChange}>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {t(`updateService.categories.${cat}`)}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="text"
+            name="location"
+            placeholder={t("updateService.form.locationPlaceholder")}
+            value={service.location}
+            onChange={handleChange}
+          />
+
+          <label className="ms-checkbox-label">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={service.isFeatured}
+              onChange={handleChange}
+            />
+            {t("updateService.form.markFeatured")}
+          </label>
+
+          {existingImage && !preview && (
+            <div className="ms-current-image">
+              <span>{t("updateService.form.currentImage")}</span>
+              <img src={existingImage} alt="current" className="ms-file-preview" />
             </div>
-          ))}
-        </div>
-      )}
+          )}
+
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+
+          {preview && <img src={preview} alt="preview" className="ms-file-preview" />}
+
+          <div className="ms-form-actions">
+            <button type="submit" disabled={saving} className="ms-btn-primary">
+              {saving ? t("updateService.form.updating") : t("updateService.form.update")}
+            </button>
+
+            <button
+              type="button"
+              disabled={saving}
+              className="ms-btn-cancel"
+              onClick={handleCancel}
+            >
+              {t("updateService.form.cancel")}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default GetService;
+export default UpdateService;
