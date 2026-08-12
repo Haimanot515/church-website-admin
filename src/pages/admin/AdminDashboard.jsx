@@ -406,7 +406,7 @@ const AdminDashboard = () => {
                   <img
                     src={p.imageUrl}
                     alt={p.title}
-                    style={{ width: "90px", height: "70px", objectFit: "cover", borderRadius: "8px", flexShrink: 0 }}
+                    style={{ width: "160px", height: "125px", objectFit: "cover", borderRadius: "8px", flexShrink: 0 }}
                   />
                 )}
                 <div>
@@ -466,7 +466,7 @@ const AdminDashboard = () => {
                   <img
                     src={promo.photo}
                     alt={promo.title}
-                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "14px" }}
+                    style={{ width: "100%", height: "220px", objectFit: "cover", borderRadius: "8px", marginBottom: "14px" }}
                   />
                 )}
                 <p style={{ fontSize: "1.15rem", fontWeight: 700, margin: "0 0 8px 0", color: "var(--navy-deep)" }}>{promo.title}</p>
@@ -500,16 +500,16 @@ const AdminDashboard = () => {
                   <img
                     src={item.mediaUrl}
                     alt={item.title}
-                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
+                    style={{ width: "100%", height: "220px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
                   />
                 ) : item.thumbnail ? (
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    style={{ width: "100%", height: "140px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
+                    style={{ width: "100%", height: "220px", objectFit: "cover", borderRadius: "8px", marginBottom: "10px" }}
                   />
                 ) : (
-                  <div style={{ width: "100%", height: "140px", borderRadius: "8px", marginBottom: "10px", background: "rgba(28,58,82,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ width: "100%", height: "220px", borderRadius: "8px", marginBottom: "10px", background: "rgba(28,58,82,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <span className="eyebrow">{item.mediaType || t("dashboard.recentMedia.uncategorized")}</span>
                   </div>
                 )}
