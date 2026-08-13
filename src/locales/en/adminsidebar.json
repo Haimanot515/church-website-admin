@@ -3,7 +3,7 @@
   "logout": "Logout",
   "sections": {
     "homehero": {
-      "label": "Home Hero",
+      "label": "Home",
       "links": {
         "create": "Create Home Hero",
         "view": "View Home Hero"
