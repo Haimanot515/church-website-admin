@@ -29,14 +29,6 @@ const NAVBAR_HEIGHT = 78; // keep in sync with .navbar's rendered height
 
 const SECTION_DEFS = [
   {
-    key: "homehero",
-    icon: Home,
-    links: [
-      { to: "/admin/hero/create", labelKey: "create" },
-      { to: "/admin/hero/view", labelKey: "view" },
-    ],
-  },
-  {
     key: "users",
     icon: Users,
     links: [
@@ -54,11 +46,11 @@ const SECTION_DEFS = [
     ],
   },
   {
-    key: "services",
-    icon: Wrench,
+    key: "categories",
+    icon: Tags,
     links: [
-      { to: "/admin/services/create", labelKey: "create" },
-      { to: "/admin/services/view", labelKey: "view" },
+      { to: "/admin/categories/create", labelKey: "create" },
+      { to: "/admin/categories/view", labelKey: "view" },
     ],
   },
   {
@@ -70,58 +62,11 @@ const SECTION_DEFS = [
     ],
   },
   {
-    key: "categories",
-    icon: Tags,
+    key: "homehero",
+    icon: Home,
     links: [
-      { to: "/admin/categories/create", labelKey: "create" },
-      { to: "/admin/categories/view", labelKey: "view" },
-    ],
-  },
-  {
-    key: "languages",
-    icon: LanguagesIcon,
-    links: [
-      { to: "/admin/languages/create", labelKey: "create" },
-      { to: "/admin/languages/view", labelKey: "view" },
-    ],
-  },
-  {
-    key: "churches",
-    icon: Church,
-    links: [
-      { to: "/admin/churches/create", labelKey: "create" },
-      { to: "/admin/churches/view", labelKey: "view" },
-      { to: "/admin/churches/assign", labelKey: "assign" },
-      { to: "/admin/church-persons/create", labelKey: "personCreate" },
-      { to: "/admin/church-persons/view", labelKey: "personView" },
-      { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
-      { to: "/admin/church-story/create", labelKey: "chapterCreate" },
-      { to: "/admin/church-story/view", labelKey: "chapterView" },
-    ],
-  },
-  {
-    key: "contacts",
-    icon: MessageSquare,
-    links: [
-      { to: "/admin/contacts/view", labelKey: "view" },
-      { to: "/admin/contacts/reply", labelKey: "reply" },
-      { to: "/admin/contacts/delete", labelKey: "delete" },
-    ],
-  },
-  {
-    key: "promotions",
-    icon: Megaphone,
-    links: [
-      { to: "/admin/promotions/create", labelKey: "create" },
-      { to: "/admin/promotions/view", labelKey: "view" },
-    ],
-  },
-  {
-    key: "subscribers",
-    icon: Mail,
-    links: [
-      { to: "/admin/subscribers/create", labelKey: "create" },
-      { to: "/admin/subscribers/view", labelKey: "view" },
+      { to: "/admin/hero/create", labelKey: "create" },
+      { to: "/admin/hero/view", labelKey: "view" },
     ],
   },
   {
@@ -141,11 +86,66 @@ const SECTION_DEFS = [
     ],
   },
   {
+    key: "services",
+    icon: Wrench,
+    links: [
+      { to: "/admin/services/create", labelKey: "create" },
+      { to: "/admin/services/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "churches",
+    icon: Church,
+    links: [
+      { to: "/admin/churches/create", labelKey: "create" },
+      { to: "/admin/churches/view", labelKey: "view" },
+      { to: "/admin/churches/assign", labelKey: "assign" },
+      { to: "/admin/church-persons/create", labelKey: "personCreate" },
+      { to: "/admin/church-persons/view", labelKey: "personView" },
+      { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
+      { to: "/admin/church-story/create", labelKey: "chapterCreate" },
+      { to: "/admin/church-story/view", labelKey: "chapterView" },
+    ],
+  },
+  {
     key: "faq",
     icon: HelpCircle,
     links: [
       { to: "/admin/faq/create", labelKey: "create" },
       { to: "/admin/faq/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "contacts",
+    icon: MessageSquare,
+    links: [
+      { to: "/admin/contacts/view", labelKey: "view" },
+      { to: "/admin/contacts/reply", labelKey: "reply" },
+      { to: "/admin/contacts/delete", labelKey: "delete" },
+    ],
+  },
+  {
+    key: "subscribers",
+    icon: Mail,
+    links: [
+      { to: "/admin/subscribers/create", labelKey: "create" },
+      { to: "/admin/subscribers/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "promotions",
+    icon: Megaphone,
+    links: [
+      { to: "/admin/promotions/create", labelKey: "create" },
+      { to: "/admin/promotions/view", labelKey: "view" },
+    ],
+  },
+  {
+    key: "languages",
+    icon: LanguagesIcon,
+    links: [
+      { to: "/admin/languages/create", labelKey: "create" },
+      { to: "/admin/languages/view", labelKey: "view" },
     ],
   },
 ];
