@@ -5,7 +5,7 @@
   "errorMessage": "የቤተ ክርስቲያን ሰዎችን መጫን አልተሳካም",
   "editTitle": "የቤተ ክርስቲያን ሰው አርትዕ",
   "namePlaceholder": "ሙሉ ስም",
-  "titlePlaceholder": "ማዕረግ (ለምሳሌ ተባባሪ ፓስተር፣ የአነስተኛ ቡድን መሪ)",
+  "titlePlaceholder": "ማዕረግ (ለምሳሌ ተባባሪ ቄስ፣ የአነስተኛ ቡድን መሪ)",
   "selectRole": "ሚና ይምረጡ",
   "noRank": "ማዕረግ የለም",
   "rankOrderPlaceholder": "የደረጃ ቅደም ተከተል (ዝቅተኛ = ከፍተኛ ቅድሚያ)",
@@ -46,9 +46,9 @@
     "testimony": "ምስክርነት"
   },
   "roles": {
-    "foundingPastor": "መስራች ፓስተር",
-    "seniorPastor": "ከፍተኛ ፓስተር",
-    "associatePastor": "ተባባሪ ፓስተር",
+    "foundingPastor": "መስራች ቄስ",
+    "seniorPastor": "ከፍተኛ ቄስ",
+    "associatePastor": "ተባባሪ ቄስ",
     "churchElder": "የቤተ ክርስቲያን ሽማግሌ",
     "ministryAssistant": "የአገልግሎት ረዳት",
     "worshipLeader": "የአምልኮ መሪ",
