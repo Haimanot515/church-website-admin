@@ -3,13 +3,12 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetFaq.css";
 
-const CATEGORIES = ["Visiting", "Kids", "Parking", "Groups"];
-
 const GetFaq = () => {
   const { t } = useTranslation();
 
   const [entries, setEntries] = useState([]);
   const [languages, setLanguages] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -39,9 +38,20 @@ const GetFaq = () => {
     }
   };
 
+  // Fetch valid categories from the backend (schema enum), not a local hardcoded list
+  const fetchCategories = async () => {
+    try {
+      const res = await API.get("/faq/categories");
+      setCategories(res.data || []);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     fetchEntries();
     fetchLanguages();
+    fetchCategories();
   }, []);
 
   const startEdit = (entry) => {
@@ -133,7 +143,7 @@ const GetFaq = () => {
                         onChange={handleEditChange}
                         className="gfaq-select"
                       >
-                        {CATEGORIES.map((cat) => (
+                        {categories.map((cat) => (
                           <option key={cat} value={cat}>
                             {cat}
                           </option>
