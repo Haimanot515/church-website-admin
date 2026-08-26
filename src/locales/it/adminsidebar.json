@@ -65,10 +65,10 @@
         "personUpdate": "Aggiorna Persone",
         "personReorder": "Riordina Persone",
         "personDelete": "Elimina Persone",
-        "chapterCreate": "Crea Capitolo",
-        "chapterView": "Visualizza Capitoli",
-        "chapterUpdate": "Aggiorna Capitoli",
-        "chapterDelete": "Elimina Capitoli"
+        "chapterCreate": "Crea Storia della Chiesa",
+        "chapterView": "Visualizza Storia della Chiesa",
+        "chapterUpdate": "Aggiorna Storia della Chiesa",
+        "chapterDelete": "Elimina Storia della Chiesa"
       }
     },
     "contacts": {

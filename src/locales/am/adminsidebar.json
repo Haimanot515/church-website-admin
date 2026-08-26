@@ -65,10 +65,10 @@
         "personUpdate": "ሰዎችን አዘምን",
         "personReorder": "ሰዎችን አደራጅ",
         "personDelete": "ሰዎችን ሰርዝ",
-        "chapterCreate": "ምዕራፍ ፍጠር",
-        "chapterView": "ምዕራፎችን ይመልከቱ",
-        "chapterUpdate": "ምዕራፎችን አዘምን",
-        "chapterDelete": "ምዕራፎችን ሰርዝ"
+        "chapterCreate": "የቤተክርስቲያን ታሪክ ፍጠር",
+        "chapterView": "የቤተክርስቲያን ታሪክ ይመልከቱ",
+        "chapterUpdate": "የቤተክርስቲያን ታሪክ አዘምን",
+        "chapterDelete": "የቤተክርስቲያን ታሪክ ሰርዝ"
       }
     },
     "contacts": {

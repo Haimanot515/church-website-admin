@@ -65,10 +65,10 @@
         "personUpdate": "Update Persons",
         "personReorder": "Reorder Persons",
         "personDelete": "Delete Persons",
-        "chapterCreate": "Create Chapter",
-        "chapterView": "View Chapters",
-        "chapterUpdate": "Update Chapters",
-        "chapterDelete": "Delete Chapters"
+        "chapterCreate": "Create Church Story",
+        "chapterView": "View Church Story",
+        "chapterUpdate": "Update Church Story",
+        "chapterDelete": "Delete Church Story"
       }
     },
     "contacts": {
