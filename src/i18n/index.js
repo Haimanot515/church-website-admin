@@ -45,6 +45,8 @@ import enCreateMissionVision from "../locales/en/createmissionvision.json";
 import enGetMissionVision from "../locales/en/getmissionvision.json";
 import enCreateFaq from "../locales/en/createfaq.json";
 import enGetFaq from "../locales/en/getfaq.json";
+import enCreateBankAccount from "../locales/en/createbankaccount.json";
+import enGetBankAccounts from "../locales/en/getbankaccounts.json";
 import enMeta from "../locales/en/meta.json";
 
 // Amharic
@@ -90,6 +92,8 @@ import amCreateMissionVision from "../locales/am/createmissionvision.json";
 import amGetMissionVision from "../locales/am/getmissionvision.json";
 import amCreateFaq from "../locales/am/createfaq.json";
 import amGetFaq from "../locales/am/getfaq.json";
+import amCreateBankAccount from "../locales/am/createbankaccount.json";
+import amGetBankAccounts from "../locales/am/getbankaccounts.json";
 import amMeta from "../locales/am/meta.json";
 
 // Italian
@@ -135,6 +139,8 @@ import itCreateMissionVision from "../locales/it/createmissionvision.json";
 import itGetMissionVision from "../locales/it/getmissionvision.json";
 import itCreateFaq from "../locales/it/createfaq.json";
 import itGetFaq from "../locales/it/getfaq.json";
+import itCreateBankAccount from "../locales/it/createbankaccount.json";
+import itGetBankAccounts from "../locales/it/getbankaccounts.json";
 import itMeta from "../locales/it/meta.json";
 
 i18n
@@ -186,6 +192,8 @@ i18n
           getMissionVision: enGetMissionVision,
           createFaq: enCreateFaq,
           getFaq: enGetFaq,
+          createBankAccount: enCreateBankAccount,
+          getBankAccounts: enGetBankAccounts,
           meta: enMeta,
         },
       },
@@ -234,6 +242,8 @@ i18n
           getMissionVision: amGetMissionVision,
           createFaq: amCreateFaq,
           getFaq: amGetFaq,
+          createBankAccount: amCreateBankAccount,
+          getBankAccounts: amGetBankAccounts,
           meta: amMeta,
         },
       },
@@ -282,6 +292,8 @@ i18n
           getMissionVision: itGetMissionVision,
           createFaq: itCreateFaq,
           getFaq: itGetFaq,
+          createBankAccount: itCreateBankAccount,
+          getBankAccounts: itGetBankAccounts,
           meta: itMeta,
         },
       },

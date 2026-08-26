@@ -20,6 +20,7 @@ import {
   ArrowLeft,
   Target,
   HelpCircle,
+  Banknote,
 } from "lucide-react";
 import API from "../api/api";
 import { useAdminMenu } from "./AdminMenuContext";
@@ -105,6 +106,14 @@ const SECTION_DEFS = [
       { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
       { to: "/admin/church-story/create", labelKey: "chapterCreate" },
       { to: "/admin/church-story/view", labelKey: "chapterView" },
+    ],
+  },
+  {
+    key: "bankAccounts",
+    icon: Banknote,
+    links: [
+      { to: "/admin/bank-accounts/create", labelKey: "create" },
+      { to: "/admin/bank-accounts/view", labelKey: "view" },
     ],
   },
   {

@@ -107,6 +107,13 @@
         "view": "Visualizza"
       }
     },
+    "bankAccounts": {
+      "label": "Conti Bancari",
+      "links": {
+        "create": "Crea",
+        "view": "Visualizza"
+      }
+    },
     "about": {
       "label": "Chi Siamo",
       "links": {

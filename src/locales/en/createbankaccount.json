@@ -1,0 +1,16 @@
+{
+  "heading": "Add Bank Account",
+  "successMessage": "Bank account created successfully.",
+  "errors": {
+    "requiredFields": "Please fill in the bank, account name, and account number.",
+    "create": "Failed to create bank account."
+  },
+  "form": {
+    "bankPlaceholder": "Bank name",
+    "accountNamePlaceholder": "Account holder name",
+    "accountNumberPlaceholder": "Account number",
+    "orderPlaceholder": "Display order",
+    "creating": "Creating...",
+    "createButton": "Create Bank Account"
+  }
+}

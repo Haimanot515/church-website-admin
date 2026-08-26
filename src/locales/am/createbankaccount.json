@@ -1,0 +1,16 @@
+{
+  "heading": "የባንክ ሂሳብ ጨምር",
+  "successMessage": "የባንክ ሂሳብ በተሳካ ሁኔታ ተፈጥሯል።",
+  "errors": {
+    "requiredFields": "እባክዎ ባንክ፣ የሂሳብ ስም እና የሂሳብ ቁጥር ይሙሉ።",
+    "create": "የባንክ ሂሳብ መፍጠር አልተቻለም።"
+  },
+  "form": {
+    "bankPlaceholder": "የባንክ ስም",
+    "accountNamePlaceholder": "የሂሳብ ባለቤት ስም",
+    "accountNumberPlaceholder": "የሂሳብ ቁጥር",
+    "orderPlaceholder": "የማሳያ ቅደም ተከተል",
+    "creating": "በመፍጠር ላይ...",
+    "createButton": "የባንክ ሂሳብ ፍጠር"
+  }
+}

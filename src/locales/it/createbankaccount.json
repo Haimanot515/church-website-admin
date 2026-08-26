@@ -1,0 +1,16 @@
+{
+  "heading": "Aggiungi Conto Bancario",
+  "successMessage": "Conto bancario creato con successo.",
+  "errors": {
+    "requiredFields": "Compila banca, intestatario e numero di conto.",
+    "create": "Impossibile creare il conto bancario."
+  },
+  "form": {
+    "bankPlaceholder": "Nome della banca",
+    "accountNamePlaceholder": "Nome dell'intestatario",
+    "accountNumberPlaceholder": "Numero di conto",
+    "orderPlaceholder": "Ordine di visualizzazione",
+    "creating": "Creazione in corso...",
+    "createButton": "Crea Conto Bancario"
+  }
+}

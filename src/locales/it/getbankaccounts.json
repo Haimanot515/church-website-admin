@@ -1,0 +1,16 @@
+{
+  "heading": "Conti Bancari",
+  "newAccount": "Nuovo Conto",
+  "noAccounts": "Nessun conto bancario trovato.",
+  "loadingAccounts": "Caricamento dei conti bancari...",
+  "confirmDelete": "Sei sicuro di voler eliminare il conto {{bank}}?",
+  "errors": {
+    "load": "Impossibile caricare i conti bancari.",
+    "delete": "Impossibile eliminare il conto bancario."
+  },
+  "actions": {
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "deleting": "Eliminazione in corso..."
+  }
+}

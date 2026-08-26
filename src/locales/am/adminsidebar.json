@@ -100,6 +100,13 @@
         "view": "ይመልከቱ"
       }
     },
+    "bankAccounts": {
+      "label": "የባንክ ሂሳቦች",
+      "links": {
+        "create": "ፍጠር",
+        "view": "ይመልከቱ"
+      }
+    },
     "subscribers": {
       "label": "ተመዝጋቢዎች",
       "links": {

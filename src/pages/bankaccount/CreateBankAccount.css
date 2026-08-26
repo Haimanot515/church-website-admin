@@ -1,0 +1,102 @@
+/* ===== Page shell ===== */
+.cba-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+  padding: 30px;
+}
+
+.cba-card {
+  max-width: 650px;
+  margin: auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cba-card h2 {
+  margin-top: 0;
+}
+
+.cba-error {
+  color: red;
+}
+
+/* ===== Form ===== */
+.cba-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cba-form input[type="text"],
+.cba-form input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.cba-btn-primary {
+  padding: 14px;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cba-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   TABLET (<= 1024px)
+   ============================================================ */
+@media (max-width: 1024px) {
+  .cba-page {
+    padding: 20px;
+  }
+
+  .cba-card {
+    padding: 22px;
+  }
+}
+
+/* ============================================================
+   MOBILE/TABLET (<= 820px)
+   ============================================================ */
+@media (max-width: 820px) {
+  .cba-page {
+    padding: 12px;
+  }
+
+  .cba-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .cba-btn-primary {
+    padding: 16px;
+    font-size: 16px;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE (<= 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .cba-page {
+    padding: 8px;
+  }
+
+  .cba-card {
+    padding: 12px;
+  }
+}

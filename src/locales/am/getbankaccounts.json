@@ -1,0 +1,16 @@
+{
+  "heading": "የባንክ ሂሳቦች",
+  "newAccount": "አዲስ ሂሳብ",
+  "noAccounts": "ምንም የባንክ ሂሳብ አልተገኘም።",
+  "loadingAccounts": "የባንክ ሂሳቦችን በመጫን ላይ...",
+  "confirmDelete": "የ{{bank}} ሂሳብን መሰረዝ ይፈልጋሉ?",
+  "errors": {
+    "load": "የባንክ ሂሳቦችን መጫን አልተቻለም።",
+    "delete": "የባንክ ሂሳብ መሰረዝ አልተቻለም።"
+  },
+  "actions": {
+    "edit": "አርትዕ",
+    "delete": "ሰርዝ",
+    "deleting": "በመሰረዝ ላይ..."
+  }
+}

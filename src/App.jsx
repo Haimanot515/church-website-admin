@@ -68,6 +68,10 @@ import GetChurchStory from "./pages/church-story/GetChurchStory";
 import UpdateChurchStory from "./pages/church-story/UpdateChurchStory";
 import DeleteChurchStory from "./pages/church-story/DeleteChurchStory";
 
+/* Bank Accounts */
+import CreateBankAccount from "./pages/bankaccount/CreateBankAccount";
+import GetBankAccounts from "./pages/bankaccount/GetBankAccounts";
+
 /* About */
 import CreateAbout from "./pages/about/CreateAbout";
 import GetAbout from "./pages/about/GetAbout";
@@ -270,6 +274,12 @@ function App() {
           <Route path="church-story/update/:id" element={<UpdateChurchStory />} />
           <Route path="church-story/delete" element={<GetChurchStory />} />
           <Route path="church-story/delete/:id" element={<DeleteChurchStory />} />
+
+          {/* Bank Accounts */}
+          <Route path="bank-accounts/create" element={<CreateBankAccount />} />
+          <Route path="bank-accounts/view" element={<GetBankAccounts />} />
+          <Route path="bank-accounts/update" element={<GetBankAccounts />} />
+          <Route path="bank-accounts/delete" element={<GetBankAccounts />} />
 
           {/* Projects (admin) */}
           <Route path="projects/create" element={<AdminProject mode={pathname} />} />

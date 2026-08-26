@@ -1,0 +1,16 @@
+{
+  "heading": "Bank Accounts",
+  "newAccount": "New Account",
+  "noAccounts": "No bank accounts found.",
+  "loadingAccounts": "Loading bank accounts...",
+  "confirmDelete": "Are you sure you want to delete the {{bank}} account?",
+  "errors": {
+    "load": "Failed to load bank accounts.",
+    "delete": "Failed to delete bank account."
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  }
+}
