@@ -109,7 +109,7 @@ function App() {
   useDocumentMeta(); // updates <html lang>, <title>, and meta tags whenever i18n.language changes
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (token) {
       try {
@@ -119,7 +119,7 @@ function App() {
         setLoggedIn(true);
       } catch (err) {
         console.error("Token validation failed", err);
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
         setIsAdmin(false);
         setLoggedIn(false);
       }

@@ -19,7 +19,7 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
     e.preventDefault();
     try {
       const res = await API.post("/auth/login", form);
-      localStorage.setItem("token", res.data.token);
+      sessionStorage.setItem("token", res.data.token);
 
       const payload = JSON.parse(atob(res.data.token.split(".")[1]));
       const adminFlag = payload.isAdmin === true || payload.isAdmin === "true";

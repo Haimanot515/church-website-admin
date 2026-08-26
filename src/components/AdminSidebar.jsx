@@ -196,7 +196,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
   }, [mobileOpen]);
 
   const clearSessionAndRedirect = () => {
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     setLoggedIn(false);
     setIsAdmin(false);
     setMobileOpen(false);
@@ -216,7 +216,7 @@ const AdminSidebar = ({ setLoggedIn, setIsAdmin }) => {
     let message;
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       await API.post(
         "/auth/logout",
