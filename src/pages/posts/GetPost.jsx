@@ -23,6 +23,29 @@ const GetPost = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const spinnerStyles = `
+    .gp-loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 8px 0;
+    }
+    .gp-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      display: inline-block;
+      animation: gp-spin 0.7s linear infinite;
+    }
+    @keyframes gp-spin {
+      to { transform: rotate(360deg); }
+    }
+  `;
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -30,9 +53,11 @@ const GetPost = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [deletingId, setDeletingId] = useState(null);
 
-  const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [languagesLoading, setLanguagesLoading] = useState(true);
+
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
@@ -48,26 +73,55 @@ const GetPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  // Fetch languages once on mount
   useEffect(() => {
-    const fetchOptions = async () => {
+    const fetchLanguages = async () => {
       try {
-        const [catRes, langRes] = await Promise.all([
-          API.get("/categories"),
-          API.get("/languages"),
-        ]);
-        setCategories(catRes.data);
-        setLanguages(langRes.data);
+        setLanguagesLoading(true);
+        const res = await API.get("/languages");
+        setLanguages(Array.isArray(res.data) ? res.data : res.data.languages || []);
       } catch (err) {
         console.log(err);
         setError((prev) => prev || t("post.errors.loadOptions"));
       } finally {
-        setOptionsLoading(false);
+        setLanguagesLoading(false);
       }
     };
 
-    fetchOptions();
+    fetchLanguages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Re-fetch categories whenever the selected language changes, scoped
+  // to that language specifically (same pattern as CreatePost) — only
+  // relevant while the edit panel is open.
+  useEffect(() => {
+    if (!editingId || !form.language) {
+      setCategories([]);
+      return;
+    }
+
+    const selectedLang = languages.find((l) => l._id === form.language);
+    if (!selectedLang) return;
+
+    const fetchCategoriesForLanguage = async () => {
+      try {
+        setCategoriesLoading(true);
+        const res = await API.get("/categories", {
+          headers: { "Accept-Language": selectedLang.code },
+        });
+        setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
+      } catch (err) {
+        console.log(err);
+        setFormError(t("post.errors.loadCategories"));
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategoriesForLanguage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingId, form.language, languages]);
 
   const fetchPosts = async (page) => {
     try {
@@ -123,10 +177,23 @@ const GetPost = () => {
     setPreview(null);
     setExistingImageUrl("");
     setFormError("");
+    setCategories([]);
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === "language") {
+      // Changing language invalidates whatever category was selected,
+      // since categories are scoped per language
+      setForm((prev) => ({
+        ...prev,
+        language: value,
+        category: "",
+      }));
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -206,6 +273,7 @@ const GetPost = () => {
 
   return (
     <div className="gp-page">
+      <style>{spinnerStyles}</style>
       <div className="gp-card">
         <div className="gp-header">
           <h2>{t("post.heading")}</h2>
@@ -253,39 +321,45 @@ const GetPost = () => {
                 required
               />
 
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                required
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? t("post.form.loadingCategories") : t("post.form.selectCategory")}
-                </option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+              {/* Language comes before category — category options depend
+                  on which language is selected */}
+              {languagesLoading ? (
+                <div className="gp-loading">
+                  <span className="gp-spinner" aria-hidden="true" />
+                  <span>{t("post.form.loadingLanguages")}</span>
+                </div>
+              ) : (
+                <select name="language" value={form.language} onChange={handleChange} required>
+                  <option value="">{t("post.form.selectLanguage")}</option>
+                  {languages.map((lang) => (
+                    <option key={lang._id} value={lang._id}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
+              )}
 
-              <select
-                name="language"
-                value={form.language}
-                onChange={handleChange}
-                required
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? t("post.form.loadingLanguages") : t("post.form.selectLanguage")}
-                </option>
-                {languages.map((lang) => (
-                  <option key={lang._id} value={lang._id}>
-                    {lang.name}
+              {/* Category stays hidden until a language is chosen and its
+                  categories have actually finished loading from the backend */}
+              {!form.language ? null : categoriesLoading ? (
+                <div className="gp-loading">
+                  <span className="gp-spinner" aria-hidden="true" />
+                  <span>{t("post.form.loadingCategories")}</span>
+                </div>
+              ) : (
+                <select name="category" value={form.category} onChange={handleChange} required>
+                  <option value="">
+                    {categories.length === 0
+                      ? t("post.form.noCategoriesForLanguage")
+                      : t("post.form.selectCategory")}
                   </option>
-                ))}
-              </select>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              )}
 
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
@@ -319,7 +393,11 @@ const GetPost = () => {
               </label>
 
               <div className="gp-form-actions">
-                <button type="submit" disabled={submitting || optionsLoading} className="gp-btn-primary">
+                <button
+                  type="submit"
+                  disabled={submitting || !form.language || !form.category}
+                  className="gp-btn-primary"
+                >
                   {submitting ? t("post.form.saving") : t("post.form.saveChanges")}
                 </button>
 

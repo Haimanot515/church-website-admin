@@ -6,6 +6,29 @@ import "./CreateMedia.css";
 const CreateMedia = () => {
   const { t } = useTranslation();
 
+  const spinnerStyles = `
+    .cm-loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 8px 0;
+    }
+    .cm-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      display: inline-block;
+      animation: cm-spin 0.7s linear infinite;
+    }
+    @keyframes cm-spin {
+      to { transform: rotate(360deg); }
+    }
+  `;
+
   const [media, setMedia] = useState({
     title: "",
     description: "",
@@ -16,37 +39,69 @@ const CreateMedia = () => {
     file: null,
   });
 
-  const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [optionsLoading, setOptionsLoading] = useState(true);
+  const [languagesLoading, setLanguagesLoading] = useState(true);
+
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories and languages from the backend on mount
+  // Fetch languages once on mount
   useEffect(() => {
-    const fetchOptions = async () => {
+    const fetchLanguages = async () => {
       try {
-        const [catRes, langRes] = await Promise.all([API.get("/categories"), API.get("/languages")]);
+        setLanguagesLoading(true);
+        const res = await API.get("/languages");
+        const data = Array.isArray(res.data) ? res.data : res.data.languages || [];
+        setLanguages(data);
 
-        setCategories(catRes.data);
-        setLanguages(langRes.data || []);
-
-        if (langRes.data?.length) {
-          setMedia((prev) => ({ ...prev, language: prev.language || langRes.data[0]._id }));
+        if (data.length) {
+          setMedia((prev) => ({ ...prev, language: prev.language || data[0]._id }));
         }
+      } catch (err) {
+        console.log(err);
+        setError(t("createMedia.errors.loadLanguages"));
+      } finally {
+        setLanguagesLoading(false);
+      }
+    };
+
+    fetchLanguages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Re-fetch categories whenever the selected language changes, scoped
+  // to that language specifically.
+  useEffect(() => {
+    if (!media.language) {
+      setCategories([]);
+      return;
+    }
+
+    const selectedLang = languages.find((l) => l._id === media.language);
+    if (!selectedLang) return;
+
+    const fetchCategoriesForLanguage = async () => {
+      try {
+        setCategoriesLoading(true);
+        const res = await API.get("/categories", {
+          headers: { "Accept-Language": selectedLang.code },
+        });
+        setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
       } catch (err) {
         console.log(err);
         setError(t("createMedia.errors.loadCategories"));
       } finally {
-        setOptionsLoading(false);
+        setCategoriesLoading(false);
       }
     };
 
-    fetchOptions();
+    fetchCategoriesForLanguage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [media.language, languages]);
 
   // Revoke the previous object URL whenever it changes or the component unmounts
   useEffect(() => {
@@ -58,10 +113,23 @@ const CreateMedia = () => {
   }, [preview]);
 
   const handleChange = (e) => {
-    setMedia({
-      ...media,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    if (name === "language") {
+      // Changing language invalidates whatever category was selected,
+      // since categories are scoped per language
+      setMedia((prev) => ({
+        ...prev,
+        language: value,
+        category: "",
+      }));
+      return;
+    }
+
+    setMedia((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleFileChange = (e) => {
@@ -146,8 +214,26 @@ const CreateMedia = () => {
     }
   };
 
+  // Don't render the form until the initial backend data (languages) has
+  // finished loading — avoids flashing an unusable/empty form first.
+  if (languagesLoading) {
+    return (
+      <div className="cm-page">
+        <style>{spinnerStyles}</style>
+        <div className="cm-card">
+          <h2 className="cm-title">{t("createMedia.heading")}</h2>
+          <div className="cm-loading">
+            <span className="cm-spinner" aria-hidden="true" />
+            <span>{t("createMedia.form.loadingLanguages")}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="cm-page">
+      <style>{spinnerStyles}</style>
       <div className="cm-card">
         <h2 className="cm-title">{t("createMedia.heading")}</h2>
 
@@ -189,16 +275,28 @@ const CreateMedia = () => {
             <option value="document">{t("createMedia.form.typeDocument")}</option>
           </select>
 
-          <select name="category" value={media.category} onChange={handleChange} disabled={optionsLoading}>
-            <option value="">
-              {optionsLoading ? t("createMedia.form.loadingCategories") : t("createMedia.form.selectCategory")}
-            </option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
+          {/* Category is scoped to the selected language, so it stays
+              hidden until a language is chosen and its categories have
+              actually finished fetching from the backend. */}
+          {!media.language ? null : categoriesLoading ? (
+            <div className="cm-loading">
+              <span className="cm-spinner" aria-hidden="true" />
+              <span>{t("createMedia.form.loadingCategories")}</span>
+            </div>
+          ) : (
+            <select name="category" value={media.category} onChange={handleChange}>
+              <option value="">
+                {categories.length === 0
+                  ? t("createMedia.form.noCategoriesForLanguage")
+                  : t("createMedia.form.selectCategory")}
               </option>
-            ))}
-          </select>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          )}
 
           <select name="status" value={media.status} onChange={handleChange}>
             <option value="draft">{t("createMedia.form.saveDraft")}</option>
@@ -223,7 +321,11 @@ const CreateMedia = () => {
             </div>
           )}
 
-          <button type="submit" disabled={loading || optionsLoading} className="cm-btn-primary">
+          <button
+            type="submit"
+            disabled={loading || categoriesLoading || !media.language}
+            className="cm-btn-primary"
+          >
             {loading ? t("createMedia.form.uploading") : t("createMedia.form.upload")}
           </button>
         </form>

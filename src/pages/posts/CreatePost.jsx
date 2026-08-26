@@ -6,6 +6,29 @@ import "./CreatePost.css";
 const CreatePost = () => {
   const { t } = useTranslation();
 
+  const spinnerStyles = `
+    .cp-loading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #555;
+      padding: 8px 0;
+    }
+    .cp-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.15);
+      border-top-color: currentColor;
+      border-radius: 50%;
+      display: inline-block;
+      animation: cp-spin 0.7s linear infinite;
+    }
+    @keyframes cp-spin {
+      to { transform: rotate(360deg); }
+    }
+  `;
+
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -158,8 +181,26 @@ const CreatePost = () => {
     }
   };
 
+  // Don't render the form until the initial backend data (languages) has
+  // finished loading — avoids flashing an unusable/empty form first.
+  if (languagesLoading) {
+    return (
+      <div className="cp-page">
+        <style>{spinnerStyles}</style>
+        <div className="cp-card">
+          <h2 className="cp-title">{t("createPost.heading")}</h2>
+          <div className="cp-loading">
+            <span className="cp-spinner" aria-hidden="true" />
+            <span>{t("createPost.form.loadingLanguages")}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="cp-page">
+      <style>{spinnerStyles}</style>
       <div className="cp-card">
         <h2 className="cp-title">{t("createPost.heading")}</h2>
 
@@ -200,11 +241,8 @@ const CreatePost = () => {
             value={post.language}
             onChange={handleChange}
             required
-            disabled={languagesLoading}
           >
-            <option value="">
-              {languagesLoading ? t("createPost.form.loadingLanguages") : t("createPost.form.selectLanguage")}
-            </option>
+            <option value="">{t("createPost.form.selectLanguage")}</option>
             {languages.map((lang) => (
               <option key={lang._id} value={lang._id}>
                 {lang.name} ({lang.code})
@@ -212,28 +250,28 @@ const CreatePost = () => {
             ))}
           </select>
 
-          <select
-            name="category"
-            value={post.category}
-            onChange={handleChange}
-            required
-            disabled={!post.language || categoriesLoading}
-          >
-            <option value="">
-              {!post.language
-                ? t("createPost.form.selectLanguageFirst")
-                : categoriesLoading
-                ? t("createPost.form.loadingCategories")
-                : categories.length === 0
-                ? t("createPost.form.noCategoriesForLanguage")
-                : t("createPost.form.selectCategory")}
-            </option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
+          {/* Category is scoped to the selected language, so it stays
+              hidden until a language is chosen and its categories have
+              actually finished fetching from the backend. */}
+          {!post.language ? null : categoriesLoading ? (
+            <div className="cp-loading">
+              <span className="cp-spinner" aria-hidden="true" />
+              <span>{t("createPost.form.loadingCategories")}</span>
+            </div>
+          ) : (
+            <select name="category" value={post.category} onChange={handleChange} required>
+              <option value="">
+                {categories.length === 0
+                  ? t("createPost.form.noCategoriesForLanguage")
+                  : t("createPost.form.selectCategory")}
               </option>
-            ))}
-          </select>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          )}
 
           <input type="file" accept="image/*" onChange={handleFileChange} />
 
