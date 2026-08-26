@@ -4,40 +4,6 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetChurchPerson.css";
 
-// Values sent to/read from the backend stay fixed English/enum strings;
-// only the displayed label is translated via roles.<key> / ranks.<key>.
-const ROLE_OPTIONS = [
-  { value: "", labelKey: null },
-  { value: "Founding Pastor", labelKey: "roles.foundingPastor" },
-  { value: "Senior Pastor", labelKey: "roles.seniorPastor" },
-  { value: "Associate Pastor", labelKey: "roles.associatePastor" },
-  { value: "Church Elder", labelKey: "roles.churchElder" },
-  { value: "Ministry Assistant", labelKey: "roles.ministryAssistant" },
-  { value: "Worship Leader", labelKey: "roles.worshipLeader" },
-  { value: "Small Group Leader", labelKey: "roles.smallGroupLeader" },
-  { value: "Food Pantry Volunteer", labelKey: "roles.foodPantryVolunteer" },
-  { value: "Worship Team Member", labelKey: "roles.worshipTeamMember" },
-  { value: "Sunday School Teacher", labelKey: "roles.sundaySchoolTeacher" },
-  { value: "Choir Member", labelKey: "roles.choirMember" },
-  { value: "Usher", labelKey: "roles.usher" },
-  { value: "Treasurer", labelKey: "roles.treasurer" },
-  { value: "Secretary", labelKey: "roles.secretary" },
-  { value: "Member", labelKey: "roles.member" },
-];
-
-const RANK_OPTIONS = [
-  { value: "", labelKey: null },
-  { value: "patriarch", labelKey: "ranks.patriarch" },
-  { value: "archbishop", labelKey: "ranks.archbishop" },
-  { value: "bishop", labelKey: "ranks.bishop" },
-  { value: "archpriest", labelKey: "ranks.archpriest" },
-  { value: "priest", labelKey: "ranks.priest" },
-  { value: "deacon", labelKey: "ranks.deacon" },
-  { value: "subdeacon", labelKey: "ranks.subdeacon" },
-  { value: "elder", labelKey: "ranks.elder" },
-  { value: "member", labelKey: "ranks.member" },
-];
-
 const CATEGORY_OPTIONS = [
   { value: "leader", labelKey: "categories.leader" },
   { value: "specialThanks", labelKey: "categories.specialThanks" },
@@ -46,13 +12,9 @@ const CATEGORY_OPTIONS = [
 
 const emptyForm = {
   name: "",
-  title: "",
   description: "",
   role: "",
-  message: "",
   category: "leader",
-  rank: "",
-  rankOrder: 0,
   files: [],
 };
 
@@ -112,13 +74,9 @@ const GetChurchPerson = () => {
     setFormError("");
     setForm({
       name: person.name || "",
-      title: person.title || "",
       description: person.description || "",
       role: person.role || "",
-      message: person.message || "",
       category: person.category || "leader",
-      rank: person.rank || "",
-      rankOrder: person.rankOrder ?? 0,
       files: [],
     });
     setExistingPhotos(person.photos || []);
@@ -187,17 +145,9 @@ const GetChurchPerson = () => {
 
       const formData = new FormData();
       formData.append("name", form.name);
-      formData.append("title", form.title);
       formData.append("description", form.description);
       formData.append("role", form.role);
-      formData.append("message", form.message);
       formData.append("category", form.category);
-
-      if (form.rank) {
-        formData.append("rank", form.rank);
-      }
-
-      formData.append("rankOrder", form.rankOrder);
 
       // New photos are appended to the existing set (replacePhotos not sent)
       if (form.files.length > 0) {
@@ -254,13 +204,6 @@ const GetChurchPerson = () => {
     const key = `categories.${category}`;
     const translated = t(key);
     return translated === key ? category : translated;
-  };
-
-  const rankLabel = (rank) => {
-    if (!rank) return "\u2014";
-    const key = `ranks.${rank}`;
-    const translated = t(key);
-    return translated === key ? rank : translated;
   };
 
   return (
@@ -328,46 +271,10 @@ const GetChurchPerson = () => {
 
               <input
                 type="text"
-                name="title"
-                placeholder={t("titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                className="getChurchPerson-input"
-              />
-
-              <select
                 name="role"
+                placeholder={t("rolePlaceholder")}
                 value={form.role}
                 onChange={handleChange}
-                className="getChurchPerson-select"
-              >
-                {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.labelKey ? t(opt.labelKey) : t("selectRole")}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                name="rank"
-                value={form.rank}
-                onChange={handleChange}
-                className="getChurchPerson-select"
-              >
-                {RANK_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.labelKey ? t(opt.labelKey) : t("noRank")}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="number"
-                name="rankOrder"
-                placeholder={t("rankOrderPlaceholder")}
-                value={form.rankOrder}
-                onChange={handleChange}
-                min="0"
                 className="getChurchPerson-input"
               />
 
@@ -376,15 +283,6 @@ const GetChurchPerson = () => {
                 placeholder={t("descriptionPlaceholder")}
                 rows="4"
                 value={form.description}
-                onChange={handleChange}
-                className="getChurchPerson-textarea"
-              />
-
-              <textarea
-                name="message"
-                placeholder={t("messagePlaceholder")}
-                rows="4"
-                value={form.message}
                 onChange={handleChange}
                 className="getChurchPerson-textarea"
               />
@@ -474,8 +372,6 @@ const GetChurchPerson = () => {
                     <th className="getChurchPerson-th">{t("tableHeaders.name")}</th>
                     <th className="getChurchPerson-th">{t("tableHeaders.category")}</th>
                     <th className="getChurchPerson-th">{t("tableHeaders.roleTitle")}</th>
-                    <th className="getChurchPerson-th">{t("tableHeaders.rank")}</th>
-                    <th className="getChurchPerson-th">{t("tableHeaders.rankOrder")}</th>
                     <th className="getChurchPerson-th">{t("tableHeaders.actions")}</th>
                   </tr>
                 </thead>
@@ -502,13 +398,7 @@ const GetChurchPerson = () => {
                         </span>
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.roleTitle")}>
-                        {person.title || person.role || "\u2014"}
-                      </td>
-                      <td className="getChurchPerson-td" data-label={t("tableHeaders.rank")}>
-                        {rankLabel(person.rank)}
-                      </td>
-                      <td className="getChurchPerson-td" data-label={t("tableHeaders.rankOrder")}>
-                        {person.rankOrder}
+                        {person.role || "\u2014"}
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.actions")}>
                         <div className="getChurchPerson-rowActions">
