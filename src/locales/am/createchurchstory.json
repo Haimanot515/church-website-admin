@@ -1,5 +1,5 @@
 {
-  "heading": "የቤተክርስቲያን ታሪክ ምዕራፍ ፍጠር",
+  "heading": "የቤተክርስቲያን ታሪክ ፍጠር",
   "languageSelectPlaceholder": "ቋንቋ ይምረጡ",
   "titlePlaceholder": "የምዕራፍ ርዕስ (ለምሳሌ፦ የመመስረቻ ዓመታት)",
   "leaderPlaceholder": "የመሪ ስም",
@@ -10,9 +10,9 @@
   "yearPlaceholder": "መደርደሪያ ዓመት (ለጊዜ ቅደም ተከተል ይያገለግላል)",
   "descPlaceholder": "የምዕራፍ መግለጫ",
   "previewAlt": "ቅድመ እይታ",
-  "submitButton": "የታሪክ ምዕራፍ ፍጠር",
+  "submitButton": "የቤተክርስቲያን ታሪክ ፍጠር",
   "submitting": "በማስቀመጥ ላይ...",
-  "successMessage": "የቤተክርስቲያን ታሪክ ምዕራፍ በተሳካ ሁኔታ ተፈጥሯል",
+  "successMessage": "የቤተክርስቲያን ታሪክ በተሳካ ሁኔታ ተፈጥሯል",
   "errorLanguageRequired": "እባክዎ ቋንቋ ይምረጡ",
-  "errorSubmit": "የቤተክርስቲያን ታሪክ ምዕራፍ መፍጠር አልተሳካም"
+  "errorSubmit": "የቤተክርስቲያን ታሪክ መፍጠር አልተሳካም"
 }

@@ -6,11 +6,16 @@
   "confirmDelete": "Are you sure you want to delete the {{bank}} account?",
   "errors": {
     "load": "Failed to load bank accounts.",
-    "delete": "Failed to delete bank account."
+    "delete": "Failed to delete bank account.",
+    "update": "Failed to update bank account.",
+    "requiredFields": "Please fill in the bank, account name, and account number."
   },
   "actions": {
     "edit": "Edit",
     "delete": "Delete",
-    "deleting": "Deleting..."
+    "deleting": "Deleting...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel"
   }
 }

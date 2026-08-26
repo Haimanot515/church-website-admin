@@ -13,6 +13,16 @@ const GetBankAccounts = () => {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    bank: "",
+    accountName: "",
+    accountNumber: "",
+    order: 0,
+  });
+  const [savingId, setSavingId] = useState(null);
+  const [editError, setEditError] = useState("");
+
   const fetchAccounts = async () => {
     try {
       setLoading(true);
@@ -33,6 +43,64 @@ const GetBankAccounts = () => {
     fetchAccounts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const startEdit = (account) => {
+    setEditingId(account._id);
+    setEditError("");
+    setEditForm({
+      bank: account.bank,
+      accountName: account.accountName,
+      accountNumber: account.accountNumber,
+      order: account.order ?? 0,
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditError("");
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdate = async (id) => {
+    setEditError("");
+
+    if (!editForm.bank || !editForm.accountName || !editForm.accountNumber) {
+      setEditError(t("getBankAccounts.errors.requiredFields"));
+      return;
+    }
+
+    try {
+      setSavingId(id);
+
+      const token = localStorage.getItem("token");
+
+      // Matches PUT /api/bank-accounts/:id -> updateBankAccount
+      const res = await API.put(
+        `/bank-accounts/${id}`,
+        {
+          bank: editForm.bank,
+          accountName: editForm.accountName,
+          accountNumber: editForm.accountNumber,
+          order: Number(editForm.order) || 0,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setAccounts((prev) =>
+        prev.map((a) => (a._id === id ? res.data : a))
+      );
+      setEditingId(null);
+    } catch (err) {
+      console.log(err);
+      setEditError(err.response?.data?.message || t("getBankAccounts.errors.update"));
+    } finally {
+      setSavingId(null);
+    }
+  };
 
   const handleDelete = async (id, bank) => {
     const confirmed = window.confirm(t("getBankAccounts.confirmDelete", { bank }));
@@ -75,36 +143,93 @@ const GetBankAccounts = () => {
         {accounts.length === 0 && !error && <p>{t("getBankAccounts.noAccounts")}</p>}
 
         <div className="gba-list">
-          {accounts.map((a) => (
-            <div key={a._id} className="gba-row">
-              <div className="gba-row-info">
-                <div className="gba-row-text">
-                  <strong>{a.bank}</strong>
-                  <div className="gba-account-name">{a.accountName}</div>
-                  <div className="gba-account-number">{a.accountNumber}</div>
-                </div>
-              </div>
+          {accounts.map((a) => {
+            const isEditing = editingId === a._id;
 
-              <div className="gba-row-actions">
-                <button
-                  className="gba-btn-edit"
-                  onClick={() => navigate(`/admin/bank-accounts/update/${a._id}`)}
-                >
-                  {t("getBankAccounts.actions.edit")}
-                </button>
+            return (
+              <div key={a._id} className="gba-row">
+                {isEditing ? (
+                  <div className="gba-edit-form">
+                    {editError && <p className="gba-error">{editError}</p>}
 
-                <button
-                  className="gba-btn-delete"
-                  onClick={() => handleDelete(a._id, a.bank)}
-                  disabled={deletingId === a._id}
-                >
-                  {deletingId === a._id
-                    ? t("getBankAccounts.actions.deleting")
-                    : t("getBankAccounts.actions.delete")}
-                </button>
+                    <input
+                      type="text"
+                      name="bank"
+                      value={editForm.bank}
+                      onChange={handleEditChange}
+                      placeholder={t("createBankAccount.form.bankPlaceholder")}
+                    />
+
+                    <input
+                      type="text"
+                      name="accountName"
+                      value={editForm.accountName}
+                      onChange={handleEditChange}
+                      placeholder={t("createBankAccount.form.accountNamePlaceholder")}
+                    />
+
+                    <input
+                      type="text"
+                      name="accountNumber"
+                      value={editForm.accountNumber}
+                      onChange={handleEditChange}
+                      placeholder={t("createBankAccount.form.accountNumberPlaceholder")}
+                    />
+
+                    <input
+                      type="number"
+                      name="order"
+                      value={editForm.order}
+                      onChange={handleEditChange}
+                      placeholder={t("createBankAccount.form.orderPlaceholder")}
+                    />
+
+                    <div className="gba-row-actions">
+                      <button
+                        className="gba-btn-edit"
+                        onClick={() => handleUpdate(a._id)}
+                        disabled={savingId === a._id}
+                      >
+                        {savingId === a._id
+                          ? t("getBankAccounts.actions.saving")
+                          : t("getBankAccounts.actions.save")}
+                      </button>
+
+                      <button className="gba-btn-cancel" onClick={cancelEdit}>
+                        {t("getBankAccounts.actions.cancel")}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="gba-row-info">
+                      <div className="gba-row-text">
+                        <strong>{a.bank}</strong>
+                        <div className="gba-account-name">{a.accountName}</div>
+                        <div className="gba-account-number">{a.accountNumber}</div>
+                      </div>
+                    </div>
+
+                    <div className="gba-row-actions">
+                      <button className="gba-btn-edit" onClick={() => startEdit(a)}>
+                        {t("getBankAccounts.actions.edit")}
+                      </button>
+
+                      <button
+                        className="gba-btn-delete"
+                        onClick={() => handleDelete(a._id, a.bank)}
+                        disabled={deletingId === a._id}
+                      >
+                        {deletingId === a._id
+                          ? t("getBankAccounts.actions.deleting")
+                          : t("getBankAccounts.actions.delete")}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

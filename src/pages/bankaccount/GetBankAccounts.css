@@ -199,3 +199,37 @@
     text-align: center;
   }
 }
+
+/* ===== Inline edit form (same look as CreateBankAccount) ===== */
+.gba-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.gba-edit-form input[type="text"],
+.gba-edit-form input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.gba-btn-cancel {
+  padding: 8px 14px;
+  background: #e2e8f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.gba-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

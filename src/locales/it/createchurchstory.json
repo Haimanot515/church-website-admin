@@ -1,5 +1,5 @@
 {
-  "heading": "Crea Capitolo della Storia della Chiesa",
+  "heading": "Crea Storia della Chiesa",
   "languageSelectPlaceholder": "Seleziona lingua",
   "titlePlaceholder": "Titolo del capitolo (es. Gli Anni della Fondazione)",
   "leaderPlaceholder": "Nome del leader",
@@ -10,9 +10,9 @@
   "yearPlaceholder": "Anno di ordinamento (usato per l'ordine cronologico)",
   "descPlaceholder": "Descrizione del capitolo",
   "previewAlt": "anteprima",
-  "submitButton": "Crea Capitolo della Storia",
+  "submitButton": "Crea Storia della Chiesa",
   "submitting": "Salvataggio...",
-  "successMessage": "Capitolo della storia della chiesa creato con successo",
+  "successMessage": "Storia della chiesa creata con successo",
   "errorLanguageRequired": "Seleziona una lingua",
-  "errorSubmit": "Impossibile creare il capitolo della storia della chiesa"
+  "errorSubmit": "Impossibile creare la storia della chiesa"
 }

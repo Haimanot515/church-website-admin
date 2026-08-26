@@ -6,11 +6,16 @@
   "confirmDelete": "Sei sicuro di voler eliminare il conto {{bank}}?",
   "errors": {
     "load": "Impossibile caricare i conti bancari.",
-    "delete": "Impossibile eliminare il conto bancario."
+    "delete": "Impossibile eliminare il conto bancario.",
+    "update": "Impossibile aggiornare il conto bancario.",
+    "requiredFields": "Compila banca, intestatario e numero di conto."
   },
   "actions": {
     "edit": "Modifica",
     "delete": "Elimina",
-    "deleting": "Eliminazione in corso..."
+    "deleting": "Eliminazione in corso...",
+    "save": "Salva",
+    "saving": "Salvataggio in corso...",
+    "cancel": "Annulla"
   }
 }

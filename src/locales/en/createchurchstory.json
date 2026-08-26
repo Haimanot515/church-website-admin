@@ -1,5 +1,5 @@
 {
-  "heading": "Create Church Story Chapter",
+  "heading": "Create Church Story",
   "languageSelectPlaceholder": "Select language",
   "titlePlaceholder": "Chapter title (e.g. The Founding Years)",
   "leaderPlaceholder": "Leader name",
@@ -10,9 +10,9 @@
   "yearPlaceholder": "Sort year (used for chronological ordering)",
   "descPlaceholder": "Chapter description",
   "previewAlt": "preview",
-  "submitButton": "Create Story Chapter",
+  "submitButton": "Create Church Story",
   "submitting": "Saving...",
-  "successMessage": "Church story chapter created successfully",
+  "successMessage": "Church story created successfully",
   "errorLanguageRequired": "Please select a language",
-  "errorSubmit": "Failed to create church story chapter"
+  "errorSubmit": "Failed to create church story"
 }
