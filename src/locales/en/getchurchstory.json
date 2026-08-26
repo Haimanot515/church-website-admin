@@ -1,7 +1,7 @@
 {
-  "heading": "Church Story Chapters",
-  "newChapterButton": "+ New Chapter",
-  "editHeading": "Edit Chapter",
+  "heading": "Church Story",
+  "newChapterButton": "+ New Story",
+  "editHeading": "Edit Story",
   "titlePlaceholder": "Chapter title (e.g. The Founding Years)",
   "leaderPlaceholder": "Leader name",
   "leaderRolePlaceholder": "Leader role (e.g. Founding Pastor)",
@@ -17,8 +17,8 @@
   "saveButton": "Save Changes",
   "saving": "Saving...",
   "cancelButton": "Cancel",
-  "loading": "Loading chapters...",
-  "empty": "No chapters yet.",
+  "loading": "Loading church story...",
+  "empty": "No story yet.",
   "editButton": "Edit",
   "deleteButton": "Delete",
   "deleting": "Deleting...",
@@ -27,9 +27,9 @@
   "pageLabel": "Page {{page}} of {{totalPages}}",
   "orderLabel": "order: {{order}}",
   "yearLabel": "year: {{year}}",
-  "confirmDelete": "Delete chapter \"{{title}}\"? This cannot be undone.",
-  "successUpdate": "Church story chapter updated successfully",
-  "errorLoad": "Failed to load church story chapters",
-  "errorUpdate": "Failed to update church story chapter",
-  "errorDelete": "Failed to delete chapter"
+  "confirmDelete": "Delete story \"{{title}}\"? This cannot be undone.",
+  "successUpdate": "Church story updated successfully",
+  "errorLoad": "Failed to load church story",
+  "errorUpdate": "Failed to update church story",
+  "errorDelete": "Failed to delete story"
 }

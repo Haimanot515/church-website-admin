@@ -1,7 +1,7 @@
 {
-  "heading": "Capitoli della Storia della Chiesa",
-  "newChapterButton": "+ Nuovo Capitolo",
-  "editHeading": "Modifica Capitolo",
+  "heading": "Storia della Chiesa",
+  "newChapterButton": "+ Nuova Storia",
+  "editHeading": "Modifica Storia",
   "titlePlaceholder": "Titolo del capitolo (es. Gli Anni della Fondazione)",
   "leaderPlaceholder": "Nome del leader",
   "leaderRolePlaceholder": "Ruolo del leader (es. Pastore Fondatore)",
@@ -17,8 +17,8 @@
   "saveButton": "Salva Modifiche",
   "saving": "Salvataggio...",
   "cancelButton": "Annulla",
-  "loading": "Caricamento dei capitoli...",
-  "empty": "Nessun capitolo ancora.",
+  "loading": "Caricamento della storia della chiesa...",
+  "empty": "Nessuna storia ancora.",
   "editButton": "Modifica",
   "deleteButton": "Elimina",
   "deleting": "Eliminazione...",
@@ -27,9 +27,9 @@
   "pageLabel": "Pagina {{page}} di {{totalPages}}",
   "orderLabel": "ordine: {{order}}",
   "yearLabel": "anno: {{year}}",
-  "confirmDelete": "Eliminare il capitolo \"{{title}}\"? Questa azione non puo essere annullata.",
-  "successUpdate": "Capitolo della storia della chiesa aggiornato con successo",
-  "errorLoad": "Impossibile caricare i capitoli della storia della chiesa",
-  "errorUpdate": "Impossibile aggiornare il capitolo della storia della chiesa",
-  "errorDelete": "Impossibile eliminare il capitolo"
+  "confirmDelete": "Eliminare la storia \"{{title}}\"? Questa azione non puo essere annullata.",
+  "successUpdate": "Storia della chiesa aggiornata con successo",
+  "errorLoad": "Impossibile caricare la storia della chiesa",
+  "errorUpdate": "Impossibile aggiornare la storia della chiesa",
+  "errorDelete": "Impossibile eliminare la storia"
 }

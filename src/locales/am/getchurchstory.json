@@ -1,7 +1,7 @@
 {
-  "heading": "የቤተክርስቲያን ታሪክ ምዕራፎች",
-  "newChapterButton": "+ አዲስ ምዕራፍ",
-  "editHeading": "ምዕራፍ አርትዕ",
+  "heading": "የቤተክርስቲያን ታሪክ",
+  "newChapterButton": "+ አዲስ ታሪክ",
+  "editHeading": "ታሪክ አርትዕ",
   "titlePlaceholder": "የምዕራፍ ርዕስ (ለምሳሌ፦ የመመስረቻ ዓመታት)",
   "leaderPlaceholder": "የመሪ ስም",
   "leaderRolePlaceholder": "የመሪ ሚና (ለምሳሌ፦ መስራች ፓስተር)",
@@ -17,8 +17,8 @@
   "saveButton": "ለውጦችን አስቀምጥ",
   "saving": "በማስቀመጥ ላይ...",
   "cancelButton": "ሰርዝ",
-  "loading": "ምዕራፎችን በመጫን ላይ...",
-  "empty": "እስካሁን ምዕራፎች የሉም።",
+  "loading": "የቤተክርስቲያን ታሪክን በመጫን ላይ...",
+  "empty": "እስካሁን ታሪክ የለም።",
   "editButton": "አርትዕ",
   "deleteButton": "ሰርዝ",
   "deleting": "በመሰረዝ ላይ...",
@@ -27,9 +27,9 @@
   "pageLabel": "ገጽ {{page}} ከ {{totalPages}}",
   "orderLabel": "ቅደም ተከተል፦ {{order}}",
   "yearLabel": "ዓመት፦ {{year}}",
-  "confirmDelete": "ምዕራፍ \"{{title}}\" ይሰረዝ? ይህ ወደ ኋላ ሊመለስ አይችልም።",
-  "successUpdate": "የቤተክርስቲያን ታሪክ ምዕራፍ በተሳካ ሁኔታ ተዘምኗል",
-  "errorLoad": "የቤተክርስቲያን ታሪክ ምዕራፎችን መጫን አልተሳካም",
-  "errorUpdate": "የቤተክርስቲያን ታሪክ ምዕራፍ ማዘመን አልተሳካም",
-  "errorDelete": "ምዕራፍ መሰረዝ አልተሳካም"
+  "confirmDelete": "ታሪክ \"{{title}}\" ይሰረዝ? ይህ ወደ ኋላ ሊመለስ አይችልም።",
+  "successUpdate": "የቤተክርስቲያን ታሪክ በተሳካ ሁኔታ ተዘምኗል",
+  "errorLoad": "የቤተክርስቲያን ታሪክን መጫን አልተሳካም",
+  "errorUpdate": "የቤተክርስቲያን ታሪክ ማዘመን አልተሳካም",
+  "errorDelete": "ታሪክ መሰረዝ አልተሳካም"
 }
