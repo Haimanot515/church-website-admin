@@ -8,12 +8,7 @@ const HEROES_PER_PAGE = 10;
 
 const emptyForm = {
   title: "",
-  subtitle: "",
   description: "",
-  quote: "",
-  name: "",
-  role: "",
-  story: "",
 };
 
 const GetHomeHero = () => {
@@ -30,11 +25,8 @@ const GetHomeHero = () => {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [image, setImage] = useState(null);
-  const [storyImage, setStoryImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [storyPreview, setStoryPreview] = useState(null);
   const [existingImageUrl, setExistingImageUrl] = useState("");
-  const [existingStoryImageUrl, setExistingStoryImageUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
 
@@ -83,19 +75,11 @@ const GetHomeHero = () => {
     setFormError("");
     setForm({
       title: hero.title || "",
-      subtitle: hero.subtitle || "",
       description: hero.description || "",
-      quote: hero.quote || "",
-      name: hero.name || "",
-      role: hero.role || "",
-      story: hero.story || "",
     });
     setExistingImageUrl(hero.image || "");
-    setExistingStoryImageUrl(hero.storyImage || "");
     setImage(null);
-    setStoryImage(null);
     setPreview(null);
-    setStoryPreview(null);
 
     requestAnimationFrame(() => {
       editPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -106,11 +90,8 @@ const GetHomeHero = () => {
     setEditingId(null);
     setForm(emptyForm);
     setImage(null);
-    setStoryImage(null);
     setPreview(null);
-    setStoryPreview(null);
     setExistingImageUrl("");
-    setExistingStoryImageUrl("");
     setFormError("");
   };
 
@@ -119,15 +100,10 @@ const GetHomeHero = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e, type) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (type === "hero") {
-      setImage(file);
-      if (file) setPreview(URL.createObjectURL(file));
-    } else {
-      setStoryImage(file);
-      if (file) setStoryPreview(URL.createObjectURL(file));
-    }
+    setImage(file);
+    if (file) setPreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
@@ -141,15 +117,9 @@ const GetHomeHero = () => {
 
       const formData = new FormData();
       formData.append("title", form.title);
-      formData.append("subtitle", form.subtitle);
       formData.append("description", form.description);
-      formData.append("quote", form.quote);
-      formData.append("name", form.name);
-      formData.append("role", form.role);
-      formData.append("story", form.story);
 
       if (image) formData.append("image", image);
-      if (storyImage) formData.append("storyImage", storyImage);
 
       await API.put(`/homeheros/${editingId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -243,14 +213,6 @@ const GetHomeHero = () => {
                 required
               />
 
-              <input
-                type="text"
-                name="subtitle"
-                placeholder={t("getHomeHero.form.subtitlePlaceholder")}
-                value={form.subtitle}
-                onChange={handleChange}
-              />
-
               <textarea
                 name="description"
                 placeholder={t("getHomeHero.form.descriptionPlaceholder")}
@@ -259,55 +221,12 @@ const GetHomeHero = () => {
                 rows="3"
               />
 
-              <textarea
-                name="quote"
-                placeholder={t("getHomeHero.form.quotePlaceholder")}
-                value={form.quote}
-                onChange={handleChange}
-                rows="2"
-              />
-
-              <div className="hh-form-grid-2">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder={t("getHomeHero.form.namePlaceholder")}
-                  value={form.name}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="role"
-                  placeholder={t("getHomeHero.form.rolePlaceholder")}
-                  value={form.role}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <textarea
-                name="story"
-                placeholder={t("getHomeHero.form.storyPlaceholder")}
-                value={form.story}
-                onChange={handleChange}
-                rows="6"
-              />
-
-              <div className="hh-form-grid-2">
-                <div>
-                  <label className="hh-file-label">{t("getHomeHero.form.heroImageLabel")}</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "hero")} />
-                  {(preview || existingImageUrl) && (
-                    <img src={preview || existingImageUrl} alt="Hero" className="hh-file-preview" />
-                  )}
-                </div>
-
-                <div>
-                  <label className="hh-file-label">{t("getHomeHero.form.storyImageLabel")}</label>
-                  <input type="file" accept="image/*" onChange={(e) => handleFileChange(e, "story")} />
-                  {(storyPreview || existingStoryImageUrl) && (
-                    <img src={storyPreview || existingStoryImageUrl} alt="Story" className="hh-file-preview" />
-                  )}
-                </div>
+              <div>
+                <label className="hh-file-label">{t("getHomeHero.form.heroImageLabel")}</label>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+                {(preview || existingImageUrl) && (
+                  <img src={preview || existingImageUrl} alt="Hero" className="hh-file-preview" />
+                )}
               </div>
 
               <div className="hh-form-actions">
@@ -370,8 +289,6 @@ const GetHomeHero = () => {
                   <thead>
                     <tr>
                       <th className="hh-th">{t("getHomeHero.table.title")}</th>
-                      <th className="hh-th">{t("getHomeHero.table.name")}</th>
-                      <th className="hh-th">{t("getHomeHero.table.role")}</th>
                       <th className="hh-th">{t("getHomeHero.table.created")}</th>
                       <th className="hh-th">{t("getHomeHero.table.actions")}</th>
                     </tr>
@@ -380,8 +297,6 @@ const GetHomeHero = () => {
                     {heroes.map((hero) => (
                       <tr key={hero._id}>
                         <td className="hh-td">{hero.title}</td>
-                        <td className="hh-td">{hero.name || t("getHomeHero.table.notAvailable")}</td>
-                        <td className="hh-td">{hero.role || t("getHomeHero.table.notAvailable")}</td>
                         <td className="hh-td">
                           {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
                         </td>
@@ -415,14 +330,6 @@ const GetHomeHero = () => {
                     <div className="hh-card-row">
                       <span className="hh-card-label">{t("getHomeHero.table.title")}</span>
                       <span className="hh-card-value">{hero.title}</span>
-                    </div>
-                    <div className="hh-card-row">
-                      <span className="hh-card-label">{t("getHomeHero.table.name")}</span>
-                      <span className="hh-card-value">{hero.name || t("getHomeHero.table.notAvailable")}</span>
-                    </div>
-                    <div className="hh-card-row">
-                      <span className="hh-card-label">{t("getHomeHero.table.role")}</span>
-                      <span className="hh-card-value">{hero.role || t("getHomeHero.table.notAvailable")}</span>
                     </div>
                     <div className="hh-card-row">
                       <span className="hh-card-label">{t("getHomeHero.table.created")}</span>
