@@ -14,7 +14,6 @@ const ReorderChurchPerson = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [dirty, setDirty] = useState(false);
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const dragIndex = useRef(null);
@@ -33,7 +32,6 @@ const ReorderChurchPerson = () => {
       const res = await API.get("/church-persons", { params: { category: cat } });
       const sorted = [...res.data].sort((a, b) => (a.rankOrder ?? 0) - (b.rankOrder ?? 0));
       setPersons(sorted);
-      setDirty(false);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("reorderChurchPerson.errorLoad"));
@@ -42,17 +40,41 @@ const ReorderChurchPerson = () => {
     }
   };
 
+  // Persists a given order to the server. Called automatically after every
+  // reorder — via arrow buttons or drag-and-drop — no manual save needed.
+  const persistOrder = async (orderedPersons) => {
+    setSaving(true);
+    setError("");
+    setMessage("");
+
+    try {
+      await Promise.all(
+        orderedPersons.map((person, index) =>
+          API.put(`/church-persons/${person._id}`, { rankOrder: index })
+        )
+      );
+
+      setMessage(t("reorderChurchPerson.successMessage"));
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || t("reorderChurchPerson.errorSave"));
+      // Reload from server so the UI doesn't show a stale/unsaved order
+      await fetchPersons(category);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const movePerson = (fromIndex, toIndex) => {
     if (toIndex < 0 || toIndex >= persons.length || fromIndex === toIndex) return;
 
-    setPersons((prev) => {
-      const next = [...prev];
-      const [moved] = next.splice(fromIndex, 1);
-      next.splice(toIndex, 0, moved);
-      return next;
-    });
-    setDirty(true);
+    const next = [...persons];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+
+    setPersons(next);
     setMessage("");
+    persistOrder(next);
   };
 
   const moveUp = (index) => movePerson(index, index - 1);
@@ -72,11 +94,15 @@ const ReorderChurchPerson = () => {
     setDragOverIndex((prev) => (prev === index ? null : prev));
   };
 
+  // Dropping a row reorders the list AND immediately saves the new order.
   const handleDrop = (index) => {
-    if (dragIndex.current === null) return;
-    movePerson(dragIndex.current, index);
+    const fromIndex = dragIndex.current;
     dragIndex.current = null;
     setDragOverIndex(null);
+
+    if (fromIndex === null || fromIndex === index) return;
+
+    movePerson(fromIndex, index);
   };
 
   const handleDragEnd = () => {
@@ -84,31 +110,19 @@ const ReorderChurchPerson = () => {
     setDragOverIndex(null);
   };
 
-  const handleSaveOrder = async () => {
-    setSaving(true);
-    setError("");
-    setMessage("");
-
-    try {
-      await Promise.all(
-        persons.map((person, index) =>
-          API.put(`/church-persons/${person._id}`, { rankOrder: index })
-        )
-      );
-
-      setMessage(t("reorderChurchPerson.successMessage"));
-      setDirty(false);
-      await fetchPersons(category);
-    } catch (err) {
-      console.log(err);
-      setError(err.response?.data?.message || t("reorderChurchPerson.errorSave"));
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
     <div className="rcpPage">
+      {/* Centered overlay spinner shown while a reorder is being saved */}
+      {saving && (
+        <div className="rcpSavingOverlay">
+          <div
+            className="rcpSavingSpinner"
+            role="status"
+            aria-label={t("reorderChurchPerson.saving")}
+          />
+        </div>
+      )}
+
       <div className="rcpCard">
         {/* Header */}
         <div className="rcpHeader">
@@ -116,18 +130,6 @@ const ReorderChurchPerson = () => {
             <h2 className="rcpTitle">{t("reorderChurchPerson.title")}</h2>
             <p className="rcpSubtitle">{t("reorderChurchPerson.subtitle")}</p>
           </div>
-
-          <button
-            onClick={handleSaveOrder}
-            disabled={!dirty || saving || loading}
-            className="rcpSaveButton"
-          >
-            {saving
-              ? t("reorderChurchPerson.saving")
-              : dirty
-              ? t("reorderChurchPerson.saveButton")
-              : t("reorderChurchPerson.saved")}
-          </button>
         </div>
 
         {/* Category tabs */}
@@ -150,7 +152,13 @@ const ReorderChurchPerson = () => {
         {message && <div className="rcpAlert rcpAlertSuccess">{message}</div>}
 
         {loading ? (
-          <p className="rcpStatusText">{t("reorderChurchPerson.loading")}</p>
+          <div className="rcpSpinnerWrap">
+            <div
+              className="rcpSpinner"
+              role="status"
+              aria-label={t("reorderChurchPerson.loading")}
+            />
+          </div>
         ) : persons.length === 0 ? (
           <p className="rcpStatusText">{t("reorderChurchPerson.empty")}</p>
         ) : (
@@ -195,7 +203,7 @@ const ReorderChurchPerson = () => {
                   <div className="rcpArrowGroup">
                     <button
                       onClick={() => moveUp(index)}
-                      disabled={index === 0}
+                      disabled={index === 0 || saving}
                       title={t("reorderChurchPerson.moveUp")}
                       className="rcpArrowButton"
                     >
@@ -203,7 +211,7 @@ const ReorderChurchPerson = () => {
                     </button>
                     <button
                       onClick={() => moveDown(index)}
-                      disabled={index === persons.length - 1}
+                      disabled={index === persons.length - 1 || saving}
                       title={t("reorderChurchPerson.moveDown")}
                       className="rcpArrowButton"
                     >

@@ -100,7 +100,6 @@ const SECTION_DEFS = [
     links: [
       { to: "/admin/churches/create", labelKey: "create" },
       { to: "/admin/churches/view", labelKey: "view" },
-      { to: "/admin/churches/assign", labelKey: "assign" },
       { to: "/admin/church-persons/create", labelKey: "personCreate" },
       { to: "/admin/church-persons/view", labelKey: "personView" },
       { to: "/admin/church-persons/reorder", labelKey: "personReorder" },
