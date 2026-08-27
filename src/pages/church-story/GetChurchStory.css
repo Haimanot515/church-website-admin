@@ -396,3 +396,58 @@
     height: 48px;
   }
 }
+
+/* Field label */
+.ccsLabel,
+.gcsLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.ccsLabel:first-of-type,
+.gcsLabel:first-of-type {
+  margin-top: 0;
+}
+
+/* Required marker */
+.ccsRequired,
+.gcsRequired {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* Optional marker */
+.ccsOptional,
+.gcsOptional {
+  color: #888;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+/* Two-column field row (Leader / Leader Role, etc.) */
+.ccsFieldRow,
+.gcsFieldRow {
+  display: flex;
+  gap: 16px;
+}
+
+.ccsFieldCol,
+.gcsFieldCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Stack the row on narrow screens instead of squeezing columns */
+@media (max-width: 480px) {
+  .ccsFieldRow,
+  .gcsFieldRow {
+    flex-direction: column;
+    gap: 0;
+  }
+}

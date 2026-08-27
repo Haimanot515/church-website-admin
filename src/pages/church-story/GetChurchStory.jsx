@@ -11,8 +11,6 @@ const emptyForm = {
   leaderRole: "",
   range: "",
   servedBy: "",
-  order: 0,
-  year: "",
   file: null,
 };
 
@@ -79,8 +77,6 @@ const GetChurchStories = () => {
       leaderRole: s.leaderRole || "",
       range: s.range || "",
       servedBy: s.servedBy || "",
-      order: s.order ?? 0,
-      year: s.year ?? "",
       file: null,
     });
     setExistingPhoto(s.photo || null);
@@ -120,6 +116,14 @@ const GetChurchStories = () => {
 
     setFormError("");
 
+    // The backend derives `year` and `order` from `range`, and requires
+    // a 4-digit year inside it (e.g. "1998 - 2006"). Catch that early
+    // instead of waiting for the schema validator to reject it.
+    if (!/\d{4}/.test(form.range)) {
+      setFormError(t("getChurchStories.errorRangeYearRequired"));
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -130,14 +134,6 @@ const GetChurchStories = () => {
       formData.append("leaderRole", form.leaderRole);
       formData.append("range", form.range);
       formData.append("servedBy", form.servedBy);
-      formData.append("order", form.order);
-
-      // Only append year if a value was actually entered — sending an
-      // empty string can fail schema validation if year is typed as a
-      // Number.
-      if (form.year) {
-        formData.append("year", form.year);
-      }
 
       if (form.file) {
         formData.append("photo", form.file);
@@ -212,7 +208,12 @@ const GetChurchStories = () => {
             {formError && <p className="gcsError">{formError}</p>}
 
             <form onSubmit={handleSubmit} className="gcsForm">
+              <label className="gcsLabel" htmlFor="gcs-title">
+                {t("getChurchStories.titleLabel")}
+                <span className="gcsRequired"> *</span>
+              </label>
               <input
+                id="gcs-title"
                 type="text"
                 name="title"
                 placeholder={t("getChurchStories.titlePlaceholder")}
@@ -222,75 +223,88 @@ const GetChurchStories = () => {
                 className="gcsInput"
               />
 
-              <div className="gcsFieldRow">
-                <input
-                  type="text"
-                  name="leader"
-                  placeholder={t("getChurchStories.leaderPlaceholder")}
-                  value={form.leader}
-                  onChange={handleChange}
-                  className="gcsInput"
-                />
+              <label className="gcsLabel" htmlFor="gcs-range">
+                {t("getChurchStories.rangeLabel")}
+                <span className="gcsRequired"> *</span>
+              </label>
+              <input
+                id="gcs-range"
+                type="text"
+                name="range"
+                placeholder={t("getChurchStories.rangePlaceholder")}
+                value={form.range}
+                onChange={handleChange}
+                required
+                className="gcsInput"
+              />
 
-                <input
-                  type="text"
-                  name="leaderRole"
-                  placeholder={t("getChurchStories.leaderRolePlaceholder")}
-                  value={form.leaderRole}
-                  onChange={handleChange}
-                  className="gcsInput"
-                />
-              </div>
-
-              <div className="gcsFieldRow">
-                <input
-                  type="text"
-                  name="range"
-                  placeholder={t("getChurchStories.rangePlaceholder")}
-                  value={form.range}
-                  onChange={handleChange}
-                  className="gcsInput"
-                />
-
-                <input
-                  type="text"
-                  name="servedBy"
-                  placeholder={t("getChurchStories.servedByPlaceholder")}
-                  value={form.servedBy}
-                  onChange={handleChange}
-                  className="gcsInput"
-                />
-              </div>
-
-              <div className="gcsFieldRow">
-                <input
-                  type="number"
-                  name="order"
-                  placeholder={t("getChurchStories.orderPlaceholder")}
-                  value={form.order}
-                  onChange={handleChange}
-                  min="0"
-                  className="gcsInput"
-                />
-
-                <input
-                  type="number"
-                  name="year"
-                  placeholder={t("getChurchStories.yearPlaceholder")}
-                  value={form.year}
-                  onChange={handleChange}
-                  className="gcsInput"
-                />
-              </div>
-
+              <label className="gcsLabel" htmlFor="gcs-desc">
+                {t("getChurchStories.descLabel")}
+                <span className="gcsRequired"> *</span>
+              </label>
               <textarea
+                id="gcs-desc"
                 name="desc"
                 placeholder={t("getChurchStories.descPlaceholder")}
                 rows="5"
                 value={form.desc}
                 onChange={handleChange}
+                required
                 className="gcsTextarea"
               />
+
+              <div className="gcsFieldRow">
+                <div className="gcsFieldCol">
+                  <label className="gcsLabel" htmlFor="gcs-leader">
+                    {t("getChurchStories.leaderLabel")}
+                    <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+                  </label>
+                  <input
+                    id="gcs-leader"
+                    type="text"
+                    name="leader"
+                    placeholder={t("getChurchStories.leaderPlaceholder")}
+                    value={form.leader}
+                    onChange={handleChange}
+                    className="gcsInput"
+                  />
+                </div>
+
+                <div className="gcsFieldCol">
+                  <label className="gcsLabel" htmlFor="gcs-leaderRole">
+                    {t("getChurchStories.leaderRoleLabel")}
+                    <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+                  </label>
+                  <input
+                    id="gcs-leaderRole"
+                    type="text"
+                    name="leaderRole"
+                    placeholder={t("getChurchStories.leaderRolePlaceholder")}
+                    value={form.leaderRole}
+                    onChange={handleChange}
+                    className="gcsInput"
+                  />
+                </div>
+              </div>
+
+              <label className="gcsLabel" htmlFor="gcs-servedBy">
+                {t("getChurchStories.servedByLabel")}
+                <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+              </label>
+              <input
+                id="gcs-servedBy"
+                type="text"
+                name="servedBy"
+                placeholder={t("getChurchStories.servedByPlaceholder")}
+                value={form.servedBy}
+                onChange={handleChange}
+                className="gcsInput"
+              />
+
+              <label className="gcsLabel" htmlFor="gcs-file">
+                {t("getChurchStories.photoLabel")}
+                <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+              </label>
 
               {existingPhoto && !preview && (
                 <div className="gcsPhotoBlock">
@@ -303,7 +317,7 @@ const GetChurchStories = () => {
                 </div>
               )}
 
-              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input id="gcs-file" type="file" accept="image/*" onChange={handleFileChange} />
 
               {preview && (
                 <div className="gcsPhotoBlock">
@@ -333,7 +347,30 @@ const GetChurchStories = () => {
         {!editingId && (
           <>
             {loading ? (
-              <p className="gcsStatusText">{t("getChurchStories.loading")}</p>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minHeight: "60vh",
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    border: "4px solid rgba(0, 0, 0, 0.1)",
+                    borderTopColor: "#1a2b4c",
+                    borderRadius: "50%",
+                    animation: "gcsSpin 0.8s linear infinite",
+                  }}
+                />
+                <style>{`
+                  @keyframes gcsSpin {
+                    to { transform: rotate(360deg); }
+                  }
+                `}</style>
+              </div>
             ) : (
               <>
                 {stories.length === 0 && !error && (

@@ -175,3 +175,25 @@
     height: 100px;
   }
 }
+
+.ccsLabel {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.ccsRequired {
+  color: #c0392b;
+}
+
+.ccsOptional {
+  color: #888;
+  font-weight: normal;
+}
+
+.ccsFieldCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
