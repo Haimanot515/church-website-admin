@@ -5,20 +5,30 @@
   "noPosts": "Nessun articolo trovato.",
   "editHeading": "Modifica Articolo",
   "form": {
+    "languageLabel": "Lingua",
+    "titleLabel": "Titolo",
+    "descriptionLabel": "Descrizione",
+    "contentLabel": "Contenuto",
+    "categoryLabel": "Categoria",
+    "statusLabel": "Stato",
+    "uploadImageLabel": "Carica Immagine",
+    "imageAlt": "Anteprima immagine articolo",
+    "optional": "facoltativo",
     "titlePlaceholder": "Titolo dell'articolo",
     "descriptionPlaceholder": "Descrizione dell'articolo",
     "contentPlaceholder": "Contenuto dell'articolo",
     "loadingCategories": "Caricamento categorie...",
-    "selectCategory": "Seleziona Categoria",
+    "selectCategory": "Seleziona categoria",
+    "noCategoriesForLanguage": "Nessuna categoria per questa lingua",
     "loadingLanguages": "Caricamento lingue...",
-    "selectLanguage": "Seleziona Lingua",
+    "selectLanguage": "Seleziona lingua",
     "draft": "Bozza",
     "published": "Pubblicato",
     "trending": "Di tendenza",
     "featured": "In evidenza",
     "recommended": "Consigliato",
     "saving": "Salvataggio...",
-    "saveChanges": "Salva Modifiche",
+    "saveChanges": "Salva modifiche",
     "cancel": "Annulla"
   },
   "table": {
@@ -45,6 +55,7 @@
   "errors": {
     "loadPosts": "Impossibile caricare gli articoli",
     "loadOptions": "Impossibile caricare categorie o lingue",
+    "loadCategories": "Impossibile caricare le categorie per questa lingua",
     "update": "Impossibile aggiornare l'articolo",
     "delete": "Impossibile eliminare l'articolo"
   }

@@ -5,11 +5,21 @@
   "noPosts": "ምንም ልጥፍ አልተገኘም።",
   "editHeading": "ልጥፍ አርትዕ",
   "form": {
+    "languageLabel": "ቋንቋ",
+    "titleLabel": "ርዕስ",
+    "descriptionLabel": "መግለጫ",
+    "contentLabel": "ይዘት",
+    "categoryLabel": "ምድብ",
+    "statusLabel": "ሁኔታ",
+    "uploadImageLabel": "ምስል ስቀል",
+    "imageAlt": "የልጥፍ ምስል ቅድመ-እይታ",
+    "optional": "አማራጭ",
     "titlePlaceholder": "የልጥፍ ርዕስ",
     "descriptionPlaceholder": "የልጥፍ መግለጫ",
     "contentPlaceholder": "የልጥፍ ይዘት",
     "loadingCategories": "ምድቦችን በመጫን ላይ...",
     "selectCategory": "ምድብ ይምረጡ",
+    "noCategoriesForLanguage": "ለዚህ ቋንቋ ምድብ የለም",
     "loadingLanguages": "ቋንቋዎችን በመጫን ላይ...",
     "selectLanguage": "ቋንቋ ይምረጡ",
     "draft": "ረቂቅ",
@@ -28,7 +38,7 @@
     "status": "ሁኔታ",
     "author": "ደራሲ",
     "created": "የተፈጠረበት",
-    "actions": "ተግባራት"
+    "actions": "ድርጊቶች"
   },
   "actions": {
     "edit": "አርትዕ",
@@ -41,10 +51,11 @@
     "pageOf": "ገጽ {{current}} ከ {{total}}"
   },
   "confirmDelete": "እርግጠኛ ነዎት ይህን ልጥፍ መሰረዝ ይፈልጋሉ?",
-  "updateSuccess": "ልጥፉ በተሳካ ሁኔታ ተስተካክሏል",
+  "updateSuccess": "ልጥፉ በተሳካ ሁኔታ ዘምኗል",
   "errors": {
     "loadPosts": "ልጥፎችን መጫን አልተሳካም",
     "loadOptions": "ምድቦችን ወይም ቋንቋዎችን መጫን አልተሳካም",
+    "loadCategories": "ለዚህ ቋንቋ ምድቦችን መጫን አልተሳካም",
     "update": "ልጥፉን ማዘመን አልተሳካም",
     "delete": "ልጥፉን መሰረዝ አልተሳካም"
   }

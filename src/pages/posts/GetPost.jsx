@@ -23,29 +23,6 @@ const GetPost = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const spinnerStyles = `
-    .gp-loading {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: #555;
-      padding: 8px 0;
-    }
-    .gp-spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(0, 0, 0, 0.15);
-      border-top-color: currentColor;
-      border-radius: 50%;
-      display: inline-block;
-      animation: gp-spin 0.7s linear infinite;
-    }
-    @keyframes gp-spin {
-      to { transform: rotate(360deg); }
-    }
-  `;
-
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -73,7 +50,6 @@ const GetPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  // Fetch languages once on mount
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
@@ -92,9 +68,6 @@ const GetPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-fetch categories whenever the selected language changes, scoped
-  // to that language specifically (same pattern as CreatePost) — only
-  // relevant while the edit panel is open.
   useEffect(() => {
     if (!editingId || !form.language) {
       setCategories([]);
@@ -147,7 +120,6 @@ const GetPost = () => {
     setCurrentPage(page);
   };
 
-  // --- Edit (inline, no navigation) ---
   const handleEditClick = (post) => {
     setEditingId(post._id);
     setFormError("");
@@ -184,8 +156,6 @@ const GetPost = () => {
     const { name, value, type, checked } = e.target;
 
     if (name === "language") {
-      // Changing language invalidates whatever category was selected,
-      // since categories are scoped per language
       setForm((prev) => ({
         ...prev,
         language: value,
@@ -247,7 +217,6 @@ const GetPost = () => {
     }
   };
 
-  // --- Delete ---
   const handleDelete = async (id) => {
     if (!window.confirm(t("post.confirmDelete"))) {
       return;
@@ -273,7 +242,6 @@ const GetPost = () => {
 
   return (
     <div className="gp-page">
-      <style>{spinnerStyles}</style>
       <div className="gp-card">
         <div className="gp-header">
           <h2>{t("post.heading")}</h2>
@@ -293,43 +261,25 @@ const GetPost = () => {
 
             {formError && <p className="gp-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="gp-form">
-              <input
-                type="text"
-                name="title"
-                placeholder={t("post.form.titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
-
-              <textarea
-                name="description"
-                placeholder={t("post.form.descriptionPlaceholder")}
-                value={form.description}
-                onChange={handleChange}
-                rows="3"
-                required
-              />
-
-              <textarea
-                name="content"
-                placeholder={t("post.form.contentPlaceholder")}
-                value={form.content}
-                onChange={handleChange}
-                rows="8"
-                required
-              />
-
-              {/* Language comes before category — category options depend
-                  on which language is selected */}
-              {languagesLoading ? (
-                <div className="gp-loading">
-                  <span className="gp-spinner" aria-hidden="true" />
-                  <span>{t("post.form.loadingLanguages")}</span>
-                </div>
-              ) : (
-                <select name="language" value={form.language} onChange={handleChange} required>
+            {languagesLoading ? (
+              <div className="gp-panelLoading">
+                <div className="gp-panelSpinner" />
+                <span>{t("post.form.loadingLanguages")}</span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="gp-form">
+                <label className="gp-label" htmlFor="gp-language">
+                  {t("post.form.languageLabel")}
+                  <span className="gp-required"> *</span>
+                </label>
+                <select
+                  id="gp-language"
+                  name="language"
+                  value={form.language}
+                  onChange={handleChange}
+                  required
+                  className="gp-select"
+                >
                   <option value="">{t("post.form.selectLanguage")}</option>
                   {languages.map((lang) => (
                     <option key={lang._id} value={lang._id}>
@@ -337,86 +287,181 @@ const GetPost = () => {
                     </option>
                   ))}
                 </select>
-              )}
 
-              {/* Category stays hidden until a language is chosen and its
-                  categories have actually finished loading from the backend */}
-              {!form.language ? null : categoriesLoading ? (
-                <div className="gp-loading">
-                  <span className="gp-spinner" aria-hidden="true" />
-                  <span>{t("post.form.loadingCategories")}</span>
-                </div>
-              ) : (
-                <select name="category" value={form.category} onChange={handleChange} required>
-                  <option value="">
-                    {categories.length === 0
-                      ? t("post.form.noCategoriesForLanguage")
-                      : t("post.form.selectCategory")}
-                  </option>
-                  {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-
-              {(preview || existingImageUrl) && (
-                <img src={preview || existingImageUrl} alt="preview" className="gp-file-preview" />
-              )}
-
-              <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">{t("post.form.draft")}</option>
-                <option value="published">{t("post.form.published")}</option>
-              </select>
-
-              <label className="gp-checkbox-label">
-                <input type="checkbox" name="isTrending" checked={form.isTrending} onChange={handleChange} />
-                {t("post.form.trending")}
-              </label>
-
-              <label className="gp-checkbox-label">
-                <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
-                {t("post.form.featured")}
-              </label>
-
-              <label className="gp-checkbox-label">
+                <label className="gp-label" htmlFor="gp-title">
+                  {t("post.form.titleLabel")}
+                  <span className="gp-required"> *</span>
+                </label>
                 <input
-                  type="checkbox"
-                  name="isRecommended"
-                  checked={form.isRecommended}
+                  id="gp-title"
+                  type="text"
+                  name="title"
+                  placeholder={t("post.form.titlePlaceholder")}
+                  value={form.title}
                   onChange={handleChange}
+                  required
+                  className="gp-input"
                 />
-                {t("post.form.recommended")}
-              </label>
 
-              <div className="gp-form-actions">
-                <button
-                  type="submit"
-                  disabled={submitting || !form.language || !form.category}
-                  className="gp-btn-primary"
-                >
-                  {submitting ? t("post.form.saving") : t("post.form.saveChanges")}
-                </button>
+                <label className="gp-label" htmlFor="gp-description">
+                  {t("post.form.descriptionLabel")}
+                  <span className="gp-required"> *</span>
+                </label>
+                <textarea
+                  id="gp-description"
+                  name="description"
+                  placeholder={t("post.form.descriptionPlaceholder")}
+                  value={form.description}
+                  onChange={handleChange}
+                  rows="3"
+                  required
+                  className="gp-textarea"
+                />
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="gp-btn-cancel"
+                <label className="gp-label" htmlFor="gp-content">
+                  {t("post.form.contentLabel")}
+                  <span className="gp-required"> *</span>
+                </label>
+                <textarea
+                  id="gp-content"
+                  name="content"
+                  placeholder={t("post.form.contentPlaceholder")}
+                  value={form.content}
+                  onChange={handleChange}
+                  rows="8"
+                  required
+                  className="gp-textarea"
+                />
+
+                {form.language && (
+                  <>
+                    <label className="gp-label" htmlFor="gp-category">
+                      {t("post.form.categoryLabel")}
+                      <span className="gp-required"> *</span>
+                    </label>
+                    {categoriesLoading ? (
+                      <div className="gp-inlineLoading">
+                        <span className="gp-inlineSpinner" aria-hidden="true" />
+                        <span>{t("post.form.loadingCategories")}</span>
+                      </div>
+                    ) : (
+                      <select
+                        id="gp-category"
+                        name="category"
+                        value={form.category}
+                        onChange={handleChange}
+                        required
+                        className="gp-select"
+                      >
+                        <option value="">
+                          {categories.length === 0
+                            ? t("post.form.noCategoriesForLanguage")
+                            : t("post.form.selectCategory")}
+                        </option>
+                        {categories.map((cat) => (
+                          <option key={cat._id} value={cat._id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </>
+                )}
+
+                <label className="gp-fileLabel" htmlFor="gp-image">
+                  {t("post.form.uploadImageLabel")}
+                  <span className="gp-optional"> ({t("post.form.optional")})</span>
+                  <input
+                    id="gp-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="gp-fileInput"
+                  />
+                </label>
+
+                {(preview || existingImageUrl) && (
+                  <img
+                    src={preview || existingImageUrl}
+                    alt={t("post.form.imageAlt")}
+                    className="gp-file-preview"
+                  />
+                )}
+
+                <label className="gp-label" htmlFor="gp-status">
+                  {t("post.form.statusLabel")}
+                  <span className="gp-optional"> ({t("post.form.optional")})</span>
+                </label>
+                <select
+                  id="gp-status"
+                  name="status"
+                  value={form.status}
+                  onChange={handleChange}
+                  className="gp-select"
                 >
-                  {t("post.form.cancel")}
-                </button>
-              </div>
-            </form>
+                  <option value="draft">{t("post.form.draft")}</option>
+                  <option value="published">{t("post.form.published")}</option>
+                </select>
+
+                <label className="gp-checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="isTrending"
+                    checked={form.isTrending}
+                    onChange={handleChange}
+                  />
+                  {t("post.form.trending")}
+                </label>
+
+                <label className="gp-checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="isFeatured"
+                    checked={form.isFeatured}
+                    onChange={handleChange}
+                  />
+                  {t("post.form.featured")}
+                </label>
+
+                <label className="gp-checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="isRecommended"
+                    checked={form.isRecommended}
+                    onChange={handleChange}
+                  />
+                  {t("post.form.recommended")}
+                </label>
+
+                <div className="gp-form-actions">
+                  <button
+                    type="submit"
+                    disabled={submitting || !form.language || !form.category}
+                    className="gp-btn-primary"
+                  >
+                    {submitting ? t("post.form.saving") : t("post.form.saveChanges")}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    disabled={submitting}
+                    className="gp-btn-cancel"
+                  >
+                    {t("post.form.cancel")}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         )}
 
         {!editingId &&
           (loading ? (
-            <p>{t("post.loadingPosts")}</p>
+            <div className="gp-panelLoading">
+              <div className="gp-panelSpinner" />
+              <span>{t("post.loadingPosts")}</span>
+            </div>
           ) : posts.length === 0 ? (
             <p>{t("post.noPosts")}</p>
           ) : (

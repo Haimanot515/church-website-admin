@@ -1,6 +1,15 @@
 {
   "heading": "Create Post",
   "form": {
+    "languageLabel": "Language",
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "contentLabel": "Content",
+    "categoryLabel": "Category",
+    "statusLabel": "Status",
+    "uploadImageLabel": "Upload Image",
+    "imageAlt": "Post image preview",
+    "optional": "optional",
     "titlePlaceholder": "Post title",
     "descriptionPlaceholder": "Post description",
     "contentPlaceholder": "Post content",

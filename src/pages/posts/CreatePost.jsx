@@ -6,29 +6,6 @@ import "./CreatePost.css";
 const CreatePost = () => {
   const { t } = useTranslation();
 
-  const spinnerStyles = `
-    .cp-loading {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: #555;
-      padding: 8px 0;
-    }
-    .cp-spinner {
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(0, 0, 0, 0.15);
-      border-top-color: currentColor;
-      border-radius: 50%;
-      display: inline-block;
-      animation: cp-spin 0.7s linear infinite;
-    }
-    @keyframes cp-spin {
-      to { transform: rotate(360deg); }
-    }
-  `;
-
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -46,28 +23,28 @@ const CreatePost = () => {
   const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   const [languages, setLanguages] = useState([]);
-  const [languagesLoading, setLanguagesLoading] = useState(true);
-
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Controls the initial fetch of languages — while true, the form is
+  // hidden and a centered spinner is shown instead (matches CreateChurch).
+  const [pageLoading, setPageLoading] = useState(true);
 
   // Fetch languages once on mount
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        setLanguagesLoading(true);
         const res = await API.get("/languages");
         setLanguages(Array.isArray(res.data) ? res.data : res.data.languages || []);
       } catch (err) {
         console.log(err);
         setError(t("createPost.errors.loadLanguages"));
       } finally {
-        setLanguagesLoading(false);
+        setPageLoading(false);
       }
     };
     fetchLanguages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Re-fetch categories whenever the selected language changes, scoped
@@ -183,16 +160,16 @@ const CreatePost = () => {
 
   // Don't render the form until the initial backend data (languages) has
   // finished loading — avoids flashing an unusable/empty form first.
-  if (languagesLoading) {
+  if (pageLoading) {
     return (
       <div className="cp-page">
-        <style>{spinnerStyles}</style>
-        <div className="cp-card">
-          <h2 className="cp-title">{t("createPost.heading")}</h2>
-          <div className="cp-loading">
-            <span className="cp-spinner" aria-hidden="true" />
-            <span>{t("createPost.form.loadingLanguages")}</span>
-          </div>
+        <div className="cp-pageLoading">
+          <div className="cp-pageSpinner" />
+          <style>{`
+            @keyframes cpPageSpin {
+              to { transform: rotate(360deg); }
+            }
+          `}</style>
         </div>
       </div>
     );
@@ -200,47 +177,27 @@ const CreatePost = () => {
 
   return (
     <div className="cp-page">
-      <style>{spinnerStyles}</style>
       <div className="cp-card">
         <h2 className="cp-title">{t("createPost.heading")}</h2>
 
         {error && <p className="cp-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="cp-form">
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createPost.form.titlePlaceholder")}
-            value={post.title}
-            onChange={handleChange}
-            required
-          />
+          {/* ===== Required fields ===== */}
 
-          <textarea
-            name="description"
-            placeholder={t("createPost.form.descriptionPlaceholder")}
-            value={post.description}
-            onChange={handleChange}
-            rows="3"
-            required
-          />
-
-          <textarea
-            name="content"
-            placeholder={t("createPost.form.contentPlaceholder")}
-            value={post.content}
-            onChange={handleChange}
-            rows="8"
-            required
-          />
-
-          {/* Language comes BEFORE category, since category options
-              depend on which language is selected */}
+          {/* Language comes first among the required fields, since
+              category options depend on which language is selected */}
+          <label className="cp-label" htmlFor="cp-language">
+            {t("createPost.form.languageLabel")}
+            <span className="cp-required"> *</span>
+          </label>
           <select
+            id="cp-language"
             name="language"
             value={post.language}
             onChange={handleChange}
             required
+            className="cp-select"
           >
             <option value="">{t("createPost.form.selectLanguage")}</option>
             {languages.map((lang) => (
@@ -250,54 +207,151 @@ const CreatePost = () => {
             ))}
           </select>
 
+          <label className="cp-label" htmlFor="cp-title">
+            {t("createPost.form.titleLabel")}
+            <span className="cp-required"> *</span>
+          </label>
+          <input
+            id="cp-title"
+            type="text"
+            name="title"
+            placeholder={t("createPost.form.titlePlaceholder")}
+            value={post.title}
+            onChange={handleChange}
+            required
+            className="cp-input"
+          />
+
+          <label className="cp-label" htmlFor="cp-description">
+            {t("createPost.form.descriptionLabel")}
+            <span className="cp-required"> *</span>
+          </label>
+          <textarea
+            id="cp-description"
+            name="description"
+            placeholder={t("createPost.form.descriptionPlaceholder")}
+            value={post.description}
+            onChange={handleChange}
+            rows="3"
+            required
+            className="cp-textarea"
+          />
+
+          <label className="cp-label" htmlFor="cp-content">
+            {t("createPost.form.contentLabel")}
+            <span className="cp-required"> *</span>
+          </label>
+          <textarea
+            id="cp-content"
+            name="content"
+            placeholder={t("createPost.form.contentPlaceholder")}
+            value={post.content}
+            onChange={handleChange}
+            rows="8"
+            required
+            className="cp-textarea"
+          />
+
           {/* Category is scoped to the selected language, so it stays
               hidden until a language is chosen and its categories have
               actually finished fetching from the backend. */}
-          {!post.language ? null : categoriesLoading ? (
-            <div className="cp-loading">
-              <span className="cp-spinner" aria-hidden="true" />
-              <span>{t("createPost.form.loadingCategories")}</span>
-            </div>
-          ) : (
-            <select name="category" value={post.category} onChange={handleChange} required>
-              <option value="">
-                {categories.length === 0
-                  ? t("createPost.form.noCategoriesForLanguage")
-                  : t("createPost.form.selectCategory")}
-              </option>
-              {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+          {post.language && (
+            <>
+              <label className="cp-label" htmlFor="cp-category">
+                {t("createPost.form.categoryLabel")}
+                <span className="cp-required"> *</span>
+              </label>
+              {categoriesLoading ? (
+                <div className="cp-inlineLoading">
+                  <span className="cp-inlineSpinner" aria-hidden="true" />
+                  <span>{t("createPost.form.loadingCategories")}</span>
+                </div>
+              ) : (
+                <select
+                  id="cp-category"
+                  name="category"
+                  value={post.category}
+                  onChange={handleChange}
+                  required
+                  className="cp-select"
+                >
+                  <option value="">
+                    {categories.length === 0
+                      ? t("createPost.form.noCategoriesForLanguage")
+                      : t("createPost.form.selectCategory")}
+                  </option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </>
           )}
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          {/* ===== Optional fields ===== */}
 
-          {preview && <img src={preview} alt="preview" className="cp-file-preview" />}
+          <label className="cp-fileLabel" htmlFor="cp-image">
+            {t("createPost.form.uploadImageLabel")}
+            <span className="cp-optional"> ({t("createPost.form.optional")})</span>
+            <input
+              id="cp-image"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="cp-fileInput"
+            />
+          </label>
 
-          <select name="status" value={post.status} onChange={handleChange}>
+          {preview && (
+            <img src={preview} alt={t("createPost.form.imageAlt")} className="cp-file-preview" />
+          )}
+
+          <label className="cp-label" htmlFor="cp-status">
+            {t("createPost.form.statusLabel")}
+            <span className="cp-optional"> ({t("createPost.form.optional")})</span>
+          </label>
+          <select
+            id="cp-status"
+            name="status"
+            value={post.status}
+            onChange={handleChange}
+            className="cp-select"
+          >
             <option value="draft">{t("createPost.form.draft")}</option>
             <option value="published">{t("createPost.form.published")}</option>
           </select>
 
-          <label className="cp-checkbox-label">
-            <input type="checkbox" name="isTrending" checked={post.isTrending} onChange={handleChange} />
+          <label className="cp-checkboxLabel">
+            <input
+              type="checkbox"
+              name="isTrending"
+              checked={post.isTrending}
+              onChange={handleChange}
+              className="cp-checkbox"
+            />
             {t("createPost.form.trending")}
           </label>
 
-          <label className="cp-checkbox-label">
-            <input type="checkbox" name="isFeatured" checked={post.isFeatured} onChange={handleChange} />
+          <label className="cp-checkboxLabel">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={post.isFeatured}
+              onChange={handleChange}
+              className="cp-checkbox"
+            />
             {t("createPost.form.featured")}
           </label>
 
-          <label className="cp-checkbox-label">
+          <label className="cp-checkboxLabel">
             <input
               type="checkbox"
               name="isRecommended"
               checked={post.isRecommended}
               onChange={handleChange}
+              className="cp-checkbox"
             />
             {t("createPost.form.recommended")}
           </label>

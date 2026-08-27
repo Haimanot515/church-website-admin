@@ -1,6 +1,15 @@
 {
   "heading": "ልጥፍ ፍጠር",
   "form": {
+    "languageLabel": "ቋንቋ",
+    "titleLabel": "ርዕስ",
+    "descriptionLabel": "መግለጫ",
+    "contentLabel": "ይዘት",
+    "categoryLabel": "ምድብ",
+    "statusLabel": "ሁኔታ",
+    "uploadImageLabel": "ምስል ስቀል",
+    "imageAlt": "የልጥፍ ምስል ቅድመ-እይታ",
+    "optional": "አማራጭ",
     "titlePlaceholder": "የልጥፍ ርዕስ",
     "descriptionPlaceholder": "የልጥፍ መግለጫ",
     "contentPlaceholder": "የልጥፍ ይዘት",

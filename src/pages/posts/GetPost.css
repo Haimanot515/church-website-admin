@@ -42,6 +42,62 @@
   white-space: nowrap;
 }
 
+/* ===== Centered spinner (initial language load / posts list load) ===== */
+.gp-panelLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 200px;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.gp-panelSpinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: gpPanelSpin 0.8s linear infinite;
+}
+
+@keyframes gpPanelSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Small inline spinner (category re-fetch on language change) ===== */
+.gp-inlineLoading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+  padding: 8px 0;
+}
+
+.gp-inlineSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  display: inline-block;
+  animation: gpInlineSpin 0.7s linear infinite;
+}
+
+@keyframes gpInlineSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gp-panelSpinner,
+  .gp-inlineSpinner {
+    animation: none;
+  }
+}
+
 /* ===== Edit panel ===== */
 .gp-edit-panel {
   border: 1px solid #e2e8f0;
@@ -59,12 +115,13 @@
 .gp-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 6px;
 }
 
 .gp-form input[type="text"],
-.gp-form select,
-.gp-form textarea {
+.gp-select,
+.gp-input,
+.gp-textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
@@ -72,6 +129,49 @@
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
+  margin-bottom: 10px;
+}
+
+.gp-textarea {
+  resize: vertical;
+}
+
+.gp-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.gp-label:first-of-type {
+  margin-top: 0;
+}
+
+.gp-required {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.gp-optional {
+  color: #888;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+.gp-fileLabel {
+  font-size: 0.85rem;
+  color: #56503f;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+.gp-fileInput {
+  font-size: 0.9rem;
 }
 
 .gp-file-preview {
@@ -79,6 +179,7 @@
   height: 250px;
   object-fit: cover;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
 
 .gp-checkbox-label {
@@ -86,6 +187,7 @@
   align-items: center;
   gap: 8px;
   font-size: 14px;
+  margin-bottom: 6px;
 }
 
 .gp-form-actions {
@@ -94,6 +196,7 @@
   flex-wrap: wrap;
   visibility: visible;
   opacity: 1;
+  margin-top: 10px;
 }
 
 .gp-btn-primary {
@@ -306,7 +409,6 @@
     flex-direction: column;
   }
 
-  /* Card-style table on small screens instead of horizontal scroll */
   .gp-table thead {
     display: none;
   }

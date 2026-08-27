@@ -5,11 +5,21 @@
   "noPosts": "No posts found.",
   "editHeading": "Edit Post",
   "form": {
+    "languageLabel": "Language",
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "contentLabel": "Content",
+    "categoryLabel": "Category",
+    "statusLabel": "Status",
+    "uploadImageLabel": "Upload Image",
+    "imageAlt": "Post image preview",
+    "optional": "optional",
     "titlePlaceholder": "Post title",
     "descriptionPlaceholder": "Post description",
     "contentPlaceholder": "Post content",
     "loadingCategories": "Loading categories...",
     "selectCategory": "Select category",
+    "noCategoriesForLanguage": "No categories for this language",
     "loadingLanguages": "Loading languages...",
     "selectLanguage": "Select language",
     "draft": "Draft",
@@ -45,6 +55,7 @@
   "errors": {
     "loadPosts": "Failed to load posts",
     "loadOptions": "Failed to load categories or languages",
+    "loadCategories": "Failed to load categories for this language",
     "update": "Failed to update post",
     "delete": "Failed to delete post"
   }

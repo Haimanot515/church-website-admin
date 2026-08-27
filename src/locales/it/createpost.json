@@ -1,6 +1,15 @@
 {
   "heading": "Crea Articolo",
   "form": {
+    "languageLabel": "Lingua",
+    "titleLabel": "Titolo",
+    "descriptionLabel": "Descrizione",
+    "contentLabel": "Contenuto",
+    "categoryLabel": "Categoria",
+    "statusLabel": "Stato",
+    "uploadImageLabel": "Carica Immagine",
+    "imageAlt": "Anteprima immagine articolo",
+    "optional": "facoltativo",
     "titlePlaceholder": "Titolo dell'articolo",
     "descriptionPlaceholder": "Descrizione dell'articolo",
     "contentPlaceholder": "Contenuto dell'articolo",
