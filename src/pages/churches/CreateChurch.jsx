@@ -8,7 +8,6 @@ const CreateChurch = () => {
 
   const [church, setChurch] = useState({
     churchName: "",
-    shortDescription: "",
     description: "",
     address: "",
     serviceDays: "",
@@ -24,6 +23,10 @@ const CreateChurch = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Controls the initial fetch of languages — while true, the form is
+  // hidden and a centered spinner is shown instead.
+  const [pageLoading, setPageLoading] = useState(true);
+
   // Fetch available languages so the entry can be tied to one
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -35,6 +38,9 @@ const CreateChurch = () => {
         }
       } catch (err) {
         console.log(err);
+        setError(t("errorLoadLanguages"));
+      } finally {
+        setPageLoading(false);
       }
     };
     fetchLanguages();
@@ -70,7 +76,6 @@ const CreateChurch = () => {
 
       const formData = new FormData();
       formData.append("churchName", church.churchName);
-      formData.append("shortDescription", church.shortDescription);
       formData.append("description", church.description);
       formData.append("address", church.address);
       formData.append("serviceDays", church.serviceDays);
@@ -92,7 +97,6 @@ const CreateChurch = () => {
 
       setChurch({
         churchName: "",
-        shortDescription: "",
         description: "",
         address: "",
         serviceDays: "",
@@ -112,6 +116,37 @@ const CreateChurch = () => {
     }
   };
 
+  if (pageLoading) {
+    return (
+      <div className="createChurch-page">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "60vh",
+          }}
+        >
+          <div
+            style={{
+              width: 40,
+              height: 40,
+              border: "4px solid rgba(0, 0, 0, 0.1)",
+              borderTopColor: "#1a2b4c",
+              borderRadius: "50%",
+              animation: "createChurchSpin 0.8s linear infinite",
+            }}
+          />
+          <style>{`
+            @keyframes createChurchSpin {
+              to { transform: rotate(360deg); }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="createChurch-page">
       <div className="createChurch-card">
@@ -120,7 +155,12 @@ const CreateChurch = () => {
         {error && <p className="createChurch-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="createChurch-form">
+          <label className="createChurch-label" htmlFor="cc-language">
+            {t("languageLabel")}
+            <span className="createChurch-required"> *</span>
+          </label>
           <select
+            id="cc-language"
             name="language"
             value={church.language}
             onChange={handleChange}
@@ -137,7 +177,12 @@ const CreateChurch = () => {
             ))}
           </select>
 
+          <label className="createChurch-label" htmlFor="cc-churchName">
+            {t("churchNameLabel")}
+            <span className="createChurch-required"> *</span>
+          </label>
           <input
+            id="cc-churchName"
             type="text"
             name="churchName"
             placeholder={t("churchNamePlaceholder")}
@@ -147,17 +192,12 @@ const CreateChurch = () => {
             className="createChurch-input"
           />
 
+          <label className="createChurch-label" htmlFor="cc-description">
+            {t("descriptionLabel")}
+            <span className="createChurch-required"> *</span>
+          </label>
           <textarea
-            name="shortDescription"
-            placeholder={t("shortDescriptionPlaceholder")}
-            value={church.shortDescription}
-            onChange={handleChange}
-            rows="2"
-            required
-            className="createChurch-textarea"
-          />
-
-          <textarea
+            id="cc-description"
             name="description"
             placeholder={t("descriptionPlaceholder")}
             value={church.description}
@@ -167,40 +207,59 @@ const CreateChurch = () => {
             className="createChurch-textarea"
           />
 
+          <label className="createChurch-label" htmlFor="cc-address">
+            {t("addressLabel")}
+            <span className="createChurch-optional"> ({t("optional")})</span>
+          </label>
           <input
+            id="cc-address"
             type="text"
             name="address"
             placeholder={t("addressPlaceholder")}
             value={church.address}
             onChange={handleChange}
-            required
             className="createChurch-input"
           />
 
           <div className="createChurch-row">
-            <input
-              type="text"
-              name="serviceDays"
-              placeholder={t("serviceDaysPlaceholder")}
-              value={church.serviceDays}
-              onChange={handleChange}
-              required
-              className="createChurch-input"
-            />
-            <input
-              type="text"
-              name="serviceTime"
-              placeholder={t("serviceTimePlaceholder")}
-              value={church.serviceTime}
-              onChange={handleChange}
-              required
-              className="createChurch-input"
-            />
+            <div className="createChurch-col">
+              <label className="createChurch-label" htmlFor="cc-serviceDays">
+                {t("serviceDaysLabel")}
+                <span className="createChurch-optional"> ({t("optional")})</span>
+              </label>
+              <input
+                id="cc-serviceDays"
+                type="text"
+                name="serviceDays"
+                placeholder={t("serviceDaysPlaceholder")}
+                value={church.serviceDays}
+                onChange={handleChange}
+                className="createChurch-input"
+              />
+            </div>
+
+            <div className="createChurch-col">
+              <label className="createChurch-label" htmlFor="cc-serviceTime">
+                {t("serviceTimeLabel")}
+                <span className="createChurch-optional"> ({t("optional")})</span>
+              </label>
+              <input
+                id="cc-serviceTime"
+                type="text"
+                name="serviceTime"
+                placeholder={t("serviceTimePlaceholder")}
+                value={church.serviceTime}
+                onChange={handleChange}
+                className="createChurch-input"
+              />
+            </div>
           </div>
 
-          <label className="createChurch-fileLabel">
+          <label className="createChurch-fileLabel" htmlFor="cc-image">
             {t("uploadImageLabel")}
+            <span className="createChurch-optional"> ({t("optional")})</span>
             <input
+              id="cc-image"
               type="file"
               accept="image/*"
               onChange={handleFileChange}

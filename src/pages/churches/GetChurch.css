@@ -5,14 +5,8 @@
   box-sizing: border-box;
 }
 
-.getChurch-loading {
-  padding: 30px;
-  font-family: "Nunito Sans", sans-serif;
-  color: #0b142c;
-}
-
 .getChurch-card {
-  max-width: 900px;
+  max-width: 780px;
   margin: 0 auto;
   background: #ffffff;
   padding: 40px;
@@ -23,9 +17,9 @@
 
 .getChurch-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
@@ -39,22 +33,26 @@
 }
 
 .getChurch-newButton {
-  padding: 10px 18px;
+  font-family: "Nunito Sans", sans-serif;
   background: #0b142c;
   color: #f4e9c9;
   border: 1px solid #0b142c;
   border-radius: 10px;
-  font-family: "Nunito Sans", sans-serif;
+  padding: 11px 18px;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .getChurch-newButton:hover {
   background: #172352;
+}
+
+.getChurch-newButton:active {
+  transform: translateY(1px);
 }
 
 .getChurch-error {
@@ -70,72 +68,126 @@
 
 .getChurch-empty {
   font-family: "Nunito Sans", sans-serif;
-  color: #56503f;
+  text-align: center;
+  color: #7a7462;
+  font-size: 0.95rem;
+  padding: 40px 0;
+}
+
+.getChurch-editingNotice {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  color: #7a7462;
+  margin: 0 0 14px;
 }
 
 .getChurch-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .getChurch-row {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  gap: 16px;
+  gap: 18px;
+  padding: 18px;
   border: 1px solid #e7e2d5;
   border-radius: 10px;
-  padding: 14px 16px;
-  font-family: "Nunito Sans", sans-serif;
+  background: #fdfcf9;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.getChurch-row:hover {
+  border-color: #c9a24b;
+  box-shadow: 0 6px 20px rgba(11, 20, 44, 0.06);
 }
 
 .getChurch-info {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 16px;
   min-width: 0;
 }
 
 .getChurch-thumb {
-  width: 56px;
-  height: 56px;
+  width: 68px;
+  height: 68px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 1px solid #e7e2d5;
   flex-shrink: 0;
+  background-color: #f4f2ec;
+}
+
+.getChurch-details {
+  min-width: 0;
+}
+
+.getChurch-nameRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .getChurch-name {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
   color: #0b142c;
-  font-size: 1rem;
 }
 
 .getChurch-badge {
-  margin-left: 8px;
   font-family: "IBM Plex Mono", monospace;
-  font-size: 0.7rem;
-  padding: 2px 9px;
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 9px;
   border-radius: 999px;
-  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .getChurch-badge--main {
-  background: #eef1fa;
-  color: #172352;
+  background: #f4e9c9;
+  color: #8a6d1d;
 }
 
 .getChurch-badge--featured {
-  background: #f6ecd2;
-  color: #8a6b1f;
+  background: #eef1ff;
+  color: #0b142c;
 }
 
-.getChurch-address {
-  color: #7a7462;
-  font-size: 0.82rem;
-  margin-top: 3px;
+.getChurch-description {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9rem;
+  color: #56503f;
+  margin: 8px 0 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 480px;
+}
+
+.getChurch-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.getChurch-metaItem {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.75rem;
+  color: #7a7462;
+  background: #f4f2ec;
+  border: 1px solid #e7e2d5;
+  border-radius: 6px;
+  padding: 3px 9px;
 }
 
 .getChurch-actions {
@@ -146,34 +198,37 @@
 
 .getChurch-editButton,
 .getChurch-deleteButton {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 8px;
   font-family: "Nunito Sans", sans-serif;
-  font-size: 0.88rem;
+  border-radius: 8px;
+  padding: 9px 15px;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
 }
 
 .getChurch-editButton {
-  background: #ece7d9;
+  background: #fdfcf9;
   color: #0b142c;
+  border: 1px solid #c9a24b;
 }
 
 .getChurch-editButton:hover {
-  background: #e0d9c4;
+  background: #f4e9c9;
 }
 
 .getChurch-deleteButton {
-  background: #fbe4e2;
-  color: #a1281f;
+  background: #fbe9e7;
+  color: #b3261e;
+  border: 1px solid #f2c4bd;
 }
 
-.getChurch-deleteButton:hover:not(:disabled) {
-  background: #f6d1cd;
+.getChurch-deleteButton:hover {
+  background: #f6d2cd;
 }
 
 .getChurch-deleteButton:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -182,6 +237,200 @@
 .getChurch-deleteButton:focus-visible {
   outline: 2px solid #c9a24b;
   outline-offset: 2px;
+}
+
+/* ===== Inline edit form (replaces a row while editing) ===== */
+
+.getChurch-row--editing {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  font-family: "Nunito Sans", sans-serif;
+  background: #ffffff;
+  border: 1px solid #e7e2d5;
+  border-radius: 14px;
+  padding: 32px;
+  box-shadow: 0 20px 45px rgba(11, 20, 44, 0.08);
+}
+
+.getChurch-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.getChurch-row--editing .getChurch-label:first-of-type {
+  margin-top: 0;
+}
+
+.getChurch-required {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.getChurch-optional {
+  color: #888;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+.getChurch-readonly {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #e7e2d5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #56503f;
+  background: #f4f2ec;
+}
+
+.getChurch-input,
+.getChurch-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #d8d2c2;
+  border-radius: 8px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+  color: #0b142c;
+  background: #fdfcf9;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.getChurch-input:focus,
+.getChurch-textarea:focus {
+  outline: none;
+  border-color: #c9a24b;
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.22);
+}
+
+.getChurch-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.getChurch-row2col {
+  display: flex;
+  gap: 16px;
+}
+
+.getChurch-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.getChurch-fileLabel {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  color: #56503f;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.getChurch-fileInput {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.9rem;
+}
+
+.getChurch-preview {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e7e2d5;
+  margin-top: 10px;
+}
+
+.getChurch-checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 1rem;
+  color: #0b142c;
+  cursor: pointer;
+  margin-top: 14px;
+}
+
+.getChurch-checkbox {
+  margin-top: 3px;
+  accent-color: #c9a24b;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.getChurch-hint {
+  display: block;
+  margin-top: 4px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #7a7462;
+}
+
+.getChurch-editActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.getChurch-submitButton {
+  padding: 12px 20px;
+  background: #0b142c;
+  color: #f4e9c9;
+  border: 1px solid #0b142c;
+  border-radius: 10px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.getChurch-submitButton:hover:not(:disabled) {
+  background: #172352;
+}
+
+.getChurch-submitButton:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.getChurch-submitButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.getChurch-cancelButton {
+  padding: 12px 20px;
+  background: #fdfcf9;
+  color: #0b142c;
+  border: 1px solid #d8d2c2;
+  border-radius: 10px;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.getChurch-cancelButton:hover:not(:disabled) {
+  background: #f4f2ec;
+}
+
+.getChurch-cancelButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 /* Tablet */
@@ -201,7 +450,7 @@
 }
 
 /* Mobile */
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .getChurch-page {
     padding: 20px 14px;
   }
@@ -211,19 +460,19 @@
     border-radius: 12px;
   }
 
+  .getChurch-title {
+    font-size: 1.6rem;
+  }
+
   .getChurch-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 10px;
   }
 
   .getChurch-newButton {
-    width: 100%;
+    align-self: stretch;
     text-align: center;
-  }
-
-  .getChurch-title {
-    font-size: 1.6rem;
   }
 
   .getChurch-row {
@@ -231,8 +480,13 @@
     align-items: flex-start;
   }
 
+  .getChurch-row--editing {
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+
   .getChurch-actions {
-    width: 100%;
+    align-self: stretch;
   }
 
   .getChurch-editButton,
@@ -240,8 +494,18 @@
     flex: 1;
   }
 
-  .getChurch-address {
-    white-space: normal;
+  .getChurch-row2col {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .getChurch-editActions {
+    flex-direction: column-reverse;
+  }
+
+  .getChurch-submitButton,
+  .getChurch-cancelButton {
+    width: 100%;
   }
 }
 
@@ -254,15 +518,11 @@
   .getChurch-title {
     font-size: 1.4rem;
   }
-
-  .getChurch-thumb {
-    width: 46px;
-    height: 46px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .getChurch-newButton {
+  .getChurch-newButton,
+  .getChurch-submitButton {
     transition: none;
   }
 }

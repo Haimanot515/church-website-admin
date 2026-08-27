@@ -225,3 +225,52 @@
     transition: none;
   }
 }
+
+
+/* Field label */
+.createChurch-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.createChurch-label:first-of-type {
+  margin-top: 0;
+}
+
+/* Required marker */
+.createChurch-required {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* Optional marker */
+.createChurch-optional {
+  color: #888;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+/* Two-column field row (Service Days / Service Time) */
+.createChurch-row {
+  display: flex;
+  gap: 16px;
+}
+
+.createChurch-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Stack the row on narrow screens instead of squeezing columns */
+@media (max-width: 480px) {
+  .createChurch-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

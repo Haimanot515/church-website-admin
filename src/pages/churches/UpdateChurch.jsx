@@ -11,52 +11,46 @@ const UpdateChurch = () => {
 
   const [church, setChurch] = useState({
     churchName: "",
-    shortDescription: "",
     description: "",
     address: "",
     serviceDays: "",
     serviceTime: "",
-    language: "",
     isFeatured: false,
     isPrimary: false,
     image: null,
   });
 
-  const [languages, setLanguages] = useState([]);
+  // Language is fixed at creation and shown read-only here — it's never
+  // part of the update payload, so it's kept separate from `church`.
+  const [language, setLanguage] = useState(null);
+
   const [existingImage, setExistingImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Fetch languages + the existing church in parallel
+  // Fetch the existing church
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
 
-        const [langRes, churchRes] = await Promise.all([
-          API.get("/languages"),
-          API.get(`/churches/${id}`),
-        ]);
-
-        setLanguages(langRes.data || []);
-
+        const churchRes = await API.get(`/churches/${id}`);
         const data = churchRes.data.church || churchRes.data;
 
         setChurch({
           churchName: data.churchName || "",
-          shortDescription: data.shortDescription || "",
           description: data.description || "",
           address: data.address || "",
           serviceDays: data.serviceDays || "",
           serviceTime: data.serviceTime || "",
-          language: data.language?._id || data.language || "",
           isFeatured: !!data.isFeatured,
           isPrimary: !!data.isPrimary,
           image: null,
         });
 
+        setLanguage(data.language || null);
         setExistingImage(data.image || null);
       } catch (err) {
         console.log(err);
@@ -90,24 +84,19 @@ const UpdateChurch = () => {
     e.preventDefault();
     setError("");
 
-    if (!church.language) {
-      setError(t("updateChurch.selectLanguageError"));
-      return;
-    }
-
     try {
       setSaving(true);
 
       const formData = new FormData();
       formData.append("churchName", church.churchName);
-      formData.append("shortDescription", church.shortDescription);
       formData.append("description", church.description);
       formData.append("address", church.address);
       formData.append("serviceDays", church.serviceDays);
       formData.append("serviceTime", church.serviceTime);
-      formData.append("language", church.language);
       formData.append("isFeatured", church.isFeatured);
       formData.append("isPrimary", church.isPrimary);
+      // language intentionally not sent — it's fixed at creation and the
+      // update controller leaves it untouched when omitted.
 
       // Only send a new image if one was picked; otherwise backend keeps existing
       if (church.image) {
@@ -143,22 +132,16 @@ const UpdateChurch = () => {
         {error && <p className="updateChurch-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="updateChurch-form">
-          <select
-            name="language"
-            value={church.language}
-            onChange={handleChange}
-            required
-            className="updateChurch-select"
-          >
-            <option value="" disabled>
-              {t("updateChurch.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+          <div className="updateChurch-readonlyGroup">
+            <span className="updateChurch-readonlyLabel">
+              {t("updateChurch.languageLabel")}
+            </span>
+            <div className="updateChurch-readonly">
+              {language?.name
+                ? `${language.name}${language.code ? ` (${language.code})` : ""}`
+                : t("updateChurch.languageUnknown")}
+            </div>
+          </div>
 
           <input
             type="text"
@@ -168,16 +151,6 @@ const UpdateChurch = () => {
             onChange={handleChange}
             required
             className="updateChurch-input"
-          />
-
-          <textarea
-            name="shortDescription"
-            placeholder={t("updateChurch.shortDescriptionPlaceholder")}
-            value={church.shortDescription}
-            onChange={handleChange}
-            rows="2"
-            required
-            className="updateChurch-textarea"
           />
 
           <textarea
