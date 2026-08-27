@@ -40,6 +40,9 @@ const CreateChurchPerson = () => {
       try {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
+        if (res.data?.length) {
+          setPerson((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+        }
       } catch (err) {
         console.log(err);
         setError(t("errorMessage"));
@@ -122,6 +125,42 @@ const CreateChurchPerson = () => {
     }
   };
 
+  if (languagesLoading) {
+    return (
+      <div className="createChurchPerson-page">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "60vh",
+          }}
+        >
+          <div
+            className="createChurchPerson-spinner"
+            role="status"
+            aria-label={t("loadingLanguages")}
+          />
+          <style>{`
+            .createChurchPerson-spinner {
+              width: 40px;
+              height: 40px;
+              border: 4px solid #e0e0e0;
+              border-top-color: #4a4a4a;
+              border-radius: 50%;
+              animation: createChurchPerson-spin 0.8s linear infinite;
+            }
+            @keyframes createChurchPerson-spin {
+              to {
+                transform: rotate(360deg);
+              }
+            }
+          `}</style>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="createChurchPerson-page">
       <div className="createChurchPerson-card">
@@ -129,112 +168,120 @@ const CreateChurchPerson = () => {
 
         {error && <p className="createChurchPerson-error">{error}</p>}
 
-        {languagesLoading ? (
-          <>
-            <style>{`
-              .createChurchPerson-spinner {
-                width: 40px;
-                height: 40px;
-                margin: 40px auto;
-                border: 4px solid #e0e0e0;
-                border-top-color: #4a4a4a;
-                border-radius: 50%;
-                animation: createChurchPerson-spin 0.8s linear infinite;
-              }
-              @keyframes createChurchPerson-spin {
-                to {
-                  transform: rotate(360deg);
-                }
-              }
-            `}</style>
-            <div className="createChurchPerson-spinner" role="status" aria-label={t("loadingLanguages")} />
-          </>
-        ) : (
-          <form onSubmit={handleSubmit} className="createChurchPerson-form">
-            <select
-              name="language"
-              value={person.language}
-              onChange={handleChange}
-              required
-              className="createChurchPerson-select"
-            >
-              <option value="" disabled>
-                {t("selectLanguage")}
+        <form onSubmit={handleSubmit} className="createChurchPerson-form">
+          <label className="createChurchPerson-label" htmlFor="ccp-language">
+            {t("languageLabel")}
+            <span className="createChurchPerson-required"> *</span>
+          </label>
+          <select
+            id="ccp-language"
+            name="language"
+            value={person.language}
+            onChange={handleChange}
+            required
+            className="createChurchPerson-select"
+          >
+            <option value="" disabled>
+              {t("selectLanguage")}
+            </option>
+            {languages.map((lang) => (
+              <option key={lang._id} value={lang._id}>
+                {lang.name} ({lang.code})
               </option>
-              {languages.map((lang) => (
-                <option key={lang._id} value={lang._id}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
 
+          <label className="createChurchPerson-label" htmlFor="ccp-name">
+            {t("nameLabel")}
+            <span className="createChurchPerson-required"> *</span>
+          </label>
+          <input
+            id="ccp-name"
+            type="text"
+            name="name"
+            placeholder={t("namePlaceholder")}
+            value={person.name}
+            onChange={handleChange}
+            required
+            className="createChurchPerson-input"
+          />
+
+          <label className="createChurchPerson-label" htmlFor="ccp-role">
+            {t("roleLabel")}
+            <span className="createChurchPerson-optional"> ({t("optional")})</span>
+          </label>
+          <input
+            id="ccp-role"
+            type="text"
+            name="role"
+            placeholder={t("rolePlaceholder")}
+            value={person.role}
+            onChange={handleChange}
+            className="createChurchPerson-input"
+          />
+
+          <label className="createChurchPerson-label" htmlFor="ccp-category">
+            {t("categoryLabel")}
+            <span className="createChurchPerson-required"> *</span>
+          </label>
+          <select
+            id="ccp-category"
+            name="category"
+            value={person.category}
+            onChange={handleChange}
+            className="createChurchPerson-select"
+          >
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {t(opt.labelKey)}
+              </option>
+            ))}
+          </select>
+
+          <label className="createChurchPerson-label" htmlFor="ccp-description">
+            {t("descriptionLabel")}
+            <span className="createChurchPerson-optional"> ({t("optional")})</span>
+          </label>
+          <textarea
+            id="ccp-description"
+            name="description"
+            placeholder={t("descriptionPlaceholder")}
+            rows="4"
+            value={person.description}
+            onChange={handleChange}
+            className="createChurchPerson-textarea"
+          />
+
+          <label className="createChurchPerson-fileLabel" htmlFor="ccp-photos">
+            {t("uploadPhotosLabel")}
+            <span className="createChurchPerson-optional"> ({t("optional")})</span>
             <input
-              type="text"
-              name="name"
-              placeholder={t("namePlaceholder")}
-              value={person.name}
-              onChange={handleChange}
-              required
-              className="createChurchPerson-input"
-            />
-
-            <input
-              type="text"
-              name="role"
-              placeholder={t("rolePlaceholder")}
-              value={person.role}
-              onChange={handleChange}
-              className="createChurchPerson-input"
-            />
-
-            <select
-              name="category"
-              value={person.category}
-              onChange={handleChange}
-              className="createChurchPerson-select"
-            >
-              {CATEGORY_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {t(opt.labelKey)}
-                </option>
-              ))}
-            </select>
-
-            <textarea
-              name="description"
-              placeholder={t("descriptionPlaceholder")}
-              rows="4"
-              value={person.description}
-              onChange={handleChange}
-              className="createChurchPerson-textarea"
-            />
-
-            <input
+              id="ccp-photos"
               type="file"
               accept="image/*"
               multiple
               onChange={handleFileChange}
               className="createChurchPerson-fileInput"
             />
+          </label>
 
-            {previews.length > 0 && (
-              <div className="createChurchPerson-previewGrid">
-                {previews.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt={t("previewAlt", { index: i })}
-                    className="createChurchPerson-preview"
-                  />
-                ))}
-              </div>
-            )}
+          {previews.length > 0 && (
+            <div className="createChurchPerson-previewGrid">
+              {previews.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt={t("previewAlt", { index: i })}
+                  className="createChurchPerson-preview"
+                />
+              ))}
+            </div>
+          )}
 
-            <button type="submit" disabled={loading} className="createChurchPerson-submitButton">
-              {loading ? t("submittingButton") : t("submitButton")}
-            </button>
-          </form>
-        )}
+          <button type="submit" disabled={loading} className="createChurchPerson-submitButton">
+            {loading ? t("submittingButton") : t("submitButton")}
+          </button>
+        </form>
       </div>
     </div>
   );

@@ -246,7 +246,12 @@ const GetChurchPerson = () => {
             {formError && <p className="getChurchPerson-error">{formError}</p>}
 
             <form onSubmit={handleSubmit} className="getChurchPerson-form">
+              <label className="getChurchPerson-label" htmlFor="gcp-name">
+                {t("nameLabel")}
+                <span className="getChurchPerson-required"> *</span>
+              </label>
               <input
+                id="gcp-name"
                 type="text"
                 name="name"
                 placeholder={t("namePlaceholder")}
@@ -256,7 +261,12 @@ const GetChurchPerson = () => {
                 className="getChurchPerson-input"
               />
 
+              <label className="getChurchPerson-label" htmlFor="gcp-category">
+                {t("categoryLabel")}
+                <span className="getChurchPerson-required"> *</span>
+              </label>
               <select
+                id="gcp-category"
                 name="category"
                 value={form.category}
                 onChange={handleChange}
@@ -269,7 +279,12 @@ const GetChurchPerson = () => {
                 ))}
               </select>
 
+              <label className="getChurchPerson-label" htmlFor="gcp-role">
+                {t("roleLabel")}
+                <span className="getChurchPerson-optional"> ({t("optional")})</span>
+              </label>
               <input
+                id="gcp-role"
                 type="text"
                 name="role"
                 placeholder={t("rolePlaceholder")}
@@ -278,7 +293,12 @@ const GetChurchPerson = () => {
                 className="getChurchPerson-input"
               />
 
+              <label className="getChurchPerson-label" htmlFor="gcp-description">
+                {t("descriptionLabel")}
+                <span className="getChurchPerson-optional"> ({t("optional")})</span>
+              </label>
               <textarea
+                id="gcp-description"
                 name="description"
                 placeholder={t("descriptionPlaceholder")}
                 rows="4"
@@ -312,16 +332,18 @@ const GetChurchPerson = () => {
                 </div>
               )}
 
-              <div>
-                <p className="getChurchPerson-hint">{t("addPhotosHint")}</p>
+              <label className="getChurchPerson-fileLabel" htmlFor="gcp-photos">
+                {t("addPhotosHint")}
+                <span className="getChurchPerson-optional"> ({t("optional")})</span>
                 <input
+                  id="gcp-photos"
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={handleFileChange}
                   className="getChurchPerson-fileInput"
                 />
-              </div>
+              </label>
 
               {previews.length > 0 && (
                 <div className="getChurchPerson-photoGrid">
@@ -360,7 +382,13 @@ const GetChurchPerson = () => {
 
         {!editingId &&
           (loading ? (
-            <p className="getChurchPerson-loading">{t("loadingMessage")}</p>
+            <div className="getChurchPerson-spinnerWrap">
+              <div
+                className="getChurchPerson-spinner"
+                role="status"
+                aria-label={t("loadingMessage")}
+              />
+            </div>
           ) : people.length === 0 ? (
             <p className="getChurchPerson-empty">{t("noResultsMessage")}</p>
           ) : (

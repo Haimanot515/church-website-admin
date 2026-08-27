@@ -122,6 +122,44 @@
   outline-offset: 2px;
 }
 
+/* Field label */
+.createChurchPerson-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+  margin-top: 14px;
+}
+
+.createChurchPerson-label:first-of-type {
+  margin-top: 0;
+}
+
+/* Required marker */
+.createChurchPerson-required {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+/* Optional marker */
+.createChurchPerson-optional {
+  color: #888;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+/* File upload label wrapper (mirrors .createChurchPerson-label but stacks with the input) */
+.createChurchPerson-fileLabel {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.85rem;
+  color: #56503f;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
 /* Tablet */
 @media (max-width: 900px) {
   .createChurchPerson-page {

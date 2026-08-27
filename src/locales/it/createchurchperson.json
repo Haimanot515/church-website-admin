@@ -1,19 +1,26 @@
 {
-  "title": "Crea Persona della Chiesa",
+  "title": "Crea Membro della Chiesa",
+  "languageLabel": "Lingua",
+  "nameLabel": "Nome",
   "namePlaceholder": "Nome completo",
   "selectLanguage": "Seleziona lingua",
   "selectLanguageError": "Seleziona una lingua",
-  "loadingLanguages": "Caricamento lingue",
-  "rolePlaceholder": "Ruolo (es. Prete Associato, Leader di Piccolo Gruppo)",
+  "loadingLanguages": "Caricamento lingue in corso",
+  "roleLabel": "Ruolo",
+  "rolePlaceholder": "Ruolo (es. Sacerdote associato, Responsabile di gruppo)",
+  "categoryLabel": "Categoria",
+  "descriptionLabel": "Descrizione",
   "descriptionPlaceholder": "Breve biografia o descrizione",
+  "uploadPhotosLabel": "Carica foto",
+  "optional": "facoltativo",
   "previewAlt": "anteprima-{{index}}",
-  "submitButton": "Crea Persona della Chiesa",
+  "submitButton": "Crea Membro della Chiesa",
   "submittingButton": "Salvataggio in corso...",
-  "successMessage": "Persona della chiesa creata con successo",
-  "errorMessage": "Impossibile creare la persona della chiesa",
+  "successMessage": "Membro della chiesa creato con successo",
+  "errorMessage": "Creazione del membro della chiesa non riuscita",
   "categories": {
     "leader": "Leader",
-    "specialThanks": "Ringraziamenti Speciali",
+    "specialThanks": "Ringraziamenti speciali",
     "testimony": "Testimonianza"
   }
 }

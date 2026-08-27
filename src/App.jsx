@@ -51,7 +51,6 @@ import GetSubscribers from "./pages/subscribers/GetSubscribers";
 /* Churches */
 import CreateChurch from "./pages/churches/CreateChurch";
 import GetChurch from "./pages/churches/GetChurch";
-import UpdateChurch from "./pages/churches/UpdateChurch";
 import DeleteChurch from "./pages/churches/DeleteChurch";
 import ChurchAssignment from "./pages/churches/CreateChurchAssignment";
 
@@ -250,7 +249,6 @@ function App() {
           <Route path="churches/create" element={<CreateChurch />} />
           <Route path="churches/view" element={<GetChurch />} />
           <Route path="churches/update" element={<GetChurch />} />
-          <Route path="churches/update/:id" element={<UpdateChurch />} />
           <Route path="churches/delete" element={<GetChurch />} />
           <Route path="churches/delete/:id" element={<DeleteChurch />} />
           <Route path="churches/assign" element={<ChurchAssignment />} />
