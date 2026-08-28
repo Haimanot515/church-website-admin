@@ -107,11 +107,11 @@
         "view": "Visualizza"
       }
     },
-    "bankAccounts": {
-      "label": "Conti Bancari",
+    "churchSupport": {
+      "label": "Sostegno alla Chiesa",
       "links": {
-        "create": "Crea",
-        "view": "Visualizza"
+        "create": "Aggiungi Conto",
+        "view": "Visualizza Conto"
       }
     },
     "about": {

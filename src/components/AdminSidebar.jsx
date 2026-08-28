@@ -108,7 +108,7 @@ const SECTION_DEFS = [
     ],
   },
   {
-    key: "bankAccounts",
+    key: "churchSupport",
     icon: Banknote,
     links: [
       { to: "/admin/bank-accounts/create", labelKey: "create" },

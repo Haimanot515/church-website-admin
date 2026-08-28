@@ -114,11 +114,11 @@
         "view": "View"
       }
     },
-    "bankAccounts": {
-      "label": "Bank Accounts",
+    "churchSupport": {
+      "label": "Church Support",
       "links": {
-        "create": "Create",
-        "view": "View"
+        "create": "Add Account",
+        "view": "View Account"
       }
     }
   }

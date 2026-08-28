@@ -100,11 +100,11 @@
         "view": "ይመልከቱ"
       }
     },
-    "bankAccounts": {
-      "label": "የባንክ ሂሳቦች",
+    "churchSupport": {
+      "label": "የቤተክርስቲያን ድጋፍ",
       "links": {
-        "create": "ፍጠር",
-        "view": "ይመልከቱ"
+        "create": "መለያ ጨምር",
+        "view": "መለያ ይመልከቱ"
       }
     },
     "subscribers": {
