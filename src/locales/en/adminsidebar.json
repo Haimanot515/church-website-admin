@@ -117,8 +117,8 @@
     "churchSupport": {
       "label": "Church Support",
       "links": {
-        "create": "Add Account",
-        "view": "View Account"
+        "create": "Add Account Number",
+        "view": "View Account Number"
       }
     }
   }

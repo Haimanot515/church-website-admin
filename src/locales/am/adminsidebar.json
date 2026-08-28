@@ -103,8 +103,8 @@
     "churchSupport": {
       "label": "የቤተክርስቲያን ድጋፍ",
       "links": {
-        "create": "መለያ ጨምር",
-        "view": "መለያ ይመልከቱ"
+        "create": "የሂሳብ ቁጥር ጨምር",
+        "view": "የሂሳብ ቁጥር ይመልከቱ"
       }
     },
     "subscribers": {

@@ -110,8 +110,8 @@
     "churchSupport": {
       "label": "Sostegno alla Chiesa",
       "links": {
-        "create": "Aggiungi Conto",
-        "view": "Visualizza Conto"
+        "create": "Aggiungi Numero di Conto",
+        "view": "Visualizza Numero di Conto"
       }
     },
     "about": {
