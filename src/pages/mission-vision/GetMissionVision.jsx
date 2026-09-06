@@ -42,14 +42,15 @@ const GetMissionVision = () => {
     fetchLanguages();
   }, []);
 
+  // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
   const startEdit = (entry) => {
-    setEditingId(entry._id);
+    setEditingId(entry.id);
     setEditData({
       type: entry.type,
       title: entry.title,
       desc: entry.desc,
       order: entry.order,
-      language: entry.language?._id || entry.language,
+      language: entry.language?.id || entry.language,
     });
     setError("");
   };
@@ -69,7 +70,7 @@ const GetMissionVision = () => {
     try {
       setSaving(true);
       const res = await API.put(`/mission-vision/${id}`, editData);
-      setEntries((prev) => prev.map((entry) => (entry._id === id ? res.data : entry)));
+      setEntries((prev) => prev.map((entry) => (entry.id === id ? res.data : entry)));
       setEditingId(null);
       setEditData({});
     } catch (err) {
@@ -85,7 +86,7 @@ const GetMissionVision = () => {
 
     try {
       await API.delete(`/mission-vision/${id}`);
-      setEntries((prev) => prev.filter((entry) => entry._id !== id));
+      setEntries((prev) => prev.filter((entry) => entry.id !== id));
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("getMissionVision.errors.delete"));
@@ -106,10 +107,10 @@ const GetMissionVision = () => {
         ) : (
           <div className="gmv-list">
             {entries.map((entry) => {
-              const isEditing = editingId === entry._id;
+              const isEditing = editingId === entry.id;
 
               return (
-                <div key={entry._id} className="gmv-row">
+                <div key={entry.id} className="gmv-row">
                   {isEditing ? (
                     <div className="gmv-edit-form">
                       <select
@@ -119,7 +120,7 @@ const GetMissionVision = () => {
                         className="gmv-select"
                       >
                         {languages.map((lang) => (
-                          <option key={lang._id} value={lang._id}>
+                          <option key={lang.id} value={lang.id}>
                             {lang.name} ({lang.code})
                           </option>
                         ))}
@@ -163,7 +164,7 @@ const GetMissionVision = () => {
                         <button
                           className="gmv-btn-save"
                           disabled={saving}
-                          onClick={() => handleSave(entry._id)}
+                          onClick={() => handleSave(entry.id)}
                         >
                           {saving ? t("getMissionVision.saving") : t("getMissionVision.save")}
                         </button>
@@ -184,7 +185,7 @@ const GetMissionVision = () => {
                         <button className="gmv-btn-edit" onClick={() => startEdit(entry)}>
                           {t("getMissionVision.edit")}
                         </button>
-                        <button className="gmv-btn-delete" onClick={() => handleDelete(entry._id)}>
+                        <button className="gmv-btn-delete" onClick={() => handleDelete(entry.id)}>
                           {t("getMissionVision.delete")}
                         </button>
                       </div>

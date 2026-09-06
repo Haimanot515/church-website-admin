@@ -28,12 +28,12 @@ const InboxList = ({ onSelect, activeThread }) => {
         `/admin/threads?limit=20${cursor ? `&cursor=${cursor}` : ""}`
       );
 
-      // Deduplicate threads by _id
+      // Deduplicate threads by id (PostgreSQL/Prisma returns `id`, not MongoDB `_id`)
       setThreads((prev) => {
         const merged = [...prev, ...res.data.threads];
         return merged.filter(
           (thread, index, self) =>
-            index === self.findIndex((th) => th._id === thread._id)
+            index === self.findIndex((th) => th.id === thread.id)
         );
       });
 
@@ -163,11 +163,12 @@ const InboxList = ({ onSelect, activeThread }) => {
       {/* Scroll Area */}
       <div style={styles.list} className="hide-scrollbar">
         {threads.map((thread) => {
-          const isActive = activeThread?._id === thread._id;
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+          const isActive = activeThread?.id === thread.id;
 
           return (
             <div
-              key={thread._id}
+              key={thread.id}
               style={{
                 ...styles.thread,
                 ...(isActive ? styles.activeThread : {}),

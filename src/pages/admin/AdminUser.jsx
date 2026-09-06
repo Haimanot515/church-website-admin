@@ -62,7 +62,8 @@ const AdminUsers = ({ mode }) => {
 
   const handleUpdate = async () => {
     if (!searchResult) return;
-    await API.put(`/admin/users/${searchResult._id}`, editUser);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    await API.put(`/admin/users/${searchResult.id}`, editUser);
     alert(t("adminUsers.alerts.userUpdated"));
     setSearchQuery("");
     setSearchResult(null);
@@ -73,7 +74,8 @@ const AdminUsers = ({ mode }) => {
   const handleDelete = async () => {
     if (!searchResult) return;
     if (!window.confirm(t("adminUsers.alerts.confirmDelete"))) return;
-    await API.delete(`/admin/delete/${searchResult._id}`);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    await API.delete(`/admin/delete/${searchResult.id}`);
     alert(t("adminUsers.alerts.userDeleted"));
     setSearchQuery("");
     setSearchResult(null);
@@ -82,7 +84,7 @@ const AdminUsers = ({ mode }) => {
   };
 
   const startRowEdit = (user) => {
-    setEditingRowId(user._id);
+    setEditingRowId(user.id);
     setRowDraft({
       name: user.name,
       email: user.email,
@@ -98,10 +100,10 @@ const AdminUsers = ({ mode }) => {
 
   const saveRowEdit = async (user) => {
     try {
-      setRowBusyId(user._id);
-      await API.put(`/admin/users/${user._id}`, rowDraft);
+      setRowBusyId(user.id);
+      await API.put(`/admin/users/${user.id}`, rowDraft);
       setUsers((prev) =>
-        prev.map((u) => (u._id === user._id ? { ...u, ...rowDraft } : u))
+        prev.map((u) => (u.id === user.id ? { ...u, ...rowDraft } : u))
       );
       setEditingRowId(null);
       setRowDraft({});
@@ -115,8 +117,8 @@ const AdminUsers = ({ mode }) => {
   const deleteRowUser = async (user) => {
     if (!window.confirm(t("adminUsers.alerts.confirmDelete"))) return;
     try {
-      setRowBusyId(user._id);
-      await API.delete(`/admin/delete/${user._id}`);
+      setRowBusyId(user.id);
+      await API.delete(`/admin/delete/${user.id}`);
       alert(t("adminUsers.alerts.userDeleted"));
       fetchUsersPage(currentPage);
     } catch {
@@ -129,10 +131,10 @@ const AdminUsers = ({ mode }) => {
   const toggleAdminRow = async (user) => {
     const nextIsAdmin = !(user.isAdmin === true || user.isAdmin === "true");
     try {
-      setRowBusyId(user._id);
-      await API.put(`/admin/users/${user._id}`, { isAdmin: nextIsAdmin });
+      setRowBusyId(user.id);
+      await API.put(`/admin/users/${user.id}`, { isAdmin: nextIsAdmin });
       setUsers((prev) =>
-        prev.map((u) => (u._id === user._id ? { ...u, isAdmin: nextIsAdmin } : u))
+        prev.map((u) => (u.id === user.id ? { ...u, isAdmin: nextIsAdmin } : u))
       );
       alert(t("adminUsers.alerts.roleUpdated"));
     } catch {
@@ -143,15 +145,12 @@ const AdminUsers = ({ mode }) => {
   };
 
   const toggleActiveRow = async (user) => {
-    const nextIsActive = !(user.isActive === false || user.isActive === "false");
-    const willBeActive = !nextIsActive ? false : true;
-    // nextIsActive currently represents "current active state"; compute target explicitly:
     const targetIsActive = !(user.isActive === false || user.isActive === "false") ? false : true;
     try {
-      setRowBusyId(user._id);
-      await API.put(`/admin/users/${user._id}`, { isActive: targetIsActive });
+      setRowBusyId(user.id);
+      await API.put(`/admin/users/${user.id}`, { isActive: targetIsActive });
       setUsers((prev) =>
-        prev.map((u) => (u._id === user._id ? { ...u, isActive: targetIsActive } : u))
+        prev.map((u) => (u.id === user.id ? { ...u, isActive: targetIsActive } : u))
       );
       alert(t("adminUsers.alerts.statusUpdated"));
     } catch {
@@ -195,11 +194,11 @@ const AdminUsers = ({ mode }) => {
                     {users.map((u) => {
                       const isAdmin = u.isAdmin === true || u.isAdmin === "true";
                       const isActive = !(u.isActive === false || u.isActive === "false");
-                      const isEditingRow = editingRowId === u._id;
-                      const isBusy = rowBusyId === u._id;
+                      const isEditingRow = editingRowId === u.id;
+                      const isBusy = rowBusyId === u.id;
 
                       return (
-                        <tr key={u._id}>
+                        <tr key={u.id}>
                           <td data-label={t("adminUsers.view.table.name")}>
                             {isEditingRow ? (
                               <input

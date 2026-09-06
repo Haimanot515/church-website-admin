@@ -48,7 +48,8 @@ const GetPromotions = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setPromotions((prev) => prev.filter((p) => p._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setPromotions((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || t("getPromotions.errors.delete"));
@@ -76,7 +77,7 @@ const GetPromotions = () => {
 
         <div className="gp-list">
           {promotions.map((p) => (
-            <div key={p._id} className="gp-row">
+            <div key={p.id} className="gp-row">
               <div className="gp-row-info">
                 {p.photo && <img src={p.photo} alt={p.title} className="gp-thumb" />}
 
@@ -89,17 +90,17 @@ const GetPromotions = () => {
               <div className="gp-row-actions">
                 <button
                   className="gp-btn-edit"
-                  onClick={() => navigate(`/admin/promotions/update/${p._id}`)}
+                  onClick={() => navigate(`/admin/promotions/update/${p.id}`)}
                 >
                   {t("getPromotions.actions.edit")}
                 </button>
 
                 <button
                   className="gp-btn-delete"
-                  onClick={() => handleDelete(p._id, p.title)}
-                  disabled={deletingId === p._id}
+                  onClick={() => handleDelete(p.id, p.title)}
+                  disabled={deletingId === p.id}
                 >
-                  {deletingId === p._id
+                  {deletingId === p.id
                     ? t("getPromotions.actions.deleting")
                     : t("getPromotions.actions.delete")}
                 </button>

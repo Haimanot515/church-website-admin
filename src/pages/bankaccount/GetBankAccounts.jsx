@@ -45,7 +45,8 @@ const GetBankAccounts = () => {
   }, []);
 
   const startEdit = (account) => {
-    setEditingId(account._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(account.id);
     setEditError("");
     setEditForm({
       bank: account.bank,
@@ -90,8 +91,9 @@ const GetBankAccounts = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
       setAccounts((prev) =>
-        prev.map((a) => (a._id === id ? res.data : a))
+        prev.map((a) => (a.id === id ? res.data : a))
       );
       setEditingId(null);
     } catch (err) {
@@ -116,7 +118,8 @@ const GetBankAccounts = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setAccounts((prev) => prev.filter((a) => a._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setAccounts((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || t("getBankAccounts.errors.delete"));
@@ -144,10 +147,10 @@ const GetBankAccounts = () => {
 
         <div className="gba-list">
           {accounts.map((a) => {
-            const isEditing = editingId === a._id;
+            const isEditing = editingId === a.id;
 
             return (
-              <div key={a._id} className="gba-row">
+              <div key={a.id} className="gba-row">
                 {isEditing ? (
                   <div className="gba-edit-form">
                     {editError && <p className="gba-error">{editError}</p>}
@@ -187,10 +190,10 @@ const GetBankAccounts = () => {
                     <div className="gba-row-actions">
                       <button
                         className="gba-btn-edit"
-                        onClick={() => handleUpdate(a._id)}
-                        disabled={savingId === a._id}
+                        onClick={() => handleUpdate(a.id)}
+                        disabled={savingId === a.id}
                       >
-                        {savingId === a._id
+                        {savingId === a.id
                           ? t("getBankAccounts.actions.saving")
                           : t("getBankAccounts.actions.save")}
                       </button>
@@ -217,10 +220,10 @@ const GetBankAccounts = () => {
 
                       <button
                         className="gba-btn-delete"
-                        onClick={() => handleDelete(a._id, a.bank)}
-                        disabled={deletingId === a._id}
+                        onClick={() => handleDelete(a.id, a.bank)}
+                        disabled={deletingId === a.id}
                       >
-                        {deletingId === a._id
+                        {deletingId === a.id
                           ? t("getBankAccounts.actions.deleting")
                           : t("getBankAccounts.actions.delete")}
                       </button>

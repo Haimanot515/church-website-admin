@@ -74,7 +74,8 @@ const GetPost = () => {
       return;
     }
 
-    const selectedLang = languages.find((l) => l._id === form.language);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    const selectedLang = languages.find((l) => l.id === form.language);
     if (!selectedLang) return;
 
     const fetchCategoriesForLanguage = async () => {
@@ -121,14 +122,14 @@ const GetPost = () => {
   };
 
   const handleEditClick = (post) => {
-    setEditingId(post._id);
+    setEditingId(post.id);
     setFormError("");
     setForm({
       title: post.title || "",
       description: post.description || "",
       content: post.content || "",
-      category: post.category?._id || "",
-      language: post.language?._id || "",
+      category: post.category?.id || "",
+      language: post.language?.id || "",
       isTrending: !!post.isTrending,
       isFeatured: !!post.isFeatured,
       isRecommended: !!post.isRecommended,
@@ -282,7 +283,7 @@ const GetPost = () => {
                 >
                   <option value="">{t("post.form.selectLanguage")}</option>
                   {languages.map((lang) => (
-                    <option key={lang._id} value={lang._id}>
+                    <option key={lang.id} value={lang.id}>
                       {lang.name}
                     </option>
                   ))}
@@ -359,7 +360,7 @@ const GetPost = () => {
                             : t("post.form.selectCategory")}
                         </option>
                         {categories.map((cat) => (
-                          <option key={cat._id} value={cat._id}>
+                          <option key={cat.id} value={cat.id}>
                             {cat.name}
                           </option>
                         ))}
@@ -481,7 +482,7 @@ const GetPost = () => {
                   </thead>
                   <tbody>
                     {posts.map((post) => (
-                      <tr key={post._id}>
+                      <tr key={post.id}>
                         <td data-label={t("post.table.title")}>{post.title}</td>
                         <td data-label={t("post.table.category")}>{post.category?.name || "—"}</td>
                         <td data-label={t("post.table.language")}>{post.language?.name || "—"}</td>
@@ -506,10 +507,10 @@ const GetPost = () => {
 
                             <button
                               className="gp-btn-delete"
-                              onClick={() => handleDelete(post._id)}
-                              disabled={deletingId === post._id}
+                              onClick={() => handleDelete(post.id)}
+                              disabled={deletingId === post.id}
                             >
-                              {deletingId === post._id ? t("post.actions.deleting") : t("post.actions.delete")}
+                              {deletingId === post.id ? t("post.actions.deleting") : t("post.actions.delete")}
                             </button>
                           </div>
                         </td>

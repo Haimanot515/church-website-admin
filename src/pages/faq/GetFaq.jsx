@@ -55,13 +55,14 @@ const GetFaq = () => {
   }, []);
 
   const startEdit = (entry) => {
-    setEditingId(entry._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(entry.id);
     setEditData({
       question: entry.question,
       answer: entry.answer,
       category: entry.category,
       order: entry.order,
-      language: entry.language?._id || entry.language,
+      language: entry.language?.id || entry.language,
     });
     setError("");
   };
@@ -81,7 +82,8 @@ const GetFaq = () => {
     try {
       setSaving(true);
       const res = await API.put(`/faq/${id}`, editData);
-      setEntries((prev) => prev.map((entry) => (entry._id === id ? res.data : entry)));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setEntries((prev) => prev.map((entry) => (entry.id === id ? res.data : entry)));
       setEditingId(null);
       setEditData({});
     } catch (err) {
@@ -97,7 +99,8 @@ const GetFaq = () => {
 
     try {
       await API.delete(`/faq/${id}`);
-      setEntries((prev) => prev.filter((entry) => entry._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setEntries((prev) => prev.filter((entry) => entry.id !== id));
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("getFaq.errors.delete"));
@@ -118,10 +121,10 @@ const GetFaq = () => {
         ) : (
           <div className="gfaq-list">
             {entries.map((entry) => {
-              const isEditing = editingId === entry._id;
+              const isEditing = editingId === entry.id;
 
               return (
-                <div key={entry._id} className="gfaq-row">
+                <div key={entry.id} className="gfaq-row">
                   {isEditing ? (
                     <div className="gfaq-edit-form">
                       <select
@@ -131,7 +134,7 @@ const GetFaq = () => {
                         className="gfaq-select"
                       >
                         {languages.map((lang) => (
-                          <option key={lang._id} value={lang._id}>
+                          <option key={lang.id} value={lang.id}>
                             {lang.name} ({lang.code})
                           </option>
                         ))}
@@ -178,7 +181,7 @@ const GetFaq = () => {
                         <button
                           className="gfaq-btn-save"
                           disabled={saving}
-                          onClick={() => handleSave(entry._id)}
+                          onClick={() => handleSave(entry.id)}
                         >
                           {saving ? t("getFaq.saving") : t("getFaq.save")}
                         </button>
@@ -199,7 +202,7 @@ const GetFaq = () => {
                         <button className="gfaq-btn-edit" onClick={() => startEdit(entry)}>
                           {t("getFaq.edit")}
                         </button>
-                        <button className="gfaq-btn-delete" onClick={() => handleDelete(entry._id)}>
+                        <button className="gfaq-btn-delete" onClick={() => handleDelete(entry.id)}>
                           {t("getFaq.delete")}
                         </button>
                       </div>

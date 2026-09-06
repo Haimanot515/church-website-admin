@@ -102,14 +102,14 @@ const GetMedia = () => {
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (item) => {
-    setEditingId(item._id);
+    setEditingId(item.id);
     setFormError("");
     setForm({
       title: item.title || "",
       description: item.description || "",
       type: item.mediaType || "photo",
       status: item.status || "draft",
-      category: item.category?._id || "",
+      category: item.category?.id || "",
       file: null,
     });
     setExistingUrl(item.mediaUrl || "");
@@ -181,11 +181,11 @@ const GetMedia = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(item._id);
+      setDeletingId(item.id);
 
-      await API.delete(`/media/${item._id}`);
+      await API.delete(`/media/${item.id}`);
 
-      if (editingId === item._id) {
+      if (editingId === item.id) {
         handleCancelEdit();
       }
 
@@ -274,7 +274,7 @@ const GetMedia = () => {
                   {optionsLoading ? t("getMedia.form.loadingCategories") : t("getMedia.form.selectCategory")}
                 </option>
                 {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
+                  <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>
                 ))}
@@ -351,7 +351,7 @@ const GetMedia = () => {
                 </thead>
                 <tbody>
                   {media.map((item) => (
-                    <tr key={item._id}>
+                    <tr key={item.id}>
                       <td data-label={t("getMedia.table.file")}>{renderThumb(item)}</td>
                       <td data-label={t("getMedia.table.title")}>{item.title}</td>
                       <td data-label={t("getMedia.table.type")}>
@@ -381,9 +381,9 @@ const GetMedia = () => {
                           <button
                             className="gm-btn-delete"
                             onClick={() => handleDelete(item)}
-                            disabled={deletingId === item._id}
+                            disabled={deletingId === item.id}
                           >
-                            {deletingId === item._id
+                            {deletingId === item.id
                               ? t("getMedia.actions.deleting")
                               : t("getMedia.actions.delete")}
                           </button>

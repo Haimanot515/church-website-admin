@@ -50,7 +50,8 @@ const ReorderChurchPerson = () => {
     try {
       await Promise.all(
         orderedPersons.map((person, index) =>
-          API.put(`/church-persons/${person._id}`, { rankOrder: index })
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+          API.put(`/church-persons/${person.id}`, { rankOrder: index })
         )
       );
 
@@ -167,7 +168,7 @@ const ReorderChurchPerson = () => {
               const isDragOver = dragOverIndex === index;
               return (
                 <div
-                  key={person._id}
+                  key={person.id}
                   draggable
                   onDragStart={() => handleDragStart(index)}
                   onDragOver={(e) => handleDragOver(e, index)}

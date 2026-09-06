@@ -15,7 +15,6 @@ const CreateHomeHero = () => {
   const [languages, setLanguages] = useState([]);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -26,8 +25,9 @@ const CreateHomeHero = () => {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
         // Default to the first language if none selected yet
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
         if (res.data?.length) {
-          setFormData((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+          setFormData((prev) => ({ ...prev, language: prev.language || res.data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -58,12 +58,10 @@ const CreateHomeHero = () => {
 
     try {
       setLoading(true);
-
       const data = new FormData();
       data.append("title", formData.title);
       data.append("description", formData.description);
       data.append("language", formData.language);
-
       if (image) {
         data.append("image", image);
       }
@@ -74,13 +72,11 @@ const CreateHomeHero = () => {
       });
 
       alert(t("createHomeHero.messages.createSuccess"));
-
       setFormData({
         title: "",
         description: "",
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
       });
-
       setImage(null);
       setPreview(null);
     } catch (err) {
@@ -104,7 +100,7 @@ const CreateHomeHero = () => {
               {t("createHomeHero.form.selectLanguagePlaceholder")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

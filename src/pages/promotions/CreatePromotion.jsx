@@ -26,7 +26,8 @@ const CreatePromotion = () => {
         setLanguages(res.data || []);
 
         if (res.data?.length) {
-          setPromotion((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+          setPromotion((prev) => ({ ...prev, language: prev.language || res.data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -83,7 +84,8 @@ const CreatePromotion = () => {
       setPromotion({
         title: "",
         description: "",
-        language: languages[0]?._id || "",
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+        language: languages[0]?.id || "",
         photo: null,
       });
 
@@ -115,7 +117,7 @@ const CreatePromotion = () => {
               {t("createPromotion.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

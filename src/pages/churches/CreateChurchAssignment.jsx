@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./CreateChurchAssignment.css";
-
 const CreateChurchAssignment = () => {
   const { t } = useTranslation("translation", { keyPrefix: "createChurchAssignment" });
-
   const [assignment, setAssignment] = useState({
     user: "",
     church: "",
@@ -15,29 +13,23 @@ const CreateChurchAssignment = () => {
     isPrimary: false,
     image: null,
   });
-
   const [preview, setPreview] = useState(null);
-
   const [users, setUsers] = useState([]);
   const [churches, setChurches] = useState([]);
   const [optionsLoading, setOptionsLoading] = useState(true);
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   // Fetch users and churches from the backend on mount
   useEffect(() => {
     const fetchOptions = async () => {
       try {
         const token = localStorage.getItem("token");
-
         const [userRes, churchRes] = await Promise.all([
           API.get("/admin/users?page=1&limit=1000", {
             headers: { Authorization: `Bearer ${token}` },
           }),
           API.get("/churches"),
         ]);
-
         setUsers(userRes.data.users); // /admin/users returns { users, totalUsers }
         setChurches(churchRes.data);
       } catch (err) {
@@ -47,10 +39,8 @@ const CreateChurchAssignment = () => {
         setOptionsLoading(false);
       }
     };
-
     fetchOptions();
   }, [t]);
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setAssignment({
@@ -58,7 +48,6 @@ const CreateChurchAssignment = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setAssignment({ ...assignment, image: file });
@@ -66,16 +55,12 @@ const CreateChurchAssignment = () => {
       setPreview(URL.createObjectURL(file));
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       setLoading(true);
-
       const token = localStorage.getItem("token");
-
       const formData = new FormData();
       formData.append("user", assignment.user);
       formData.append("church", assignment.church);
@@ -86,11 +71,9 @@ const CreateChurchAssignment = () => {
       formData.append("description", assignment.description);
       formData.append("isCurrent", true);
       formData.append("isPrimary", assignment.isPrimary);
-
       if (assignment.image) {
         formData.append("image", assignment.image);
       }
-
       // Matches POST /api/churches/assignment in churchRoutes.js,
       // handled by createAssignment in churchController.js
       await API.post("/churches/assignment", formData, {
@@ -99,9 +82,7 @@ const CreateChurchAssignment = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-
       alert(t("successMessage"));
-
       setAssignment({
         user: "",
         church: "",
@@ -119,14 +100,11 @@ const CreateChurchAssignment = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="createChurchAssignment-page">
       <div className="createChurchAssignment-card">
         <h2 className="createChurchAssignment-title">{t("title")}</h2>
-
         {error && <p className="createChurchAssignment-error">{error}</p>}
-
         <form onSubmit={handleSubmit} className="createChurchAssignment-form">
           <select
             name="user"
@@ -140,12 +118,12 @@ const CreateChurchAssignment = () => {
               {optionsLoading ? t("loadingUsersMessage") : t("selectUserPlaceholder")}
             </option>
             {users.map((u) => (
-              <option key={u._id} value={u._id}>
+              // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+              <option key={u.id} value={u.id}>
                 {u.name || u.username || u.email}
               </option>
             ))}
           </select>
-
           <select
             name="church"
             value={assignment.church}
@@ -158,12 +136,12 @@ const CreateChurchAssignment = () => {
               {optionsLoading ? t("loadingChurchesMessage") : t("selectChurchPlaceholder")}
             </option>
             {churches.map((c) => (
-              <option key={c._id} value={c._id}>
+              // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+              <option key={c.id} value={c.id}>
                 {c.churchName}
               </option>
             ))}
           </select>
-
           <input
             type="text"
             name="role"
@@ -173,7 +151,6 @@ const CreateChurchAssignment = () => {
             required
             className="createChurchAssignment-input"
           />
-
           <input
             type="date"
             name="servingSince"
@@ -181,7 +158,6 @@ const CreateChurchAssignment = () => {
             onChange={handleChange}
             className="createChurchAssignment-input"
           />
-
           <textarea
             name="description"
             placeholder={t("descriptionPlaceholder")}
@@ -190,7 +166,6 @@ const CreateChurchAssignment = () => {
             rows="4"
             className="createChurchAssignment-textarea"
           />
-
           <div className="createChurchAssignment-fileGroup">
             <label className="createChurchAssignment-fileLabel">{t("leaderPhotoLabel")}</label>
             <input
@@ -200,11 +175,9 @@ const CreateChurchAssignment = () => {
               className="createChurchAssignment-fileInput"
             />
           </div>
-
           {preview && (
             <img src={preview} alt={t("imageAlt")} className="createChurchAssignment-preview" />
           )}
-
           {/* Drives the "Where I Serve Now" section on the public Church
               page (getLeadershipChurch requires isCurrent AND isPrimary).
               Only one assignment across all users can hold this — checking
@@ -222,7 +195,6 @@ const CreateChurchAssignment = () => {
               <small className="createChurchAssignment-hint">{t("featuredLeaderHint")}</small>
             </span>
           </label>
-
           <button
             type="submit"
             disabled={loading || optionsLoading}
@@ -235,5 +207,4 @@ const CreateChurchAssignment = () => {
     </div>
   );
 };
-
 export default CreateChurchAssignment;

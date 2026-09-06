@@ -57,9 +57,9 @@ const CreateMedia = () => {
         const res = await API.get("/languages");
         const data = Array.isArray(res.data) ? res.data : res.data.languages || [];
         setLanguages(data);
-
         if (data.length) {
-          setMedia((prev) => ({ ...prev, language: prev.language || data[0]._id }));
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+          setMedia((prev) => ({ ...prev, language: prev.language || data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -68,7 +68,6 @@ const CreateMedia = () => {
         setLanguagesLoading(false);
       }
     };
-
     fetchLanguages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -80,10 +79,8 @@ const CreateMedia = () => {
       setCategories([]);
       return;
     }
-
-    const selectedLang = languages.find((l) => l._id === media.language);
+    const selectedLang = languages.find((l) => l.id === media.language);
     if (!selectedLang) return;
-
     const fetchCategoriesForLanguage = async () => {
       try {
         setCategoriesLoading(true);
@@ -98,7 +95,6 @@ const CreateMedia = () => {
         setCategoriesLoading(false);
       }
     };
-
     fetchCategoriesForLanguage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [media.language, languages]);
@@ -114,7 +110,6 @@ const CreateMedia = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "language") {
       // Changing language invalidates whatever category was selected,
       // since categories are scoped per language
@@ -125,7 +120,6 @@ const CreateMedia = () => {
       }));
       return;
     }
-
     setMedia((prev) => ({
       ...prev,
       [name]: value,
@@ -134,12 +128,10 @@ const CreateMedia = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
     setMedia({
       ...media,
       file: file,
     });
-
     if (file) {
       setPreview(URL.createObjectURL(file));
     }
@@ -174,14 +166,12 @@ const CreateMedia = () => {
       setLoading(true);
 
       const formData = new FormData();
-
       formData.append("title", media.title);
       formData.append("description", media.description);
       formData.append("type", media.type);
       formData.append("status", media.status);
       formData.append("category", media.category);
       formData.append("language", media.language);
-
       if (media.file) {
         formData.append("file", media.file);
       }
@@ -194,17 +184,15 @@ const CreateMedia = () => {
       });
 
       alert(t("createMedia.uploadSuccess"));
-
       setMedia({
         title: "",
         description: "",
         type: "photo",
         status: "published",
         category: "",
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
         file: null,
       });
-
       setPreview(null);
     } catch (err) {
       console.log(err);
@@ -245,7 +233,7 @@ const CreateMedia = () => {
               {t("createMedia.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}
@@ -291,7 +279,7 @@ const CreateMedia = () => {
                   : t("createMedia.form.selectCategory")}
               </option>
               {categories.map((cat) => (
-                <option key={cat._id} value={cat._id}>
+                <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
               ))}
@@ -308,13 +296,10 @@ const CreateMedia = () => {
           {preview && media.type === "photo" && (
             <img src={preview} alt="preview" className="cm-file-preview" />
           )}
-
           {preview && media.type === "video" && (
             <video src={preview} controls className="cm-video-preview" />
           )}
-
           {preview && media.type === "audio" && <audio src={preview} controls />}
-
           {preview && media.type === "document" && (
             <div className="cm-pdf-frame-wrap">
               <iframe src={preview} title="PDF preview" className="cm-pdf-frame" />

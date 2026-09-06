@@ -44,9 +44,10 @@ const CreateChurchStory = () => {
             (l) => l.code?.toLowerCase() === "en" || l.name?.toLowerCase() === "english"
           );
 
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
           setStory((prev) => ({
             ...prev,
-            language: prev.language || (englishLang || langs[0])._id,
+            language: prev.language || (englishLang || langs[0]).id,
           }));
         }
       } catch (err) {
@@ -139,7 +140,7 @@ const CreateChurchStory = () => {
         leaderRole: "",
         range: "",
         servedBy: "",
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
         file: null,
       });
 
@@ -208,7 +209,7 @@ const CreateChurchStory = () => {
               {t("createChurchStory.languageSelectPlaceholder")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

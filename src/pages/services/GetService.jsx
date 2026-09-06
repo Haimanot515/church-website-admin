@@ -37,8 +37,9 @@ const GetService = () => {
 
   // --- Edit: redirect to the UpdateService page (matches the
   // "services/update/:id" route registered in App.jsx) ---
+  // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
   const handleEditClick = (service) => {
-    navigate(`/admin/services/update/${service._id}`);
+    navigate(`/admin/services/update/${service.id}`);
   };
 
   // --- Delete ---
@@ -52,7 +53,7 @@ const GetService = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setServices((prev) => prev.filter((s) => s._id !== id));
+      setServices((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       alert(err.response?.data?.message || t("getService.errors.delete"));
     } finally {
@@ -65,12 +66,12 @@ const GetService = () => {
 
     try {
       const res = await API.put(
-        `/services/${service._id}`,
+        `/services/${service.id}`,
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setServices((prev) => prev.map((s) => (s._id === service._id ? res.data : s)));
+      setServices((prev) => prev.map((s) => (s.id === service.id ? res.data : s)));
     } catch (err) {
       alert(err.response?.data?.message || t("getService.errors.updateStatus"));
     }
@@ -88,7 +89,7 @@ const GetService = () => {
       ) : (
         <div className="ms-list">
           {services.map((service) => (
-            <div key={service._id} className="ms-card">
+            <div key={service.id} className="ms-card">
               <div>
                 <h3 className="ms-card-title">{service.title}</h3>
                 <p className="ms-card-meta">
@@ -129,10 +130,10 @@ const GetService = () => {
                 <button
                   type="button"
                   className="ms-btn ms-btn-delete"
-                  onClick={() => handleDelete(service._id)}
-                  disabled={deletingId === service._id}
+                  onClick={() => handleDelete(service.id)}
+                  disabled={deletingId === service.id}
                 >
-                  {deletingId === service._id
+                  {deletingId === service.id
                     ? t("getService.actions.deleting")
                     : t("getService.actions.delete")}
                 </button>

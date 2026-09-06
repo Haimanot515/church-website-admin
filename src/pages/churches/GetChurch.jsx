@@ -67,7 +67,8 @@ const GetChurch = () => {
       });
 
       // Remove locally instead of refetching everything
-      setChurches((prev) => prev.filter((c) => c._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setChurches((prev) => prev.filter((c) => c.id !== id));
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || t("deleteErrorMessage"));
@@ -77,7 +78,8 @@ const GetChurch = () => {
   };
 
   const startEdit = (c) => {
-    setEditingId(c._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(c.id);
     setEditForm({
       churchName: c.churchName || "",
       description: c.description || "",
@@ -149,7 +151,8 @@ const GetChurch = () => {
       const updated = res.data.church || res.data;
 
       // Patch it in place instead of refetching the whole list
-      setChurches((prev) => prev.map((c) => (c._id === id ? updated : c)));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setChurches((prev) => prev.map((c) => (c.id === id ? updated : c)));
 
       cancelEdit();
     } catch (err) {
@@ -216,13 +219,13 @@ const GetChurch = () => {
 
         <div className="getChurch-list">
           {churches
-            .filter((c) => !editingId || c._id === editingId)
+            .filter((c) => !editingId || c.id === editingId)
             .map((c) => {
-            const isEditing = editingId === c._id;
+            const isEditing = editingId === c.id;
 
             if (isEditing) {
               return (
-                <div key={c._id} className="getChurch-row getChurch-row--editing">
+                <div key={c.id} className="getChurch-row getChurch-row--editing">
                   {editError && <p className="getChurch-error">{editError}</p>}
 
                   <label className="getChurch-label">{t("languageLabel")}</label>
@@ -232,12 +235,12 @@ const GetChurch = () => {
                       : t("languageUnknown")}
                   </div>
 
-                  <label className="getChurch-label" htmlFor={`ec-name-${c._id}`}>
+                  <label className="getChurch-label" htmlFor={`ec-name-${c.id}`}>
                     {t("churchNameLabel")}
                     <span className="getChurch-required"> *</span>
                   </label>
                   <input
-                    id={`ec-name-${c._id}`}
+                    id={`ec-name-${c.id}`}
                     type="text"
                     name="churchName"
                     value={editForm.churchName}
@@ -246,12 +249,12 @@ const GetChurch = () => {
                     className="getChurch-input"
                   />
 
-                  <label className="getChurch-label" htmlFor={`ec-desc-${c._id}`}>
+                  <label className="getChurch-label" htmlFor={`ec-desc-${c.id}`}>
                     {t("descriptionLabel")}
                     <span className="getChurch-required"> *</span>
                   </label>
                   <textarea
-                    id={`ec-desc-${c._id}`}
+                    id={`ec-desc-${c.id}`}
                     name="description"
                     value={editForm.description}
                     onChange={handleEditChange}
@@ -260,12 +263,12 @@ const GetChurch = () => {
                     className="getChurch-textarea"
                   />
 
-                  <label className="getChurch-label" htmlFor={`ec-address-${c._id}`}>
+                  <label className="getChurch-label" htmlFor={`ec-address-${c.id}`}>
                     {t("addressLabel")}
                     <span className="getChurch-optional"> ({t("optional")})</span>
                   </label>
                   <input
-                    id={`ec-address-${c._id}`}
+                    id={`ec-address-${c.id}`}
                     type="text"
                     name="address"
                     value={editForm.address}
@@ -275,12 +278,12 @@ const GetChurch = () => {
 
                   <div className="getChurch-row2col">
                     <div className="getChurch-col">
-                      <label className="getChurch-label" htmlFor={`ec-days-${c._id}`}>
+                      <label className="getChurch-label" htmlFor={`ec-days-${c.id}`}>
                         {t("serviceDaysLabel")}
                         <span className="getChurch-optional"> ({t("optional")})</span>
                       </label>
                       <input
-                        id={`ec-days-${c._id}`}
+                        id={`ec-days-${c.id}`}
                         type="text"
                         name="serviceDays"
                         value={editForm.serviceDays}
@@ -290,12 +293,12 @@ const GetChurch = () => {
                     </div>
 
                     <div className="getChurch-col">
-                      <label className="getChurch-label" htmlFor={`ec-time-${c._id}`}>
+                      <label className="getChurch-label" htmlFor={`ec-time-${c.id}`}>
                         {t("serviceTimeLabel")}
                         <span className="getChurch-optional"> ({t("optional")})</span>
                       </label>
                       <input
-                        id={`ec-time-${c._id}`}
+                        id={`ec-time-${c.id}`}
                         type="text"
                         name="serviceTime"
                         value={editForm.serviceTime}
@@ -305,11 +308,11 @@ const GetChurch = () => {
                     </div>
                   </div>
 
-                  <label className="getChurch-fileLabel" htmlFor={`ec-image-${c._id}`}>
+                  <label className="getChurch-fileLabel" htmlFor={`ec-image-${c.id}`}>
                     {t("uploadImageLabel")}
                     <span className="getChurch-optional"> ({t("optional")})</span>
                     <input
-                      id={`ec-image-${c._id}`}
+                      id={`ec-image-${c.id}`}
                       type="file"
                       accept="image/*"
                       onChange={handleEditFileChange}
@@ -361,7 +364,7 @@ const GetChurch = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleEditSave(c._id)}
+                      onClick={() => handleEditSave(c.id)}
                       disabled={saving}
                       className="getChurch-submitButton"
                     >
@@ -373,7 +376,7 @@ const GetChurch = () => {
             }
 
             return (
-              <div key={c._id} className="getChurch-row">
+              <div key={c.id} className="getChurch-row">
                 <div className="getChurch-info">
                   {c.image && (
                     <img src={c.image} alt={c.churchName} className="getChurch-thumb" />
@@ -426,11 +429,11 @@ const GetChurch = () => {
                     {t("editButton")}
                   </button>
                   <button
-                    onClick={() => handleDelete(c._id, c.churchName)}
-                    disabled={deletingId === c._id}
+                    onClick={() => handleDelete(c.id, c.churchName)}
+                    disabled={deletingId === c.id}
                     className="getChurch-deleteButton"
                   >
-                    {deletingId === c._id ? t("deletingButton") : t("deleteButton")}
+                    {deletingId === c.id ? t("deletingButton") : t("deleteButton")}
                   </button>
                 </div>
               </div>

@@ -43,10 +43,11 @@ const CreateService = () => {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
 
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
         if (res.data?.length) {
           setService((prev) => ({
             ...prev,
-            language: prev.language || res.data[0]._id,
+            language: prev.language || res.data[0].id,
           }));
         }
       } catch (err) {
@@ -116,7 +117,7 @@ const CreateService = () => {
         day: "",
         time: "",
         category: "Other",
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
         location: "",
         isFeatured: false,
         image: null,
@@ -144,7 +145,7 @@ const CreateService = () => {
               {t("createService.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

@@ -48,7 +48,8 @@ const GetSubscribers = () => {
         params: { email },
       });
 
-      setSubscribers((prev) => prev.filter((s) => s._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setSubscribers((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.msg || t("getSubscribers.errors.unsubscribe"));
@@ -76,7 +77,7 @@ const GetSubscribers = () => {
 
         <div className="gs-list">
           {subscribers.map((s) => (
-            <div key={s._id} className="gs-row">
+            <div key={s.id} className="gs-row">
               <div className="gs-row-text">
                 <strong>{s.email}</strong>
                 <div className="gs-subscribed-date">
@@ -88,7 +89,7 @@ const GetSubscribers = () => {
 
               <button
                 className="gs-btn-unsubscribe"
-                onClick={() => handleUnsubscribe(s._id, s.email)}
+                onClick={() => handleUnsubscribe(s.id, s.email)}
                 disabled={removingEmail === s.email}
               >
                 {removingEmail === s.email

@@ -57,12 +57,13 @@ const ChatWindow = ({ thread }) => {
 
   // Load messages when thread changes
   useEffect(() => {
-    if (!thread?._id) return;
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    if (!thread?.id) return;
 
     const fetchMessages = async () => {
       setLoading(true);
       try {
-        const res = await API.get(`/admin/messages/${thread._id}?limit=100`);
+        const res = await API.get(`/admin/messages/${thread.id}?limit=100`);
         setMessages(res.data.messages || []);
         setThreadData(res.data.thread || null);
       } catch (err) {
@@ -104,7 +105,8 @@ const ChatWindow = ({ thread }) => {
 
   const sendMessage = async () => {
     if (!text.trim() || loading) return;
-    if (!thread?._id) {
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    if (!thread?.id) {
       console.warn("No thread selected");
       return;
     }
@@ -112,7 +114,7 @@ const ChatWindow = ({ thread }) => {
     const clientId = Date.now().toString();
 
     const optimisticMsg = {
-      threadId: thread._id,
+      threadId: thread.id,
       message: text,
       clientId,
       createdAt: new Date().toISOString(),
@@ -129,7 +131,7 @@ const ChatWindow = ({ thread }) => {
       setLoading(true);
 
       const res = await API.post("/admin/reply", {
-        threadId: thread._id,
+        threadId: thread.id,
         message: optimisticMsg.message,
         clientId,
       });
@@ -298,9 +300,10 @@ const ChatWindow = ({ thread }) => {
       </div>
 
       <div ref={bodyRef} style={styles.body}>
-        {thread?._id ? (
+        {/* PostgreSQL/Prisma returns `id`, not MongoDB `_id` */}
+        {thread?.id ? (
           messages.map((msg, index) => (
-            <MessageBubble key={msg._id || index} msg={msg} onRetry={retryMessage} />
+            <MessageBubble key={msg.id || index} msg={msg} onRetry={retryMessage} />
           ))
         ) : (
           <div style={styles.emptyState}>{t("chatWindow.selectconversation")}</div>
@@ -314,11 +317,11 @@ const ChatWindow = ({ thread }) => {
           onChange={handleTextChange}
           placeholder={t("chatWindow.typemessage")}
           style={styles.textarea}
-          disabled={loading || !thread?._id}
+          disabled={loading || !thread?.id}
         />
         <button
           onClick={sendMessage}
-          disabled={!text.trim() || loading || !thread?._id}
+          disabled={!text.trim() || loading || !thread?.id}
           style={styles.button}
         >
           {t("chatWindow.send")}

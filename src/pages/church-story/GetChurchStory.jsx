@@ -68,7 +68,8 @@ const GetChurchStories = () => {
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (s) => {
-    setEditingId(s._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(s.id);
     setFormError("");
     setForm({
       title: s.title || "",
@@ -173,7 +174,8 @@ const GetChurchStories = () => {
         handleCancelEdit();
       }
 
-      setStories((prev) => prev.filter((s) => s._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setStories((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       console.log(err);
 
@@ -379,7 +381,7 @@ const GetChurchStories = () => {
 
                 <div className="gcsList">
                   {stories.map((s) => (
-                    <div key={s._id} className="gcsListItem">
+                    <div key={s.id} className="gcsListItem">
                       <div className="gcsItemMain">
                         {s.photo && (
                           <img src={s.photo} alt={s.title} className="gcsItemPhoto" />
@@ -412,11 +414,11 @@ const GetChurchStories = () => {
                         </button>
 
                         <button
-                          onClick={() => handleDelete(s._id, s.title)}
-                          disabled={deletingId === s._id}
+                          onClick={() => handleDelete(s.id, s.title)}
+                          disabled={deletingId === s.id}
                           className="gcsDeleteButton"
                         >
-                          {deletingId === s._id
+                          {deletingId === s.id
                             ? t("getChurchStories.deleting")
                             : t("getChurchStories.deleteButton")}
                         </button>

@@ -71,7 +71,7 @@ const GetHomeHero = () => {
     // Close any open delete-confirm panel first
     setPendingDeleteHero(null);
 
-    setEditingId(hero._id);
+    setEditingId(hero.id);
     setFormError("");
     setForm({
       title: hero.title || "",
@@ -154,7 +154,7 @@ const GetHomeHero = () => {
 
   const confirmDelete = async () => {
     if (!pendingDeleteHero) return;
-    const id = pendingDeleteHero._id;
+    const id = pendingDeleteHero.id;
 
     try {
       setDeletingId(id);
@@ -257,9 +257,9 @@ const GetHomeHero = () => {
               <button
                 className="hh-btn-danger"
                 onClick={confirmDelete}
-                disabled={deletingId === pendingDeleteHero?._id}
+                disabled={deletingId === pendingDeleteHero?.id}
               >
-                {deletingId === pendingDeleteHero?._id
+                {deletingId === pendingDeleteHero?.id
                   ? t("getHomeHero.buttons.deleting")
                   : t("getHomeHero.buttons.confirmDelete")}
               </button>
@@ -267,7 +267,7 @@ const GetHomeHero = () => {
               <button
                 className="hh-btn-secondary"
                 onClick={cancelDelete}
-                disabled={deletingId === pendingDeleteHero?._id}
+                disabled={deletingId === pendingDeleteHero?.id}
               >
                 {t("getHomeHero.buttons.cancel")}
               </button>
@@ -295,7 +295,7 @@ const GetHomeHero = () => {
                   </thead>
                   <tbody>
                     {heroes.map((hero) => (
-                      <tr key={hero._id}>
+                      <tr key={hero.id}>
                         <td className="hh-td">{hero.title}</td>
                         <td className="hh-td">
                           {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
@@ -309,9 +309,9 @@ const GetHomeHero = () => {
                             <button
                               className="hh-btn hh-btn-delete"
                               onClick={() => handleDeleteClick(hero)}
-                              disabled={deletingId === hero._id}
+                              disabled={deletingId === hero.id}
                             >
-                              {deletingId === hero._id
+                              {deletingId === hero.id
                                 ? t("getHomeHero.buttons.deleting")
                                 : t("getHomeHero.buttons.delete")}
                             </button>
@@ -326,7 +326,7 @@ const GetHomeHero = () => {
               {/* ===== Mobile/tablet card list (shown <= 820px via CSS) ===== */}
               <div className="hh-cards">
                 {heroes.map((hero) => (
-                  <div className="hh-card-item" key={hero._id}>
+                  <div className="hh-card-item" key={hero.id}>
                     <div className="hh-card-row">
                       <span className="hh-card-label">{t("getHomeHero.table.title")}</span>
                       <span className="hh-card-value">{hero.title}</span>
@@ -345,9 +345,9 @@ const GetHomeHero = () => {
                       <button
                         className="hh-btn hh-btn-delete"
                         onClick={() => handleDeleteClick(hero)}
-                        disabled={deletingId === hero._id}
+                        disabled={deletingId === hero.id}
                       >
-                        {deletingId === hero._id
+                        {deletingId === hero.id
                           ? t("getHomeHero.buttons.deleting")
                           : t("getHomeHero.buttons.delete")}
                       </button>

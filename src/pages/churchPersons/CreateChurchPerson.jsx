@@ -41,7 +41,8 @@ const CreateChurchPerson = () => {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
         if (res.data?.length) {
-          setPerson((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+          // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+          setPerson((prev) => ({ ...prev, language: prev.language || res.data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -112,7 +113,8 @@ const CreateChurchPerson = () => {
         description: "",
         role: "",
         category: "leader",
-        language: languages[0]?._id || "",
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+        language: languages[0]?.id || "",
         files: [],
       });
 
@@ -185,7 +187,7 @@ const CreateChurchPerson = () => {
               {t("selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

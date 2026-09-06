@@ -70,7 +70,8 @@ const GetChurchPerson = () => {
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (person) => {
-    setEditingId(person._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(person.id);
     setFormError("");
     setForm({
       name: person.name || "",
@@ -123,8 +124,9 @@ const GetChurchPerson = () => {
 
       setExistingPhotos(res.data.photos || []);
       // Keep the underlying list in sync too
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
       setPeople((prev) =>
-        prev.map((p) => (p._id === editingId ? { ...p, photos: res.data.photos } : p))
+        prev.map((p) => (p.id === editingId ? { ...p, photos: res.data.photos } : p))
       );
     } catch (err) {
       console.log(err);
@@ -175,11 +177,12 @@ const GetChurchPerson = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(person._id);
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setDeletingId(person.id);
 
-      await API.delete(`/church-persons/${person._id}`);
+      await API.delete(`/church-persons/${person.id}`);
 
-      if (editingId === person._id) {
+      if (editingId === person.id) {
         handleCancelEdit();
       }
 
@@ -405,7 +408,7 @@ const GetChurchPerson = () => {
                 </thead>
                 <tbody>
                   {people.map((person) => (
-                    <tr key={person._id}>
+                    <tr key={person.id}>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.photo")}>
                         {person.photos && person.photos.length > 0 ? (
                           <img
@@ -439,10 +442,10 @@ const GetChurchPerson = () => {
 
                           <button
                             onClick={() => handleDelete(person)}
-                            disabled={deletingId === person._id}
+                            disabled={deletingId === person.id}
                             className="getChurchPerson-deleteRowButton"
                           >
-                            {deletingId === person._id ? t("deletingButton") : t("deleteButton")}
+                            {deletingId === person.id ? t("deletingButton") : t("deleteButton")}
                           </button>
                         </div>
                       </td>

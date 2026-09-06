@@ -24,8 +24,9 @@ const CreateMissionVision = () => {
       try {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
         if (res.data?.length) {
-          setMissionVision((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+          setMissionVision((prev) => ({ ...prev, language: prev.language || res.data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -61,7 +62,7 @@ const CreateMissionVision = () => {
         title: "",
         desc: "",
         order: 0,
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
       });
     } catch (err) {
       console.log(err);
@@ -90,7 +91,7 @@ const CreateMissionVision = () => {
               {t("createMissionVision.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

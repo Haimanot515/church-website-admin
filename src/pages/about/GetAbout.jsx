@@ -65,7 +65,7 @@ const GetAbout = () => {
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (entry) => {
-    setEditingId(entry._id);
+    setEditingId(entry.id);
     setFormError("");
     setForm({
       title: entry.title || "",
@@ -262,7 +262,7 @@ const GetAbout = () => {
                   </thead>
                   <tbody>
                     {entries.map((entry) => (
-                      <tr key={entry._id}>
+                      <tr key={entry.id}>
                         <td data-label={t("getAbout.table.title")}>{entry.title}</td>
                         <td data-label={t("getAbout.table.churchLeader")}>{entry.churchLeader || "—"}</td>
                         <td data-label={t("getAbout.table.description")}>
@@ -285,10 +285,10 @@ const GetAbout = () => {
 
                             <button
                               className="ga-btn-delete"
-                              onClick={() => handleDelete(entry._id)}
-                              disabled={deletingId === entry._id}
+                              onClick={() => handleDelete(entry.id)}
+                              disabled={deletingId === entry.id}
                             >
-                              {deletingId === entry._id
+                              {deletingId === entry.id
                                 ? t("getAbout.actions.deleting")
                                 : t("getAbout.actions.delete")}
                             </button>

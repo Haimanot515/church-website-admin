@@ -137,7 +137,7 @@ const CreateCategory = () => {
                 : t("createCategory.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}

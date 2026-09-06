@@ -48,7 +48,8 @@ const GetLanguage = () => {
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (language) => {
-    setEditingId(language._id);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    setEditingId(language.id);
     setFormError("");
     setForm({
       name: language.name || "",
@@ -104,11 +105,12 @@ const GetLanguage = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(language._id);
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setDeletingId(language.id);
 
-      await API.delete(`/languages/${language._id}`);
+      await API.delete(`/languages/${language.id}`);
 
-      if (editingId === language._id) {
+      if (editingId === language.id) {
         handleCancelEdit();
       }
 
@@ -197,7 +199,7 @@ const GetLanguage = () => {
                 </thead>
                 <tbody>
                   {languages.map((lang) => (
-                    <tr key={lang._id}>
+                    <tr key={lang.id}>
                       <td data-label={t("getLanguage.table.name")}>{lang.name}</td>
                       <td data-label={t("getLanguage.table.code")}>
                         <span className="gl-code-badge">{lang.code}</span>
@@ -211,9 +213,9 @@ const GetLanguage = () => {
                           <button
                             className="gl-btn-delete"
                             onClick={() => handleDelete(lang)}
-                            disabled={deletingId === lang._id}
+                            disabled={deletingId === lang.id}
                           >
-                            {deletingId === lang._id
+                            {deletingId === lang.id
                               ? t("getLanguage.actions.deleting")
                               : t("getLanguage.actions.delete")}
                           </button>

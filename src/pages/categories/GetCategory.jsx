@@ -44,7 +44,6 @@ const GetCategory = () => {
         const res = await API.get("/languages");
         const langData = Array.isArray(res.data) ? res.data : res.data.languages;
         setLanguages(langData || []);
-
         if (langData && langData.length > 0) {
           setFilterLanguageCode(langData[0].code);
         }
@@ -70,11 +69,9 @@ const GetCategory = () => {
     try {
       setLoading(true);
       setError("");
-
       const res = await API.get("/categories", {
         headers: { "Accept-Language": languageCode },
       });
-
       setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
     } catch (err) {
       console.log(err);
@@ -84,14 +81,15 @@ const GetCategory = () => {
     }
   };
 
+  // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
   const getLanguageLabel = (languageId) => {
-    const match = languages.find((l) => l._id === languageId);
+    const match = languages.find((l) => l.id === languageId);
     return match ? `${match.name} (${match.code})` : "—";
   };
 
   // --- Edit (inline, no navigation) ---
   const handleEditClick = (category) => {
-    setEditingId(category._id);
+    setEditingId(category.id);
     setFormError("");
     setForm({
       name: category.name || "",
@@ -137,7 +135,6 @@ const GetCategory = () => {
 
     try {
       setSubmitting(true);
-
       await API.put(`/categories/${editingId}`, {
         name: form.name,
         slug: form.slug,
@@ -162,11 +159,11 @@ const GetCategory = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(category._id);
+      setDeletingId(category.id);
 
-      await API.delete(`/categories/${category._id}`);
+      await API.delete(`/categories/${category.id}`);
 
-      if (editingId === category._id) {
+      if (editingId === category.id) {
         handleCancelEdit();
       }
 
@@ -205,7 +202,7 @@ const GetCategory = () => {
               disabled={languagesLoading}
             >
               {languages.map((lang) => (
-                <option key={lang._id} value={lang.code}>
+                <option key={lang.id} value={lang.code}>
                   {lang.name} ({lang.code})
                 </option>
               ))}
@@ -256,7 +253,7 @@ const GetCategory = () => {
                   {t("getCategory.form.selectLanguage")}
                 </option>
                 {languages.map((lang) => (
-                  <option key={lang._id} value={lang._id}>
+                  <option key={lang.id} value={lang.id}>
                     {lang.name} ({lang.code})
                   </option>
                 ))}
@@ -299,7 +296,7 @@ const GetCategory = () => {
                 </thead>
                 <tbody>
                   {categories.map((cat) => (
-                    <tr key={cat._id}>
+                    <tr key={cat.id}>
                       <td data-label={t("getCategory.table.name")}>{cat.name}</td>
                       <td data-label={t("getCategory.table.slug", "Slug")}>
                         {cat.slug || (
@@ -315,13 +312,12 @@ const GetCategory = () => {
                           <button className="gc-btn-edit" onClick={() => handleEditClick(cat)}>
                             {t("getCategory.actions.edit")}
                           </button>
-
                           <button
                             className="gc-btn-delete"
                             onClick={() => handleDelete(cat)}
-                            disabled={deletingId === cat._id}
+                            disabled={deletingId === cat.id}
                           >
-                            {deletingId === cat._id
+                            {deletingId === cat.id
                               ? t("getCategory.actions.deleting")
                               : t("getCategory.actions.delete")}
                           </button>

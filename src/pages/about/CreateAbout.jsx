@@ -25,8 +25,9 @@ const CreateAbout = () => {
       try {
         const res = await API.get("/languages");
         setLanguages(res.data || []);
+        // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
         if (res.data?.length) {
-          setAbout((prev) => ({ ...prev, language: prev.language || res.data[0]._id }));
+          setAbout((prev) => ({ ...prev, language: prev.language || res.data[0].id }));
         }
       } catch (err) {
         console.log(err);
@@ -59,13 +60,11 @@ const CreateAbout = () => {
 
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("title", about.title);
       formData.append("churchLeader", about.churchLeader);
       formData.append("description", about.description);
       formData.append("language", about.language);
-
       if (about.image) {
         formData.append("image", about.image);
       }
@@ -76,15 +75,13 @@ const CreateAbout = () => {
       });
 
       alert(t("createAbout.successMessage"));
-
       setAbout({
         title: "",
         churchLeader: "",
         description: "",
-        language: languages[0]?._id || "",
+        language: languages[0]?.id || "",
         image: null,
       });
-
       setPreview(null);
     } catch (err) {
       console.log(err);
@@ -113,7 +110,7 @@ const CreateAbout = () => {
               {t("createAbout.form.selectLanguage")}
             </option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}
@@ -146,7 +143,6 @@ const CreateAbout = () => {
           />
 
           <input type="file" accept="image/*" onChange={handleFileChange} className="ca-file-input" />
-
           {preview && (
             <img src={preview} alt={t("createAbout.previewAlt")} className="ca-preview" />
           )}

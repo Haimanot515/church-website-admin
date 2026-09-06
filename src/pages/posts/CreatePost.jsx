@@ -5,7 +5,6 @@ import "./CreatePost.css";
 
 const CreatePost = () => {
   const { t } = useTranslation();
-
   const [post, setPost] = useState({
     title: "",
     description: "",
@@ -18,15 +17,12 @@ const CreatePost = () => {
     status: "draft",
     image: null,
   });
-
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-
   const [languages, setLanguages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   // Controls the initial fetch of languages — while true, the form is
   // hidden and a centered spinner is shown instead (matches CreateChurch).
   const [pageLoading, setPageLoading] = useState(true);
@@ -56,10 +52,9 @@ const CreatePost = () => {
       setCategories([]);
       return;
     }
-
-    const selectedLang = languages.find((l) => l._id === post.language);
+    // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+    const selectedLang = languages.find((l) => l.id === post.language);
     if (!selectedLang) return;
-
     const fetchCategoriesForLanguage = async () => {
       try {
         setCategoriesLoading(true);
@@ -74,14 +69,12 @@ const CreatePost = () => {
         setCategoriesLoading(false);
       }
     };
-
     fetchCategoriesForLanguage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post.language, languages]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
     if (name === "language") {
       // Changing language invalidates whatever category was selected,
       // since categories are scoped per language
@@ -92,7 +85,6 @@ const CreatePost = () => {
       }));
       return;
     }
-
     setPost({
       ...post,
       [name]: type === "checkbox" ? checked : value,
@@ -110,32 +102,27 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("title", post.title);
       formData.append("description", post.description);
       formData.append("content", post.content);
+      // These are now PostgreSQL UUIDs
       formData.append("category", post.category);
       formData.append("language", post.language);
       formData.append("isTrending", post.isTrending);
       formData.append("isFeatured", post.isFeatured);
       formData.append("isRecommended", post.isRecommended);
       formData.append("status", post.status);
-
       if (post.image) {
         formData.append("image", post.image);
       }
-
       // Auth header is already attached globally by the API interceptor
       await API.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       alert(t("createPost.createSuccess"));
-
       setPost({
         title: "",
         description: "",
@@ -148,7 +135,6 @@ const CreatePost = () => {
         status: "draft",
         image: null,
       });
-
       setPreview(null);
     } catch (err) {
       console.log(err);
@@ -179,12 +165,9 @@ const CreatePost = () => {
     <div className="cp-page">
       <div className="cp-card">
         <h2 className="cp-title">{t("createPost.heading")}</h2>
-
         {error && <p className="cp-error">{error}</p>}
-
         <form onSubmit={handleSubmit} className="cp-form">
           {/* ===== Required fields ===== */}
-
           {/* Language comes first among the required fields, since
               category options depend on which language is selected */}
           <label className="cp-label" htmlFor="cp-language">
@@ -201,7 +184,7 @@ const CreatePost = () => {
           >
             <option value="">{t("createPost.form.selectLanguage")}</option>
             {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
+              <option key={lang.id} value={lang.id}>
                 {lang.name} ({lang.code})
               </option>
             ))}
@@ -281,7 +264,7 @@ const CreatePost = () => {
                       : t("createPost.form.selectCategory")}
                   </option>
                   {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
+                    <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>
                   ))}
@@ -291,7 +274,6 @@ const CreatePost = () => {
           )}
 
           {/* ===== Optional fields ===== */}
-
           <label className="cp-fileLabel" htmlFor="cp-image">
             {t("createPost.form.uploadImageLabel")}
             <span className="cp-optional"> ({t("createPost.form.optional")})</span>
@@ -303,7 +285,6 @@ const CreatePost = () => {
               className="cp-fileInput"
             />
           </label>
-
           {preview && (
             <img src={preview} alt={t("createPost.form.imageAlt")} className="cp-file-preview" />
           )}
@@ -333,7 +314,6 @@ const CreatePost = () => {
             />
             {t("createPost.form.trending")}
           </label>
-
           <label className="cp-checkboxLabel">
             <input
               type="checkbox"
@@ -344,7 +324,6 @@ const CreatePost = () => {
             />
             {t("createPost.form.featured")}
           </label>
-
           <label className="cp-checkboxLabel">
             <input
               type="checkbox"

@@ -30,7 +30,7 @@ const ManageAssignments = () => {
 
   // "Unassign" = remove the assignment record entirely. There's no
   // PATCH route on the backend, only DELETE, so unassigning a
-  // user/church pairing means deleting that ChurchAssignment doc
+  // user/church pairing means deleting that ChurchAssignment record
   // (matches DELETE /api/churches/assignment/:id -> deleteAssignment).
   const handleUnassign = async (id, personLabel, churchLabel) => {
     const confirmed = window.confirm(
@@ -47,7 +47,8 @@ const ManageAssignments = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      setAssignments((prev) => prev.filter((a) => a._id !== id));
+      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+      setAssignments((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
       console.log(err);
       alert(err.response?.data?.message || "Failed to unassign");
@@ -105,7 +106,7 @@ const ManageAssignments = () => {
 
             return (
               <div
-                key={a._id}
+                key={a.id}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -152,8 +153,8 @@ const ManageAssignments = () => {
                 </div>
 
                 <button
-                  onClick={() => handleUnassign(a._id, personLabel, churchLabel)}
-                  disabled={unassigningId === a._id}
+                  onClick={() => handleUnassign(a.id, personLabel, churchLabel)}
+                  disabled={unassigningId === a.id}
                   style={{
                     padding: "8px 14px",
                     background: "#fee2e2",
@@ -163,7 +164,7 @@ const ManageAssignments = () => {
                     cursor: "pointer",
                   }}
                 >
-                  {unassigningId === a._id ? "Unassigning..." : "Unassign"}
+                  {unassigningId === a.id ? "Unassigning..." : "Unassign"}
                 </button>
               </div>
             );

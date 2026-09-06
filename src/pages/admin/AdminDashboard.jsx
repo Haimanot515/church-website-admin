@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 
-// Every number and list below is fetched from the backend — nothing here
-// is hardcoded placeholder content. Each entry maps to a real model/route
-// that already exists elsewhere in this admin panel.
 const CONTENT_CONFIG = [
   { key: "posts", to: "/admin/posts/view" },
   { key: "media", to: "/admin/media/view" },
@@ -20,9 +17,6 @@ const CONTENT_CONFIG = [
   { key: "users", to: "/admin/users/view" },
 ];
 
-// Shared cap for every "recent" list below (Posts, Promotions, Messages,
-// Subscribers) so each section pulls the same number of items and the
-// "Showing X of Y" labels stay consistent.
 const RECENT_LIMIT = 5;
 
 const QUICK_ACTIONS = [
@@ -37,9 +31,6 @@ const QUICK_ACTIONS = [
 const AdminDashboard = () => {
   const { t } = useTranslation();
 
-  // Greeting is based on Ethiopian time (Africa/Addis_Ababa), not the
-  // visitor's local browser time, since this is a church admin panel
-  // for a congregation there.
   const ethiopianHour = parseInt(
     new Intl.DateTimeFormat("en-US", {
       timeZone: "Africa/Addis_Ababa",
@@ -270,12 +261,6 @@ const AdminDashboard = () => {
           margin-bottom: 30px; flex-wrap: wrap; gap: 10px;
         }
 
-        /* ============================================================
-           RESPONSIVE + CENTERING (tablet and mobile)
-           Inline styles win specificity over plain classes, so these
-           use !important to reliably override them at these widths.
-           ============================================================ */
-
         @media (max-width: 900px) {
           .church-admin section { padding: 40px 0 !important; }
 
@@ -400,7 +385,7 @@ const AdminDashboard = () => {
           <p style={{ color: "var(--slate)" }}>{t("dashboard.recentPosts.none")}</p>
         ) : (
           recentPosts.map((p, i) => (
-            <div key={p._id} className="recent-post-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+            <div key={p.id} className="recent-post-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "24px", padding: "28px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "20px", flex: 1, minWidth: "260px" }}>
                 {p.imageUrl && (
                   <img
@@ -461,7 +446,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
             {recentPromotions.map((promo) => (
-              <div key={promo._id} className="promo-card" style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
+              <div key={promo.id} className="promo-card" style={{ borderTop: "2px solid var(--deep-red)", paddingTop: "18px" }}>
                 {promo.photo && (
                   <img
                     src={promo.photo}
@@ -495,7 +480,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "20px" }}>
             {recentMedia.map((item) => (
-              <div key={item._id} className="media-card">
+              <div key={item.id} className="media-card">
                 {item.mediaType === "photo" && item.mediaUrl ? (
                   <img
                     src={item.mediaUrl}
@@ -538,7 +523,7 @@ const AdminDashboard = () => {
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "30px" }}>
             {recentThreads.map((th) => (
-              <div key={th._id} className="thread-card" style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
+              <div key={th.id} className="thread-card" style={{ borderTop: "2px solid var(--navy)", paddingTop: "18px" }}>
                 <p style={{ fontSize: "1rem", fontWeight: 700, margin: "0 0 6px 0", color: "var(--navy)" }}>{th.userName}</p>
                 <p style={{ fontSize: "1rem", color: "var(--slate)", lineHeight: 1.5, margin: "0 0 8px 0" }}>{th.lastMessage}</p>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -574,7 +559,7 @@ const AdminDashboard = () => {
           <p style={{ color: "var(--slate)" }}>{t("dashboard.recentSubscribers.none")}</p>
         ) : (
           recentSubscribers.map((s, i) => (
-            <div key={s._id} className="subscriber-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
+            <div key={s.id} className="subscriber-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", padding: "18px 0", borderTop: i === 0 ? "1px solid rgba(28,58,82,0.12)" : "none", borderBottom: "1px solid rgba(28,58,82,0.12)", flexWrap: "wrap" }}>
               <div style={{ fontSize: "1.05rem", color: "var(--navy-deep)", fontWeight: 700 }}>{s.email}</div>
               <div style={{ fontSize: "0.95rem", color: "var(--slate)", flexShrink: 0 }}>
                 {s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString() : "—"}
