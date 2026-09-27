@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreatePromotion.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreatePromotion = () => {
   const { t } = useTranslation();
@@ -59,6 +65,18 @@ const CreatePromotion = () => {
       return;
     }
 
+    // RichTextField is a contenteditable, not an <input>/<textarea>, so it
+    // can't rely on the native `required` attribute — check the plain-text
+    // content of each converted field instead.
+    if (!stripHtml(promotion.title)) {
+      setError(t("createPromotion.errors.titleRequired"));
+      return;
+    }
+    if (!stripHtml(promotion.description)) {
+      setError(t("createPromotion.errors.descriptionRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -100,57 +118,65 @@ const CreatePromotion = () => {
 
   return (
     <div className="cp-page">
-      <div className="cp-card">
-        <h2>{t("createPromotion.heading")}</h2>
+      <div className="cp-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2>{t("createPromotion.heading")}</h2>
 
-        {error && <p className="cp-error">{error}</p>}
+            {error && <p className="cp-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="cp-form">
-          <select
-            name="language"
-            value={promotion.language}
-            onChange={handleChange}
-            required
-            className="cp-select"
-          >
-            <option value="" disabled>
-              {t("createPromotion.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="cp-form">
+              <select
+                name="language"
+                value={promotion.language}
+                onChange={handleChange}
+                required
+                className="cp-select"
+              >
+                <option value="" disabled>
+                  {t("createPromotion.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createPromotion.form.titlePlaceholder")}
-            value={promotion.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                id="cp-title"
+                value={promotion.title}
+                onChange={(html) => setPromotion((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createPromotion.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="description"
-            placeholder={t("createPromotion.form.descriptionPlaceholder")}
-            rows="6"
-            value={promotion.description}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                id="cp-description"
+                value={promotion.description}
+                onChange={(html) => setPromotion((prev) => ({ ...prev, description: html }))}
+                placeholder={t("createPromotion.form.descriptionPlaceholder")}
+                minHeight="140px"
+              />
 
-          <input type="file" accept="image/*" onChange={handleFileChange} className="cp-file-input" />
+              <input type="file" accept="image/*" onChange={handleFileChange} className="cp-file-input" />
 
-          {preview && (
-            <img src={preview} alt={t("createPromotion.previewAlt")} className="cp-preview" />
-          )}
+              {preview && (
+                <img src={preview} alt={t("createPromotion.previewAlt")} className="cp-preview" />
+              )}
 
-          <button type="submit" disabled={loading} className="cp-btn-primary">
-            {loading ? t("createPromotion.form.creating") : t("createPromotion.form.createButton")}
-          </button>
-        </form>
+              <button type="submit" disabled={loading} className="cp-btn-primary">
+                {loading ? t("createPromotion.form.creating") : t("createPromotion.form.createButton")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetMissionVision.css";
+
+// Strips HTML tags for the plain-text read-only view
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const GetMissionVision = () => {
   const { t } = useTranslation();
@@ -112,66 +119,74 @@ const GetMissionVision = () => {
               return (
                 <div key={entry.id} className="gmv-row">
                   {isEditing ? (
-                    <div className="gmv-edit-form">
-                      <select
-                        name="language"
-                        value={editData.language}
-                        onChange={handleEditChange}
-                        className="gmv-select"
-                      >
-                        {languages.map((lang) => (
-                          <option key={lang.id} value={lang.id}>
-                            {lang.name} ({lang.code})
-                          </option>
-                        ))}
-                      </select>
+                    <div className="gmv-edit-form rte-page-shell">
+                      <RichTextProvider>
+                      <div className="rte-editor-shell">
+                        <RichTextToolbar />
+                        <RichTextContextMenu />
+                        <div className="rte-scroll-area">
+                          <select
+                            name="language"
+                            value={editData.language}
+                            onChange={handleEditChange}
+                            className="gmv-select"
+                          >
+                            {languages.map((lang) => (
+                              <option key={lang.id} value={lang.id}>
+                                {lang.name} ({lang.code})
+                              </option>
+                            ))}
+                          </select>
 
-                      <select
-                        name="type"
-                        value={editData.type}
-                        onChange={handleEditChange}
-                        className="gmv-select"
-                      >
-                        <option value="mission">{t("getMissionVision.typeMission")}</option>
-                        <option value="vision">{t("getMissionVision.typeVision")}</option>
-                      </select>
+                          <select
+                            name="type"
+                            value={editData.type}
+                            onChange={handleEditChange}
+                            className="gmv-select"
+                          >
+                            <option value="mission">{t("getMissionVision.typeMission")}</option>
+                            <option value="vision">{t("getMissionVision.typeVision")}</option>
+                          </select>
 
-                      <input
-                        type="text"
-                        name="title"
-                        value={editData.title}
-                        onChange={handleEditChange}
-                        placeholder={t("getMissionVision.form.titlePlaceholder")}
-                      />
+                          <RichTextField
+                            value={editData.title}
+                            onChange={(html) => setEditData((prev) => ({ ...prev, title: html }))}
+                            placeholder={t("getMissionVision.form.titlePlaceholder")}
+                            minHeight="44px"
+                            toolbar="minimal"
+                            autoFocus
+                          />
 
-                      <textarea
-                        name="desc"
-                        value={editData.desc}
-                        onChange={handleEditChange}
-                        rows="4"
-                        placeholder={t("getMissionVision.form.descPlaceholder")}
-                      />
+                          <RichTextField
+                            value={editData.desc}
+                            onChange={(html) => setEditData((prev) => ({ ...prev, desc: html }))}
+                            placeholder={t("getMissionVision.form.descPlaceholder")}
+                            minHeight="140px"
+                          />
 
-                      <input
-                        type="number"
-                        name="order"
-                        value={editData.order}
-                        onChange={handleEditChange}
-                        placeholder={t("getMissionVision.form.orderPlaceholder")}
-                      />
+                          <input
+                            type="number"
+                            name="order"
+                            value={editData.order}
+                            onChange={handleEditChange}
+                            placeholder={t("getMissionVision.form.orderPlaceholder")}
+                          />
 
-                      <div className="gmv-edit-actions">
-                        <button
-                          className="gmv-btn-save"
-                          disabled={saving}
-                          onClick={() => handleSave(entry.id)}
-                        >
-                          {saving ? t("getMissionVision.saving") : t("getMissionVision.save")}
-                        </button>
-                        <button className="gmv-btn-cancel" onClick={cancelEdit}>
-                          {t("getMissionVision.cancel")}
-                        </button>
+                          <div className="gmv-edit-actions">
+                            <button
+                              className="gmv-btn-save"
+                              disabled={saving}
+                              onClick={() => handleSave(entry.id)}
+                            >
+                              {saving ? t("getMissionVision.saving") : t("getMissionVision.save")}
+                            </button>
+                            <button className="gmv-btn-cancel" onClick={cancelEdit}>
+                              {t("getMissionVision.cancel")}
+                            </button>
+                          </div>
+                        </div>
                       </div>
+                      </RichTextProvider>
                     </div>
                   ) : (
                     <>
@@ -179,8 +194,8 @@ const GetMissionVision = () => {
                         <span className="gmv-type-badge">{entry.type}</span>
                         <span className="gmv-order">#{entry.order}</span>
                       </div>
-                      <h3>{entry.title}</h3>
-                      <p>{entry.desc}</p>
+                      <h3>{stripHtml(entry.title) || "—"}</h3>
+                      <p>{stripHtml(entry.desc) || "—"}</p>
                       <div className="gmv-row-actions">
                         <button className="gmv-btn-edit" onClick={() => startEdit(entry)}>
                           {t("getMissionVision.edit")}

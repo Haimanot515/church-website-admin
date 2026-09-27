@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetLanguage.css";
+
+// Strips HTML tags for plain-text display/validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   name: "",
@@ -78,6 +85,13 @@ const GetLanguage = () => {
 
     setFormError("");
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(form.name)) {
+      setFormError(t("getLanguage.errors.nameRequired"));
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -100,7 +114,7 @@ const GetLanguage = () => {
   // --- Delete ---
   const handleDelete = async (language) => {
     const confirmed = window.confirm(
-      t("getLanguage.confirmDelete", { name: language.name, code: language.code })
+      t("getLanguage.confirmDelete", { name: stripHtml(language.name), code: language.code })
     );
     if (!confirmed) return;
 
@@ -139,46 +153,54 @@ const GetLanguage = () => {
         {error && <p className="gl-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gl-edit-panel">
-            <h3>{t("getLanguage.editHeading")}</h3>
+          <div ref={editPanelRef} className="gl-edit-panel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3>{t("getLanguage.editHeading")}</h3>
 
-            {formError && <p className="gl-error">{formError}</p>}
+                {formError && <p className="gl-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="gl-form">
-              <input
-                type="text"
-                name="name"
-                placeholder={t("getLanguage.form.namePlaceholder")}
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
+                <form onSubmit={handleSubmit} className="gl-form">
+                  <RichTextField
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder={t("getLanguage.form.namePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <input
-                type="text"
-                name="code"
-                placeholder={t("getLanguage.form.codePlaceholder")}
-                value={form.code}
-                onChange={handleChange}
-                required
-                className="gl-code-input"
-              />
+                  <input
+                    type="text"
+                    name="code"
+                    placeholder={t("getLanguage.form.codePlaceholder")}
+                    value={form.code}
+                    onChange={handleChange}
+                    required
+                    className="gl-code-input"
+                  />
 
-              <div className="gl-form-actions">
-                <button type="submit" disabled={submitting} className="gl-btn-primary">
-                  {submitting ? t("getLanguage.form.saving") : t("getLanguage.form.saveChanges")}
-                </button>
+                  <div className="gl-form-actions">
+                    <button type="submit" disabled={submitting} className="gl-btn-primary">
+                      {submitting ? t("getLanguage.form.saving") : t("getLanguage.form.saveChanges")}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="gl-btn-cancel"
-                >
-                  {t("getLanguage.form.cancel")}
-                </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="gl-btn-cancel"
+                    >
+                      {t("getLanguage.form.cancel")}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -200,7 +222,7 @@ const GetLanguage = () => {
                 <tbody>
                   {languages.map((lang) => (
                     <tr key={lang.id}>
-                      <td data-label={t("getLanguage.table.name")}>{lang.name}</td>
+                      <td data-label={t("getLanguage.table.name")}>{stripHtml(lang.name)}</td>
                       <td data-label={t("getLanguage.table.code")}>
                         <span className="gl-code-badge">{lang.code}</span>
                       </td>

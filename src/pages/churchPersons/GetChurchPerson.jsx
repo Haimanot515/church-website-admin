@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchPerson.css";
 
 const CATEGORY_OPTIONS = [
@@ -17,6 +21,9 @@ const emptyForm = {
   category: "leader",
   files: [],
 };
+
+// Strips HTML tags for plain-text display/validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const GetChurchPerson = () => {
   const { t } = useTranslation("translation", { keyPrefix: "getChurchPerson" });
@@ -142,6 +149,13 @@ const GetChurchPerson = () => {
 
     setFormError("");
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(form.name)) {
+      setFormError(t("nameRequiredError"));
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -173,7 +187,7 @@ const GetChurchPerson = () => {
 
   // --- Delete ---
   const handleDelete = async (person) => {
-    const confirmed = window.confirm(t("deleteConfirm", { name: person.name }));
+    const confirmed = window.confirm(t("deleteConfirm", { name: stripHtml(person.name) }));
     if (!confirmed) return;
 
     try {
@@ -243,143 +257,148 @@ const GetChurchPerson = () => {
         {error && <p className="getChurchPerson-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="getChurchPerson-editPanel">
-            <h3 className="getChurchPerson-editTitle">{t("editTitle")}</h3>
+          <div ref={editPanelRef} className="getChurchPerson-editPanel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3 className="getChurchPerson-editTitle">{t("editTitle")}</h3>
 
-            {formError && <p className="getChurchPerson-error">{formError}</p>}
+                {formError && <p className="getChurchPerson-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="getChurchPerson-form">
-              <label className="getChurchPerson-label" htmlFor="gcp-name">
-                {t("nameLabel")}
-                <span className="getChurchPerson-required"> *</span>
-              </label>
-              <input
-                id="gcp-name"
-                type="text"
-                name="name"
-                placeholder={t("namePlaceholder")}
-                value={form.name}
-                onChange={handleChange}
-                required
-                className="getChurchPerson-input"
-              />
+                <form onSubmit={handleSubmit} className="getChurchPerson-form">
+                  <label className="getChurchPerson-label" htmlFor="gcp-name">
+                    {t("nameLabel")}
+                    <span className="getChurchPerson-required"> *</span>
+                  </label>
+                  <RichTextField
+                    id="gcp-name"
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder={t("namePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <label className="getChurchPerson-label" htmlFor="gcp-category">
-                {t("categoryLabel")}
-                <span className="getChurchPerson-required"> *</span>
-              </label>
-              <select
-                id="gcp-category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                className="getChurchPerson-select"
-              >
-                {CATEGORY_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {t(opt.labelKey)}
-                  </option>
-                ))}
-              </select>
+                  <label className="getChurchPerson-label" htmlFor="gcp-category">
+                    {t("categoryLabel")}
+                    <span className="getChurchPerson-required"> *</span>
+                  </label>
+                  <select
+                    id="gcp-category"
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    className="getChurchPerson-select"
+                  >
+                    {CATEGORY_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {t(opt.labelKey)}
+                      </option>
+                    ))}
+                  </select>
 
-              <label className="getChurchPerson-label" htmlFor="gcp-role">
-                {t("roleLabel")}
-                <span className="getChurchPerson-optional"> ({t("optional")})</span>
-              </label>
-              <input
-                id="gcp-role"
-                type="text"
-                name="role"
-                placeholder={t("rolePlaceholder")}
-                value={form.role}
-                onChange={handleChange}
-                className="getChurchPerson-input"
-              />
+                  <label className="getChurchPerson-label" htmlFor="gcp-role">
+                    {t("roleLabel")}
+                    <span className="getChurchPerson-optional"> ({t("optional")})</span>
+                  </label>
+                  <input
+                    id="gcp-role"
+                    type="text"
+                    name="role"
+                    placeholder={t("rolePlaceholder")}
+                    value={form.role}
+                    onChange={handleChange}
+                    className="getChurchPerson-input"
+                  />
 
-              <label className="getChurchPerson-label" htmlFor="gcp-description">
-                {t("descriptionLabel")}
-                <span className="getChurchPerson-optional"> ({t("optional")})</span>
-              </label>
-              <textarea
-                id="gcp-description"
-                name="description"
-                placeholder={t("descriptionPlaceholder")}
-                rows="4"
-                value={form.description}
-                onChange={handleChange}
-                className="getChurchPerson-textarea"
-              />
+                  <label className="getChurchPerson-label" htmlFor="gcp-description">
+                    {t("descriptionLabel")}
+                    <span className="getChurchPerson-optional"> ({t("optional")})</span>
+                  </label>
+                  <RichTextField
+                    id="gcp-description"
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder={t("descriptionPlaceholder")}
+                    minHeight="140px"
+                  />
 
-              {existingPhotos.length > 0 && (
-                <div>
-                  <p className="getChurchPerson-hint">{t("currentPhotosHint")}</p>
-                  <div className="getChurchPerson-photoGrid">
-                    {existingPhotos.map((url) => (
-                      <div key={url} className="getChurchPerson-photoItem">
+                  {existingPhotos.length > 0 && (
+                    <div>
+                      <p className="getChurchPerson-hint">{t("currentPhotosHint")}</p>
+                      <div className="getChurchPerson-photoGrid">
+                        {existingPhotos.map((url) => (
+                          <div key={url} className="getChurchPerson-photoItem">
+                            <img
+                              src={url}
+                              alt={t("existingPhotoAlt")}
+                              className="getChurchPerson-photo"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveExistingPhoto(url)}
+                              disabled={removingPhoto === url}
+                              className="getChurchPerson-removeButton"
+                            >
+                              {removingPhoto === url ? t("removingButton") : t("removeButton")}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <label className="getChurchPerson-fileLabel" htmlFor="gcp-photos">
+                    {t("addPhotosHint")}
+                    <span className="getChurchPerson-optional"> ({t("optional")})</span>
+                    <input
+                      id="gcp-photos"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleFileChange}
+                      className="getChurchPerson-fileInput"
+                    />
+                  </label>
+
+                  {previews.length > 0 && (
+                    <div className="getChurchPerson-photoGrid">
+                      {previews.map((src, i) => (
                         <img
-                          src={url}
-                          alt={t("existingPhotoAlt")}
+                          key={i}
+                          src={src}
+                          alt={t("previewAlt", { index: i })}
                           className="getChurchPerson-photo"
                         />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveExistingPhoto(url)}
-                          disabled={removingPhoto === url}
-                          className="getChurchPerson-removeButton"
-                        >
-                          {removingPhoto === url ? t("removingButton") : t("removeButton")}
-                        </button>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="getChurchPerson-formActions">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="getChurchPerson-saveButton"
+                    >
+                      {submitting ? t("savingButton") : t("saveButton")}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="getChurchPerson-cancelButton"
+                    >
+                      {t("cancelButton")}
+                    </button>
                   </div>
-                </div>
-              )}
-
-              <label className="getChurchPerson-fileLabel" htmlFor="gcp-photos">
-                {t("addPhotosHint")}
-                <span className="getChurchPerson-optional"> ({t("optional")})</span>
-                <input
-                  id="gcp-photos"
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleFileChange}
-                  className="getChurchPerson-fileInput"
-                />
-              </label>
-
-              {previews.length > 0 && (
-                <div className="getChurchPerson-photoGrid">
-                  {previews.map((src, i) => (
-                    <img
-                      key={i}
-                      src={src}
-                      alt={t("previewAlt", { index: i })}
-                      className="getChurchPerson-photo"
-                    />
-                  ))}
-                </div>
-              )}
-
-              <div className="getChurchPerson-formActions">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="getChurchPerson-saveButton"
-                >
-                  {submitting ? t("savingButton") : t("saveButton")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="getChurchPerson-cancelButton"
-                >
-                  {t("cancelButton")}
-                </button>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -413,7 +432,7 @@ const GetChurchPerson = () => {
                         {person.photos && person.photos.length > 0 ? (
                           <img
                             src={person.photos[0]}
-                            alt={person.name}
+                            alt={stripHtml(person.name)}
                             className="getChurchPerson-avatar"
                           />
                         ) : (
@@ -421,7 +440,7 @@ const GetChurchPerson = () => {
                         )}
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.name")}>
-                        {person.name}
+                        {stripHtml(person.name)}
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.category")}>
                         <span className={categoryBadgeClass(person.category)}>

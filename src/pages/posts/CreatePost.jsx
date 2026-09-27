@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreatePost.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreatePost = () => {
   const { t } = useTranslation();
@@ -102,6 +108,23 @@ const CreatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // RichTextField is a contenteditable, not an <input>/<textarea>, so it
+    // can't rely on the native `required` attribute — check the plain-text
+    // content of each converted field instead.
+    if (!stripHtml(post.title)) {
+      setError(t("createPost.errors.titleRequired"));
+      return;
+    }
+    if (!stripHtml(post.description)) {
+      setError(t("createPost.errors.descriptionRequired"));
+      return;
+    }
+    if (!stripHtml(post.content)) {
+      setError(t("createPost.errors.contentRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
       const formData = new FormData();
@@ -163,186 +186,187 @@ const CreatePost = () => {
 
   return (
     <div className="cp-page">
-      <div className="cp-card">
-        <h2 className="cp-title">{t("createPost.heading")}</h2>
-        {error && <p className="cp-error">{error}</p>}
-        <form onSubmit={handleSubmit} className="cp-form">
-          {/* ===== Required fields ===== */}
-          {/* Language comes first among the required fields, since
-              category options depend on which language is selected */}
-          <label className="cp-label" htmlFor="cp-language">
-            {t("createPost.form.languageLabel")}
-            <span className="cp-required"> *</span>
-          </label>
-          <select
-            id="cp-language"
-            name="language"
-            value={post.language}
-            onChange={handleChange}
-            required
-            className="cp-select"
-          >
-            <option value="">{t("createPost.form.selectLanguage")}</option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
-
-          <label className="cp-label" htmlFor="cp-title">
-            {t("createPost.form.titleLabel")}
-            <span className="cp-required"> *</span>
-          </label>
-          <input
-            id="cp-title"
-            type="text"
-            name="title"
-            placeholder={t("createPost.form.titlePlaceholder")}
-            value={post.title}
-            onChange={handleChange}
-            required
-            className="cp-input"
-          />
-
-          <label className="cp-label" htmlFor="cp-description">
-            {t("createPost.form.descriptionLabel")}
-            <span className="cp-required"> *</span>
-          </label>
-          <textarea
-            id="cp-description"
-            name="description"
-            placeholder={t("createPost.form.descriptionPlaceholder")}
-            value={post.description}
-            onChange={handleChange}
-            rows="3"
-            required
-            className="cp-textarea"
-          />
-
-          <label className="cp-label" htmlFor="cp-content">
-            {t("createPost.form.contentLabel")}
-            <span className="cp-required"> *</span>
-          </label>
-          <textarea
-            id="cp-content"
-            name="content"
-            placeholder={t("createPost.form.contentPlaceholder")}
-            value={post.content}
-            onChange={handleChange}
-            rows="8"
-            required
-            className="cp-textarea"
-          />
-
-          {/* Category is scoped to the selected language, so it stays
-              hidden until a language is chosen and its categories have
-              actually finished fetching from the backend. */}
-          {post.language && (
-            <>
-              <label className="cp-label" htmlFor="cp-category">
-                {t("createPost.form.categoryLabel")}
+      <div className="cp-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2 className="cp-title">{t("createPost.heading")}</h2>
+            {error && <p className="cp-error">{error}</p>}
+            <form onSubmit={handleSubmit} className="cp-form">
+              {/* ===== Required fields ===== */}
+              {/* Language comes first among the required fields, since
+                  category options depend on which language is selected */}
+              <label className="cp-label" htmlFor="cp-language">
+                {t("createPost.form.languageLabel")}
                 <span className="cp-required"> *</span>
               </label>
-              {categoriesLoading ? (
-                <div className="cp-inlineLoading">
-                  <span className="cp-inlineSpinner" aria-hidden="true" />
-                  <span>{t("createPost.form.loadingCategories")}</span>
-                </div>
-              ) : (
-                <select
-                  id="cp-category"
-                  name="category"
-                  value={post.category}
-                  onChange={handleChange}
-                  required
-                  className="cp-select"
-                >
-                  <option value="">
-                    {categories.length === 0
-                      ? t("createPost.form.noCategoriesForLanguage")
-                      : t("createPost.form.selectCategory")}
+              <select
+                id="cp-language"
+                name="language"
+                value={post.language}
+                onChange={handleChange}
+                required
+                className="cp-select"
+              >
+                <option value="">{t("createPost.form.selectLanguage")}</option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
                   </option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
+                ))}
+              </select>
+
+              <label className="cp-label" htmlFor="cp-title">
+                {t("createPost.form.titleLabel")}
+                <span className="cp-required"> *</span>
+              </label>
+              <RichTextField
+                id="cp-title"
+                value={post.title}
+                onChange={(html) => setPost((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createPost.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
+
+              <label className="cp-label" htmlFor="cp-description">
+                {t("createPost.form.descriptionLabel")}
+                <span className="cp-required"> *</span>
+              </label>
+              <RichTextField
+                id="cp-description"
+                value={post.description}
+                onChange={(html) => setPost((prev) => ({ ...prev, description: html }))}
+                placeholder={t("createPost.form.descriptionPlaceholder")}
+                minHeight="90px"
+              />
+
+              <label className="cp-label" htmlFor="cp-content">
+                {t("createPost.form.contentLabel")}
+                <span className="cp-required"> *</span>
+              </label>
+              <RichTextField
+                id="cp-content"
+                value={post.content}
+                onChange={(html) => setPost((prev) => ({ ...prev, content: html }))}
+                placeholder={t("createPost.form.contentPlaceholder")}
+                minHeight="240px"
+              />
+
+              {/* Category is scoped to the selected language, so it stays
+                  hidden until a language is chosen and its categories have
+                  actually finished fetching from the backend. */}
+              {post.language && (
+                <>
+                  <label className="cp-label" htmlFor="cp-category">
+                    {t("createPost.form.categoryLabel")}
+                    <span className="cp-required"> *</span>
+                  </label>
+                  {categoriesLoading ? (
+                    <div className="cp-inlineLoading">
+                      <span className="cp-inlineSpinner" aria-hidden="true" />
+                      <span>{t("createPost.form.loadingCategories")}</span>
+                    </div>
+                  ) : (
+                    <select
+                      id="cp-category"
+                      name="category"
+                      value={post.category}
+                      onChange={handleChange}
+                      required
+                      className="cp-select"
+                    >
+                      <option value="">
+                        {categories.length === 0
+                          ? t("createPost.form.noCategoriesForLanguage")
+                          : t("createPost.form.selectCategory")}
+                      </option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </>
               )}
-            </>
-          )}
 
-          {/* ===== Optional fields ===== */}
-          <label className="cp-fileLabel" htmlFor="cp-image">
-            {t("createPost.form.uploadImageLabel")}
-            <span className="cp-optional"> ({t("createPost.form.optional")})</span>
-            <input
-              id="cp-image"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="cp-fileInput"
-            />
-          </label>
-          {preview && (
-            <img src={preview} alt={t("createPost.form.imageAlt")} className="cp-file-preview" />
-          )}
+              {/* ===== Optional fields ===== */}
+              <label className="cp-fileLabel" htmlFor="cp-image">
+                {t("createPost.form.uploadImageLabel")}
+                <span className="cp-optional"> ({t("createPost.form.optional")})</span>
+                <input
+                  id="cp-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="cp-fileInput"
+                />
+              </label>
+              {preview && (
+                <img src={preview} alt={t("createPost.form.imageAlt")} className="cp-file-preview" />
+              )}
 
-          <label className="cp-label" htmlFor="cp-status">
-            {t("createPost.form.statusLabel")}
-            <span className="cp-optional"> ({t("createPost.form.optional")})</span>
-          </label>
-          <select
-            id="cp-status"
-            name="status"
-            value={post.status}
-            onChange={handleChange}
-            className="cp-select"
-          >
-            <option value="draft">{t("createPost.form.draft")}</option>
-            <option value="published">{t("createPost.form.published")}</option>
-          </select>
+              <label className="cp-label" htmlFor="cp-status">
+                {t("createPost.form.statusLabel")}
+                <span className="cp-optional"> ({t("createPost.form.optional")})</span>
+              </label>
+              <select
+                id="cp-status"
+                name="status"
+                value={post.status}
+                onChange={handleChange}
+                className="cp-select"
+              >
+                <option value="draft">{t("createPost.form.draft")}</option>
+                <option value="published">{t("createPost.form.published")}</option>
+              </select>
 
-          <label className="cp-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isTrending"
-              checked={post.isTrending}
-              onChange={handleChange}
-              className="cp-checkbox"
-            />
-            {t("createPost.form.trending")}
-          </label>
-          <label className="cp-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isFeatured"
-              checked={post.isFeatured}
-              onChange={handleChange}
-              className="cp-checkbox"
-            />
-            {t("createPost.form.featured")}
-          </label>
-          <label className="cp-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isRecommended"
-              checked={post.isRecommended}
-              onChange={handleChange}
-              className="cp-checkbox"
-            />
-            {t("createPost.form.recommended")}
-          </label>
+              <label className="cp-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isTrending"
+                  checked={post.isTrending}
+                  onChange={handleChange}
+                  className="cp-checkbox"
+                />
+                {t("createPost.form.trending")}
+              </label>
+              <label className="cp-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={post.isFeatured}
+                  onChange={handleChange}
+                  className="cp-checkbox"
+                />
+                {t("createPost.form.featured")}
+              </label>
+              <label className="cp-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isRecommended"
+                  checked={post.isRecommended}
+                  onChange={handleChange}
+                  className="cp-checkbox"
+                />
+                {t("createPost.form.recommended")}
+              </label>
 
-          <button
-            type="submit"
-            disabled={loading || !post.language || !post.category}
-            className="cp-btn-primary"
-          >
-            {loading ? t("createPost.form.creating") : t("createPost.form.create")}
-          </button>
-        </form>
+              <button
+                type="submit"
+                disabled={loading || !post.language || !post.category}
+                className="cp-btn-primary"
+              >
+                {loading ? t("createPost.form.creating") : t("createPost.form.create")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

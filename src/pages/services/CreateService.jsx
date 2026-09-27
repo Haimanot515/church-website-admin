@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateService.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateService = () => {
   const { t } = useTranslation();
@@ -83,6 +89,23 @@ const CreateService = () => {
       return;
     }
 
+    // title/day/time are now RichTextField (contenteditable), not native
+    // inputs, so `required` can't validate them — check the plain text instead.
+    if (!stripHtml(service.title)) {
+      setError(t("createService.errors.titleRequired"));
+      return;
+    }
+
+    if (!stripHtml(service.day)) {
+      setError(t("createService.errors.dayRequired"));
+      return;
+    }
+
+    if (!stripHtml(service.time)) {
+      setError(t("createService.errors.timeRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -134,93 +157,97 @@ const CreateService = () => {
 
   return (
     <div className="cs-page">
-      <div className="cs-card">
-        <h2 className="cs-title">{t("createService.heading")}</h2>
+      <div className="cs-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2 className="cs-title">{t("createService.heading")}</h2>
 
-        {error && <p className="cs-error">{error}</p>}
+            {error && <p className="cs-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="cs-form">
-          <select name="language" value={service.language} onChange={handleChange} required>
-            <option value="" disabled>
-              {t("createService.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="cs-form">
+              <select name="language" value={service.language} onChange={handleChange} required>
+                <option value="" disabled>
+                  {t("createService.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createService.form.titlePlaceholder")}
-            value={service.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.title}
+                onChange={(html) => setService((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createService.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="description"
-            placeholder={t("createService.form.descriptionPlaceholder")}
-            rows="5"
-            value={service.description}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.description}
+                onChange={(html) => setService((prev) => ({ ...prev, description: html }))}
+                placeholder={t("createService.form.descriptionPlaceholder")}
+                minHeight="140px"
+              />
 
-          <input
-            type="text"
-            name="day"
-            placeholder={t("createService.form.dayPlaceholder")}
-            value={service.day}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.day}
+                onChange={(html) => setService((prev) => ({ ...prev, day: html }))}
+                placeholder={t("createService.form.dayPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <input
-            type="text"
-            name="time"
-            placeholder={t("createService.form.timePlaceholder")}
-            value={service.time}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.time}
+                onChange={(html) => setService((prev) => ({ ...prev, time: html }))}
+                placeholder={t("createService.form.timePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <select name="category" value={service.category} onChange={handleChange}>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {t(`createService.categories.${cat}`)}
-              </option>
-            ))}
-          </select>
+              <select name="category" value={service.category} onChange={handleChange}>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {t(`createService.categories.${cat}`)}
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="location"
-            placeholder={t("createService.form.locationPlaceholder")}
-            value={service.location}
-            onChange={handleChange}
-          />
+              <RichTextField
+                value={service.location}
+                onChange={(html) => setService((prev) => ({ ...prev, location: html }))}
+                placeholder={t("createService.form.locationPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <label className="cs-checkbox-label">
-            <input
-              type="checkbox"
-              name="isFeatured"
-              checked={service.isFeatured}
-              onChange={handleChange}
-            />
-            {t("createService.form.markFeatured")}
-          </label>
+              <label className="cs-checkbox-label">
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={service.isFeatured}
+                  onChange={handleChange}
+                />
+                {t("createService.form.markFeatured")}
+              </label>
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input type="file" accept="image/*" onChange={handleFileChange} />
 
-          {preview && <img src={preview} alt="preview" className="cs-file-preview" />}
+              {preview && <img src={preview} alt="preview" className="cs-file-preview" />}
 
-          <button type="submit" disabled={loading} className="cs-btn-primary">
-            {loading ? t("createService.form.creating") : t("createService.form.create")}
-          </button>
-        </form>
+              <button type="submit" disabled={loading} className="cs-btn-primary">
+                {loading ? t("createService.form.creating") : t("createService.form.create")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

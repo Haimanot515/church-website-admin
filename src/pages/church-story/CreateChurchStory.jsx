@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurchStory.css";
+
+// Strips HTML tags for plain-text validation checks
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateChurchStory = () => {
   const { t } = useTranslation();
@@ -99,6 +106,17 @@ const CreateChurchStory = () => {
       return;
     }
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(story.title)) {
+      setError(t("createChurchStory.errorTitleRequired"));
+      return;
+    }
+    if (!stripHtml(story.desc)) {
+      setError(t("createChurchStory.errorDescRequired"));
+      return;
+    }
+
     // The backend derives `year` and `order` from `range`, and requires
     // a 4-digit year inside it (e.g. "1998 - 2006"). Catch that early
     // instead of waiting for the schema validator to reject it.
@@ -187,149 +205,153 @@ const CreateChurchStory = () => {
 
   return (
     <div className="ccsPage">
-      <div className="ccsCard">
-        <h2 className="ccsHeading">{t("createChurchStory.heading")}</h2>
+      <div className="ccsCard rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2 className="ccsHeading">{t("createChurchStory.heading")}</h2>
 
-        {error && <p className="ccsError">{error}</p>}
+            {error && <p className="ccsError">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="ccsForm">
-          <label className="ccsLabel" htmlFor="ccs-language">
-            {t("createChurchStory.languageLabel")}
-            <span className="ccsRequired"> *</span>
-          </label>
-          <select
-            id="ccs-language"
-            name="language"
-            value={story.language}
-            onChange={handleChange}
-            required
-            className="ccsSelect"
-          >
-            <option value="" disabled>
-              {t("createChurchStory.languageSelectPlaceholder")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="ccsForm">
+              <label className="ccsLabel" htmlFor="ccs-language">
+                {t("createChurchStory.languageLabel")}
+                <span className="ccsRequired"> *</span>
+              </label>
+              <select
+                id="ccs-language"
+                name="language"
+                value={story.language}
+                onChange={handleChange}
+                required
+                className="ccsSelect"
+              >
+                <option value="" disabled>
+                  {t("createChurchStory.languageSelectPlaceholder")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <label className="ccsLabel" htmlFor="ccs-title">
-            {t("createChurchStory.titleLabel")}
-            <span className="ccsRequired"> *</span>
-          </label>
-          <input
-            id="ccs-title"
-            type="text"
-            name="title"
-            placeholder={t("createChurchStory.titlePlaceholder")}
-            value={story.title}
-            onChange={handleChange}
-            required
-            className="ccsInput"
-          />
+              <label className="ccsLabel" htmlFor="ccs-title">
+                {t("createChurchStory.titleLabel")}
+                <span className="ccsRequired"> *</span>
+              </label>
+              <RichTextField
+                id="ccs-title"
+                value={story.title}
+                onChange={(html) => setStory((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createChurchStory.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <label className="ccsLabel" htmlFor="ccs-range">
-            {t("createChurchStory.rangeLabel")}
-            <span className="ccsRequired"> *</span>
-          </label>
-          <input
-            id="ccs-range"
-            type="text"
-            name="range"
-            placeholder={t("createChurchStory.rangePlaceholder")}
-            value={story.range}
-            onChange={handleChange}
-            required
-            className="ccsInput"
-          />
+              <label className="ccsLabel" htmlFor="ccs-range">
+                {t("createChurchStory.rangeLabel")}
+                <span className="ccsRequired"> *</span>
+              </label>
+              <input
+                id="ccs-range"
+                type="text"
+                name="range"
+                placeholder={t("createChurchStory.rangePlaceholder")}
+                value={story.range}
+                onChange={handleChange}
+                required
+                className="ccsInput"
+              />
 
-          <label className="ccsLabel" htmlFor="ccs-desc">
-            {t("createChurchStory.descLabel")}
-            <span className="ccsRequired"> *</span>
-          </label>
-          <textarea
-            id="ccs-desc"
-            name="desc"
-            placeholder={t("createChurchStory.descPlaceholder")}
-            rows="5"
-            value={story.desc}
-            onChange={handleChange}
-            required
-            className="ccsTextarea"
-          />
+              <label className="ccsLabel" htmlFor="ccs-desc">
+                {t("createChurchStory.descLabel")}
+                <span className="ccsRequired"> *</span>
+              </label>
+              <RichTextField
+                id="ccs-desc"
+                value={story.desc}
+                onChange={(html) => setStory((prev) => ({ ...prev, desc: html }))}
+                placeholder={t("createChurchStory.descPlaceholder")}
+                minHeight="160px"
+              />
 
-          <div className="ccsFieldRow">
-            <div className="ccsFieldCol">
-              <label className="ccsLabel" htmlFor="ccs-leader">
-                {t("createChurchStory.leaderLabel")}
+              <div className="ccsFieldRow">
+                <div className="ccsFieldCol">
+                  <label className="ccsLabel" htmlFor="ccs-leader">
+                    {t("createChurchStory.leaderLabel")}
+                    <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
+                  </label>
+                  <input
+                    id="ccs-leader"
+                    type="text"
+                    name="leader"
+                    placeholder={t("createChurchStory.leaderPlaceholder")}
+                    value={story.leader}
+                    onChange={handleChange}
+                    className="ccsInput"
+                  />
+                </div>
+
+                <div className="ccsFieldCol">
+                  <label className="ccsLabel" htmlFor="ccs-leaderRole">
+                    {t("createChurchStory.leaderRoleLabel")}
+                    <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
+                  </label>
+                  <input
+                    id="ccs-leaderRole"
+                    type="text"
+                    name="leaderRole"
+                    placeholder={t("createChurchStory.leaderRolePlaceholder")}
+                    value={story.leaderRole}
+                    onChange={handleChange}
+                    className="ccsInput"
+                  />
+                </div>
+              </div>
+
+              <label className="ccsLabel" htmlFor="ccs-servedBy">
+                {t("createChurchStory.servedByLabel")}
                 <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
               </label>
               <input
-                id="ccs-leader"
+                id="ccs-servedBy"
                 type="text"
-                name="leader"
-                placeholder={t("createChurchStory.leaderPlaceholder")}
-                value={story.leader}
+                name="servedBy"
+                placeholder={t("createChurchStory.servedByPlaceholder")}
+                value={story.servedBy}
                 onChange={handleChange}
                 className="ccsInput"
               />
-            </div>
 
-            <div className="ccsFieldCol">
-              <label className="ccsLabel" htmlFor="ccs-leaderRole">
-                {t("createChurchStory.leaderRoleLabel")}
+              <label className="ccsLabel" htmlFor="ccs-file">
+                {t("createChurchStory.photoLabel")}
                 <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
               </label>
               <input
-                id="ccs-leaderRole"
-                type="text"
-                name="leaderRole"
-                placeholder={t("createChurchStory.leaderRolePlaceholder")}
-                value={story.leaderRole}
-                onChange={handleChange}
-                className="ccsInput"
+                id="ccs-file"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="ccsFileInput"
               />
-            </div>
+
+              {preview && (
+                <div className="ccsPreviewWrap">
+                  <img src={preview} alt={t("createChurchStory.previewAlt")} className="ccsPreview" />
+                </div>
+              )}
+
+              <button type="submit" disabled={loading} className="ccsSubmitButton">
+                {loading ? t("createChurchStory.submitting") : t("createChurchStory.submitButton")}
+              </button>
+            </form>
           </div>
-
-          <label className="ccsLabel" htmlFor="ccs-servedBy">
-            {t("createChurchStory.servedByLabel")}
-            <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
-          </label>
-          <input
-            id="ccs-servedBy"
-            type="text"
-            name="servedBy"
-            placeholder={t("createChurchStory.servedByPlaceholder")}
-            value={story.servedBy}
-            onChange={handleChange}
-            className="ccsInput"
-          />
-
-          <label className="ccsLabel" htmlFor="ccs-file">
-            {t("createChurchStory.photoLabel")}
-            <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
-          </label>
-          <input
-            id="ccs-file"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="ccsFileInput"
-          />
-
-          {preview && (
-            <div className="ccsPreviewWrap">
-              <img src={preview} alt={t("createChurchStory.previewAlt")} className="ccsPreview" />
-            </div>
-          )}
-
-          <button type="submit" disabled={loading} className="ccsSubmitButton">
-            {loading ? t("createChurchStory.submitting") : t("createChurchStory.submitButton")}
-          </button>
-        </form>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

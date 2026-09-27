@@ -4,6 +4,10 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetPromotions.css";
 
+// Strips HTML tags for plain-text display, since title/description are now
+// stored as HTML from the CreatePromotion/UpdatePromotion rich text fields
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
+
 const GetPromotions = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -35,7 +39,7 @@ const GetPromotions = () => {
   }, []);
 
   const handleDelete = async (id, title) => {
-    const confirmed = window.confirm(t("getPromotions.confirmDelete", { title }));
+    const confirmed = window.confirm(t("getPromotions.confirmDelete", { title: stripHtml(title) }));
     if (!confirmed) return;
 
     try {
@@ -79,11 +83,11 @@ const GetPromotions = () => {
           {promotions.map((p) => (
             <div key={p.id} className="gp-row">
               <div className="gp-row-info">
-                {p.photo && <img src={p.photo} alt={p.title} className="gp-thumb" />}
+                {p.photo && <img src={p.photo} alt={stripHtml(p.title)} className="gp-thumb" />}
 
                 <div className="gp-row-text">
-                  <strong>{p.title}</strong>
-                  <div className="gp-description">{p.description}</div>
+                  <strong>{stripHtml(p.title)}</strong>
+                  <div className="gp-description">{stripHtml(p.description)}</div>
                 </div>
               </div>
 

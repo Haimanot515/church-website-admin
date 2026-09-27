@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurch.css";
+
+// Strips HTML tags for plain-text display/validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyEditForm = {
   churchName: "",
@@ -53,7 +60,7 @@ const GetChurch = () => {
   }, []);
 
   const handleDelete = async (id, churchName) => {
-    const confirmed = window.confirm(t("deleteConfirm", { churchName }));
+    const confirmed = window.confirm(t("deleteConfirm", { churchName: stripHtml(churchName) }));
     if (!confirmed) return;
 
     try {
@@ -123,6 +130,17 @@ const GetChurch = () => {
 
   const handleEditSave = async (id) => {
     setEditError("");
+
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(editForm.churchName)) {
+      setEditError(t("churchNameRequiredError"));
+      return;
+    }
+    if (!stripHtml(editForm.description)) {
+      setEditError(t("descriptionRequiredError"));
+      return;
+    }
 
     try {
       setSaving(true);
@@ -225,152 +243,156 @@ const GetChurch = () => {
 
             if (isEditing) {
               return (
-                <div key={c.id} className="getChurch-row getChurch-row--editing">
-                  {editError && <p className="getChurch-error">{editError}</p>}
+                <div key={c.id} className="getChurch-row getChurch-row--editing rte-page-shell">
+                  <RichTextProvider>
+                  <div className="rte-editor-shell">
+                    <RichTextToolbar />
+                    <RichTextContextMenu />
+                    <div className="rte-scroll-area">
+                      {editError && <p className="getChurch-error">{editError}</p>}
 
-                  <label className="getChurch-label">{t("languageLabel")}</label>
-                  <div className="getChurch-readonly">
-                    {editLanguage?.name
-                      ? `${editLanguage.name}${editLanguage.code ? ` (${editLanguage.code})` : ""}`
-                      : t("languageUnknown")}
-                  </div>
+                      <label className="getChurch-label">{t("languageLabel")}</label>
+                      <div className="getChurch-readonly">
+                        {editLanguage?.name
+                          ? `${editLanguage.name}${editLanguage.code ? ` (${editLanguage.code})` : ""}`
+                          : t("languageUnknown")}
+                      </div>
 
-                  <label className="getChurch-label" htmlFor={`ec-name-${c.id}`}>
-                    {t("churchNameLabel")}
-                    <span className="getChurch-required"> *</span>
-                  </label>
-                  <input
-                    id={`ec-name-${c.id}`}
-                    type="text"
-                    name="churchName"
-                    value={editForm.churchName}
-                    onChange={handleEditChange}
-                    required
-                    className="getChurch-input"
-                  />
+                      <label className="getChurch-label" htmlFor={`ec-name-${c.id}`}>
+                        {t("churchNameLabel")}
+                        <span className="getChurch-required"> *</span>
+                      </label>
+                      <RichTextField
+                        id={`ec-name-${c.id}`}
+                        value={editForm.churchName}
+                        onChange={(html) => setEditForm((prev) => ({ ...prev, churchName: html }))}
+                        minHeight="44px"
+                        toolbar="minimal"
+                        autoFocus
+                      />
 
-                  <label className="getChurch-label" htmlFor={`ec-desc-${c.id}`}>
-                    {t("descriptionLabel")}
-                    <span className="getChurch-required"> *</span>
-                  </label>
-                  <textarea
-                    id={`ec-desc-${c.id}`}
-                    name="description"
-                    value={editForm.description}
-                    onChange={handleEditChange}
-                    rows="4"
-                    required
-                    className="getChurch-textarea"
-                  />
+                      <label className="getChurch-label" htmlFor={`ec-desc-${c.id}`}>
+                        {t("descriptionLabel")}
+                        <span className="getChurch-required"> *</span>
+                      </label>
+                      <RichTextField
+                        id={`ec-desc-${c.id}`}
+                        value={editForm.description}
+                        onChange={(html) => setEditForm((prev) => ({ ...prev, description: html }))}
+                        minHeight="160px"
+                      />
 
-                  <label className="getChurch-label" htmlFor={`ec-address-${c.id}`}>
-                    {t("addressLabel")}
-                    <span className="getChurch-optional"> ({t("optional")})</span>
-                  </label>
-                  <input
-                    id={`ec-address-${c.id}`}
-                    type="text"
-                    name="address"
-                    value={editForm.address}
-                    onChange={handleEditChange}
-                    className="getChurch-input"
-                  />
-
-                  <div className="getChurch-row2col">
-                    <div className="getChurch-col">
-                      <label className="getChurch-label" htmlFor={`ec-days-${c.id}`}>
-                        {t("serviceDaysLabel")}
+                      <label className="getChurch-label" htmlFor={`ec-address-${c.id}`}>
+                        {t("addressLabel")}
                         <span className="getChurch-optional"> ({t("optional")})</span>
                       </label>
                       <input
-                        id={`ec-days-${c.id}`}
+                        id={`ec-address-${c.id}`}
                         type="text"
-                        name="serviceDays"
-                        value={editForm.serviceDays}
+                        name="address"
+                        value={editForm.address}
                         onChange={handleEditChange}
                         className="getChurch-input"
                       />
-                    </div>
 
-                    <div className="getChurch-col">
-                      <label className="getChurch-label" htmlFor={`ec-time-${c.id}`}>
-                        {t("serviceTimeLabel")}
+                      <div className="getChurch-row2col">
+                        <div className="getChurch-col">
+                          <label className="getChurch-label" htmlFor={`ec-days-${c.id}`}>
+                            {t("serviceDaysLabel")}
+                            <span className="getChurch-optional"> ({t("optional")})</span>
+                          </label>
+                          <input
+                            id={`ec-days-${c.id}`}
+                            type="text"
+                            name="serviceDays"
+                            value={editForm.serviceDays}
+                            onChange={handleEditChange}
+                            className="getChurch-input"
+                          />
+                        </div>
+
+                        <div className="getChurch-col">
+                          <label className="getChurch-label" htmlFor={`ec-time-${c.id}`}>
+                            {t("serviceTimeLabel")}
+                            <span className="getChurch-optional"> ({t("optional")})</span>
+                          </label>
+                          <input
+                            id={`ec-time-${c.id}`}
+                            type="text"
+                            name="serviceTime"
+                            value={editForm.serviceTime}
+                            onChange={handleEditChange}
+                            className="getChurch-input"
+                          />
+                        </div>
+                      </div>
+
+                      <label className="getChurch-fileLabel" htmlFor={`ec-image-${c.id}`}>
+                        {t("uploadImageLabel")}
                         <span className="getChurch-optional"> ({t("optional")})</span>
+                        <input
+                          id={`ec-image-${c.id}`}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleEditFileChange}
+                          className="getChurch-fileInput"
+                        />
                       </label>
-                      <input
-                        id={`ec-time-${c.id}`}
-                        type="text"
-                        name="serviceTime"
-                        value={editForm.serviceTime}
-                        onChange={handleEditChange}
-                        className="getChurch-input"
-                      />
+
+                      {(editPreview || editExistingImage) && (
+                        <img
+                          src={editPreview || editExistingImage}
+                          alt={t("imageAlt")}
+                          className="getChurch-preview"
+                        />
+                      )}
+
+                      <label className="getChurch-checkboxLabel">
+                        <input
+                          type="checkbox"
+                          name="isFeatured"
+                          checked={editForm.isFeatured}
+                          onChange={handleEditChange}
+                          className="getChurch-checkbox"
+                        />
+                        {t("featured")}
+                      </label>
+
+                      <label className="getChurch-checkboxLabel">
+                        <input
+                          type="checkbox"
+                          name="isPrimary"
+                          checked={editForm.isPrimary}
+                          onChange={handleEditChange}
+                          className="getChurch-checkbox"
+                        />
+                        <span>
+                          {t("setAsMainChurch")}
+                          <small className="getChurch-hint">{t("mainChurchHint")}</small>
+                        </span>
+                      </label>
+
+                      <div className="getChurch-editActions">
+                        <button
+                          type="button"
+                          onClick={cancelEdit}
+                          disabled={saving}
+                          className="getChurch-cancelButton"
+                        >
+                          {t("cancelButton")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEditSave(c.id)}
+                          disabled={saving}
+                          className="getChurch-submitButton"
+                        >
+                          {saving ? t("savingButton") : t("saveButton")}
+                        </button>
+                      </div>
                     </div>
                   </div>
-
-                  <label className="getChurch-fileLabel" htmlFor={`ec-image-${c.id}`}>
-                    {t("uploadImageLabel")}
-                    <span className="getChurch-optional"> ({t("optional")})</span>
-                    <input
-                      id={`ec-image-${c.id}`}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleEditFileChange}
-                      className="getChurch-fileInput"
-                    />
-                  </label>
-
-                  {(editPreview || editExistingImage) && (
-                    <img
-                      src={editPreview || editExistingImage}
-                      alt={t("imageAlt")}
-                      className="getChurch-preview"
-                    />
-                  )}
-
-                  <label className="getChurch-checkboxLabel">
-                    <input
-                      type="checkbox"
-                      name="isFeatured"
-                      checked={editForm.isFeatured}
-                      onChange={handleEditChange}
-                      className="getChurch-checkbox"
-                    />
-                    {t("featured")}
-                  </label>
-
-                  <label className="getChurch-checkboxLabel">
-                    <input
-                      type="checkbox"
-                      name="isPrimary"
-                      checked={editForm.isPrimary}
-                      onChange={handleEditChange}
-                      className="getChurch-checkbox"
-                    />
-                    <span>
-                      {t("setAsMainChurch")}
-                      <small className="getChurch-hint">{t("mainChurchHint")}</small>
-                    </span>
-                  </label>
-
-                  <div className="getChurch-editActions">
-                    <button
-                      type="button"
-                      onClick={cancelEdit}
-                      disabled={saving}
-                      className="getChurch-cancelButton"
-                    >
-                      {t("cancelButton")}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleEditSave(c.id)}
-                      disabled={saving}
-                      className="getChurch-submitButton"
-                    >
-                      {saving ? t("savingButton") : t("saveButton")}
-                    </button>
-                  </div>
+                  </RichTextProvider>
                 </div>
               );
             }
@@ -379,11 +401,11 @@ const GetChurch = () => {
               <div key={c.id} className="getChurch-row">
                 <div className="getChurch-info">
                   {c.image && (
-                    <img src={c.image} alt={c.churchName} className="getChurch-thumb" />
+                    <img src={c.image} alt={stripHtml(c.churchName)} className="getChurch-thumb" />
                   )}
                   <div className="getChurch-details">
                     <div className="getChurch-nameRow">
-                      <strong className="getChurch-name">{c.churchName}</strong>
+                      <strong className="getChurch-name">{stripHtml(c.churchName)}</strong>
                       {c.isPrimary && (
                         <span className="getChurch-badge getChurch-badge--main">
                           {t("mainChurchBadge")}
@@ -397,7 +419,7 @@ const GetChurch = () => {
                     </div>
 
                     {c.description && (
-                      <p className="getChurch-description">{c.description}</p>
+                      <p className="getChurch-description">{stripHtml(c.description)}</p>
                     )}
 
                     <div className="getChurch-meta">

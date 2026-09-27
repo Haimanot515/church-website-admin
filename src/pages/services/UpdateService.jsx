@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./UpdateService.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const UpdateService = () => {
   const { t } = useTranslation();
@@ -104,6 +110,23 @@ const UpdateService = () => {
       return;
     }
 
+    // title/day/time are now RichTextField (contenteditable), not native
+    // inputs, so `required` can't validate them — check the plain text instead.
+    if (!stripHtml(service.title)) {
+      setError(t("updateService.errors.titleRequired"));
+      return;
+    }
+
+    if (!stripHtml(service.day)) {
+      setError(t("updateService.errors.dayRequired"));
+      return;
+    }
+
+    if (!stripHtml(service.time)) {
+      setError(t("updateService.errors.timeRequired"));
+      return;
+    }
+
     try {
       setSaving(true);
 
@@ -149,111 +172,115 @@ const UpdateService = () => {
 
   return (
     <div className="ms-page">
-      <div className="ms-edit-panel">
-        <h3>{t("updateService.heading")}</h3>
+      <div className="ms-edit-panel rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h3>{t("updateService.heading")}</h3>
 
-        {error && <p className="ms-error">{error}</p>}
+            {error && <p className="ms-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="ms-form">
-          <select name="language" value={service.language} onChange={handleChange} required>
-            <option value="" disabled>
-              {t("updateService.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="ms-form">
+              <select name="language" value={service.language} onChange={handleChange} required>
+                <option value="" disabled>
+                  {t("updateService.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang._id} value={lang._id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("updateService.form.titlePlaceholder")}
-            value={service.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.title}
+                onChange={(html) => setService((prev) => ({ ...prev, title: html }))}
+                placeholder={t("updateService.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="description"
-            placeholder={t("updateService.form.descriptionPlaceholder")}
-            rows="5"
-            value={service.description}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.description}
+                onChange={(html) => setService((prev) => ({ ...prev, description: html }))}
+                placeholder={t("updateService.form.descriptionPlaceholder")}
+                minHeight="140px"
+              />
 
-          <input
-            type="text"
-            name="day"
-            placeholder={t("updateService.form.dayPlaceholder")}
-            value={service.day}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.day}
+                onChange={(html) => setService((prev) => ({ ...prev, day: html }))}
+                placeholder={t("updateService.form.dayPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <input
-            type="text"
-            name="time"
-            placeholder={t("updateService.form.timePlaceholder")}
-            value={service.time}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={service.time}
+                onChange={(html) => setService((prev) => ({ ...prev, time: html }))}
+                placeholder={t("updateService.form.timePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <select name="category" value={service.category} onChange={handleChange}>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {t(`updateService.categories.${cat}`)}
-              </option>
-            ))}
-          </select>
+              <select name="category" value={service.category} onChange={handleChange}>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {t(`updateService.categories.${cat}`)}
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="location"
-            placeholder={t("updateService.form.locationPlaceholder")}
-            value={service.location}
-            onChange={handleChange}
-          />
+              <RichTextField
+                value={service.location}
+                onChange={(html) => setService((prev) => ({ ...prev, location: html }))}
+                placeholder={t("updateService.form.locationPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <label className="ms-checkbox-label">
-            <input
-              type="checkbox"
-              name="isFeatured"
-              checked={service.isFeatured}
-              onChange={handleChange}
-            />
-            {t("updateService.form.markFeatured")}
-          </label>
+              <label className="ms-checkbox-label">
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={service.isFeatured}
+                  onChange={handleChange}
+                />
+                {t("updateService.form.markFeatured")}
+              </label>
 
-          {existingImage && !preview && (
-            <div className="ms-current-image">
-              <span>{t("updateService.form.currentImage")}</span>
-              <img src={existingImage} alt="current" className="ms-file-preview" />
-            </div>
-          )}
+              {existingImage && !preview && (
+                <div className="ms-current-image">
+                  <span>{t("updateService.form.currentImage")}</span>
+                  <img src={existingImage} alt="current" className="ms-file-preview" />
+                </div>
+              )}
 
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input type="file" accept="image/*" onChange={handleFileChange} />
 
-          {preview && <img src={preview} alt="preview" className="ms-file-preview" />}
+              {preview && <img src={preview} alt="preview" className="ms-file-preview" />}
 
-          <div className="ms-form-actions">
-            <button type="submit" disabled={saving} className="ms-btn-primary">
-              {saving ? t("updateService.form.updating") : t("updateService.form.update")}
-            </button>
+              <div className="ms-form-actions">
+                <button type="submit" disabled={saving} className="ms-btn-primary">
+                  {saving ? t("updateService.form.updating") : t("updateService.form.update")}
+                </button>
 
-            <button
-              type="button"
-              disabled={saving}
-              className="ms-btn-cancel"
-              onClick={handleCancel}
-            >
-              {t("updateService.form.cancel")}
-            </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  className="ms-btn-cancel"
+                  onClick={handleCancel}
+                >
+                  {t("updateService.form.cancel")}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

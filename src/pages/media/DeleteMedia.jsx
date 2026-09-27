@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 
+// Title is stored as RichTextField HTML — strip tags for plain-text display here
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
+
 const typeBadgeStyle = (type) => {
   const colors = {
     photo: { bg: "#dbeafe", text: "#1d4ed8" },
@@ -51,7 +54,7 @@ const DeleteMedia = () => {
 
   const handleDelete = async (item) => {
     const confirmed = window.confirm(
-      `Delete "${item.title}"? This action cannot be undone.`
+      `Delete "${stripHtml(item.title)}"? This action cannot be undone.`
     );
     if (!confirmed) return;
 
@@ -105,7 +108,7 @@ const DeleteMedia = () => {
             <tbody>
               {media.map((item) => (
                 <tr key={item._id}>
-                  <td style={tdStyle}>{item.title}</td>
+                  <td style={tdStyle}>{stripHtml(item.title) || "—"}</td>
                   <td style={tdStyle}>
                     <span style={typeBadgeStyle(item.mediaType)}>{item.mediaType}</span>
                   </td>

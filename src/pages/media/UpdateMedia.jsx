@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Title/description are stored as RichTextField HTML — strip tags for plain-text display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   title: "",
@@ -120,6 +127,13 @@ const UpdateMedia = () => {
 
     setFormError("");
 
+    // title is now a RichTextField (contenteditable), not a native input,
+    // so `required` can't validate it — check the plain text instead.
+    if (!stripHtml(form.title)) {
+      setFormError("Title is required");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -167,6 +181,7 @@ const UpdateMedia = () => {
 
         {editingId && (
           <div
+            className="rte-page-shell"
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
@@ -175,130 +190,137 @@ const UpdateMedia = () => {
               background: "#f8fafc",
             }}
           >
-            <h3 style={{ marginTop: 0 }}>Edit Media</h3>
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3 style={{ marginTop: 0 }}>Edit Media</h3>
 
-            {formError && <p style={{ color: "red" }}>{formError}</p>}
+                {formError && <p style={{ color: "red" }}>{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-              <input
-                type="text"
-                name="title"
-                placeholder="Media title"
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
+                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <RichTextField
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder="Media title"
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <textarea
-                name="description"
-                placeholder="Media description"
-                rows="4"
-                value={form.description}
-                onChange={handleChange}
-              />
+                  <RichTextField
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder="Media description"
+                    minHeight="120px"
+                  />
 
-              <select name="type" value={form.type} onChange={handleChange}>
-                <option value="photo">Photo</option>
-                <option value="video">Video</option>
-                <option value="audio">Audio</option>
-                <option value="document">Book / PDF</option>
-              </select>
+                  <select name="type" value={form.type} onChange={handleChange}>
+                    <option value="photo">Photo</option>
+                    <option value="video">Video</option>
+                    <option value="audio">Audio</option>
+                    <option value="document">Book / PDF</option>
+                  </select>
 
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? "Loading categories..." : "Select Category"}
-                </option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                  <select
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    disabled={optionsLoading}
+                  >
+                    <option value="">
+                      {optionsLoading ? "Loading categories..." : "Select Category"}
+                    </option>
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
 
-              <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">Save as Draft</option>
-                <option value="published">Publish</option>
-              </select>
+                  <select name="status" value={form.status} onChange={handleChange}>
+                    <option value="draft">Save as Draft</option>
+                    <option value="published">Publish</option>
+                  </select>
 
-              <input
-                type="file"
-                accept={getAcceptForType(form.type)}
-                onChange={handleFileChange}
-              />
-              <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>
-                Leave empty to keep the current file.
-              </p>
+                  <input
+                    type="file"
+                    accept={getAcceptForType(form.type)}
+                    onChange={handleFileChange}
+                  />
+                  <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>
+                    Leave empty to keep the current file.
+                  </p>
 
-              {preview && form.type === "photo" && (
-                <img
-                  src={preview}
-                  alt="preview"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
-              )}
-              {preview && form.type === "video" && (
-                <video src={preview} controls style={{ width: "100%" }} />
-              )}
-              {preview && form.type === "audio" && <audio src={preview} controls />}
-              {preview && form.type === "document" && (
-                <div style={{ border: "1px solid #e2e8f0", borderRadius: "10px", overflow: "hidden" }}>
-                  <iframe src={preview} title="PDF preview" style={{ width: "100%", height: "350px", border: "none" }} />
-                </div>
-              )}
+                  {preview && form.type === "photo" && (
+                    <img
+                      src={preview}
+                      alt="preview"
+                      style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                    />
+                  )}
+                  {preview && form.type === "video" && (
+                    <video src={preview} controls style={{ width: "100%" }} />
+                  )}
+                  {preview && form.type === "audio" && <audio src={preview} controls />}
+                  {preview && form.type === "document" && (
+                    <div style={{ border: "1px solid #e2e8f0", borderRadius: "10px", overflow: "hidden" }}>
+                      <iframe src={preview} title="PDF preview" style={{ width: "100%", height: "350px", border: "none" }} />
+                    </div>
+                  )}
 
-              {!preview && existingUrl && form.type === "photo" && (
-                <img
-                  src={existingUrl}
-                  alt="current"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
-              )}
-              {!preview && existingUrl && (form.type === "video" || form.type === "audio" || form.type === "document") && (
-                <a href={existingUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px" }}>
-                  View current file
-                </a>
-              )}
+                  {!preview && existingUrl && form.type === "photo" && (
+                    <img
+                      src={existingUrl}
+                      alt="current"
+                      style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                    />
+                  )}
+                  {!preview && existingUrl && (form.type === "video" || form.type === "audio" || form.type === "document") && (
+                    <a href={existingUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px" }}>
+                      View current file
+                    </a>
+                  )}
 
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting || optionsLoading}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      type="submit"
+                      disabled={submitting || optionsLoading}
+                      style={{
+                        padding: "14px",
+                        background: "#2563eb",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      {submitting ? "Saving..." : "Save Changes"}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  Cancel
-                </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#e5e7eb",
+                        color: "#334155",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -321,7 +343,7 @@ const UpdateMedia = () => {
             <tbody>
               {media.map((item) => (
                 <tr key={item._id} style={editingId === item._id ? { background: "#eff6ff" } : undefined}>
-                  <td style={tdStyle}>{item.title}</td>
+                  <td style={tdStyle}>{stripHtml(item.title) || "—"}</td>
                   <td style={tdStyle}>{item.mediaType}</td>
                   <td style={tdStyle}>{item.category?.name || "—"}</td>
                   <td style={tdStyle}>

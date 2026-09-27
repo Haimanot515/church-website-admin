@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import RichTextEditor from "../../components/textEditor/RichTextEditor";
 import "./GetHomeHero.css";
 
 const HEROES_PER_PAGE = 10;
@@ -213,12 +214,11 @@ const GetHomeHero = () => {
                 required
               />
 
-              <textarea
-                name="description"
-                placeholder={t("getHomeHero.form.descriptionPlaceholder")}
+              <RichTextEditor
                 value={form.description}
-                onChange={handleChange}
-                rows="3"
+                onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                placeholder={t("getHomeHero.form.descriptionPlaceholder")}
+                minHeight="100px"
               />
 
               <div>

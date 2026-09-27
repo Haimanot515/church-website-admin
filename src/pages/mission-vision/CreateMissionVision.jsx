@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateMissionVision.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateMissionVision = () => {
   const { t } = useTranslation();
@@ -49,6 +55,18 @@ const CreateMissionVision = () => {
       return;
     }
 
+    // title/desc are now RichTextField (contenteditable), not native
+    // inputs, so `required` can't validate them — check the plain text instead.
+    if (!stripHtml(missionVision.title)) {
+      setError(t("createMissionVision.errors.titleRequired"));
+      return;
+    }
+
+    if (!stripHtml(missionVision.desc)) {
+      setError(t("createMissionVision.errors.descRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -74,70 +92,76 @@ const CreateMissionVision = () => {
 
   return (
     <div className="cmv-page">
-      <div className="cmv-card">
-        <h2>{t("createMissionVision.heading")}</h2>
+      <div className="cmv-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2>{t("createMissionVision.heading")}</h2>
 
-        {error && <p className="cmv-error">{error}</p>}
+            {error && <p className="cmv-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="cmv-form">
-          <select
-            name="language"
-            value={missionVision.language}
-            onChange={handleChange}
-            required
-            className="cmv-select"
-          >
-            <option value="" disabled>
-              {t("createMissionVision.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="cmv-form">
+              <select
+                name="language"
+                value={missionVision.language}
+                onChange={handleChange}
+                required
+                className="cmv-select"
+              >
+                <option value="" disabled>
+                  {t("createMissionVision.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <select
-            name="type"
-            value={missionVision.type}
-            onChange={handleChange}
-            required
-            className="cmv-select"
-          >
-            <option value="mission">{t("createMissionVision.form.typeMission")}</option>
-            <option value="vision">{t("createMissionVision.form.typeVision")}</option>
-          </select>
+              <select
+                name="type"
+                value={missionVision.type}
+                onChange={handleChange}
+                required
+                className="cmv-select"
+              >
+                <option value="mission">{t("createMissionVision.form.typeMission")}</option>
+                <option value="vision">{t("createMissionVision.form.typeVision")}</option>
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createMissionVision.form.titlePlaceholder")}
-            value={missionVision.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={missionVision.title}
+                onChange={(html) => setMissionVision((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createMissionVision.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="desc"
-            placeholder={t("createMissionVision.form.descPlaceholder")}
-            value={missionVision.desc}
-            onChange={handleChange}
-            rows="6"
-            required
-          />
+              <RichTextField
+                value={missionVision.desc}
+                onChange={(html) => setMissionVision((prev) => ({ ...prev, desc: html }))}
+                placeholder={t("createMissionVision.form.descPlaceholder")}
+                minHeight="160px"
+              />
 
-          <input
-            type="number"
-            name="order"
-            placeholder={t("createMissionVision.form.orderPlaceholder")}
-            value={missionVision.order}
-            onChange={handleChange}
-          />
+              <input
+                type="number"
+                name="order"
+                placeholder={t("createMissionVision.form.orderPlaceholder")}
+                value={missionVision.order}
+                onChange={handleChange}
+              />
 
-          <button type="submit" disabled={loading} className="cmv-btn-primary">
-            {loading ? t("createMissionVision.form.creating") : t("createMissionVision.form.createButton")}
-          </button>
-        </form>
+              <button type="submit" disabled={loading} className="cmv-btn-primary">
+                {loading ? t("createMissionVision.form.creating") : t("createMissionVision.form.createButton")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

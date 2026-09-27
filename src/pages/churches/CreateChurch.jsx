@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurch.css";
+
+// Strips HTML tags for plain-text validation checks
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateChurch = () => {
   const { t } = useTranslation("translation", { keyPrefix: "createChurch" });
@@ -69,6 +76,17 @@ const CreateChurch = () => {
 
     if (!church.language) {
       setError(t("selectLanguageError"));
+      return;
+    }
+
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(church.churchName)) {
+      setError(t("churchNameRequiredError"));
+      return;
+    }
+    if (!stripHtml(church.description)) {
+      setError(t("descriptionRequiredError"));
       return;
     }
 
@@ -151,159 +169,163 @@ const CreateChurch = () => {
 
   return (
     <div className="createChurch-page">
-      <div className="createChurch-card">
-        <h2 className="createChurch-title">{t("title")}</h2>
+      <div className="createChurch-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2 className="createChurch-title">{t("title")}</h2>
 
-        {error && <p className="createChurch-error">{error}</p>}
+            {error && <p className="createChurch-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="createChurch-form">
-          <label className="createChurch-label" htmlFor="cc-language">
-            {t("languageLabel")}
-            <span className="createChurch-required"> *</span>
-          </label>
-          <select
-            id="cc-language"
-            name="language"
-            value={church.language}
-            onChange={handleChange}
-            required
-            className="createChurch-select"
-          >
-            <option value="" disabled>
-              {t("selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="createChurch-form">
+              <label className="createChurch-label" htmlFor="cc-language">
+                {t("languageLabel")}
+                <span className="createChurch-required"> *</span>
+              </label>
+              <select
+                id="cc-language"
+                name="language"
+                value={church.language}
+                onChange={handleChange}
+                required
+                className="createChurch-select"
+              >
+                <option value="" disabled>
+                  {t("selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <label className="createChurch-label" htmlFor="cc-churchName">
-            {t("churchNameLabel")}
-            <span className="createChurch-required"> *</span>
-          </label>
-          <input
-            id="cc-churchName"
-            type="text"
-            name="churchName"
-            placeholder={t("churchNamePlaceholder")}
-            value={church.churchName}
-            onChange={handleChange}
-            required
-            className="createChurch-input"
-          />
+              <label className="createChurch-label" htmlFor="cc-churchName">
+                {t("churchNameLabel")}
+                <span className="createChurch-required"> *</span>
+              </label>
+              <RichTextField
+                id="cc-churchName"
+                value={church.churchName}
+                onChange={(html) => setChurch((prev) => ({ ...prev, churchName: html }))}
+                placeholder={t("churchNamePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <label className="createChurch-label" htmlFor="cc-description">
-            {t("descriptionLabel")}
-            <span className="createChurch-required"> *</span>
-          </label>
-          <textarea
-            id="cc-description"
-            name="description"
-            placeholder={t("descriptionPlaceholder")}
-            value={church.description}
-            onChange={handleChange}
-            rows="6"
-            required
-            className="createChurch-textarea"
-          />
+              <label className="createChurch-label" htmlFor="cc-description">
+                {t("descriptionLabel")}
+                <span className="createChurch-required"> *</span>
+              </label>
+              <RichTextField
+                id="cc-description"
+                value={church.description}
+                onChange={(html) => setChurch((prev) => ({ ...prev, description: html }))}
+                placeholder={t("descriptionPlaceholder")}
+                minHeight="180px"
+              />
 
-          <label className="createChurch-label" htmlFor="cc-address">
-            {t("addressLabel")}
-            <span className="createChurch-optional"> ({t("optional")})</span>
-          </label>
-          <input
-            id="cc-address"
-            type="text"
-            name="address"
-            placeholder={t("addressPlaceholder")}
-            value={church.address}
-            onChange={handleChange}
-            className="createChurch-input"
-          />
-
-          <div className="createChurch-row">
-            <div className="createChurch-col">
-              <label className="createChurch-label" htmlFor="cc-serviceDays">
-                {t("serviceDaysLabel")}
+              <label className="createChurch-label" htmlFor="cc-address">
+                {t("addressLabel")}
                 <span className="createChurch-optional"> ({t("optional")})</span>
               </label>
               <input
-                id="cc-serviceDays"
+                id="cc-address"
                 type="text"
-                name="serviceDays"
-                placeholder={t("serviceDaysPlaceholder")}
-                value={church.serviceDays}
+                name="address"
+                placeholder={t("addressPlaceholder")}
+                value={church.address}
                 onChange={handleChange}
                 className="createChurch-input"
               />
-            </div>
 
-            <div className="createChurch-col">
-              <label className="createChurch-label" htmlFor="cc-serviceTime">
-                {t("serviceTimeLabel")}
+              <div className="createChurch-row">
+                <div className="createChurch-col">
+                  <label className="createChurch-label" htmlFor="cc-serviceDays">
+                    {t("serviceDaysLabel")}
+                    <span className="createChurch-optional"> ({t("optional")})</span>
+                  </label>
+                  <input
+                    id="cc-serviceDays"
+                    type="text"
+                    name="serviceDays"
+                    placeholder={t("serviceDaysPlaceholder")}
+                    value={church.serviceDays}
+                    onChange={handleChange}
+                    className="createChurch-input"
+                  />
+                </div>
+
+                <div className="createChurch-col">
+                  <label className="createChurch-label" htmlFor="cc-serviceTime">
+                    {t("serviceTimeLabel")}
+                    <span className="createChurch-optional"> ({t("optional")})</span>
+                  </label>
+                  <input
+                    id="cc-serviceTime"
+                    type="text"
+                    name="serviceTime"
+                    placeholder={t("serviceTimePlaceholder")}
+                    value={church.serviceTime}
+                    onChange={handleChange}
+                    className="createChurch-input"
+                  />
+                </div>
+              </div>
+
+              <label className="createChurch-fileLabel" htmlFor="cc-image">
+                {t("uploadImageLabel")}
                 <span className="createChurch-optional"> ({t("optional")})</span>
+                <input
+                  id="cc-image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="createChurch-fileInput"
+                />
               </label>
-              <input
-                id="cc-serviceTime"
-                type="text"
-                name="serviceTime"
-                placeholder={t("serviceTimePlaceholder")}
-                value={church.serviceTime}
-                onChange={handleChange}
-                className="createChurch-input"
-              />
-            </div>
+
+              {preview && (
+                <img src={preview} alt={t("imageAlt")} className="createChurch-preview" />
+              )}
+
+              <label className="createChurch-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isFeatured"
+                  checked={church.isFeatured}
+                  onChange={handleChange}
+                  className="createChurch-checkbox"
+                />
+                {t("featured")}
+              </label>
+
+              {/* UI-facing label maps internally to isPrimary, which drives the
+                  public hero section on the Church page. */}
+              <label className="createChurch-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isPrimary"
+                  checked={church.isPrimary}
+                  onChange={handleChange}
+                  className="createChurch-checkbox"
+                />
+                <span>
+                  {t("setAsMainChurch")}
+                  <small className="createChurch-hint">{t("mainChurchHint")}</small>
+                </span>
+              </label>
+
+              <button type="submit" disabled={loading} className="createChurch-submitButton">
+                {loading ? t("submittingButton") : t("submitButton")}
+              </button>
+            </form>
           </div>
-
-          <label className="createChurch-fileLabel" htmlFor="cc-image">
-            {t("uploadImageLabel")}
-            <span className="createChurch-optional"> ({t("optional")})</span>
-            <input
-              id="cc-image"
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="createChurch-fileInput"
-            />
-          </label>
-
-          {preview && (
-            <img src={preview} alt={t("imageAlt")} className="createChurch-preview" />
-          )}
-
-          <label className="createChurch-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isFeatured"
-              checked={church.isFeatured}
-              onChange={handleChange}
-              className="createChurch-checkbox"
-            />
-            {t("featured")}
-          </label>
-
-          {/* UI-facing label maps internally to isPrimary, which drives the
-              public hero section on the Church page. */}
-          <label className="createChurch-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isPrimary"
-              checked={church.isPrimary}
-              onChange={handleChange}
-              className="createChurch-checkbox"
-            />
-            <span>
-              {t("setAsMainChurch")}
-              <small className="createChurch-hint">{t("mainChurchHint")}</small>
-            </span>
-          </label>
-
-          <button type="submit" disabled={loading} className="createChurch-submitButton">
-            {loading ? t("submittingButton") : t("submitButton")}
-          </button>
-        </form>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

@@ -1,0 +1,303 @@
+.rte-wrapper {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rte-btn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  color: #374151;
+}
+
+.rte-btn:hover {
+  background: #eef2ff;
+}
+
+.rte-btn.active {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  color: #4338ca;
+}
+
+.rte-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rte-divider {
+  width: 1px;
+  height: 22px;
+  background: #e5e7eb;
+  margin: 0 4px;
+}
+
+.rte-color {
+  width: 30px;
+  height: 30px;
+  padding: 2px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #ffffff;
+}
+
+.rte-content {
+  padding: 12px;
+  min-height: var(--rte-min-height, 120px);
+  outline: none;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #111827;
+}
+
+.rte-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.rte-content pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 14px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0 0 12px;
+}
+
+.rte-content blockquote {
+  border-left: 4px solid #d1d5db;
+  padding-left: 16px;
+  margin: 0 0 12px;
+  color: #4b5563;
+}
+
+.rte-content hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 20px 0;
+}
+
+.rte-content img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+.rte-content ul,
+.rte-content ol {
+  padding-left: 24px;
+  margin: 0 0 12px;
+}
+
+/* Task list (checklist) */
+.rte-content ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 4px;
+}
+.rte-content ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.rte-content ul[data-type="taskList"] li > label {
+  margin-top: 3px;
+  user-select: none;
+}
+.rte-content ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+.rte-content ul[data-type="taskList"] li[data-checked="true"] > div {
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+/* Tables */
+.rte-content table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0 0 12px;
+  overflow: hidden;
+}
+.rte-content th,
+.rte-content td {
+  border: 1px solid #d1d5db;
+  padding: 6px 10px;
+  vertical-align: top;
+  position: relative;
+}
+.rte-content th {
+  background: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+}
+.rte-content .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(99, 102, 241, 0.1);
+  pointer-events: none;
+}
+
+/* Font family dropdown in the toolbar */
+.rte-font-select {
+  height: 30px;
+  padding: 0 6px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: #ffffff;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+}
+.rte-font-select:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   ADD-ONS for the shared page-level toolbar (RichTextToolbar +
+   RichTextField + RichTextContext). Everything above this line
+   is unchanged from the original file.
+   ============================================================ */
+
+:root {
+  /* Rendered height of the fixed site navbar (see Navbar.css .navbar:
+     15px top/bottom padding + its content). Measure the real value in
+     devtools (inspect .navbar, check the box height) and adjust this
+     one number if it's off - everything below keys off it. */
+  --navbar-height: 72px;
+}
+
+/* ------------------------------------------------------------
+   OPTION B LAYOUT: "toolbar fixed, only the form scrolls"
+   ------------------------------------------------------------
+   Structure expected in the page component:
+
+     <div className="rte-page-shell">
+       <h2>...</h2>              <- natural height, does not scroll
+       {error && <p>...</p>}     <- natural height, does not scroll
+       <RichTextProvider>
+         <div className="rte-editor-shell">
+           <RichTextToolbar />               <- static, never scrolls
+           <div className="rte-scroll-area">  <- the only thing that scrolls
+             <form>...all fields, image, submit button...</form>
+           </div>
+         </div>
+       </RichTextProvider>
+     </div>
+
+   .rte-page-shell pins the whole card to exactly the viewport height
+   below the navbar, so the browser window itself never scrolls.
+   .rte-editor-shell then takes whatever vertical space is left after
+   the heading/error message, and only .rte-scroll-area inside it
+   scrolls - the toolbar (a static, non-flex-growing child) always
+   stays in view.
+   ------------------------------------------------------------ */
+
+.rte-page-shell {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--navbar-height));
+  overflow: hidden; /* the shell itself never scrolls - only .rte-scroll-area does */
+}
+
+.rte-editor-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0; /* required so this flex child can shrink and let its own children scroll, instead of stretching past the shell */
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  overflow: hidden; /* clips corners around the static toolbar + scroll area */
+}
+
+.rte-scroll-area {
+  flex: 1 1 auto;
+  min-height: 0; /* same reason as above - without this, overflow-y:auto has nothing to clip against */
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* The toolbar is now a static first child of .rte-editor-shell's flex
+   column - it never scrolls because .rte-scroll-area (its sibling) is
+   the only element with overflow-y:auto. No more position:sticky. */
+.rte-toolbar-pinned {
+  position: static;
+  flex: 0 0 auto;
+  margin-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  border: none;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* .rte-wrapper already supplies the border/radius/background a
+   toolbar-less field needs, and .rte-content already has its own
+   padding and min-height - so rte-field-only has nothing to
+   override today. Kept as a hook in case that changes. */
+.rte-field-only {
+}
+
+/* Show/hide toggle button, always the first thing in the toolbar.
+   Slightly bolder than a normal .rte-btn so it reads as the control
+   that collapses/expands everything else next to it. */
+.rte-toolbar-toggle {
+  font-weight: 600;
+  min-width: auto;
+  padding: 0 10px;
+}
+
+/* ============================================================
+   RIGHT-CLICK CONTEXT MENU (RichTextContextMenu)
+   ============================================================ */
+
+.rte-context-menu {
+  position: fixed;
+  z-index: 2000;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rte-context-menu-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.rte-context-menu-row:not(:last-child) {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rte-context-menu .rte-font-select {
+  flex: 1 1 0;
+  min-width: 0;
+}

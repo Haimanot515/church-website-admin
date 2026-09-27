@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchStory.css";
+
+// Strips HTML tags for plain-text display/validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   title: "",
@@ -117,6 +124,17 @@ const GetChurchStories = () => {
 
     setFormError("");
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(form.title)) {
+      setFormError(t("getChurchStories.errorTitleRequired"));
+      return;
+    }
+    if (!stripHtml(form.desc)) {
+      setFormError(t("getChurchStories.errorDescRequired"));
+      return;
+    }
+
     // The backend derives `year` and `order` from `range`, and requires
     // a 4-digit year inside it (e.g. "1998 - 2006"). Catch that early
     // instead of waiting for the schema validator to reject it.
@@ -160,7 +178,7 @@ const GetChurchStories = () => {
 
   // --- Delete ---
   const handleDelete = async (id, title) => {
-    const confirmed = window.confirm(t("getChurchStories.confirmDelete", { title }));
+    const confirmed = window.confirm(t("getChurchStories.confirmDelete", { title: stripHtml(title) }));
 
     if (!confirmed) return;
 
@@ -204,145 +222,149 @@ const GetChurchStories = () => {
         {error && <p className="gcsError">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gcsEditPanel">
-            <h3 className="gcsEditHeading">{t("getChurchStories.editHeading")}</h3>
+          <div ref={editPanelRef} className="gcsEditPanel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3 className="gcsEditHeading">{t("getChurchStories.editHeading")}</h3>
 
-            {formError && <p className="gcsError">{formError}</p>}
+                {formError && <p className="gcsError">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="gcsForm">
-              <label className="gcsLabel" htmlFor="gcs-title">
-                {t("getChurchStories.titleLabel")}
-                <span className="gcsRequired"> *</span>
-              </label>
-              <input
-                id="gcs-title"
-                type="text"
-                name="title"
-                placeholder={t("getChurchStories.titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                required
-                className="gcsInput"
-              />
+                <form onSubmit={handleSubmit} className="gcsForm">
+                  <label className="gcsLabel" htmlFor="gcs-title">
+                    {t("getChurchStories.titleLabel")}
+                    <span className="gcsRequired"> *</span>
+                  </label>
+                  <RichTextField
+                    id="gcs-title"
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder={t("getChurchStories.titlePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <label className="gcsLabel" htmlFor="gcs-range">
-                {t("getChurchStories.rangeLabel")}
-                <span className="gcsRequired"> *</span>
-              </label>
-              <input
-                id="gcs-range"
-                type="text"
-                name="range"
-                placeholder={t("getChurchStories.rangePlaceholder")}
-                value={form.range}
-                onChange={handleChange}
-                required
-                className="gcsInput"
-              />
+                  <label className="gcsLabel" htmlFor="gcs-range">
+                    {t("getChurchStories.rangeLabel")}
+                    <span className="gcsRequired"> *</span>
+                  </label>
+                  <input
+                    id="gcs-range"
+                    type="text"
+                    name="range"
+                    placeholder={t("getChurchStories.rangePlaceholder")}
+                    value={form.range}
+                    onChange={handleChange}
+                    required
+                    className="gcsInput"
+                  />
 
-              <label className="gcsLabel" htmlFor="gcs-desc">
-                {t("getChurchStories.descLabel")}
-                <span className="gcsRequired"> *</span>
-              </label>
-              <textarea
-                id="gcs-desc"
-                name="desc"
-                placeholder={t("getChurchStories.descPlaceholder")}
-                rows="5"
-                value={form.desc}
-                onChange={handleChange}
-                required
-                className="gcsTextarea"
-              />
+                  <label className="gcsLabel" htmlFor="gcs-desc">
+                    {t("getChurchStories.descLabel")}
+                    <span className="gcsRequired"> *</span>
+                  </label>
+                  <RichTextField
+                    id="gcs-desc"
+                    value={form.desc}
+                    onChange={(html) => setForm((prev) => ({ ...prev, desc: html }))}
+                    placeholder={t("getChurchStories.descPlaceholder")}
+                    minHeight="160px"
+                  />
 
-              <div className="gcsFieldRow">
-                <div className="gcsFieldCol">
-                  <label className="gcsLabel" htmlFor="gcs-leader">
-                    {t("getChurchStories.leaderLabel")}
+                  <div className="gcsFieldRow">
+                    <div className="gcsFieldCol">
+                      <label className="gcsLabel" htmlFor="gcs-leader">
+                        {t("getChurchStories.leaderLabel")}
+                        <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+                      </label>
+                      <input
+                        id="gcs-leader"
+                        type="text"
+                        name="leader"
+                        placeholder={t("getChurchStories.leaderPlaceholder")}
+                        value={form.leader}
+                        onChange={handleChange}
+                        className="gcsInput"
+                      />
+                    </div>
+
+                    <div className="gcsFieldCol">
+                      <label className="gcsLabel" htmlFor="gcs-leaderRole">
+                        {t("getChurchStories.leaderRoleLabel")}
+                        <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
+                      </label>
+                      <input
+                        id="gcs-leaderRole"
+                        type="text"
+                        name="leaderRole"
+                        placeholder={t("getChurchStories.leaderRolePlaceholder")}
+                        value={form.leaderRole}
+                        onChange={handleChange}
+                        className="gcsInput"
+                      />
+                    </div>
+                  </div>
+
+                  <label className="gcsLabel" htmlFor="gcs-servedBy">
+                    {t("getChurchStories.servedByLabel")}
                     <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
                   </label>
                   <input
-                    id="gcs-leader"
+                    id="gcs-servedBy"
                     type="text"
-                    name="leader"
-                    placeholder={t("getChurchStories.leaderPlaceholder")}
-                    value={form.leader}
+                    name="servedBy"
+                    placeholder={t("getChurchStories.servedByPlaceholder")}
+                    value={form.servedBy}
                     onChange={handleChange}
                     className="gcsInput"
                   />
-                </div>
 
-                <div className="gcsFieldCol">
-                  <label className="gcsLabel" htmlFor="gcs-leaderRole">
-                    {t("getChurchStories.leaderRoleLabel")}
+                  <label className="gcsLabel" htmlFor="gcs-file">
+                    {t("getChurchStories.photoLabel")}
                     <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
                   </label>
-                  <input
-                    id="gcs-leaderRole"
-                    type="text"
-                    name="leaderRole"
-                    placeholder={t("getChurchStories.leaderRolePlaceholder")}
-                    value={form.leaderRole}
-                    onChange={handleChange}
-                    className="gcsInput"
-                  />
-                </div>
+
+                  {existingPhoto && !preview && (
+                    <div className="gcsPhotoBlock">
+                      <small className="gcsPhotoLabel">{t("getChurchStories.currentPhotoLabel")}</small>
+                      <img
+                        src={existingPhoto}
+                        alt={t("getChurchStories.currentPhotoAlt")}
+                        className="gcsPhotoPreview"
+                      />
+                    </div>
+                  )}
+
+                  <input id="gcs-file" type="file" accept="image/*" onChange={handleFileChange} />
+
+                  {preview && (
+                    <div className="gcsPhotoBlock">
+                      <small className="gcsPhotoLabel">{t("getChurchStories.newPhotoLabel")}</small>
+                      <img src={preview} alt={t("getChurchStories.previewAlt")} className="gcsPhotoPreview" />
+                    </div>
+                  )}
+
+                  <div className="gcsFormActions">
+                    <button type="submit" disabled={submitting} className="gcsSaveButton">
+                      {submitting ? t("getChurchStories.saving") : t("getChurchStories.saveButton")}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="gcsCancelButton"
+                    >
+                      {t("getChurchStories.cancelButton")}
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <label className="gcsLabel" htmlFor="gcs-servedBy">
-                {t("getChurchStories.servedByLabel")}
-                <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
-              </label>
-              <input
-                id="gcs-servedBy"
-                type="text"
-                name="servedBy"
-                placeholder={t("getChurchStories.servedByPlaceholder")}
-                value={form.servedBy}
-                onChange={handleChange}
-                className="gcsInput"
-              />
-
-              <label className="gcsLabel" htmlFor="gcs-file">
-                {t("getChurchStories.photoLabel")}
-                <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
-              </label>
-
-              {existingPhoto && !preview && (
-                <div className="gcsPhotoBlock">
-                  <small className="gcsPhotoLabel">{t("getChurchStories.currentPhotoLabel")}</small>
-                  <img
-                    src={existingPhoto}
-                    alt={t("getChurchStories.currentPhotoAlt")}
-                    className="gcsPhotoPreview"
-                  />
-                </div>
-              )}
-
-              <input id="gcs-file" type="file" accept="image/*" onChange={handleFileChange} />
-
-              {preview && (
-                <div className="gcsPhotoBlock">
-                  <small className="gcsPhotoLabel">{t("getChurchStories.newPhotoLabel")}</small>
-                  <img src={preview} alt={t("getChurchStories.previewAlt")} className="gcsPhotoPreview" />
-                </div>
-              )}
-
-              <div className="gcsFormActions">
-                <button type="submit" disabled={submitting} className="gcsSaveButton">
-                  {submitting ? t("getChurchStories.saving") : t("getChurchStories.saveButton")}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="gcsCancelButton"
-                >
-                  {t("getChurchStories.cancelButton")}
-                </button>
-              </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -384,11 +406,11 @@ const GetChurchStories = () => {
                     <div key={s.id} className="gcsListItem">
                       <div className="gcsItemMain">
                         {s.photo && (
-                          <img src={s.photo} alt={s.title} className="gcsItemPhoto" />
+                          <img src={s.photo} alt={stripHtml(s.title)} className="gcsItemPhoto" />
                         )}
 
                         <div className="gcsItemText">
-                          <strong className="gcsItemTitle">{s.title}</strong>
+                          <strong className="gcsItemTitle">{stripHtml(s.title)}</strong>
                           <span className="gcsItemMeta">
                             {t("getChurchStories.orderLabel", { order: s.order })}
                             {s.year !== undefined && s.year !== null && s.year !== ""

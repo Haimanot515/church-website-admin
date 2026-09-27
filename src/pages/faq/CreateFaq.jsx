@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateFaq.css";
+
+// Strips HTML tags for plain-text validation checks
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateFaq = () => {
   const { t } = useTranslation();
@@ -70,6 +77,17 @@ const CreateFaq = () => {
       return;
     }
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(faq.question)) {
+      setError(t("createFaq.errors.questionRequired"));
+      return;
+    }
+    if (!stripHtml(faq.answer)) {
+      setError(t("createFaq.errors.answerRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
       await API.post("/faq", faq);
@@ -93,76 +111,82 @@ const CreateFaq = () => {
 
   return (
     <div className="cfaq-page">
-      <div className="cfaq-card">
-        <h2>{t("createFaq.heading")}</h2>
+      <div className="cfaq-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2>{t("createFaq.heading")}</h2>
 
-        {error && <p className="cfaq-error">{error}</p>}
+            {error && <p className="cfaq-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="cfaq-form">
-          <select
-            name="language"
-            value={faq.language}
-            onChange={handleChange}
-            required
-            className="cfaq-select"
-          >
-            <option value="" disabled>
-              {t("createFaq.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="cfaq-form">
+              <select
+                name="language"
+                value={faq.language}
+                onChange={handleChange}
+                required
+                className="cfaq-select"
+              >
+                <option value="" disabled>
+                  {t("createFaq.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <select
-            name="category"
-            value={faq.category}
-            onChange={handleChange}
-            required
-            className="cfaq-select"
-          >
-            <option value="" disabled>
-              {t("createFaq.form.selectCategory")}
-            </option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+              <select
+                name="category"
+                value={faq.category}
+                onChange={handleChange}
+                required
+                className="cfaq-select"
+              >
+                <option value="" disabled>
+                  {t("createFaq.form.selectCategory")}
+                </option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="question"
-            placeholder={t("createFaq.form.questionPlaceholder")}
-            value={faq.question}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={faq.question}
+                onChange={(html) => setFaq((prev) => ({ ...prev, question: html }))}
+                placeholder={t("createFaq.form.questionPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="answer"
-            placeholder={t("createFaq.form.answerPlaceholder")}
-            value={faq.answer}
-            onChange={handleChange}
-            rows="6"
-            required
-          />
+              <RichTextField
+                value={faq.answer}
+                onChange={(html) => setFaq((prev) => ({ ...prev, answer: html }))}
+                placeholder={t("createFaq.form.answerPlaceholder")}
+                minHeight="180px"
+              />
 
-          <input
-            type="number"
-            name="order"
-            placeholder={t("createFaq.form.orderPlaceholder")}
-            value={faq.order}
-            onChange={handleChange}
-          />
+              <input
+                type="number"
+                name="order"
+                placeholder={t("createFaq.form.orderPlaceholder")}
+                value={faq.order}
+                onChange={handleChange}
+              />
 
-          <button type="submit" disabled={loading} className="cfaq-btn-primary">
-            {loading ? t("createFaq.form.creating") : t("createFaq.form.createButton")}
-          </button>
-        </form>
+              <button type="submit" disabled={loading} className="cfaq-btn-primary">
+                {loading ? t("createFaq.form.creating") : t("createFaq.form.createButton")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

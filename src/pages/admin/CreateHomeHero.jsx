@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import RichTextEditor from "../../components/textEditor/RichTextEditor";
 import "./CreateHomeHero.css";
 
 const CreateHomeHero = () => {
@@ -115,12 +116,11 @@ const CreateHomeHero = () => {
             required
           />
 
-          <textarea
-            name="description"
-            placeholder={t("createHomeHero.form.descriptionPlaceholder")}
+          <RichTextEditor
             value={formData.description}
-            onChange={handleChange}
-            rows="3"
+            onChange={(html) => setFormData((prev) => ({ ...prev, description: html }))}
+            placeholder={t("createHomeHero.form.descriptionPlaceholder")}
+            minHeight="100px"
           />
 
           <div>

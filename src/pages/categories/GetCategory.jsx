@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetCategory.css";
+
+// Strips HTML tags for plain-text display/validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   name: "",
@@ -133,6 +140,13 @@ const GetCategory = () => {
 
     setFormError("");
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(form.name)) {
+      setFormError(t("getCategory.errors.nameRequired"));
+      return;
+    }
+
     try {
       setSubmitting(true);
       await API.put(`/categories/${editingId}`, {
@@ -155,7 +169,7 @@ const GetCategory = () => {
 
   // --- Delete ---
   const handleDelete = async (category) => {
-    const confirmed = window.confirm(t("getCategory.confirmDelete", { name: category.name }));
+    const confirmed = window.confirm(t("getCategory.confirmDelete", { name: stripHtml(category.name) }));
     if (!confirmed) return;
 
     try {
@@ -213,67 +227,74 @@ const GetCategory = () => {
         {error && <p className="gc-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gc-edit-panel">
-            <h3>{t("getCategory.editHeading")}</h3>
+          <div ref={editPanelRef} className="gc-edit-panel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3>{t("getCategory.editHeading")}</h3>
 
-            {formError && <p className="gc-error">{formError}</p>}
+                {formError && <p className="gc-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="gc-form">
-              <input
-                type="text"
-                name="name"
-                placeholder={t("getCategory.form.namePlaceholder")}
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
+                <form onSubmit={handleSubmit} className="gc-form">
+                  <RichTextField
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder={t("getCategory.form.namePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <input
-                type="text"
-                name="slug"
-                placeholder={t(
-                  "getCategory.form.slugPlaceholder",
-                  "Slug (e.g. travel) — same slug across all languages for this category"
-                )}
-                value={form.slug}
-                onChange={handleSlugChange}
-                required
-              />
+                  <input
+                    type="text"
+                    name="slug"
+                    placeholder={t(
+                      "getCategory.form.slugPlaceholder",
+                      "Slug (e.g. travel) — same slug across all languages for this category"
+                    )}
+                    value={form.slug}
+                    onChange={handleSlugChange}
+                    required
+                  />
 
-              <textarea
-                name="description"
-                placeholder={t("getCategory.form.descriptionPlaceholder")}
-                value={form.description}
-                onChange={handleChange}
-                rows="5"
-              />
+                  <RichTextField
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder={t("getCategory.form.descriptionPlaceholder")}
+                    minHeight="140px"
+                  />
 
-              <select name="language" value={form.language} onChange={handleChange} required>
-                <option value="" disabled>
-                  {t("getCategory.form.selectLanguage")}
-                </option>
-                {languages.map((lang) => (
-                  <option key={lang.id} value={lang.id}>
-                    {lang.name} ({lang.code})
-                  </option>
-                ))}
-              </select>
+                  <select name="language" value={form.language} onChange={handleChange} required>
+                    <option value="" disabled>
+                      {t("getCategory.form.selectLanguage")}
+                    </option>
+                    {languages.map((lang) => (
+                      <option key={lang.id} value={lang.id}>
+                        {lang.name} ({lang.code})
+                      </option>
+                    ))}
+                  </select>
 
-              <div className="gc-form-actions">
-                <button type="submit" disabled={submitting} className="gc-btn-primary">
-                  {submitting ? t("getCategory.form.saving") : t("getCategory.form.saveChanges")}
-                </button>
+                  <div className="gc-form-actions">
+                    <button type="submit" disabled={submitting} className="gc-btn-primary">
+                      {submitting ? t("getCategory.form.saving") : t("getCategory.form.saveChanges")}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="gc-btn-cancel"
-                >
-                  {t("getCategory.form.cancel")}
-                </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="gc-btn-cancel"
+                    >
+                      {t("getCategory.form.cancel")}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -297,7 +318,7 @@ const GetCategory = () => {
                 <tbody>
                   {categories.map((cat) => (
                     <tr key={cat.id}>
-                      <td data-label={t("getCategory.table.name")}>{cat.name}</td>
+                      <td data-label={t("getCategory.table.name")}>{stripHtml(cat.name)}</td>
                       <td data-label={t("getCategory.table.slug", "Slug")}>
                         {cat.slug || (
                           <span className="gc-slug-missing">
@@ -305,7 +326,7 @@ const GetCategory = () => {
                           </span>
                         )}
                       </td>
-                      <td data-label={t("getCategory.table.description")}>{cat.description || "—"}</td>
+                      <td data-label={t("getCategory.table.description")}>{stripHtml(cat.description) || "—"}</td>
                       <td data-label={t("getCategory.table.language")}>{getLanguageLabel(cat.language)}</td>
                       <td data-label={t("getCategory.table.actions")}>
                         <div className="gc-row-actions">

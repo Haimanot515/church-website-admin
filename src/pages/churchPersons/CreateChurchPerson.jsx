@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurchPerson.css";
 
 const CATEGORY_OPTIONS = [
@@ -8,6 +12,9 @@ const CATEGORY_OPTIONS = [
   { value: "specialThanks", labelKey: "categories.specialThanks" },
   { value: "testimony", labelKey: "categories.testimony" },
 ];
+
+// Strips HTML tags for plain-text validation checks
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateChurchPerson = () => {
   const { t } = useTranslation("translation", { keyPrefix: "createChurchPerson" });
@@ -82,6 +89,13 @@ const CreateChurchPerson = () => {
 
     if (!person.language) {
       setError(t("selectLanguageError"));
+      return;
+    }
+
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(person.name)) {
+      setError(t("nameRequiredError"));
       return;
     }
 
@@ -165,125 +179,130 @@ const CreateChurchPerson = () => {
 
   return (
     <div className="createChurchPerson-page">
-      <div className="createChurchPerson-card">
-        <h2 className="createChurchPerson-title">{t("title")}</h2>
+      <div className="createChurchPerson-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2 className="createChurchPerson-title">{t("title")}</h2>
 
-        {error && <p className="createChurchPerson-error">{error}</p>}
+            {error && <p className="createChurchPerson-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="createChurchPerson-form">
-          <label className="createChurchPerson-label" htmlFor="ccp-language">
-            {t("languageLabel")}
-            <span className="createChurchPerson-required"> *</span>
-          </label>
-          <select
-            id="ccp-language"
-            name="language"
-            value={person.language}
-            onChange={handleChange}
-            required
-            className="createChurchPerson-select"
-          >
-            <option value="" disabled>
-              {t("selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="createChurchPerson-form">
+              <label className="createChurchPerson-label" htmlFor="ccp-language">
+                {t("languageLabel")}
+                <span className="createChurchPerson-required"> *</span>
+              </label>
+              <select
+                id="ccp-language"
+                name="language"
+                value={person.language}
+                onChange={handleChange}
+                required
+                className="createChurchPerson-select"
+              >
+                <option value="" disabled>
+                  {t("selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <label className="createChurchPerson-label" htmlFor="ccp-name">
-            {t("nameLabel")}
-            <span className="createChurchPerson-required"> *</span>
-          </label>
-          <input
-            id="ccp-name"
-            type="text"
-            name="name"
-            placeholder={t("namePlaceholder")}
-            value={person.name}
-            onChange={handleChange}
-            required
-            className="createChurchPerson-input"
-          />
+              <label className="createChurchPerson-label" htmlFor="ccp-name">
+                {t("nameLabel")}
+                <span className="createChurchPerson-required"> *</span>
+              </label>
+              <RichTextField
+                id="ccp-name"
+                value={person.name}
+                onChange={(html) => setPerson((prev) => ({ ...prev, name: html }))}
+                placeholder={t("namePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <label className="createChurchPerson-label" htmlFor="ccp-role">
-            {t("roleLabel")}
-            <span className="createChurchPerson-optional"> ({t("optional")})</span>
-          </label>
-          <input
-            id="ccp-role"
-            type="text"
-            name="role"
-            placeholder={t("rolePlaceholder")}
-            value={person.role}
-            onChange={handleChange}
-            className="createChurchPerson-input"
-          />
+              <label className="createChurchPerson-label" htmlFor="ccp-role">
+                {t("roleLabel")}
+                <span className="createChurchPerson-optional"> ({t("optional")})</span>
+              </label>
+              <input
+                id="ccp-role"
+                type="text"
+                name="role"
+                placeholder={t("rolePlaceholder")}
+                value={person.role}
+                onChange={handleChange}
+                className="createChurchPerson-input"
+              />
 
-          <label className="createChurchPerson-label" htmlFor="ccp-category">
-            {t("categoryLabel")}
-            <span className="createChurchPerson-required"> *</span>
-          </label>
-          <select
-            id="ccp-category"
-            name="category"
-            value={person.category}
-            onChange={handleChange}
-            className="createChurchPerson-select"
-          >
-            {CATEGORY_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {t(opt.labelKey)}
-              </option>
-            ))}
-          </select>
+              <label className="createChurchPerson-label" htmlFor="ccp-category">
+                {t("categoryLabel")}
+                <span className="createChurchPerson-required"> *</span>
+              </label>
+              <select
+                id="ccp-category"
+                name="category"
+                value={person.category}
+                onChange={handleChange}
+                className="createChurchPerson-select"
+              >
+                {CATEGORY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {t(opt.labelKey)}
+                  </option>
+                ))}
+              </select>
 
-          <label className="createChurchPerson-label" htmlFor="ccp-description">
-            {t("descriptionLabel")}
-            <span className="createChurchPerson-optional"> ({t("optional")})</span>
-          </label>
-          <textarea
-            id="ccp-description"
-            name="description"
-            placeholder={t("descriptionPlaceholder")}
-            rows="4"
-            value={person.description}
-            onChange={handleChange}
-            className="createChurchPerson-textarea"
-          />
+              <label className="createChurchPerson-label" htmlFor="ccp-description">
+                {t("descriptionLabel")}
+                <span className="createChurchPerson-optional"> ({t("optional")})</span>
+              </label>
+              <RichTextField
+                id="ccp-description"
+                value={person.description}
+                onChange={(html) => setPerson((prev) => ({ ...prev, description: html }))}
+                placeholder={t("descriptionPlaceholder")}
+                minHeight="140px"
+              />
 
-          <label className="createChurchPerson-fileLabel" htmlFor="ccp-photos">
-            {t("uploadPhotosLabel")}
-            <span className="createChurchPerson-optional"> ({t("optional")})</span>
-            <input
-              id="ccp-photos"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-              className="createChurchPerson-fileInput"
-            />
-          </label>
-
-          {previews.length > 0 && (
-            <div className="createChurchPerson-previewGrid">
-              {previews.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt={t("previewAlt", { index: i })}
-                  className="createChurchPerson-preview"
+              <label className="createChurchPerson-fileLabel" htmlFor="ccp-photos">
+                {t("uploadPhotosLabel")}
+                <span className="createChurchPerson-optional"> ({t("optional")})</span>
+                <input
+                  id="ccp-photos"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  className="createChurchPerson-fileInput"
                 />
-              ))}
-            </div>
-          )}
+              </label>
 
-          <button type="submit" disabled={loading} className="createChurchPerson-submitButton">
-            {loading ? t("submittingButton") : t("submitButton")}
-          </button>
-        </form>
+              {previews.length > 0 && (
+                <div className="createChurchPerson-previewGrid">
+                  {previews.map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt={t("previewAlt", { index: i })}
+                      className="createChurchPerson-preview"
+                    />
+                  ))}
+                </div>
+              )}
+
+              <button type="submit" disabled={loading} className="createChurchPerson-submitButton">
+                {loading ? t("submittingButton") : t("submitButton")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

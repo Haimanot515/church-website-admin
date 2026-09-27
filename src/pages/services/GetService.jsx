@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetService.css";
 
+// Title is now stored as RichTextField HTML — strip tags for the plain-text card heading
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
+
 const GetService = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -91,7 +94,7 @@ const GetService = () => {
           {services.map((service) => (
             <div key={service.id} className="ms-card">
               <div>
-                <h3 className="ms-card-title">{service.title}</h3>
+                <h3 className="ms-card-title">{stripHtml(service.title) || "—"}</h3>
                 <p className="ms-card-meta">
                   {service.schedule} · {service.category} ·{" "}
                   <strong

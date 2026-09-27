@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./UpdatePromotion.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const UpdatePromotion = () => {
   const { t } = useTranslation();
@@ -81,6 +87,18 @@ const UpdatePromotion = () => {
       return;
     }
 
+    // RichTextField is a contenteditable, not an <input>/<textarea>, so it
+    // can't rely on the native `required` attribute — check the plain-text
+    // content of each converted field instead.
+    if (!stripHtml(promotion.title)) {
+      setError(t("updatePromotion.errors.titleRequired"));
+      return;
+    }
+    if (!stripHtml(promotion.description)) {
+      setError(t("updatePromotion.errors.descriptionRequired"));
+      return;
+    }
+
     try {
       setSaving(true);
       const token = localStorage.getItem("token");
@@ -120,74 +138,82 @@ const UpdatePromotion = () => {
 
   return (
     <div className="up-page">
-      <div className="up-card">
-        <h2>{t("updatePromotion.heading")}</h2>
+      <div className="up-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2>{t("updatePromotion.heading")}</h2>
 
-        {error && <p className="up-error">{error}</p>}
+            {error && <p className="up-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="up-form">
-          <select
-            name="language"
-            value={promotion.language}
-            onChange={handleChange}
-            required
-            className="up-select"
-          >
-            <option value="" disabled>
-              {t("updatePromotion.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang._id} value={lang._id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="up-form">
+              <select
+                name="language"
+                value={promotion.language}
+                onChange={handleChange}
+                required
+                className="up-select"
+              >
+                <option value="" disabled>
+                  {t("updatePromotion.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang._id} value={lang._id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("updatePromotion.form.titlePlaceholder")}
-            value={promotion.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                id="up-title"
+                value={promotion.title}
+                onChange={(html) => setPromotion((prev) => ({ ...prev, title: html }))}
+                placeholder={t("updatePromotion.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <textarea
-            name="description"
-            placeholder={t("updatePromotion.form.descriptionPlaceholder")}
-            rows="6"
-            value={promotion.description}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                id="up-description"
+                value={promotion.description}
+                onChange={(html) => setPromotion((prev) => ({ ...prev, description: html }))}
+                placeholder={t("updatePromotion.form.descriptionPlaceholder")}
+                minHeight="140px"
+              />
 
-          {existingPhoto && !preview && (
-            <div className="up-current-photo">
-              <span>{t("updatePromotion.currentImageLabel")}</span>
-              <img src={existingPhoto} alt={promotion.title} className="up-preview" />
-            </div>
-          )}
+              {existingPhoto && !preview && (
+                <div className="up-current-photo">
+                  <span>{t("updatePromotion.currentImageLabel")}</span>
+                  <img src={existingPhoto} alt={stripHtml(promotion.title)} className="up-preview" />
+                </div>
+              )}
 
-          <input type="file" accept="image/*" onChange={handleFileChange} className="up-file-input" />
+              <input type="file" accept="image/*" onChange={handleFileChange} className="up-file-input" />
 
-          {preview && (
-            <img src={preview} alt={t("updatePromotion.previewAlt")} className="up-preview" />
-          )}
+              {preview && (
+                <img src={preview} alt={t("updatePromotion.previewAlt")} className="up-preview" />
+              )}
 
-          <div className="up-button-row">
-            <button type="submit" disabled={saving} className="up-btn-primary">
-              {saving ? t("updatePromotion.form.saving") : t("updatePromotion.form.saveButton")}
-            </button>
-            <button
-              type="button"
-              disabled={saving}
-              onClick={handleCancel}
-              className="up-btn-cancel"
-            >
-              {t("updatePromotion.form.cancelButton")}
-            </button>
+              <div className="up-button-row">
+                <button type="submit" disabled={saving} className="up-btn-primary">
+                  {saving ? t("updatePromotion.form.saving") : t("updatePromotion.form.saveButton")}
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={handleCancel}
+                  className="up-btn-cancel"
+                >
+                  {t("updatePromotion.form.cancelButton")}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );

@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetPost.css";
+
+// Strips HTML tags for the plain-text table preview / validation
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const POSTS_PER_PAGE = 10;
 
@@ -185,6 +192,22 @@ const GetPost = () => {
 
     setFormError("");
 
+    // RichTextField is a contenteditable, not an <input>/<textarea>, so it
+    // can't rely on the native `required` attribute — check the plain-text
+    // content of each converted field instead.
+    if (!stripHtml(form.title)) {
+      setFormError(t("post.errors.titleRequired"));
+      return;
+    }
+    if (!stripHtml(form.description)) {
+      setFormError(t("post.errors.descriptionRequired"));
+      return;
+    }
+    if (!stripHtml(form.content)) {
+      setFormError(t("post.errors.contentRequired"));
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -257,18 +280,23 @@ const GetPost = () => {
         {error && <p className="gp-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gp-edit-panel">
-            <h3>{t("post.editHeading")}</h3>
+          <div ref={editPanelRef} className="gp-edit-panel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3>{t("post.editHeading")}</h3>
 
-            {formError && <p className="gp-error">{formError}</p>}
+                {formError && <p className="gp-error">{formError}</p>}
 
-            {languagesLoading ? (
-              <div className="gp-panelLoading">
-                <div className="gp-panelSpinner" />
-                <span>{t("post.form.loadingLanguages")}</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="gp-form">
+                {languagesLoading ? (
+                  <div className="gp-panelLoading">
+                    <div className="gp-panelSpinner" />
+                    <span>{t("post.form.loadingLanguages")}</span>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="gp-form">
                 <label className="gp-label" htmlFor="gp-language">
                   {t("post.form.languageLabel")}
                   <span className="gp-required"> *</span>
@@ -293,45 +321,38 @@ const GetPost = () => {
                   {t("post.form.titleLabel")}
                   <span className="gp-required"> *</span>
                 </label>
-                <input
+                <RichTextField
                   id="gp-title"
-                  type="text"
-                  name="title"
-                  placeholder={t("post.form.titlePlaceholder")}
                   value={form.title}
-                  onChange={handleChange}
-                  required
-                  className="gp-input"
+                  onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                  placeholder={t("post.form.titlePlaceholder")}
+                  minHeight="44px"
+                  toolbar="minimal"
+                  autoFocus
                 />
 
                 <label className="gp-label" htmlFor="gp-description">
                   {t("post.form.descriptionLabel")}
                   <span className="gp-required"> *</span>
                 </label>
-                <textarea
+                <RichTextField
                   id="gp-description"
-                  name="description"
-                  placeholder={t("post.form.descriptionPlaceholder")}
                   value={form.description}
-                  onChange={handleChange}
-                  rows="3"
-                  required
-                  className="gp-textarea"
+                  onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                  placeholder={t("post.form.descriptionPlaceholder")}
+                  minHeight="90px"
                 />
 
                 <label className="gp-label" htmlFor="gp-content">
                   {t("post.form.contentLabel")}
                   <span className="gp-required"> *</span>
                 </label>
-                <textarea
+                <RichTextField
                   id="gp-content"
-                  name="content"
-                  placeholder={t("post.form.contentPlaceholder")}
                   value={form.content}
-                  onChange={handleChange}
-                  rows="8"
-                  required
-                  className="gp-textarea"
+                  onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
+                  placeholder={t("post.form.contentPlaceholder")}
+                  minHeight="240px"
                 />
 
                 {form.language && (
@@ -453,7 +474,10 @@ const GetPost = () => {
                   </button>
                 </div>
               </form>
-            )}
+                )}
+              </div>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -483,7 +507,7 @@ const GetPost = () => {
                   <tbody>
                     {posts.map((post) => (
                       <tr key={post.id}>
-                        <td data-label={t("post.table.title")}>{post.title}</td>
+                        <td data-label={t("post.table.title")}>{stripHtml(post.title) || "—"}</td>
                         <td data-label={t("post.table.category")}>{post.category?.name || "—"}</td>
                         <td data-label={t("post.table.language")}>{post.language?.name || "—"}</td>
                         <td data-label={t("post.table.status")}>

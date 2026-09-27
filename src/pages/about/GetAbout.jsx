@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetAbout.css";
+
+// Strips HTML tags for the plain-text table preview snippet
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const ENTRIES_PER_PAGE = 10;
 
@@ -89,11 +96,6 @@ const GetAbout = () => {
     setFormError("");
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setForm((prev) => ({ ...prev, image: file }));
@@ -107,6 +109,13 @@ const GetAbout = () => {
     if (!editingId) return;
 
     setFormError("");
+
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(form.title)) {
+      setFormError(t("getAbout.errors.titleRequired"));
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -182,63 +191,69 @@ const GetAbout = () => {
         {error && <p className="ga-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="ga-edit-panel">
-            <h3>{t("getAbout.editHeading")}</h3>
+          <div ref={editPanelRef} className="ga-edit-panel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3>{t("getAbout.editHeading")}</h3>
 
-            {formError && <p className="ga-error">{formError}</p>}
+                {formError && <p className="ga-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="ga-form">
-              <input
-                type="text"
-                name="title"
-                placeholder={t("getAbout.form.titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
+                <form onSubmit={handleSubmit} className="ga-form">
+                  <RichTextField
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder={t("getAbout.form.titlePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <input
-                type="text"
-                name="churchLeader"
-                placeholder={t("getAbout.form.churchLeaderPlaceholder")}
-                value={form.churchLeader}
-                onChange={handleChange}
-              />
+                  <RichTextField
+                    value={form.churchLeader}
+                    onChange={(html) => setForm((prev) => ({ ...prev, churchLeader: html }))}
+                    placeholder={t("getAbout.form.churchLeaderPlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
 
-              <textarea
-                name="description"
-                placeholder={t("getAbout.form.descriptionPlaceholder")}
-                value={form.description}
-                onChange={handleChange}
-                rows="6"
-                required
-              />
+                  <RichTextField
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder={t("getAbout.form.descriptionPlaceholder")}
+                    minHeight="160px"
+                  />
 
-              <input type="file" accept="image/*" onChange={handleFileChange} className="ga-file-input" />
+                  <input type="file" accept="image/*" onChange={handleFileChange} className="ga-file-input" />
 
-              {(preview || existingImageUrl) && (
-                <img
-                  src={preview || existingImageUrl}
-                  alt={t("getAbout.previewAlt")}
-                  className="ga-preview"
-                />
-              )}
+                  {(preview || existingImageUrl) && (
+                    <img
+                      src={preview || existingImageUrl}
+                      alt={t("getAbout.previewAlt")}
+                      className="ga-preview"
+                    />
+                  )}
 
-              <div className="ga-form-actions">
-                <button type="submit" disabled={submitting} className="ga-btn-primary">
-                  {submitting ? t("getAbout.form.saving") : t("getAbout.form.saveChanges")}
-                </button>
+                  <div className="ga-form-actions">
+                    <button type="submit" disabled={submitting} className="ga-btn-primary">
+                      {submitting ? t("getAbout.form.saving") : t("getAbout.form.saveChanges")}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="ga-btn-cancel"
-                >
-                  {t("getAbout.form.cancel")}
-                </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="ga-btn-cancel"
+                    >
+                      {t("getAbout.form.cancel")}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -263,14 +278,13 @@ const GetAbout = () => {
                   <tbody>
                     {entries.map((entry) => (
                       <tr key={entry.id}>
-                        <td data-label={t("getAbout.table.title")}>{entry.title}</td>
-                        <td data-label={t("getAbout.table.churchLeader")}>{entry.churchLeader || "—"}</td>
+                        <td data-label={t("getAbout.table.title")}>{stripHtml(entry.title) || "—"}</td>
+                        <td data-label={t("getAbout.table.churchLeader")}>{stripHtml(entry.churchLeader) || "—"}</td>
                         <td data-label={t("getAbout.table.description")}>
-                          {entry.description
-                            ? entry.description.length > 60
-                              ? `${entry.description.slice(0, 60)}...`
-                              : entry.description
-                            : "—"}
+                          {(() => {
+                            const plain = stripHtml(entry.description);
+                            return plain ? (plain.length > 60 ? `${plain.slice(0, 60)}...` : plain) : "—";
+                          })()}
                         </td>
                         <td data-label={t("getAbout.table.created")}>
                           {entry.createdAt

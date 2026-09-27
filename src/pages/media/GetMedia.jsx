@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetMedia.css";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Title/description are stored as RichTextField HTML — strip tags for plain-text display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   title: "",
@@ -146,6 +153,13 @@ const GetMedia = () => {
 
     setFormError("");
 
+    // title is now a RichTextField (contenteditable), not a native input,
+    // so `required` can't validate it — check the plain text instead.
+    if (!stripHtml(form.title)) {
+      setFormError(t("getMedia.errors.titleRequired"));
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -177,7 +191,7 @@ const GetMedia = () => {
 
   // --- Delete ---
   const handleDelete = async (item) => {
-    const confirmed = window.confirm(t("getMedia.confirmDelete", { title: item.title }));
+    const confirmed = window.confirm(t("getMedia.confirmDelete", { title: stripHtml(item.title) }));
     if (!confirmed) return;
 
     try {
@@ -200,11 +214,11 @@ const GetMedia = () => {
 
   const renderThumb = (item) => {
     if (item.mediaType === "photo" && item.mediaUrl) {
-      return <img src={item.mediaUrl} alt={item.title} className="gm-thumb" />;
+      return <img src={item.mediaUrl} alt={stripHtml(item.title)} className="gm-thumb" />;
     }
 
     if (item.thumbnail) {
-      return <img src={item.thumbnail} alt={item.title} className="gm-thumb" />;
+      return <img src={item.thumbnail} alt={stripHtml(item.title)} className="gm-thumb" />;
     }
 
     if (item.mediaUrl) {
@@ -234,99 +248,106 @@ const GetMedia = () => {
         {error && <p className="gm-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gm-edit-panel">
-            <h3>{t("getMedia.editHeading")}</h3>
+          <div ref={editPanelRef} className="gm-edit-panel rte-page-shell">
+            <RichTextProvider>
+            <div className="rte-editor-shell">
+              <RichTextToolbar />
+              <RichTextContextMenu />
+              <div className="rte-scroll-area">
+                <h3>{t("getMedia.editHeading")}</h3>
 
-            {formError && <p className="gm-error">{formError}</p>}
+                {formError && <p className="gm-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="gm-form">
-              <input
-                type="text"
-                name="title"
-                placeholder={t("getMedia.form.titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
+                <form onSubmit={handleSubmit} className="gm-form">
+                  <RichTextField
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder={t("getMedia.form.titlePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                    autoFocus
+                  />
 
-              <textarea
-                name="description"
-                placeholder={t("getMedia.form.descriptionPlaceholder")}
-                rows="4"
-                value={form.description}
-                onChange={handleChange}
-              />
+                  <RichTextField
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder={t("getMedia.form.descriptionPlaceholder")}
+                    minHeight="120px"
+                  />
 
-              <select name="type" value={form.type} onChange={handleChange}>
-                <option value="photo">{t("getMedia.form.typePhoto")}</option>
-                <option value="video">{t("getMedia.form.typeVideo")}</option>
-                <option value="audio">{t("getMedia.form.typeAudio")}</option>
-                <option value="document">{t("getMedia.form.typeDocument")}</option>
-              </select>
+                  <select name="type" value={form.type} onChange={handleChange}>
+                    <option value="photo">{t("getMedia.form.typePhoto")}</option>
+                    <option value="video">{t("getMedia.form.typeVideo")}</option>
+                    <option value="audio">{t("getMedia.form.typeAudio")}</option>
+                    <option value="document">{t("getMedia.form.typeDocument")}</option>
+                  </select>
 
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? t("getMedia.form.loadingCategories") : t("getMedia.form.selectCategory")}
-                </option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                  <select
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    disabled={optionsLoading}
+                  >
+                    <option value="">
+                      {optionsLoading ? t("getMedia.form.loadingCategories") : t("getMedia.form.selectCategory")}
+                    </option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
 
-              <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">{t("getMedia.form.saveDraft")}</option>
-                <option value="published">{t("getMedia.form.publish")}</option>
-              </select>
+                  <select name="status" value={form.status} onChange={handleChange}>
+                    <option value="draft">{t("getMedia.form.saveDraft")}</option>
+                    <option value="published">{t("getMedia.form.publish")}</option>
+                  </select>
 
-              <input type="file" accept={getAcceptForType(form.type)} onChange={handleFileChange} />
-              <p className="gm-hint">{t("getMedia.form.keepFileHint")}</p>
+                  <input type="file" accept={getAcceptForType(form.type)} onChange={handleFileChange} />
+                  <p className="gm-hint">{t("getMedia.form.keepFileHint")}</p>
 
-              {preview && form.type === "photo" && (
-                <img src={preview} alt="preview" className="gm-file-preview" />
-              )}
-              {preview && form.type === "video" && (
-                <video src={preview} controls className="gm-video-preview" />
-              )}
-              {preview && form.type === "audio" && <audio src={preview} controls />}
-              {preview && form.type === "document" && (
-                <div className="gm-pdf-frame-wrap">
-                  <iframe src={preview} title="PDF preview" className="gm-pdf-frame" />
-                </div>
-              )}
+                  {preview && form.type === "photo" && (
+                    <img src={preview} alt="preview" className="gm-file-preview" />
+                  )}
+                  {preview && form.type === "video" && (
+                    <video src={preview} controls className="gm-video-preview" />
+                  )}
+                  {preview && form.type === "audio" && <audio src={preview} controls />}
+                  {preview && form.type === "document" && (
+                    <div className="gm-pdf-frame-wrap">
+                      <iframe src={preview} title="PDF preview" className="gm-pdf-frame" />
+                    </div>
+                  )}
 
-              {!preview && existingUrl && form.type === "photo" && (
-                <img src={existingUrl} alt="current" className="gm-file-preview" />
-              )}
-              {!preview &&
-                existingUrl &&
-                (form.type === "video" || form.type === "audio" || form.type === "document") && (
-                  <a href={existingUrl} target="_blank" rel="noopener noreferrer" className="gm-link">
-                    {t("getMedia.form.viewCurrentFile")}
-                  </a>
-                )}
+                  {!preview && existingUrl && form.type === "photo" && (
+                    <img src={existingUrl} alt="current" className="gm-file-preview" />
+                  )}
+                  {!preview &&
+                    existingUrl &&
+                    (form.type === "video" || form.type === "audio" || form.type === "document") && (
+                      <a href={existingUrl} target="_blank" rel="noopener noreferrer" className="gm-link">
+                        {t("getMedia.form.viewCurrentFile")}
+                      </a>
+                    )}
 
-              <div className="gm-form-actions">
-                <button type="submit" disabled={submitting || optionsLoading} className="gm-btn-primary">
-                  {submitting ? t("getMedia.form.saving") : t("getMedia.form.saveChanges")}
-                </button>
+                  <div className="gm-form-actions">
+                    <button type="submit" disabled={submitting || optionsLoading} className="gm-btn-primary">
+                      {submitting ? t("getMedia.form.saving") : t("getMedia.form.saveChanges")}
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  className="gm-btn-cancel"
-                >
-                  {t("getMedia.form.cancel")}
-                </button>
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      className="gm-btn-cancel"
+                    >
+                      {t("getMedia.form.cancel")}
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </div>
+            </RichTextProvider>
           </div>
         )}
 
@@ -353,7 +374,7 @@ const GetMedia = () => {
                   {media.map((item) => (
                     <tr key={item.id}>
                       <td data-label={t("getMedia.table.file")}>{renderThumb(item)}</td>
-                      <td data-label={t("getMedia.table.title")}>{item.title}</td>
+                      <td data-label={t("getMedia.table.title")}>{stripHtml(item.title) || "—"}</td>
                       <td data-label={t("getMedia.table.type")}>
                         <span className={typeBadgeClass(item.mediaType)}>{item.mediaType}</span>
                       </td>

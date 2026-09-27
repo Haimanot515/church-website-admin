@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
 
+// Title is now stored as RichTextField HTML — strip tags for plain-text display here
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const DeleteService = () => {
 
@@ -133,7 +135,7 @@ const DeleteService = () => {
               {service.imageUrl && (
                 <img
                   src={service.imageUrl}
-                  alt={service.title}
+                  alt={stripHtml(service.title)}
                   style={{
                     width: "80px",
                     height: "64px",
@@ -144,7 +146,7 @@ const DeleteService = () => {
               )}
 
               <div>
-                <strong>{service.title}</strong>
+                <strong>{stripHtml(service.title)}</strong>
                 <div
                   style={{
                     color: "#64748b",
@@ -152,7 +154,7 @@ const DeleteService = () => {
                     marginTop: "4px"
                   }}
                 >
-                  {service.day} · {service.time} · {service.category}
+                  {stripHtml(service.day)} · {stripHtml(service.time)} · {service.category}
                 </div>
               </div>
 

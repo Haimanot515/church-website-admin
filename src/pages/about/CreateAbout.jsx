@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateAbout.css";
+
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateAbout = () => {
   const { t } = useTranslation();
@@ -58,6 +64,13 @@ const CreateAbout = () => {
       return;
     }
 
+    // RichTextField is a contenteditable, not an <input>, so it can't rely
+    // on the native `required` attribute — check the plain-text content instead.
+    if (!stripHtml(about.title)) {
+      setError(t("createAbout.errors.titleRequired"));
+      return;
+    }
+
     try {
       setLoading(true);
       const formData = new FormData();
@@ -93,64 +106,70 @@ const CreateAbout = () => {
 
   return (
     <div className="ca-page">
-      <div className="ca-card">
-        <h2>{t("createAbout.heading")}</h2>
+      <div className="ca-card rte-page-shell">
+        <RichTextProvider>
+        <div className="rte-editor-shell">
+          <RichTextToolbar />
+          <RichTextContextMenu />
+          <div className="rte-scroll-area">
+            <h2>{t("createAbout.heading")}</h2>
 
-        {error && <p className="ca-error">{error}</p>}
+            {error && <p className="ca-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="ca-form">
-          <select
-            name="language"
-            value={about.language}
-            onChange={handleChange}
-            required
-            className="ca-select"
-          >
-            <option value="" disabled>
-              {t("createAbout.form.selectLanguage")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
+            <form onSubmit={handleSubmit} className="ca-form">
+              <select
+                name="language"
+                value={about.language}
+                onChange={handleChange}
+                required
+                className="ca-select"
+              >
+                <option value="" disabled>
+                  {t("createAbout.form.selectLanguage")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
 
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createAbout.form.titlePlaceholder")}
-            value={about.title}
-            onChange={handleChange}
-            required
-          />
+              <RichTextField
+                value={about.title}
+                onChange={(html) => setAbout((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createAbout.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+                autoFocus
+              />
 
-          <input
-            type="text"
-            name="churchLeader"
-            placeholder={t("createAbout.form.churchLeaderPlaceholder")}
-            value={about.churchLeader}
-            onChange={handleChange}
-          />
+              <RichTextField
+                value={about.churchLeader}
+                onChange={(html) => setAbout((prev) => ({ ...prev, churchLeader: html }))}
+                placeholder={t("createAbout.form.churchLeaderPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
 
-          <textarea
-            name="description"
-            placeholder={t("createAbout.form.descriptionPlaceholder")}
-            value={about.description}
-            onChange={handleChange}
-            rows="8"
-            required
-          />
+              <RichTextField
+                value={about.description}
+                onChange={(html) => setAbout((prev) => ({ ...prev, description: html }))}
+                placeholder={t("createAbout.form.descriptionPlaceholder")}
+                minHeight="180px"
+              />
 
-          <input type="file" accept="image/*" onChange={handleFileChange} className="ca-file-input" />
-          {preview && (
-            <img src={preview} alt={t("createAbout.previewAlt")} className="ca-preview" />
-          )}
+              <input type="file" accept="image/*" onChange={handleFileChange} className="ca-file-input" />
+              {preview && (
+                <img src={preview} alt={t("createAbout.previewAlt")} className="ca-preview" />
+              )}
 
-          <button type="submit" disabled={loading} className="ca-btn-primary">
-            {loading ? t("createAbout.form.creating") : t("createAbout.form.createButton")}
-          </button>
-        </form>
+              <button type="submit" disabled={loading} className="ca-btn-primary">
+                {loading ? t("createAbout.form.creating") : t("createAbout.form.createButton")}
+              </button>
+            </form>
+          </div>
+        </div>
+        </RichTextProvider>
       </div>
     </div>
   );
