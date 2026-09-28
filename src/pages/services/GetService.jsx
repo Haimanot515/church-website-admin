@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetService.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Title is now stored as RichTextField HTML — strip tags for the plain-text card heading
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -111,36 +112,26 @@ const GetService = () => {
               </div>
 
               <div className="ms-card-actions">
-                <button
-                  type="button"
-                  className="ms-btn ms-btn-edit"
-                  onClick={() => handleEditClick(service)}
-                >
-                  {t("getService.actions.edit")}
-                </button>
-
-                <button
-                  type="button"
-                  className={`ms-btn ${
-                    service.status === "active" ? "ms-btn-toggle-active" : "ms-btn-toggle-inactive"
-                  }`}
-                  onClick={() => handleToggleStatus(service)}
-                >
-                  {service.status === "active"
-                    ? t("getService.actions.makeInactive")
-                    : t("getService.actions.makeActive")}
-                </button>
-
-                <button
-                  type="button"
-                  className="ms-btn ms-btn-delete"
-                  onClick={() => handleDelete(service.id)}
-                  disabled={deletingId === service.id}
-                >
-                  {deletingId === service.id
-                    ? t("getService.actions.deleting")
-                    : t("getService.actions.delete")}
-                </button>
+                <ActionMenu
+                  items={[
+                    {
+                      label: t("getService.actions.edit"),
+                      onClick: () => handleEditClick(service),
+                      tone: "edit",
+                    },
+                    {
+                      label: service.status === "active" ? t("getService.actions.makeInactive") : t("getService.actions.makeActive"),
+                      onClick: () => handleToggleStatus(service),
+                      tone: service.status === "active" ? "warning" : "success",
+                    },
+                    {
+                      label: deletingId === service.id ? t("getService.actions.deleting") : t("getService.actions.delete"),
+                      onClick: () => handleDelete(service.id),
+                      tone: "delete",
+                      disabled: deletingId === service.id,
+                    },
+                  ]}
+                />
               </div>
             </div>
           ))}

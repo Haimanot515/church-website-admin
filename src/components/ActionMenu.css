@@ -1,0 +1,59 @@
+/* Vertical three-dot action menu */
+.am-trigger {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: transparent;
+  color: #475569;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.am-trigger:hover,
+.am-trigger--open { background: #e2e8f0; color: #0f172a; }
+.am-trigger:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+.am-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 150px;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Actions are plain text, each with its own colour */
+.am-item {
+  display: block;
+  width: 100%;
+  padding: 9px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.am-item:hover:not(:disabled) { background: #f1f5f9; }
+.am-item:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.am-item--edit    { color: #2563eb; } /* blue  */
+.am-item--delete  { color: #dc2626; } /* red   */
+.am-item--success { color: #16a34a; } /* green */
+.am-item--warning { color: #d97706; } /* amber */
+
+/* Containers that now hold only the three-dot trigger: keep it on the right, never stacked */
+:has(> .am-trigger) { justify-content: flex-end; }
+div:has(> .am-trigger) { flex-direction: row !important; }
+td:has(> div > .am-trigger), td > div:has(> .am-trigger) { text-align: right; }

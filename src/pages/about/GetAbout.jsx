@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetAbout.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for the plain-text table preview snippet
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -294,19 +295,21 @@ const GetAbout = () => {
                         </td>
                         <td data-label={t("getAbout.table.actions")}>
                           <div className="ga-row-actions">
-                            <button className="ga-btn-edit" onClick={() => handleEditClick(entry)}>
-                              {t("getAbout.actions.edit")}
-                            </button>
-
-                            <button
-                              className="ga-btn-delete"
-                              onClick={() => handleDelete(entry.id)}
-                              disabled={deletingId === entry.id}
-                            >
-                              {deletingId === entry.id
-                                ? t("getAbout.actions.deleting")
-                                : t("getAbout.actions.delete")}
-                            </button>
+                            <ActionMenu
+                              items={[
+                                {
+                                  label: t("getAbout.actions.edit"),
+                                  onClick: () => handleEditClick(entry),
+                                  tone: "edit",
+                                },
+                                {
+                                  label: deletingId === entry.id ? t("getAbout.actions.deleting") : t("getAbout.actions.delete"),
+                                  onClick: () => handleDelete(entry.id),
+                                  tone: "delete",
+                                  disabled: deletingId === entry.id,
+                                },
+                              ]}
+                            />
                           </div>
                         </td>
                       </tr>

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetPromotions.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display, since title/description are now
 // stored as HTML from the CreatePromotion/UpdatePromotion rich text fields
@@ -93,22 +94,21 @@ const GetPromotions = () => {
               </div>
 
               <div className="gp-row-actions">
-                <button
-                  className="gp-btn-edit"
-                  onClick={() => navigate(`/admin/promotions/update/${p.id}`)}
-                >
-                  {t("getPromotions.actions.edit")}
-                </button>
-
-                <button
-                  className="gp-btn-delete"
-                  onClick={() => handleDelete(p.id, p.title)}
-                  disabled={deletingId === p.id}
-                >
-                  {deletingId === p.id
-                    ? t("getPromotions.actions.deleting")
-                    : t("getPromotions.actions.delete")}
-                </button>
+                <ActionMenu
+                  items={[
+                    {
+                      label: t("getPromotions.actions.edit"),
+                      onClick: () => navigate(`/admin/promotions/update/${p.id}`),
+                      tone: "edit",
+                    },
+                    {
+                      label: deletingId === p.id ? t("getPromotions.actions.deleting") : t("getPromotions.actions.delete"),
+                      onClick: () => handleDelete(p.id, p.title),
+                      tone: "delete",
+                      disabled: deletingId === p.id,
+                    },
+                  ]}
+                />
               </div>
             </div>
           ))}

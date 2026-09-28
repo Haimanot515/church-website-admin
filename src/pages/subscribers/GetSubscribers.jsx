@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetSubscribers.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 const GetSubscribers = () => {
   const { t, i18n } = useTranslation();
@@ -88,15 +89,19 @@ const GetSubscribers = () => {
                 </div>
               </div>
 
-              <button
-                className="gs-btn-unsubscribe"
-                onClick={() => handleUnsubscribe(s.id, s.email)}
-                disabled={removingEmail === s.email}
-              >
-                {removingEmail === s.email
-                  ? t("getSubscribers.actions.removing")
-                  : t("getSubscribers.actions.unsubscribe")}
-              </button>
+              <ActionMenu
+                items={[
+                  {
+                    label:
+                      removingEmail === s.email
+                        ? t("getSubscribers.actions.removing")
+                        : t("getSubscribers.actions.unsubscribe"),
+                    onClick: () => handleUnsubscribe(s.id, s.email),
+                    tone: "delete",
+                    disabled: removingEmail === s.email,
+                  },
+                ]}
+              />
             </div>
           ))}
         </div>

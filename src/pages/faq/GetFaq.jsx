@@ -7,6 +7,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetFaq.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -232,12 +233,20 @@ const GetFaq = () => {
                   <h3>{stripHtml(entry.question)}</h3>
                   <p>{stripHtml(entry.answer)}</p>
                   <div className="gfaq-row-actions">
-                    <button className="gfaq-btn-edit" onClick={() => startEdit(entry)}>
-                      {t("getFaq.edit")}
-                    </button>
-                    <button className="gfaq-btn-delete" onClick={() => handleDelete(entry.id)}>
-                      {t("getFaq.delete")}
-                    </button>
+                    <ActionMenu
+                      items={[
+                        {
+                          label: t("getFaq.edit"),
+                          onClick: () => startEdit(entry),
+                          tone: "edit",
+                        },
+                        {
+                          label: t("getFaq.delete"),
+                          onClick: () => handleDelete(entry.id),
+                          tone: "delete",
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
               ))}

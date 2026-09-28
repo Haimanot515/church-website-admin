@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchPerson.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 const CATEGORY_OPTIONS = [
   { value: "leader", labelKey: "categories.leader" },
@@ -452,20 +453,21 @@ const GetChurchPerson = () => {
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.actions")}>
                         <div className="getChurchPerson-rowActions">
-                          <button
-                            onClick={() => handleEditClick(person)}
-                            className="getChurchPerson-editRowButton"
-                          >
-                            {t("editButton")}
-                          </button>
-
-                          <button
-                            onClick={() => handleDelete(person)}
-                            disabled={deletingId === person.id}
-                            className="getChurchPerson-deleteRowButton"
-                          >
-                            {deletingId === person.id ? t("deletingButton") : t("deleteButton")}
-                          </button>
+                          <ActionMenu
+                            items={[
+                              {
+                                label: t("editButton"),
+                                onClick: () => handleEditClick(person),
+                                tone: "edit",
+                              },
+                              {
+                                label: deletingId === person.id ? t("deletingButton") : t("deleteButton"),
+                                onClick: () => handleDelete(person),
+                                tone: "delete",
+                                disabled: deletingId === person.id,
+                              },
+                            ]}
+                          />
                         </div>
                       </td>
                     </tr>

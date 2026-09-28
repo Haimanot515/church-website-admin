@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetPost.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for the plain-text table preview / validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -526,17 +527,21 @@ const GetPost = () => {
                         </td>
                         <td data-label={t("post.table.actions")}>
                           <div className="gpost-row-actions">
-                            <button className="gpost-btn-edit" onClick={() => handleEditClick(post)}>
-                              {t("post.actions.edit")}
-                            </button>
-
-                            <button
-                              className="gpost-btn-delete"
-                              onClick={() => handleDelete(post.id)}
-                              disabled={deletingId === post.id}
-                            >
-                              {deletingId === post.id ? t("post.actions.deleting") : t("post.actions.delete")}
-                            </button>
+                            <ActionMenu
+                              items={[
+                                {
+                                  label: t("post.actions.edit"),
+                                  onClick: () => handleEditClick(post),
+                                  tone: "edit",
+                                },
+                                {
+                                  label: deletingId === post.id ? t("post.actions.deleting") : t("post.actions.delete"),
+                                  onClick: () => handleDelete(post.id),
+                                  tone: "delete",
+                                  disabled: deletingId === post.id,
+                                },
+                              ]}
+                            />
                           </div>
                         </td>
                       </tr>

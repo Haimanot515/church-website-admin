@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
 import { useTranslation } from "react-i18next";
+import ActionMenu from "../../components/ActionMenu";
 import "./AdminUsers.css";
 
 const PAGE_SIZE = 20;
@@ -253,40 +254,38 @@ const AdminUsers = ({ mode }) => {
                                   </button>
                                 </>
                               ) : (
-                                <>
-                                  <button
-                                    className="au-btn au-btn-edit"
-                                    disabled={isBusy}
-                                    onClick={() => startRowEdit(u)}
-                                  >
-                                    {t("adminUsers.view.edit")}
-                                  </button>
-                                  <button
-                                    className={`au-btn ${isAdmin ? "au-btn-admin-off" : "au-btn-admin-on"}`}
-                                    disabled={isBusy}
-                                    onClick={() => toggleAdminRow(u)}
-                                  >
-                                    {isAdmin
-                                      ? t("adminUsers.view.removeAdmin")
-                                      : t("adminUsers.view.makeAdmin")}
-                                  </button>
-                                  <button
-                                    className={`au-btn ${isActive ? "au-btn-active-off" : "au-btn-active-on"}`}
-                                    disabled={isBusy}
-                                    onClick={() => toggleActiveRow(u)}
-                                  >
-                                    {isActive
-                                      ? t("adminUsers.view.makeInactive")
-                                      : t("adminUsers.view.makeActive")}
-                                  </button>
-                                  <button
-                                    className="au-btn au-btn-delete"
-                                    disabled={isBusy}
-                                    onClick={() => deleteRowUser(u)}
-                                  >
-                                    {t("adminUsers.view.delete")}
-                                  </button>
-                                </>
+                                <ActionMenu
+                                  items={[
+                                    {
+                                      label: t("adminUsers.view.edit"),
+                                      onClick: () => startRowEdit(u),
+                                      tone: "edit",
+                                      disabled: isBusy,
+                                    },
+                                    {
+                                      label: isAdmin
+                                        ? t("adminUsers.view.removeAdmin")
+                                        : t("adminUsers.view.makeAdmin"),
+                                      onClick: () => toggleAdminRow(u),
+                                      tone: isAdmin ? "warning" : "success",
+                                      disabled: isBusy,
+                                    },
+                                    {
+                                      label: isActive
+                                        ? t("adminUsers.view.makeInactive")
+                                        : t("adminUsers.view.makeActive"),
+                                      onClick: () => toggleActiveRow(u),
+                                      tone: isActive ? "warning" : "success",
+                                      disabled: isBusy,
+                                    },
+                                    {
+                                      label: t("adminUsers.view.delete"),
+                                      onClick: () => deleteRowUser(u),
+                                      tone: "delete",
+                                      disabled: isBusy,
+                                    },
+                                  ]}
+                                />
                               )}
                             </div>
                           </td>

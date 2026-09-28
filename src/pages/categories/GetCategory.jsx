@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetCategory.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -331,18 +332,21 @@ const GetCategory = () => {
                       <td data-label={t("getCategory.table.language")}>{getLanguageLabel(cat.language)}</td>
                       <td data-label={t("getCategory.table.actions")}>
                         <div className="gc-row-actions">
-                          <button className="gc-btn-edit" onClick={() => handleEditClick(cat)}>
-                            {t("getCategory.actions.edit")}
-                          </button>
-                          <button
-                            className="gc-btn-delete"
-                            onClick={() => handleDelete(cat)}
-                            disabled={deletingId === cat.id}
-                          >
-                            {deletingId === cat.id
-                              ? t("getCategory.actions.deleting")
-                              : t("getCategory.actions.delete")}
-                          </button>
+                          <ActionMenu
+                            items={[
+                              {
+                                label: t("getCategory.actions.edit"),
+                                onClick: () => handleEditClick(cat),
+                                tone: "edit",
+                              },
+                              {
+                                label: deletingId === cat.id ? t("getCategory.actions.deleting") : t("getCategory.actions.delete"),
+                                onClick: () => handleDelete(cat),
+                                tone: "delete",
+                                disabled: deletingId === cat.id,
+                              },
+                            ]}
+                          />
                         </div>
                       </td>
                     </tr>

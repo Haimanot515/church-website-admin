@@ -9,6 +9,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import ActionMenu from "../../components/ActionMenu";
 
 // Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -324,19 +325,21 @@ const GetHomeHero = () => {
                         </td>
                         <td className="ghh-td">
                           <div className="ghh-actions">
-                            <button className="ghh-btn ghh-btn-edit" onClick={() => handleEditClick(hero)}>
-                              {t("getHomeHero.buttons.edit")}
-                            </button>
-
-                            <button
-                              className="ghh-btn ghh-btn-delete"
-                              onClick={() => handleDeleteClick(hero)}
-                              disabled={deletingId === hero.id}
-                            >
-                              {deletingId === hero.id
-                                ? t("getHomeHero.buttons.deleting")
-                                : t("getHomeHero.buttons.delete")}
-                            </button>
+                            <ActionMenu
+                              items={[
+                                {
+                                  label: t("getHomeHero.buttons.edit"),
+                                  onClick: () => handleEditClick(hero),
+                                  tone: "edit",
+                                },
+                                {
+                                  label: deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete"),
+                                  onClick: () => handleDeleteClick(hero),
+                                  tone: "delete",
+                                  disabled: deletingId === hero.id,
+                                },
+                              ]}
+                            />
                           </div>
                         </td>
                       </tr>
@@ -361,18 +364,21 @@ const GetHomeHero = () => {
                     </div>
 
                     <div className="ghh-card-actions">
-                      <button className="ghh-btn ghh-btn-edit" onClick={() => handleEditClick(hero)}>
-                        {t("getHomeHero.buttons.edit")}
-                      </button>
-                      <button
-                        className="ghh-btn ghh-btn-delete"
-                        onClick={() => handleDeleteClick(hero)}
-                        disabled={deletingId === hero.id}
-                      >
-                        {deletingId === hero.id
-                          ? t("getHomeHero.buttons.deleting")
-                          : t("getHomeHero.buttons.delete")}
-                      </button>
+                      <ActionMenu
+                        items={[
+                          {
+                            label: t("getHomeHero.buttons.edit"),
+                            onClick: () => handleEditClick(hero),
+                            tone: "edit",
+                          },
+                          {
+                            label: deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete"),
+                            onClick: () => handleDeleteClick(hero),
+                            tone: "delete",
+                            disabled: deletingId === hero.id,
+                          },
+                        ]}
+                      />
                     </div>
                   </div>
                 ))}

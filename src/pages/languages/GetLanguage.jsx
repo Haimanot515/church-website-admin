@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetLanguage.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -229,19 +230,21 @@ const GetLanguage = () => {
                       </td>
                       <td data-label={t("getLanguage.table.actions")}>
                         <div className="gl-row-actions">
-                          <button className="gl-btn-edit" onClick={() => handleEditClick(lang)}>
-                            {t("getLanguage.actions.edit")}
-                          </button>
-
-                          <button
-                            className="gl-btn-delete"
-                            onClick={() => handleDelete(lang)}
-                            disabled={deletingId === lang.id}
-                          >
-                            {deletingId === lang.id
-                              ? t("getLanguage.actions.deleting")
-                              : t("getLanguage.actions.delete")}
-                          </button>
+                          <ActionMenu
+                            items={[
+                              {
+                                label: t("getLanguage.actions.edit"),
+                                onClick: () => handleEditClick(lang),
+                                tone: "edit",
+                              },
+                              {
+                                label: deletingId === lang.id ? t("getLanguage.actions.deleting") : t("getLanguage.actions.delete"),
+                                onClick: () => handleDelete(lang),
+                                tone: "delete",
+                                disabled: deletingId === lang.id,
+                              },
+                            ]}
+                          />
                         </div>
                       </td>
                     </tr>

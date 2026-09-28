@@ -8,6 +8,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Title/description are stored as RichTextField HTML — strip tags for plain-text display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -396,19 +397,21 @@ const GetMedia = () => {
                       </td>
                       <td data-label={t("getMedia.table.actions")}>
                         <div className="gm-row-actions">
-                          <button className="gm-btn-edit" onClick={() => handleEditClick(item)}>
-                            {t("getMedia.actions.edit")}
-                          </button>
-
-                          <button
-                            className="gm-btn-delete"
-                            onClick={() => handleDelete(item)}
-                            disabled={deletingId === item.id}
-                          >
-                            {deletingId === item.id
-                              ? t("getMedia.actions.deleting")
-                              : t("getMedia.actions.delete")}
-                          </button>
+                          <ActionMenu
+                            items={[
+                              {
+                                label: t("getMedia.actions.edit"),
+                                onClick: () => handleEditClick(item),
+                                tone: "edit",
+                              },
+                              {
+                                label: deletingId === item.id ? t("getMedia.actions.deleting") : t("getMedia.actions.delete"),
+                                onClick: () => handleDelete(item),
+                                tone: "delete",
+                                disabled: deletingId === item.id,
+                              },
+                            ]}
+                          />
                         </div>
                       </td>
                     </tr>

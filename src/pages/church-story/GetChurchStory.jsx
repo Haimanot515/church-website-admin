@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchStory.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -432,19 +433,21 @@ const GetChurchStories = () => {
                       </div>
 
                       <div className="gcsItemActions">
-                        <button onClick={() => handleEditClick(s)} className="gcsEditButton">
-                          {t("getChurchStories.editButton")}
-                        </button>
-
-                        <button
-                          onClick={() => handleDelete(s.id, s.title)}
-                          disabled={deletingId === s.id}
-                          className="gcsDeleteButton"
-                        >
-                          {deletingId === s.id
-                            ? t("getChurchStories.deleting")
-                            : t("getChurchStories.deleteButton")}
-                        </button>
+                        <ActionMenu
+                          items={[
+                            {
+                              label: t("getChurchStories.editButton"),
+                              onClick: () => handleEditClick(s),
+                              tone: "edit",
+                            },
+                            {
+                              label: deletingId === s.id ? t("getChurchStories.deleting") : t("getChurchStories.deleteButton"),
+                              onClick: () => handleDelete(s.id, s.title),
+                              tone: "delete",
+                              disabled: deletingId === s.id,
+                            },
+                          ]}
+                        />
                       </div>
                     </div>
                   ))}

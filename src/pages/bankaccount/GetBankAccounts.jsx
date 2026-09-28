@@ -9,6 +9,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import ActionMenu from "../../components/ActionMenu";
 
 // Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -230,19 +231,21 @@ const GetBankAccounts = () => {
                     </div>
 
                     <div className="gba-row-actions">
-                      <button className="gba-btn-edit" onClick={() => startEdit(a)}>
-                        {t("getBankAccounts.actions.edit")}
-                      </button>
-
-                      <button
-                        className="gba-btn-delete"
-                        onClick={() => handleDelete(a.id, a.bank)}
-                        disabled={deletingId === a.id}
-                      >
-                        {deletingId === a.id
-                          ? t("getBankAccounts.actions.deleting")
-                          : t("getBankAccounts.actions.delete")}
-                      </button>
+                      <ActionMenu
+                        items={[
+                          {
+                            label: t("getBankAccounts.actions.edit"),
+                            onClick: () => startEdit(a),
+                            tone: "edit",
+                          },
+                          {
+                            label: deletingId === a.id ? t("getBankAccounts.actions.deleting") : t("getBankAccounts.actions.delete"),
+                            onClick: () => handleDelete(a.id, a.bank),
+                            tone: "delete",
+                            disabled: deletingId === a.id,
+                          },
+                        ]}
+                      />
                     </div>
                   </>
                 )}

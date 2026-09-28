@@ -7,6 +7,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetMissionVision.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for the plain-text read-only view
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -198,12 +199,20 @@ const GetMissionVision = () => {
                       <h3>{stripHtml(entry.title) || "—"}</h3>
                       <p>{stripHtml(entry.desc) || "—"}</p>
                       <div className="gmv-row-actions">
-                        <button className="gmv-btn-edit" onClick={() => startEdit(entry)}>
-                          {t("getMissionVision.edit")}
-                        </button>
-                        <button className="gmv-btn-delete" onClick={() => handleDelete(entry.id)}>
-                          {t("getMissionVision.delete")}
-                        </button>
+                        <ActionMenu
+                          items={[
+                            {
+                              label: t("getMissionVision.edit"),
+                              onClick: () => startEdit(entry),
+                              tone: "edit",
+                            },
+                            {
+                              label: t("getMissionVision.delete"),
+                              onClick: () => handleDelete(entry.id),
+                              tone: "delete",
+                            },
+                          ]}
+                        />
                       </div>
                     </>
                   )}

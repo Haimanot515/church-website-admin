@@ -8,6 +8,7 @@ import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurch.css";
 import "../shared/AdminShared.css";
+import ActionMenu from "../../components/ActionMenu";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -445,16 +446,21 @@ const GetChurch = () => {
                 </div>
 
                 <div className="getChurch-actions">
-                  <button onClick={() => startEdit(c)} className="getChurch-editButton">
-                    {t("editButton")}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(c.id, c.churchName)}
-                    disabled={deletingId === c.id}
-                    className="getChurch-deleteButton"
-                  >
-                    {deletingId === c.id ? t("deletingButton") : t("deleteButton")}
-                  </button>
+                  <ActionMenu
+                    items={[
+                      {
+                        label: t("editButton"),
+                        onClick: () => startEdit(c),
+                        tone: "edit",
+                      },
+                      {
+                        label: deletingId === c.id ? t("deletingButton") : t("deleteButton"),
+                        onClick: () => handleDelete(c.id, c.churchName),
+                        tone: "delete",
+                        disabled: deletingId === c.id,
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             );
