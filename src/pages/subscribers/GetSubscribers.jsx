@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetSubscribers.css";
+import "../shared/AdminShared.css";
 
 const GetSubscribers = () => {
   const { t, i18n } = useTranslation();

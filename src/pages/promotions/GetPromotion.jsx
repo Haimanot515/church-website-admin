@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetPromotions.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for plain-text display, since title/description are now
 // stored as HTML from the CreatePromotion/UpdatePromotion rich text fields

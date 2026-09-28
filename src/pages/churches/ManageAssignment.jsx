@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const ManageAssignments = () => {
   const [assignments, setAssignments] = useState([]);
@@ -63,7 +64,7 @@ const ManageAssignments = () => {
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1000px",
           margin: "auto",
           background: "#fff",
           padding: "30px",

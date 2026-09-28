@@ -6,6 +6,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurchPerson.css";
+import "../shared/AdminShared.css";
 
 const CATEGORY_OPTIONS = [
   { value: "leader", labelKey: "categories.leader" },
@@ -230,14 +231,13 @@ const CreateChurchPerson = () => {
                 {t("roleLabel")}
                 <span className="createChurchPerson-optional"> ({t("optional")})</span>
               </label>
-              <input
+              <RichTextField
                 id="ccp-role"
-                type="text"
-                name="role"
-                placeholder={t("rolePlaceholder")}
                 value={person.role}
-                onChange={handleChange}
-                className="createChurchPerson-input"
+                onChange={(html) => setPerson((prev) => ({ ...prev, role: html }))}
+                placeholder={t("rolePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
               />
 
               <label className="createChurchPerson-label" htmlFor="ccp-category">

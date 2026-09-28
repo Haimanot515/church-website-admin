@@ -1,17 +1,20 @@
 /* ===== Page shell ===== */
+
 .cl-page {
   min-height: 100vh;
   background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .cl-card {
-  max-width: 600px;
-  margin: auto;
-  background: #fff;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .cl-card h2 {
@@ -23,6 +26,7 @@
 }
 
 /* ===== Form ===== */
+
 .cl-form {
   display: flex;
   flex-direction: column;
@@ -41,6 +45,11 @@
 
 .cl-code-input {
   text-transform: uppercase;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
 }
 
 .cl-btn-primary {
@@ -49,9 +58,9 @@
   color: #fff;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .cl-btn-primary:disabled {
@@ -60,6 +69,7 @@
 }
 
 /* ===== Examples ===== */
+
 .cl-examples {
   margin-top: 30px;
   padding: 15px;
@@ -99,24 +109,19 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .cl-page {
-    padding: 20px;
-  }
 
+@media (max-width: 1024px) {
   .cl-card {
     padding: 22px;
   }
+
 }
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .cl-page {
-    padding: 12px;
-  }
 
+@media (max-width: 820px) {
   .cl-card {
     padding: 16px;
     border-radius: 10px;
@@ -128,6 +133,7 @@
   }
 
   /* Card-style table on small screens instead of horizontal scroll */
+
   .cl-table thead {
     display: none;
   }
@@ -163,17 +169,30 @@
     color: #555;
     flex-shrink: 0;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .cl-page {
-    padding: 8px;
-  }
 
+@media (max-width: 480px) {
   .cl-card {
     padding: 12px;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .cl-page { padding: 20px; }
+  .cl-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .cl-page { padding: 12px; }
+  .cl-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .cl-page { padding: 8px; }
+  .cl-card { padding: 12px; }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const DeleteChurch = () => {
   const { id } = useParams();

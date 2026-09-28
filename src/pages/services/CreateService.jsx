@@ -6,6 +6,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateService.css";
+import "../shared/AdminShared.css";
 
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
@@ -156,18 +157,18 @@ const CreateService = () => {
   };
 
   return (
-    <div className="cs-page">
-      <div className="cs-card rte-page-shell">
+    <div className="csvc-page">
+      <div className="csvc-card rte-page-shell">
         <RichTextProvider>
         <div className="rte-editor-shell">
           <RichTextToolbar />
           <RichTextContextMenu />
           <div className="rte-scroll-area">
-            <h2 className="cs-title">{t("createService.heading")}</h2>
+            <h2 className="csvc-title">{t("createService.heading")}</h2>
 
-            {error && <p className="cs-error">{error}</p>}
+            {error && <p className="csvc-error">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="cs-form">
+            <form onSubmit={handleSubmit} className="csvc-form">
               <select name="language" value={service.language} onChange={handleChange} required>
                 <option value="" disabled>
                   {t("createService.form.selectLanguage")}
@@ -227,7 +228,7 @@ const CreateService = () => {
                 toolbar="minimal"
               />
 
-              <label className="cs-checkbox-label">
+              <label className="csvc-checkbox-label">
                 <input
                   type="checkbox"
                   name="isFeatured"
@@ -239,9 +240,9 @@ const CreateService = () => {
 
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
-              {preview && <img src={preview} alt="preview" className="cs-file-preview" />}
+              {preview && <img src={preview} alt="preview" className="csvc-file-preview" />}
 
-              <button type="submit" disabled={loading} className="cs-btn-primary">
+              <button type="submit" disabled={loading} className="csvc-btn-primary">
                 {loading ? t("createService.form.creating") : t("createService.form.create")}
               </button>
             </form>

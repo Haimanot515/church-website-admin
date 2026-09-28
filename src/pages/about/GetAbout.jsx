@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetAbout.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for the plain-text table preview snippet
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");

@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetBankAccounts.css";
+import "../shared/AdminShared.css";
 
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 const GetBankAccounts = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -69,7 +77,7 @@ const GetBankAccounts = () => {
   const handleUpdate = async (id) => {
     setEditError("");
 
-    if (!editForm.bank || !editForm.accountName || !editForm.accountNumber) {
+    if (!stripHtml(editForm.bank) || !stripHtml(editForm.accountName) || !editForm.accountNumber) {
       setEditError(t("getBankAccounts.errors.requiredFields"));
       return;
     }
@@ -132,7 +140,7 @@ const GetBankAccounts = () => {
 
   return (
     <div className="gba-page">
-      <div className="gba-card">
+      <div className="gba-card rte-page-shell">
         <div className="gba-header">
           <h2>{t("getBankAccounts.heading")}</h2>
 
@@ -152,23 +160,29 @@ const GetBankAccounts = () => {
             return (
               <div key={a.id} className="gba-row">
                 {isEditing ? (
-                  <div className="gba-edit-form">
+                  <RichTextProvider>
+                  <div className="rte-editor-shell">
+                    <RichTextToolbar />
+                    <RichTextContextMenu />
+                    <div className="gba-edit-form rte-scroll-area">
                     {editError && <p className="gba-error">{editError}</p>}
 
-                    <input
-                      type="text"
-                      name="bank"
+                    <RichTextField
+                      id="rt-edit-bank"
                       value={editForm.bank}
-                      onChange={handleEditChange}
+                      onChange={(html) => setEditForm((prev) => ({ ...prev, bank: html }))}
                       placeholder={t("createBankAccount.form.bankPlaceholder")}
+                      minHeight="44px"
+                      toolbar="minimal"
                     />
 
-                    <input
-                      type="text"
-                      name="accountName"
+                    <RichTextField
+                      id="rt-edit-accountName"
                       value={editForm.accountName}
-                      onChange={handleEditChange}
+                      onChange={(html) => setEditForm((prev) => ({ ...prev, accountName: html }))}
                       placeholder={t("createBankAccount.form.accountNamePlaceholder")}
+                      minHeight="44px"
+                      toolbar="minimal"
                     />
 
                     <input
@@ -202,13 +216,15 @@ const GetBankAccounts = () => {
                         {t("getBankAccounts.actions.cancel")}
                       </button>
                     </div>
+                    </div>
                   </div>
+                </RichTextProvider>
                 ) : (
                   <>
                     <div className="gba-row-info">
                       <div className="gba-row-text">
-                        <strong>{a.bank}</strong>
-                        <div className="gba-account-name">{a.accountName}</div>
+                        <strong>{stripHtml(a.bank)}</strong>
+                        <div className="gba-account-name">{stripHtml(a.accountName)}</div>
                         <div className="gba-account-number">{a.accountNumber}</div>
                       </div>
                     </div>

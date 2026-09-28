@@ -1,45 +1,35 @@
 .createChurch-page {
   min-height: 100vh;
-  background: #f4f2ec;
-  padding: 48px 24px;
+  background: #f1f5f9;
+  padding: 30px;
   box-sizing: border-box;
 }
 
 .createChurch-card {
-  max-width: 720px;
+  max-width: 700px;
   margin: 0 auto;
   background: #ffffff;
-  padding: 40px;
-  border-radius: 14px;
-  border: 1px solid #e7e2d5;
-  box-shadow: 0 20px 45px rgba(11, 20, 44, 0.08);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .createChurch-title {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 2.2rem;
-  font-weight: 600;
-  color: #0b142c;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
   margin: 0 0 24px;
-  letter-spacing: 0.01em;
 }
 
 .createChurch-error {
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 0.95rem;
-  color: #b3261e;
-  background: #fbe9e7;
-  border: 1px solid #f2c4bd;
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin: 0 0 20px;
+  color: red;
 }
 
 .createChurch-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  font-family: "Nunito Sans", sans-serif;
 }
 
 .createChurch-select,
@@ -47,27 +37,32 @@
 .createChurch-textarea {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 14px;
-  border: 1px solid #d8d2c2;
+  padding: 12px;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 1rem;
-  color: #0b142c;
-  background: #fdfcf9;
+  font-size: 14px;
+  color: #0f172a;
+  background: #f8fafc;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
 }
 
 .createChurch-select:focus,
 .createChurch-input:focus,
 .createChurch-textarea:focus {
   outline: none;
-  border-color: #c9a24b;
-  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.22);
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.22);
 }
 
 .createChurch-textarea {
   resize: vertical;
   min-height: 90px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
 }
 
 .createChurch-row {
@@ -81,16 +76,14 @@
 }
 
 .createChurch-fileLabel {
-  font-family: "IBM Plex Mono", monospace;
   font-size: 0.85rem;
-  color: #56503f;
+  color: #475569;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .createChurch-fileInput {
-  font-family: "Nunito Sans", sans-serif;
   font-size: 0.9rem;
 }
 
@@ -99,7 +92,7 @@
   height: 220px;
   object-fit: cover;
   border-radius: 10px;
-  border: 1px solid #e7e2d5;
+  border: 1px solid #e2e8f0;
 }
 
 .createChurch-checkboxLabel {
@@ -107,13 +100,13 @@
   align-items: flex-start;
   gap: 10px;
   font-size: 1rem;
-  color: #0b142c;
+  color: #0f172a;
   cursor: pointer;
 }
 
 .createChurch-checkbox {
   margin-top: 3px;
-  accent-color: #c9a24b;
+  accent-color: #2563eb;
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -122,28 +115,25 @@
 .createChurch-hint {
   display: block;
   margin-top: 4px;
-  font-family: "IBM Plex Mono", monospace;
   font-size: 0.78rem;
   line-height: 1.5;
-  color: #7a7462;
+  color: #64748b;
 }
 
 .createChurch-submitButton {
   padding: 14px;
-  background: #0b142c;
-  color: #f4e9c9;
-  border: 1px solid #0b142c;
+  background: #2563eb;
+  color: #fff;
+  border: none;
   border-radius: 10px;
-  font-family: "Nunito Sans", sans-serif;
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.02em;
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
 }
 
 .createChurch-submitButton:hover:not(:disabled) {
-  background: #172352;
+  background: #1d4ed8;
 }
 
 .createChurch-submitButton:active:not(:disabled) {
@@ -158,32 +148,22 @@
 .createChurch-submitButton:focus-visible,
 .createChurch-select:focus-visible,
 .createChurch-checkbox:focus-visible {
-  outline: 2px solid #c9a24b;
+  outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
 
 /* Tablet */
+
 @media (max-width: 900px) {
-  .createChurch-page {
-    padding: 36px 20px;
-  }
-
-  .createChurch-card {
-    max-width: 100%;
-    padding: 32px;
-  }
-
   .createChurch-title {
     font-size: 1.9rem;
   }
+
 }
 
 /* Mobile */
-@media (max-width: 600px) {
-  .createChurch-page {
-    padding: 20px 14px;
-  }
 
+@media (max-width: 600px) {
   .createChurch-card {
     padding: 22px 18px;
     border-radius: 12px;
@@ -207,9 +187,11 @@
     padding: 13px;
     font-size: 0.95rem;
   }
+
 }
 
 /* Small mobile */
+
 @media (max-width: 380px) {
   .createChurch-card {
     padding: 18px 14px;
@@ -218,16 +200,18 @@
   .createChurch-title {
     font-size: 1.4rem;
   }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
   .createChurch-submitButton {
     transition: none;
   }
+
 }
 
-
 /* Field label */
+
 .createChurch-label {
   display: block;
   font-size: 0.85rem;
@@ -242,12 +226,14 @@
 }
 
 /* Required marker */
+
 .createChurch-required {
-  color: #c0392b;
+  color: #dc2626;
   font-weight: 600;
 }
 
 /* Optional marker */
+
 .createChurch-optional {
   color: #888;
   font-weight: normal;
@@ -255,6 +241,7 @@
 }
 
 /* Two-column field row (Service Days / Service Time) */
+
 .createChurch-row {
   display: flex;
   gap: 16px;
@@ -268,9 +255,25 @@
 }
 
 /* Stack the row on narrow screens instead of squeezing columns */
+
 @media (max-width: 480px) {
   .createChurch-row {
     flex-direction: column;
     gap: 0;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .createChurch-page { padding: 20px; }
+  .createChurch-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .createChurch-page { padding: 12px; }
+  .createChurch-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .createChurch-page { padding: 8px; }
+  .createChurch-card { padding: 12px; }
 }

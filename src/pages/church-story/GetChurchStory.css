@@ -13,9 +13,9 @@
 }
 
 .gcsCard {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  background: #fff;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -23,6 +23,7 @@
 }
 
 /* Top bar */
+
 .gcsTopBar {
   display: flex;
   justify-content: space-between;
@@ -34,24 +35,25 @@
 
 .gcsHeading {
   margin: 0;
-  font-size: 21px;
+  font-size: 24px;
   color: #0f172a;
+  font-weight: 700;
 }
 
 .gcsNewButton {
-  padding: 10px 16px;
+  padding: 10px 18px;
   background: #2563eb;
   color: #fff;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
   white-space: nowrap;
 }
 
 .gcsError {
-  color: #dc2626;
+  color: red;
 }
 
 .gcsStatusText {
@@ -59,6 +61,7 @@
 }
 
 /* Edit panel */
+
 .gcsEditPanel {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -71,8 +74,9 @@
 
 .gcsEditHeading {
   margin-top: 0;
-  font-size: 17px;
+  font-size: 24px;
   color: #0f172a;
+  font-weight: 700;
 }
 
 .gcsForm {
@@ -84,14 +88,14 @@
 .gcsInput,
 .gcsTextarea {
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 14px;
-  font-family: inherit;
   box-sizing: border-box;
   background: #fff;
   color: #0f172a;
+  font-family: inherit;
 }
 
 .gcsInput:focus,
@@ -104,6 +108,11 @@
 .gcsTextarea {
   resize: vertical;
   min-height: 110px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
 }
 
 .gcsFieldRow {
@@ -158,12 +167,14 @@
 }
 
 .gcsCancelButton {
-  padding: 14px 18px;
-  background: #e2e8f0;
+  padding: 14px;
+  background: #e5e7eb;
+  color: #334155;
   border: none;
   border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 15px;
 }
 
 .gcsCancelButton:disabled {
@@ -172,6 +183,7 @@
 }
 
 /* List */
+
 .gcsList {
   display: flex;
   flex-direction: column;
@@ -212,6 +224,7 @@
 .gcsItemTitle {
   font-weight: 700;
   color: #0f172a;
+  font-size: 24px;
 }
 
 .gcsItemMeta {
@@ -235,23 +248,24 @@
 }
 
 .gcsEditButton {
-  padding: 8px 14px;
-  background: #e2e8f0;
+  padding: 6px 12px;
+  background: #2563eb;
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 13px;
   cursor: pointer;
-  font-size: 13.5px;
   white-space: nowrap;
 }
 
 .gcsDeleteButton {
-  padding: 8px 14px;
-  background: #fee2e2;
-  color: #b91c1c;
+  padding: 6px 12px;
+  background: #dc2626;
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  font-size: 13px;
   cursor: pointer;
-  font-size: 13.5px;
   white-space: nowrap;
 }
 
@@ -262,6 +276,7 @@
 }
 
 /* Pagination */
+
 .gcsPagination {
   display: flex;
   justify-content: center;
@@ -291,22 +306,17 @@
 }
 
 /* -------------------- Tablet: 640px - 1023px -------------------- */
-@media (max-width: 1023px) {
-  .gcsPage {
-    padding: 22px;
-  }
 
+@media (max-width: 1023px) {
   .gcsCard {
     padding: 24px;
   }
+
 }
 
 /* -------------------- Mobile: < 640px -------------------- */
-@media (max-width: 639px) {
-  .gcsPage {
-    padding: 14px;
-  }
 
+@media (max-width: 639px) {
   .gcsCard {
     padding: 16px;
     border-radius: 12px;
@@ -332,7 +342,7 @@
   .gcsInput,
   .gcsTextarea {
     padding: 11px 12px;
-    font-size: 16px; /* prevents iOS auto-zoom on focus */
+    font-size: 16px;
   }
 
   .gcsFieldRow {
@@ -354,6 +364,7 @@
   }
 
   /* List items stack: photo+text row, then full-width actions row */
+
   .gcsListItem {
     flex-direction: column;
     align-items: stretch;
@@ -383,9 +394,11 @@
   .gcsPagination {
     gap: 8px;
   }
+
 }
 
 /* -------------------- Very small phones: < 380px -------------------- */
+
 @media (max-width: 379px) {
   .gcsHeading {
     font-size: 16.5px;
@@ -395,9 +408,11 @@
     width: 48px;
     height: 48px;
   }
+
 }
 
 /* Field label */
+
 .ccsLabel,
 .gcsLabel {
   display: block;
@@ -414,13 +429,15 @@
 }
 
 /* Required marker */
+
 .ccsRequired,
 .gcsRequired {
-  color: #c0392b;
+  color: #dc2626;
   font-weight: 600;
 }
 
 /* Optional marker */
+
 .ccsOptional,
 .gcsOptional {
   color: #888;
@@ -429,6 +446,7 @@
 }
 
 /* Two-column field row (Leader / Leader Role, etc.) */
+
 .ccsFieldRow,
 .gcsFieldRow {
   display: flex;
@@ -444,10 +462,26 @@
 }
 
 /* Stack the row on narrow screens instead of squeezing columns */
+
 @media (max-width: 480px) {
   .ccsFieldRow,
   .gcsFieldRow {
     flex-direction: column;
     gap: 0;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .gcsPage { padding: 20px; }
+  .gcsCard { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .gcsPage { padding: 12px; }
+  .gcsCard { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .gcsPage { padding: 8px; }
+  .gcsCard { padding: 12px; }
 }

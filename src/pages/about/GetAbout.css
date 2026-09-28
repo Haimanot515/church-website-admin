@@ -1,17 +1,20 @@
 /* ===== Page shell ===== */
+
 .ga-page {
   min-height: 100vh;
   background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .ga-card {
   max-width: 1000px;
-  margin: auto;
-  background: #fff;
+  margin: 0 auto;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .ga-header {
@@ -33,17 +36,18 @@
 
 .ga-btn-new {
   padding: 10px 18px;
-  background: #16a34a;
+  background: #2563eb;
   color: #fff;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
   white-space: nowrap;
 }
 
 /* ===== Edit panel ===== */
+
 .ga-edit-panel {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -68,7 +72,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
@@ -96,13 +100,13 @@
 .ga-btn-primary {
   padding: 14px;
   background: #2563eb;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
-  flex: 1;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
+  flex: 1;
 }
 
 .ga-btn-primary:disabled {
@@ -116,10 +120,10 @@
   color: #334155;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
-  flex: 1;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
+  flex: 1;
 }
 
 .ga-btn-cancel:disabled {
@@ -128,6 +132,7 @@
 }
 
 /* ===== Table ===== */
+
 .ga-table-wrap {
   overflow-x: auto;
   margin-top: 15px;
@@ -164,8 +169,8 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 13px;
+  cursor: pointer;
   white-space: nowrap;
 }
 
@@ -175,8 +180,8 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 13px;
+  cursor: pointer;
   white-space: nowrap;
 }
 
@@ -187,6 +192,7 @@
 }
 
 /* ===== Pagination ===== */
+
 .ga-pagination {
   display: flex;
   justify-content: center;
@@ -218,24 +224,19 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .ga-page {
-    padding: 20px;
-  }
 
+@media (max-width: 1024px) {
   .ga-card {
     padding: 22px;
   }
+
 }
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .ga-page {
-    padding: 12px;
-  }
 
+@media (max-width: 820px) {
   .ga-card {
     padding: 16px;
     border-radius: 10px;
@@ -266,6 +267,7 @@
   }
 
   /* Card-style table on small screens instead of horizontal scroll */
+
   .ga-table thead {
     display: none;
   }
@@ -309,16 +311,14 @@
   .ga-pagination {
     flex-wrap: wrap;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .ga-page {
-    padding: 8px;
-  }
 
+@media (max-width: 480px) {
   .ga-card {
     padding: 12px;
   }
@@ -331,4 +331,19 @@
     flex: 1;
     text-align: center;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .ga-page { padding: 20px; }
+  .ga-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .ga-page { padding: 12px; }
+  .ga-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .ga-page { padding: 8px; }
+  .ga-card { padding: 12px; }
 }

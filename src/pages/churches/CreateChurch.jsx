@@ -6,6 +6,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurch.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for plain-text validation checks
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -232,14 +233,13 @@ const CreateChurch = () => {
                 {t("addressLabel")}
                 <span className="createChurch-optional"> ({t("optional")})</span>
               </label>
-              <input
+              <RichTextField
                 id="cc-address"
-                type="text"
-                name="address"
-                placeholder={t("addressPlaceholder")}
                 value={church.address}
-                onChange={handleChange}
-                className="createChurch-input"
+                onChange={(html) => setChurch((prev) => ({ ...prev, address: html }))}
+                placeholder={t("addressPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
               />
 
               <div className="createChurch-row">
@@ -248,14 +248,13 @@ const CreateChurch = () => {
                     {t("serviceDaysLabel")}
                     <span className="createChurch-optional"> ({t("optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="cc-serviceDays"
-                    type="text"
-                    name="serviceDays"
-                    placeholder={t("serviceDaysPlaceholder")}
                     value={church.serviceDays}
-                    onChange={handleChange}
-                    className="createChurch-input"
+                    onChange={(html) => setChurch((prev) => ({ ...prev, serviceDays: html }))}
+                    placeholder={t("serviceDaysPlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
                 </div>
 
@@ -264,14 +263,13 @@ const CreateChurch = () => {
                     {t("serviceTimeLabel")}
                     <span className="createChurch-optional"> ({t("optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="cc-serviceTime"
-                    type="text"
-                    name="serviceTime"
-                    placeholder={t("serviceTimePlaceholder")}
                     value={church.serviceTime}
-                    onChange={handleChange}
-                    className="createChurch-input"
+                    onChange={(html) => setChurch((prev) => ({ ...prev, serviceTime: html }))}
+                    placeholder={t("serviceTimePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
                 </div>
               </div>

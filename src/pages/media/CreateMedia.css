@@ -1,21 +1,27 @@
 /* ===== Page shell ===== */
+
 .cm-page {
   min-height: 100vh;
   background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .cm-card {
-  max-width: 650px;
-  margin: auto;
-  background: #fff;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .cm-title {
   margin: 0 0 20px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .cm-error {
@@ -23,6 +29,7 @@
 }
 
 /* ===== Form ===== */
+
 .cm-form {
   display: flex;
   flex-direction: column;
@@ -35,7 +42,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
@@ -71,9 +78,9 @@
   color: #fff;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .cm-btn-primary:disabled {
@@ -84,24 +91,19 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .cm-page {
-    padding: 20px;
-  }
 
+@media (max-width: 1024px) {
   .cm-card {
     padding: 22px;
   }
+
 }
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .cm-page {
-    padding: 12px;
-  }
 
+@media (max-width: 820px) {
   .cm-card {
     padding: 16px;
     border-radius: 10px;
@@ -115,16 +117,14 @@
     padding: 16px;
     font-size: 16px;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .cm-page {
-    padding: 8px;
-  }
 
+@media (max-width: 480px) {
   .cm-card {
     padding: 12px;
   }
@@ -136,4 +136,19 @@
   .cm-pdf-frame {
     height: 250px;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .cm-page { padding: 20px; }
+  .cm-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .cm-page { padding: 12px; }
+  .cm-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .cm-page { padding: 8px; }
+  .cm-card { padding: 12px; }
 }

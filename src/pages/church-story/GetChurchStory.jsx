@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchStory.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -143,6 +144,11 @@ const GetChurchStories = () => {
       return;
     }
 
+    if (!stripHtml(form.range)) {
+      setFormError("Range is required");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -251,15 +257,13 @@ const GetChurchStories = () => {
                     {t("getChurchStories.rangeLabel")}
                     <span className="gcsRequired"> *</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="gcs-range"
-                    type="text"
-                    name="range"
-                    placeholder={t("getChurchStories.rangePlaceholder")}
                     value={form.range}
-                    onChange={handleChange}
-                    required
-                    className="gcsInput"
+                    onChange={(html) => setForm((prev) => ({ ...prev, range: html }))}
+                    placeholder={t("getChurchStories.rangePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
 
                   <label className="gcsLabel" htmlFor="gcs-desc">
@@ -280,14 +284,13 @@ const GetChurchStories = () => {
                         {t("getChurchStories.leaderLabel")}
                         <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
                       </label>
-                      <input
+                      <RichTextField
                         id="gcs-leader"
-                        type="text"
-                        name="leader"
-                        placeholder={t("getChurchStories.leaderPlaceholder")}
                         value={form.leader}
-                        onChange={handleChange}
-                        className="gcsInput"
+                        onChange={(html) => setForm((prev) => ({ ...prev, leader: html }))}
+                        placeholder={t("getChurchStories.leaderPlaceholder")}
+                        minHeight="44px"
+                        toolbar="minimal"
                       />
                     </div>
 
@@ -296,14 +299,13 @@ const GetChurchStories = () => {
                         {t("getChurchStories.leaderRoleLabel")}
                         <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
                       </label>
-                      <input
+                      <RichTextField
                         id="gcs-leaderRole"
-                        type="text"
-                        name="leaderRole"
-                        placeholder={t("getChurchStories.leaderRolePlaceholder")}
                         value={form.leaderRole}
-                        onChange={handleChange}
-                        className="gcsInput"
+                        onChange={(html) => setForm((prev) => ({ ...prev, leaderRole: html }))}
+                        placeholder={t("getChurchStories.leaderRolePlaceholder")}
+                        minHeight="44px"
+                        toolbar="minimal"
                       />
                     </div>
                   </div>
@@ -312,14 +314,13 @@ const GetChurchStories = () => {
                     {t("getChurchStories.servedByLabel")}
                     <span className="gcsOptional"> ({t("getChurchStories.optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="gcs-servedBy"
-                    type="text"
-                    name="servedBy"
-                    placeholder={t("getChurchStories.servedByPlaceholder")}
                     value={form.servedBy}
-                    onChange={handleChange}
-                    className="gcsInput"
+                    onChange={(html) => setForm((prev) => ({ ...prev, servedBy: html }))}
+                    placeholder={t("getChurchStories.servedByPlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
 
                   <label className="gcsLabel" htmlFor="gcs-file">
@@ -421,9 +422,9 @@ const GetChurchStories = () => {
                           <div className="gcsItemSubline">
                             {s.leader && (
                               <>
-                                {s.leader}
-                                {s.leaderRole ? ` — ${s.leaderRole}` : ""}
-                                {s.range ? ` (${s.range})` : ""}
+                                {stripHtml(s.leader)}
+                                {s.leaderRole ? ` — ${stripHtml(s.leaderRole)}` : ""}
+                                {s.range ? ` (${stripHtml(s.range)})` : ""}
                               </>
                             )}
                           </div>

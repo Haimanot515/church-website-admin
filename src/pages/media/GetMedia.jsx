@@ -7,6 +7,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import "../shared/AdminShared.css";
 
 // Title/description are stored as RichTextField HTML — strip tags for plain-text display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");

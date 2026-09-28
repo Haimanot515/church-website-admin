@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./UpdatePromotion.css";
+import "../shared/AdminShared.css";
 
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
@@ -47,7 +48,9 @@ const UpdatePromotion = () => {
         setPromotion({
           title: data.title || "",
           description: data.description || "",
-          language: data.language?._id || data.language || "",
+          // FIX: Prisma returns `languageId` at the top level. The nested
+          // `language` object only has { name, code }, so never use it as the value.
+          language: data.languageId || data.language?.id || "",
           photo: null,
         });
 
@@ -140,79 +143,80 @@ const UpdatePromotion = () => {
     <div className="up-page">
       <div className="up-card rte-page-shell">
         <RichTextProvider>
-        <div className="rte-editor-shell">
-          <RichTextToolbar />
-          <RichTextContextMenu />
-          <div className="rte-scroll-area">
-            <h2>{t("updatePromotion.heading")}</h2>
+          <div className="rte-editor-shell">
+            <RichTextToolbar />
+            <RichTextContextMenu />
+            <div className="rte-scroll-area">
+              <h2>{t("updatePromotion.heading")}</h2>
 
-            {error && <p className="up-error">{error}</p>}
+              {error && <p className="up-error">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="up-form">
-              <select
-                name="language"
-                value={promotion.language}
-                onChange={handleChange}
-                required
-                className="up-select"
-              >
-                <option value="" disabled>
-                  {t("updatePromotion.form.selectLanguage")}
-                </option>
-                {languages.map((lang) => (
-                  <option key={lang._id} value={lang._id}>
-                    {lang.name} ({lang.code})
-                  </option>
-                ))}
-              </select>
-
-              <RichTextField
-                id="up-title"
-                value={promotion.title}
-                onChange={(html) => setPromotion((prev) => ({ ...prev, title: html }))}
-                placeholder={t("updatePromotion.form.titlePlaceholder")}
-                minHeight="44px"
-                toolbar="minimal"
-                autoFocus
-              />
-
-              <RichTextField
-                id="up-description"
-                value={promotion.description}
-                onChange={(html) => setPromotion((prev) => ({ ...prev, description: html }))}
-                placeholder={t("updatePromotion.form.descriptionPlaceholder")}
-                minHeight="140px"
-              />
-
-              {existingPhoto && !preview && (
-                <div className="up-current-photo">
-                  <span>{t("updatePromotion.currentImageLabel")}</span>
-                  <img src={existingPhoto} alt={stripHtml(promotion.title)} className="up-preview" />
-                </div>
-              )}
-
-              <input type="file" accept="image/*" onChange={handleFileChange} className="up-file-input" />
-
-              {preview && (
-                <img src={preview} alt={t("updatePromotion.previewAlt")} className="up-preview" />
-              )}
-
-              <div className="up-button-row">
-                <button type="submit" disabled={saving} className="up-btn-primary">
-                  {saving ? t("updatePromotion.form.saving") : t("updatePromotion.form.saveButton")}
-                </button>
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={handleCancel}
-                  className="up-btn-cancel"
+              <form onSubmit={handleSubmit} className="up-form">
+                <select
+                  name="language"
+                  value={promotion.language}
+                  onChange={handleChange}
+                  required
+                  className="up-select"
                 >
-                  {t("updatePromotion.form.cancelButton")}
-                </button>
-              </div>
-            </form>
+                  <option value="" disabled>
+                    {t("updatePromotion.form.selectLanguage")}
+                  </option>
+                  {/* FIX: PostgreSQL/Prisma uses `id`, not MongoDB `_id` */}
+                  {languages.map((lang) => (
+                    <option key={lang.id} value={lang.id}>
+                      {lang.name} ({lang.code})
+                    </option>
+                  ))}
+                </select>
+
+                <RichTextField
+                  id="up-title"
+                  value={promotion.title}
+                  onChange={(html) => setPromotion((prev) => ({ ...prev, title: html }))}
+                  placeholder={t("updatePromotion.form.titlePlaceholder")}
+                  minHeight="44px"
+                  toolbar="minimal"
+                  autoFocus
+                />
+
+                <RichTextField
+                  id="up-description"
+                  value={promotion.description}
+                  onChange={(html) => setPromotion((prev) => ({ ...prev, description: html }))}
+                  placeholder={t("updatePromotion.form.descriptionPlaceholder")}
+                  minHeight="140px"
+                />
+
+                {existingPhoto && !preview && (
+                  <div className="up-current-photo">
+                    <span>{t("updatePromotion.currentImageLabel")}</span>
+                    <img src={existingPhoto} alt={stripHtml(promotion.title)} className="up-preview" />
+                  </div>
+                )}
+
+                <input type="file" accept="image/*" onChange={handleFileChange} className="up-file-input" />
+
+                {preview && (
+                  <img src={preview} alt={t("updatePromotion.previewAlt")} className="up-preview" />
+                )}
+
+                <div className="up-button-row">
+                  <button type="submit" disabled={saving} className="up-btn-primary">
+                    {saving ? t("updatePromotion.form.saving") : t("updatePromotion.form.saveButton")}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={handleCancel}
+                    className="up-btn-cancel"
+                  >
+                    {t("updatePromotion.form.cancelButton")}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
         </RichTextProvider>
       </div>
     </div>

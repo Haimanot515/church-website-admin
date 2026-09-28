@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const UpdateChurchStory = () => {
 
@@ -120,6 +129,11 @@ const UpdateChurchStory = () => {
     e.preventDefault();
     setError("");
 
+    if (!stripHtml(story.title)) {
+      setError("Title is required");
+      return;
+    }
+
     try {
 
       setLoading(true);
@@ -189,8 +203,9 @@ const UpdateChurchStory = () => {
     >
 
       <div
+        className="rte-page-shell"
         style={{
-          maxWidth: "650px",
+          maxWidth: "700px",
           margin: "auto",
           background: "#fff",
           padding: "30px",
@@ -203,154 +218,166 @@ const UpdateChurchStory = () => {
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-        >
-
-          <input
-            type="text"
-            name="title"
-            placeholder="Chapter title (e.g. The Founding Years)"
-            value={story.title}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="leader"
-            placeholder="Leader name"
-            value={story.leader}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="leaderRole"
-            placeholder="Leader role (e.g. Founding Pastor)"
-            value={story.leaderRole}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="range"
-            placeholder="Years led (e.g. 1998 – 2006)"
-            value={story.range}
-            onChange={handleChange}
-          />
-
-          <input
-            type="text"
-            name="servedBy"
-            placeholder="Served by / community group"
-            value={story.servedBy}
-            onChange={handleChange}
-          />
-
-          <input
-            type="number"
-            name="order"
-            placeholder="Display order (lower = shown first)"
-            value={story.order}
-            onChange={handleChange}
-            min="0"
-          />
-
-          <input
-            type="number"
-            name="year"
-            placeholder="Sort year (used for chronological ordering)"
-            value={story.year}
-            onChange={handleChange}
-          />
-
-          <textarea
-            name="desc"
-            placeholder="Chapter description"
-            rows="5"
-            value={story.desc}
-            onChange={handleChange}
-          />
-
-          {existingPhoto && !preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>Current photo:</small>
-              <br />
-              <img
-                src={existingPhoto}
-                alt="current chapter"
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  border: "1px solid #e2e8f0"
-                }}
-              />
-            </div>
-          )}
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-
-          {preview && (
-            <div>
-              <small style={{ color: "#64748b" }}>New photo:</small>
-              <br />
-              <img
-                src={preview}
-                alt="preview"
-                style={{
-                  width: "160px",
-                  height: "160px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  border: "1px solid #e2e8f0"
-                }}
-              />
-            </div>
-          )}
-
-          <div style={{ display: "flex", gap: "10px" }}>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                flex: 1,
-                padding: "14px",
-                background: "#2563eb",
-                color: "#fff",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer"
-              }}
+        <RichTextProvider>
+          <div className="rte-editor-shell">
+            <RichTextToolbar />
+            <RichTextContextMenu />
+            <div className="rte-scroll-area">
+              <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: "15px" }}
             >
-              {loading ? "Saving..." : "Save Changes"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/admin/church-story")}
-              style={{
-                padding: "14px",
-                background: "#e2e8f0",
-                border: "none",
-                borderRadius: "10px",
-                cursor: "pointer"
-              }}
-            >
-              Cancel
-            </button>
-
+    
+              <RichTextField
+                id="ur-title"
+                value={story.title}
+                onChange={(html) => setStory((prev) => ({ ...prev, title: html }))}
+                placeholder="Chapter title (e.g. The Founding Years)"
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <RichTextField
+                id="ur-leader"
+                value={story.leader}
+                onChange={(html) => setStory((prev) => ({ ...prev, leader: html }))}
+                placeholder="Leader name"
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <RichTextField
+                id="ur-leaderRole"
+                value={story.leaderRole}
+                onChange={(html) => setStory((prev) => ({ ...prev, leaderRole: html }))}
+                placeholder="Leader role (e.g. Founding Pastor)"
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <RichTextField
+                id="ur-range"
+                value={story.range}
+                onChange={(html) => setStory((prev) => ({ ...prev, range: html }))}
+                placeholder="Years led (e.g. 1998 – 2006)"
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <RichTextField
+                id="ur-servedBy"
+                value={story.servedBy}
+                onChange={(html) => setStory((prev) => ({ ...prev, servedBy: html }))}
+                placeholder="Served by / community group"
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <input
+                type="number"
+                name="order"
+                placeholder="Display order (lower = shown first)"
+                value={story.order}
+                onChange={handleChange}
+                min="0"
+              />
+    
+              <input
+                type="number"
+                name="year"
+                placeholder="Sort year (used for chronological ordering)"
+                value={story.year}
+                onChange={handleChange}
+              />
+    
+              <RichTextField
+                id="ur-desc"
+                value={story.desc}
+                onChange={(html) => setStory((prev) => ({ ...prev, desc: html }))}
+                placeholder="Chapter description"
+                minHeight="160px"
+              />
+    
+              {existingPhoto && !preview && (
+                <div>
+                  <small style={{ color: "#64748b" }}>Current photo:</small>
+                  <br />
+                  <img
+                    src={existingPhoto}
+                    alt="current chapter"
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                      border: "1px solid #e2e8f0"
+                    }}
+                  />
+                </div>
+              )}
+    
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+    
+              {preview && (
+                <div>
+                  <small style={{ color: "#64748b" }}>New photo:</small>
+                  <br />
+                  <img
+                    src={preview}
+                    alt="preview"
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                      border: "1px solid #e2e8f0"
+                    }}
+                  />
+                </div>
+              )}
+    
+              <div style={{ display: "flex", gap: "10px" }}>
+    
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    flex: 1,
+                    padding: "14px",
+                    background: "#2563eb",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: "pointer"
+                  }}
+                >
+                  {loading ? "Saving..." : "Save Changes"}
+                </button>
+    
+                <button
+                  type="button"
+                  onClick={() => navigate("/admin/church-story")}
+                  style={{
+                    padding: "14px",
+                    background: "#e2e8f0",
+                    border: "none",
+                    borderRadius: "10px",
+                    cursor: "pointer"
+                  }}
+                >
+                  Cancel
+                </button>
+    
+              </div>
+    
+            </form>
+            </div>
           </div>
-
-        </form>
+        </RichTextProvider>
 
       </div>
 

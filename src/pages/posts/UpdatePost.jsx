@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const POSTS_PER_PAGE = 10;
 
@@ -84,14 +93,14 @@ const UpdatePost = () => {
   };
 
   const handleEditClick = (post) => {
-    setEditingId(post._id);
+    setEditingId(post.id);
     setFormError("");
     setForm({
       title: post.title || "",
       description: post.description || "",
       content: post.content || "",
-      category: post.category?._id || "",
-      language: post.language?._id || "",
+      category: post.categoryId || post.category?.id || "",
+      language: post.languageId || post.language?.id || "",
       isTrending: !!post.isTrending,
       isFeatured: !!post.isFeatured,
       isRecommended: !!post.isRecommended,
@@ -131,6 +140,19 @@ const UpdatePost = () => {
     if (!editingId) return;
 
     setFormError("");
+
+    if (!stripHtml(form.title)) {
+      setFormError("Title is required");
+      return;
+    }
+    if (!stripHtml(form.description)) {
+      setFormError("Description is required");
+      return;
+    }
+    if (!stripHtml(form.content)) {
+      setFormError("Content is required");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -183,6 +205,7 @@ const UpdatePost = () => {
 
         {editingId && (
           <div
+            className="rte-page-shell"
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
@@ -195,145 +218,151 @@ const UpdatePost = () => {
 
             {formError && <p style={{ color: "red" }}>{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-              <input
-                type="text"
-                name="title"
-                placeholder="Post title"
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
-
-              <textarea
-                name="description"
-                placeholder="Post description"
-                value={form.description}
-                onChange={handleChange}
-                rows="3"
-                required
-              />
-
-              <textarea
-                name="content"
-                placeholder="Post content"
-                value={form.content}
-                onChange={handleChange}
-                rows="8"
-                required
-              />
-
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                required
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? "Loading categories..." : "Select Category"}
-                </option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                name="language"
-                value={form.language}
-                onChange={handleChange}
-                required
-                disabled={optionsLoading}
-              >
-                <option value="">
-                  {optionsLoading ? "Loading languages..." : "Select Language"}
-                </option>
-                {languages.map((lang) => (
-                  <option key={lang._id} value={lang._id}>
-                    {lang.name}
-                  </option>
-                ))}
-              </select>
-
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-
-              {(preview || existingImageUrl) && (
-                <img
-                  src={preview || existingImageUrl}
-                  alt="preview"
-                  style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
-                />
-              )}
-
-              <select name="status" value={form.status} onChange={handleChange}>
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-              </select>
-
-              <label>
-                <input type="checkbox" name="isTrending" checked={form.isTrending} onChange={handleChange} />
-                Trending
-              </label>
-
-              <label>
-                <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
-                Featured
-              </label>
-
-              <label>
-                <input type="checkbox" name="isRecommended" checked={form.isRecommended} onChange={handleChange} />
-                Recommended
-              </label>
-
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                <button
-                  type="submit"
-                  disabled={submitting || optionsLoading}
-                  style={{
-                    display: "inline-block",
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: submitting || optionsLoading ? "not-allowed" : "pointer",
-                    flex: 1,
-                    minWidth: "120px",
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    opacity: submitting || optionsLoading ? 0.6 : 1,
-                    visibility: "visible",
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    display: "inline-block",
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: submitting ? "not-allowed" : "pointer",
-                    flex: 1,
-                    minWidth: "120px",
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    opacity: submitting ? 0.6 : 1,
-                    visibility: "visible",
-                  }}
-                >
-                  Cancel
-                </button>
+            <RichTextProvider>
+              <div className="rte-editor-shell">
+                <RichTextToolbar />
+                <RichTextContextMenu />
+                <div className="rte-scroll-area">
+                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <RichTextField
+                    id="ur-title"
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder="Post title"
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <RichTextField
+                    id="ur-description"
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder="Post description"
+                    minHeight="120px"
+                  />
+    
+                  <RichTextField
+                    id="ur-content"
+                    value={form.content}
+                    onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
+                    placeholder="Post content"
+                    minHeight="220px"
+                  />
+    
+                  <select
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
+                    required
+                    disabled={optionsLoading}
+                  >
+                    <option value="">
+                      {optionsLoading ? "Loading categories..." : "Select Category"}
+                    </option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {stripHtml(cat.name)}
+                      </option>
+                    ))}
+                  </select>
+    
+                  <select
+                    name="language"
+                    value={form.language}
+                    onChange={handleChange}
+                    required
+                    disabled={optionsLoading}
+                  >
+                    <option value="">
+                      {optionsLoading ? "Loading languages..." : "Select Language"}
+                    </option>
+                    {languages.map((lang) => (
+                      <option key={lang.id} value={lang.id}>
+                        {stripHtml(lang.name)}
+                      </option>
+                    ))}
+                  </select>
+    
+                  <input type="file" accept="image/*" onChange={handleFileChange} />
+    
+                  {(preview || existingImageUrl) && (
+                    <img
+                      src={preview || existingImageUrl}
+                      alt="preview"
+                      style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
+                    />
+                  )}
+    
+                  <select name="status" value={form.status} onChange={handleChange}>
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+    
+                  <label>
+                    <input type="checkbox" name="isTrending" checked={form.isTrending} onChange={handleChange} />
+                    Trending
+                  </label>
+    
+                  <label>
+                    <input type="checkbox" name="isFeatured" checked={form.isFeatured} onChange={handleChange} />
+                    Featured
+                  </label>
+    
+                  <label>
+                    <input type="checkbox" name="isRecommended" checked={form.isRecommended} onChange={handleChange} />
+                    Recommended
+                  </label>
+    
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    <button
+                      type="submit"
+                      disabled={submitting || optionsLoading}
+                      style={{
+                        display: "inline-block",
+                        padding: "14px",
+                        background: "#2563eb",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: submitting || optionsLoading ? "not-allowed" : "pointer",
+                        flex: 1,
+                        minWidth: "120px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        opacity: submitting || optionsLoading ? 0.6 : 1,
+                        visibility: "visible",
+                      }}
+                    >
+                      {submitting ? "Saving..." : "Save Changes"}
+                    </button>
+    
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      style={{
+                        display: "inline-block",
+                        padding: "14px",
+                        background: "#e5e7eb",
+                        color: "#334155",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: submitting ? "not-allowed" : "pointer",
+                        flex: 1,
+                        minWidth: "120px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        opacity: submitting ? 0.6 : 1,
+                        visibility: "visible",
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+                </div>
               </div>
-            </form>
+            </RichTextProvider>
           </div>
         )}
 
@@ -358,8 +387,8 @@ const UpdatePost = () => {
                 </thead>
                 <tbody>
                   {posts.map((post) => (
-                    <tr key={post._id} style={editingId === post._id ? { background: "#eff6ff" } : undefined}>
-                      <td style={tdStyle}>{post.title}</td>
+                    <tr key={post.id} style={editingId === post.id ? { background: "#eff6ff" } : undefined}>
+                      <td style={tdStyle}>{stripHtml(post.title)}</td>
                       <td style={tdStyle}>{post.category?.name || "—"}</td>
                       <td style={tdStyle}>{post.language?.name || "—"}</td>
                       <td style={tdStyle}>

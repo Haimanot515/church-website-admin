@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./GetService.css";
+import "../shared/AdminShared.css";
 
 // Title is now stored as RichTextField HTML — strip tags for the plain-text card heading
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./CreateSubscriber.css";
+import "../shared/AdminShared.css";
 
 const CreateSubscriber = () => {
   const { t } = useTranslation();

@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./UpdateService.css";
+import "../shared/AdminShared.css";
 
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
@@ -66,7 +67,7 @@ const UpdateService = () => {
           day: data.day || "",
           time: data.time || "",
           category: data.category || "Other",
-          language: data.language?._id || data.language || "",
+          language: data.languageId || data.language?.id || "",
           location: data.location || "",
           isFeatured: !!data.isFeatured,
           image: null,
@@ -168,11 +169,11 @@ const UpdateService = () => {
     navigate("/admin/services/view");
   };
 
-  if (loading) return <p className="ms-page">{t("updateService.loading")}</p>;
+  if (loading) return <p className="usvc-page">{t("updateService.loading")}</p>;
 
   return (
-    <div className="ms-page">
-      <div className="ms-edit-panel rte-page-shell">
+    <div className="usvc-page">
+      <div className="usvc-edit-panel rte-page-shell">
         <RichTextProvider>
         <div className="rte-editor-shell">
           <RichTextToolbar />
@@ -180,15 +181,15 @@ const UpdateService = () => {
           <div className="rte-scroll-area">
             <h3>{t("updateService.heading")}</h3>
 
-            {error && <p className="ms-error">{error}</p>}
+            {error && <p className="usvc-error">{error}</p>}
 
-            <form onSubmit={handleSubmit} className="ms-form">
+            <form onSubmit={handleSubmit} className="usvc-form">
               <select name="language" value={service.language} onChange={handleChange} required>
                 <option value="" disabled>
                   {t("updateService.form.selectLanguage")}
                 </option>
                 {languages.map((lang) => (
-                  <option key={lang._id} value={lang._id}>
+                  <option key={lang.id} value={lang.id}>
                     {lang.name} ({lang.code})
                   </option>
                 ))}
@@ -242,7 +243,7 @@ const UpdateService = () => {
                 toolbar="minimal"
               />
 
-              <label className="ms-checkbox-label">
+              <label className="usvc-checkbox-label">
                 <input
                   type="checkbox"
                   name="isFeatured"
@@ -253,25 +254,25 @@ const UpdateService = () => {
               </label>
 
               {existingImage && !preview && (
-                <div className="ms-current-image">
+                <div className="usvc-current-image">
                   <span>{t("updateService.form.currentImage")}</span>
-                  <img src={existingImage} alt="current" className="ms-file-preview" />
+                  <img src={existingImage} alt="current" className="usvc-file-preview" />
                 </div>
               )}
 
               <input type="file" accept="image/*" onChange={handleFileChange} />
 
-              {preview && <img src={preview} alt="preview" className="ms-file-preview" />}
+              {preview && <img src={preview} alt="preview" className="usvc-file-preview" />}
 
-              <div className="ms-form-actions">
-                <button type="submit" disabled={saving} className="ms-btn-primary">
+              <div className="usvc-form-actions">
+                <button type="submit" disabled={saving} className="usvc-btn-primary">
                   {saving ? t("updateService.form.updating") : t("updateService.form.update")}
                 </button>
 
                 <button
                   type="button"
                   disabled={saving}
-                  className="ms-btn-cancel"
+                  className="usvc-btn-cancel"
                   onClick={handleCancel}
                 >
                   {t("updateService.form.cancel")}

@@ -1,17 +1,20 @@
 /* ===== Page shell ===== */
+
 .gc-page {
   min-height: 100vh;
   background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .gc-card {
-  max-width: 900px;
-  margin: auto;
-  background: #fff;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .gc-header {
@@ -33,17 +36,18 @@
 
 .gc-btn-new {
   padding: 10px 18px;
-  background: #16a34a;
+  background: #2563eb;
   color: #fff;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
   white-space: nowrap;
 }
 
 /* ===== Language filter (kept as a plain control, not a card, at every size) ===== */
+
 .gc-filter-row {
   margin-bottom: 20px;
   display: flex;
@@ -58,12 +62,15 @@
 }
 
 .gc-filter-select {
-  padding: 8px 12px;
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
 }
 
 /* ===== Edit panel ===== */
+
 .gc-edit-panel {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -89,7 +96,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
   font-family: inherit;
@@ -103,13 +110,13 @@
 .gc-btn-primary {
   padding: 14px;
   background: #2563eb;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
-  flex: 1;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
+  flex: 1;
 }
 
 .gc-btn-primary:disabled {
@@ -123,10 +130,10 @@
   color: #334155;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
-  flex: 1;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
+  flex: 1;
 }
 
 .gc-btn-cancel:disabled {
@@ -135,6 +142,7 @@
 }
 
 /* ===== Table ===== */
+
 .gc-table-wrap {
   overflow-x: auto;
   margin-top: 15px;
@@ -171,8 +179,8 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 13px;
+  cursor: pointer;
   white-space: nowrap;
 }
 
@@ -182,8 +190,8 @@
   color: #fff;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
   font-size: 13px;
+  cursor: pointer;
   white-space: nowrap;
 }
 
@@ -196,24 +204,19 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .gc-page {
-    padding: 20px;
-  }
 
+@media (max-width: 1024px) {
   .gc-card {
     padding: 22px;
   }
+
 }
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .gc-page {
-    padding: 12px;
-  }
 
+@media (max-width: 820px) {
   .gc-card {
     padding: 16px;
     border-radius: 10px;
@@ -242,6 +245,7 @@
   /* Card-style table on small screens instead of horizontal scroll.
      The language filter select above is NOT part of the table, so it
      is left untouched and keeps its normal dropdown layout. */
+
   .gc-table thead {
     display: none;
   }
@@ -281,16 +285,14 @@
   .gc-row-actions {
     justify-content: flex-end;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .gc-page {
-    padding: 8px;
-  }
 
+@media (max-width: 480px) {
   .gc-card {
     padding: 12px;
   }
@@ -298,4 +300,19 @@
   .gc-filter-select {
     flex: 1;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .gc-page { padding: 20px; }
+  .gc-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .gc-page { padding: 12px; }
+  .gc-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .gc-page { padding: 8px; }
+  .gc-card { padding: 12px; }
 }

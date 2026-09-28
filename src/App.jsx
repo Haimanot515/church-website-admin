@@ -87,9 +87,7 @@ import GetFaq from "./pages/faq/GetFaq";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUser from "./pages/admin/AdminUser";
-import AdminProject from "./pages/admin/AdminProject";
 import AdminMessages from "./pages/admin/AdminContacts/AdminMessage";
-import AdminSkills from "./pages/admin/AdminSkills";
 import AdminLanding from "./pages/admin/AdminLanding";
 
 /* Home Hero */
@@ -261,9 +259,6 @@ function App() {
           <Route path="church-persons/delete" element={<GetChurchPerson />} />
           <Route path="church-persons/delete/:id" element={<DeleteChurchPerson />} />
           <Route path="church-persons/reorder" element={<ReorderChurchPerson />} />
-          {/* NOTE: "reorder" is in the sidebar but isn't a CRUD action —
-              no ReorderChurchPerson component exists yet, so it's left
-              unwired for now. */}
 
           {/* Church Story */}
           <Route path="church-story/create" element={<CreateChurchStory />} />
@@ -278,18 +273,6 @@ function App() {
           <Route path="bank-accounts/view" element={<GetBankAccounts />} />
           <Route path="bank-accounts/update" element={<GetBankAccounts />} />
           <Route path="bank-accounts/delete" element={<GetBankAccounts />} />
-
-          {/* Projects (admin) */}
-          <Route path="projects/create" element={<AdminProject mode={pathname} />} />
-          <Route path="projects/view" element={<AdminProject mode={pathname} />} />
-          <Route path="projects/update" element={<AdminProject mode={pathname} />} />
-          <Route path="projects/delete" element={<AdminProject mode={pathname} />} />
-
-          {/* Skills (admin) */}
-          <Route path="skills/create" element={<AdminSkills mode={pathname} />} />
-          <Route path="skills/view" element={<AdminSkills mode={pathname} />} />
-          <Route path="skills/update" element={<AdminSkills mode={pathname} />} />
-          <Route path="skills/delete" element={<AdminSkills mode={pathname} />} />
 
           {/* Contacts */}
           <Route path="contacts/view" element={<AdminMessages />} />

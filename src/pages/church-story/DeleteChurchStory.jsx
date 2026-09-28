@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 
 const DeleteChurchStory = () => {
@@ -93,7 +94,7 @@ const DeleteChurchStory = () => {
 
       <div
         style={{
-          maxWidth: "550px",
+          maxWidth: "700px",
           margin: "auto",
           background: "#fff",
           padding: "30px",

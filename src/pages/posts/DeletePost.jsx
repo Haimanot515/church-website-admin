@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const POSTS_PER_PAGE = 10;
 
@@ -47,10 +48,10 @@ const DeletePost = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(post._id);
+      setDeletingId(post.id);
       setError("");
 
-      await API.delete(`/posts/${post._id}`);
+      await API.delete(`/posts/${post.id}`);
 
       await fetchPosts(currentPage);
     } catch (err) {
@@ -102,7 +103,7 @@ const DeletePost = () => {
               </thead>
               <tbody>
                 {posts.map((post) => (
-                  <tr key={post._id}>
+                  <tr key={post.id}>
                     <td style={tdStyle}>{post.title}</td>
                     <td style={tdStyle}>{post.category?.name || "—"}</td>
                     <td style={tdStyle}>{post.language?.name || "—"}</td>
@@ -127,18 +128,18 @@ const DeletePost = () => {
                     <td style={tdStyle}>
                       <button
                         onClick={() => handleDelete(post)}
-                        disabled={deletingId === post._id}
+                        disabled={deletingId === post.id}
                         style={{
                           padding: "6px 12px",
                           background: "#dc2626",
                           color: "#fff",
                           border: "none",
                           borderRadius: "6px",
-                          cursor: deletingId === post._id ? "not-allowed" : "pointer",
+                          cursor: deletingId === post.id ? "not-allowed" : "pointer",
                           fontSize: "13px",
                         }}
                       >
-                        {deletingId === post._id ? "Deleting..." : "Delete"}
+                        {deletingId === post.id ? "Deleting..." : "Delete"}
                       </button>
                     </td>
                   </tr>

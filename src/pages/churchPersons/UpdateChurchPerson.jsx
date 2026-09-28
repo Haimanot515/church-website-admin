@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const ROLE_OPTIONS = [
   "",
@@ -73,7 +82,7 @@ const UpdateChurchPerson = () => {
   };
 
   const handleEditClick = (person) => {
-    setEditingId(person._id);
+    setEditingId(person.id);
     setFormError("");
     setForm({
       name: person.name || "",
@@ -127,7 +136,7 @@ const UpdateChurchPerson = () => {
       setExistingPhotos(res.data.photos || []);
       // Keep the underlying list in sync too
       setPeople((prev) =>
-        prev.map((p) => (p._id === editingId ? { ...p, photos: res.data.photos } : p))
+        prev.map((p) => (p.id === editingId ? { ...p, photos: res.data.photos } : p))
       );
     } catch (err) {
       console.log(err);
@@ -142,6 +151,11 @@ const UpdateChurchPerson = () => {
     if (!editingId) return;
 
     setFormError("");
+
+    if (!stripHtml(form.name)) {
+      setFormError("Name is required");
+      return;
+    }
 
     try {
       setSubmitting(true);
@@ -198,6 +212,7 @@ const UpdateChurchPerson = () => {
 
         {editingId && (
           <div
+            className="rte-page-shell"
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
@@ -210,87 +225,138 @@ const UpdateChurchPerson = () => {
 
             {formError && <p style={{ color: "red" }}>{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full name"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-
-              <select name="category" value={form.category} onChange={handleChange}>
-                <option value="leader">Leader</option>
-                <option value="specialThanks">Special Thanks</option>
-                <option value="testimony">Testimony</option>
-              </select>
-
-              <input
-                type="text"
-                name="title"
-                placeholder="Title (e.g. Associate Pastor, Small Group Leader)"
-                value={form.title}
-                onChange={handleChange}
-              />
-
-              <select name="role" value={form.role} onChange={handleChange}>
-                {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt === "" ? "Select Role" : opt}
-                  </option>
-                ))}
-              </select>
-
-              <select name="rank" value={form.rank} onChange={handleChange}>
-                <option value="">No Rank</option>
-                <option value="patriarch">Patriarch</option>
-                <option value="archbishop">Archbishop</option>
-                <option value="bishop">Bishop</option>
-                <option value="archpriest">Archpriest</option>
-                <option value="priest">Priest</option>
-                <option value="deacon">Deacon</option>
-                <option value="subdeacon">Subdeacon</option>
-                <option value="elder">Elder</option>
-                <option value="member">Member</option>
-              </select>
-
-              <input
-                type="number"
-                name="rankOrder"
-                placeholder="Rank order (lower = higher precedence)"
-                value={form.rankOrder}
-                onChange={handleChange}
-                min="0"
-              />
-
-              <textarea
-                name="description"
-                placeholder="Short bio or description"
-                rows="4"
-                value={form.description}
-                onChange={handleChange}
-              />
-
-              <textarea
-                name="message"
-                placeholder="Message / testimony quote (used for testimonies)"
-                rows="4"
-                value={form.message}
-                onChange={handleChange}
-              />
-
-              {existingPhotos.length > 0 && (
-                <div>
-                  <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
-                    Current photos — click Remove to delete individually
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                    {existingPhotos.map((url) => (
-                      <div key={url} style={{ textAlign: "center" }}>
+            <RichTextProvider>
+              <div className="rte-editor-shell">
+                <RichTextToolbar />
+                <RichTextContextMenu />
+                <div className="rte-scroll-area">
+                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <RichTextField
+                    id="ur-name"
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder="Full name"
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <select name="category" value={form.category} onChange={handleChange}>
+                    <option value="leader">Leader</option>
+                    <option value="specialThanks">Special Thanks</option>
+                    <option value="testimony">Testimony</option>
+                  </select>
+    
+                  <RichTextField
+                    id="ur-title"
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder="Title (e.g. Associate Pastor, Small Group Leader)"
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <select name="role" value={form.role} onChange={handleChange}>
+                    {ROLE_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt === "" ? "Select Role" : opt}
+                      </option>
+                    ))}
+                  </select>
+    
+                  <select name="rank" value={form.rank} onChange={handleChange}>
+                    <option value="">No Rank</option>
+                    <option value="patriarch">Patriarch</option>
+                    <option value="archbishop">Archbishop</option>
+                    <option value="bishop">Bishop</option>
+                    <option value="archpriest">Archpriest</option>
+                    <option value="priest">Priest</option>
+                    <option value="deacon">Deacon</option>
+                    <option value="subdeacon">Subdeacon</option>
+                    <option value="elder">Elder</option>
+                    <option value="member">Member</option>
+                  </select>
+    
+                  <input
+                    type="number"
+                    name="rankOrder"
+                    placeholder="Rank order (lower = higher precedence)"
+                    value={form.rankOrder}
+                    onChange={handleChange}
+                    min="0"
+                  />
+    
+                  <RichTextField
+                    id="ur-description"
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder="Short bio or description"
+                    minHeight="140px"
+                  />
+    
+                  <RichTextField
+                    id="ur-message"
+                    value={form.message}
+                    onChange={(html) => setForm((prev) => ({ ...prev, message: html }))}
+                    placeholder="Message / testimony quote (used for testimonies)"
+                    minHeight="140px"
+                  />
+    
+                  {existingPhotos.length > 0 && (
+                    <div>
+                      <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
+                        Current photos — click Remove to delete individually
+                      </p>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                        {existingPhotos.map((url) => (
+                          <div key={url} style={{ textAlign: "center" }}>
+                            <img
+                              src={url}
+                              alt="existing"
+                              style={{
+                                width: "90px",
+                                height: "90px",
+                                objectFit: "cover",
+                                borderRadius: "10px",
+                                border: "1px solid #e2e8f0",
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveExistingPhoto(url)}
+                              disabled={removingPhoto === url}
+                              style={{
+                                marginTop: "4px",
+                                padding: "3px 8px",
+                                fontSize: "11px",
+                                background: "#dc2626",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: removingPhoto === url ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {removingPhoto === url ? "Removing..." : "Remove"}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+    
+                  <div>
+                    <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
+                      Add new photos (appended to the ones above)
+                    </p>
+                    <input type="file" accept="image/*" multiple onChange={handleFileChange} />
+                  </div>
+    
+                  {previews.length > 0 && (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                      {previews.map((src, i) => (
                         <img
-                          src={url}
-                          alt="existing"
+                          key={i}
+                          src={src}
+                          alt={`preview-${i}`}
                           style={{
                             width: "90px",
                             height: "90px",
@@ -299,90 +365,48 @@ const UpdateChurchPerson = () => {
                             border: "1px solid #e2e8f0",
                           }}
                         />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveExistingPhoto(url)}
-                          disabled={removingPhoto === url}
-                          style={{
-                            marginTop: "4px",
-                            padding: "3px 8px",
-                            fontSize: "11px",
-                            background: "#dc2626",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: removingPhoto === url ? "not-allowed" : "pointer",
-                          }}
-                        >
-                          {removingPhoto === url ? "Removing..." : "Remove"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <p style={{ margin: "0 0 8px", fontSize: "13px", color: "#64748b" }}>
-                  Add new photos (appended to the ones above)
-                </p>
-                <input type="file" accept="image/*" multiple onChange={handleFileChange} />
-              </div>
-
-              {previews.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                  {previews.map((src, i) => (
-                    <img
-                      key={i}
-                      src={src}
-                      alt={`preview-${i}`}
+                      ))}
+                    </div>
+                  )}
+    
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      type="submit"
+                      disabled={submitting}
                       style={{
-                        width: "90px",
-                        height: "90px",
-                        objectFit: "cover",
+                        padding: "14px",
+                        background: "#2563eb",
+                        color: "white",
+                        border: "none",
                         borderRadius: "10px",
-                        border: "1px solid #e2e8f0",
+                        cursor: "pointer",
+                        flex: 1,
                       }}
-                    />
-                  ))}
+                    >
+                      {submitting ? "Saving..." : "Save Changes"}
+                    </button>
+    
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#e5e7eb",
+                        color: "#334155",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
                 </div>
-              )}
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  Cancel
-                </button>
               </div>
-            </form>
+            </RichTextProvider>
           </div>
         )}
 
@@ -404,21 +428,21 @@ const UpdateChurchPerson = () => {
             </thead>
             <tbody>
               {people.map((person) => (
-                <tr key={person._id} style={editingId === person._id ? { background: "#eff6ff" } : undefined}>
+                <tr key={person.id} style={editingId === person.id ? { background: "#eff6ff" } : undefined}>
                   <td style={tdStyle}>
                     {person.photos && person.photos.length > 0 ? (
                       <img
                         src={person.photos[0]}
-                        alt={person.name}
+                        alt={stripHtml(person.name)}
                         style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "50%" }}
                       />
                     ) : (
                       <span style={{ color: "#94a3b8" }}>—</span>
                     )}
                   </td>
-                  <td style={tdStyle}>{person.name}</td>
+                  <td style={tdStyle}>{stripHtml(person.name)}</td>
                   <td style={tdStyle}>{person.category}</td>
-                  <td style={tdStyle}>{person.title || person.role || "—"}</td>
+                  <td style={tdStyle}>{stripHtml(person.title) || person.role || "—"}</td>
                   <td style={tdStyle}>{person.rankOrder}</td>
                   <td style={tdStyle}>
                     <button

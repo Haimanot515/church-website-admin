@@ -4,6 +4,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import "../shared/AdminShared.css";
 
 // Title/description are stored as RichTextField HTML — strip tags for plain-text display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -87,14 +88,14 @@ const UpdateMedia = () => {
   };
 
   const handleEditClick = (item) => {
-    setEditingId(item._id);
+    setEditingId(item.id);
     setFormError("");
     setForm({
       title: item.title || "",
       description: item.description || "",
       type: item.mediaType || "photo",
       status: item.status || "draft",
-      category: item.category?._id || "",
+      category: item.categoryId || item.category?.id || "",
       file: null,
     });
     setExistingUrl(item.mediaUrl || "");
@@ -233,7 +234,7 @@ const UpdateMedia = () => {
                       {optionsLoading ? "Loading categories..." : "Select Category"}
                     </option>
                     {categories.map((cat) => (
-                      <option key={cat._id} value={cat._id}>
+                      <option key={cat.id} value={cat.id}>
                         {cat.name}
                       </option>
                     ))}
@@ -342,7 +343,7 @@ const UpdateMedia = () => {
             </thead>
             <tbody>
               {media.map((item) => (
-                <tr key={item._id} style={editingId === item._id ? { background: "#eff6ff" } : undefined}>
+                <tr key={item.id} style={editingId === item.id ? { background: "#eff6ff" } : undefined}>
                   <td style={tdStyle}>{stripHtml(item.title) || "—"}</td>
                   <td style={tdStyle}>{item.mediaType}</td>
                   <td style={tdStyle}>{item.category?.name || "—"}</td>

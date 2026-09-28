@@ -1,17 +1,20 @@
 /* ===== Page shell ===== */
+
 .cc-page {
   min-height: 100vh;
   background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
 }
 
 .cc-card {
-  max-width: 650px;
-  margin: auto;
-  background: #fff;
+  max-width: 700px;
+  margin: 0 auto;
+  background: #ffffff;
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .cc-card h2 {
@@ -23,6 +26,7 @@
 }
 
 /* ===== Form ===== */
+
 .cc-form {
   display: flex;
   flex-direction: column;
@@ -47,9 +51,9 @@
   color: #fff;
   border: none;
   border-radius: 10px;
-  cursor: pointer;
   font-size: 14px;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .cc-btn-primary:disabled {
@@ -58,6 +62,7 @@
 }
 
 /* ===== Examples ===== */
+
 .cc-examples {
   margin-top: 30px;
   padding: 15px;
@@ -97,24 +102,19 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .cc-page {
-    padding: 20px;
-  }
 
+@media (max-width: 1024px) {
   .cc-card {
     padding: 22px;
   }
+
 }
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .cc-page {
-    padding: 12px;
-  }
 
+@media (max-width: 820px) {
   .cc-card {
     padding: 16px;
     border-radius: 10px;
@@ -126,6 +126,7 @@
   }
 
   /* Card-style table on small screens instead of horizontal scroll */
+
   .cc-table thead {
     display: none;
   }
@@ -161,17 +162,30 @@
     color: #555;
     flex-shrink: 0;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .cc-page {
-    padding: 8px;
-  }
 
+@media (max-width: 480px) {
   .cc-card {
     padding: 12px;
   }
+
+}
+
+/* ===== Canonical responsive shell (identical on every page — see shared/AdminShared.css) ===== */
+@media (max-width: 1024px) {
+  .cc-page { padding: 20px; }
+  .cc-card { padding: 22px; }
+}
+@media (max-width: 820px) {
+  .cc-page { padding: 12px; }
+  .cc-card { padding: 16px; border-radius: 10px; }
+}
+@media (max-width: 480px) {
+  .cc-page { padding: 8px; }
+  .cc-card { padding: 12px; }
 }

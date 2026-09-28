@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 // Title is now stored as RichTextField HTML — strip tags for plain-text display here
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -98,7 +99,7 @@ const DeleteService = () => {
 
       <div
         style={{
-          maxWidth: "550px",
+          maxWidth: "700px",
           margin: "auto",
           background: "#fff",
           padding: "30px",

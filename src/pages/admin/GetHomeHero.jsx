@@ -2,8 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-import RichTextEditor from "../../components/textEditor/RichTextEditor";
 import "./GetHomeHero.css";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const HEROES_PER_PAGE = 10;
 
@@ -113,6 +121,11 @@ const GetHomeHero = () => {
 
     setFormError("");
 
+    if (!stripHtml(form.title)) {
+      setFormError("Title is required");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -183,79 +196,88 @@ const GetHomeHero = () => {
   };
 
   return (
-    <div className="hh-page">
-      <div className="hh-card">
-        <div className="hh-header">
-          <h2 className="hh-title">{t("getHomeHero.pageTitle")}</h2>
+    <div className="ghh-page">
+      <div className="ghh-card rte-page-shell">
+        <div className="ghh-header">
+          <h2 className="ghh-title">{t("getHomeHero.pageTitle")}</h2>
 
           {!editingId && !pendingDeleteHero && (
-            <button className="hh-new-btn" onClick={() => navigate("/admin/hero/create")}>
+            <button className="ghh-new-btn" onClick={() => navigate("/admin/hero/create")}>
               {t("getHomeHero.newButton")}
             </button>
           )}
         </div>
 
-        {error && <p className="hh-error">{error}</p>}
+        {error && <p className="ghh-error">{error}</p>}
 
         {/* ===== Inline full-width edit panel ===== */}
         {editingId && (
-          <div ref={editPanelRef} className="hh-panel">
-            <h3 className="hh-panel-title">{t("getHomeHero.editTitle")}</h3>
+          <div ref={editPanelRef} className="ghh-panel">
+            <h3 className="ghh-panel-title">{t("getHomeHero.editTitle")}</h3>
 
-            {formError && <p className="hh-error">{formError}</p>}
+            {formError && <p className="ghh-error">{formError}</p>}
 
-            <form onSubmit={handleSubmit} className="hh-form">
-              <input
-                type="text"
-                name="title"
-                placeholder={t("getHomeHero.form.titlePlaceholder")}
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
-
-              <RichTextEditor
-                value={form.description}
-                onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
-                placeholder={t("getHomeHero.form.descriptionPlaceholder")}
-                minHeight="100px"
-              />
-
-              <div>
-                <label className="hh-file-label">{t("getHomeHero.form.heroImageLabel")}</label>
-                <input type="file" accept="image/*" onChange={handleFileChange} />
-                {(preview || existingImageUrl) && (
-                  <img src={preview || existingImageUrl} alt="Hero" className="hh-file-preview" />
-                )}
+            <RichTextProvider>
+              <div className="rte-editor-shell">
+                <RichTextToolbar />
+                <RichTextContextMenu />
+                <div className="rte-scroll-area">
+                  <form onSubmit={handleSubmit} className="ghh-form">
+                  <RichTextField
+                    id="rt-title"
+                    value={form.title}
+                    onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
+                    placeholder={t("getHomeHero.form.titlePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <RichTextField
+      id="rt-description"
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder={t("getHomeHero.form.descriptionPlaceholder")}
+                    minHeight="100px"
+                  />
+    
+                  <div>
+                    <label className="ghh-file-label">{t("getHomeHero.form.heroImageLabel")}</label>
+                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                    {(preview || existingImageUrl) && (
+                      <img src={preview || existingImageUrl} alt="Hero" className="ghh-file-preview" />
+                    )}
+                  </div>
+    
+                  <div className="ghh-form-actions">
+                    <button type="submit" disabled={submitting} className="ghh-btn-primary">
+                      {submitting ? t("getHomeHero.buttons.saving") : t("getHomeHero.buttons.save")}
+                    </button>
+    
+                    <button type="button" onClick={handleCancelEdit} disabled={submitting} className="ghh-btn-secondary">
+                      {t("getHomeHero.buttons.cancel")}
+                    </button>
+                  </div>
+                </form>
+                </div>
               </div>
-
-              <div className="hh-form-actions">
-                <button type="submit" disabled={submitting} className="hh-btn-primary">
-                  {submitting ? t("getHomeHero.buttons.saving") : t("getHomeHero.buttons.save")}
-                </button>
-
-                <button type="button" onClick={handleCancelEdit} disabled={submitting} className="hh-btn-secondary">
-                  {t("getHomeHero.buttons.cancel")}
-                </button>
-              </div>
-            </form>
+            </RichTextProvider>
           </div>
         )}
 
         {/* ===== Inline full-width delete-confirm panel ===== */}
         {pendingDeleteHero && (
-          <div ref={deletePanelRef} className="hh-panel hh-delete-panel">
-            <h3 className="hh-panel-title">{t("getHomeHero.messages.confirmDeleteTitle")}</h3>
+          <div ref={deletePanelRef} className="ghh-panel ghh-delete-panel">
+            <h3 className="ghh-panel-title">{t("getHomeHero.messages.confirmDeleteTitle")}</h3>
 
-            <p className="hh-panel-body-text">
+            <p className="ghh-panel-body-text">
               {pendingDeleteHero?.title
                 ? t("getHomeHero.messages.confirmDeleteNamed", { title: pendingDeleteHero.title })
                 : t("getHomeHero.messages.confirmDelete")}
             </p>
 
-            <div className="hh-form-actions">
+            <div className="ghh-form-actions">
               <button
-                className="hh-btn-danger"
+                className="ghh-btn-danger"
                 onClick={confirmDelete}
                 disabled={deletingId === pendingDeleteHero?.id}
               >
@@ -265,7 +287,7 @@ const GetHomeHero = () => {
               </button>
 
               <button
-                className="hh-btn-secondary"
+                className="ghh-btn-secondary"
                 onClick={cancelDelete}
                 disabled={deletingId === pendingDeleteHero?.id}
               >
@@ -284,30 +306,30 @@ const GetHomeHero = () => {
           ) : (
             <>
               {/* ===== Desktop table (hidden <= 820px via CSS) ===== */}
-              <div className="hh-table-wrap">
-                <table className="hh-table">
+              <div className="ghh-table-wrap">
+                <table className="ghh-table">
                   <thead>
                     <tr>
-                      <th className="hh-th">{t("getHomeHero.table.title")}</th>
-                      <th className="hh-th">{t("getHomeHero.table.created")}</th>
-                      <th className="hh-th">{t("getHomeHero.table.actions")}</th>
+                      <th className="ghh-th">{t("getHomeHero.table.title")}</th>
+                      <th className="ghh-th">{t("getHomeHero.table.created")}</th>
+                      <th className="ghh-th">{t("getHomeHero.table.actions")}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {heroes.map((hero) => (
                       <tr key={hero.id}>
-                        <td className="hh-td">{hero.title}</td>
-                        <td className="hh-td">
+                        <td className="ghh-td">{stripHtml(hero.title)}</td>
+                        <td className="ghh-td">
                           {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
                         </td>
-                        <td className="hh-td">
-                          <div className="hh-actions">
-                            <button className="hh-btn hh-btn-edit" onClick={() => handleEditClick(hero)}>
+                        <td className="ghh-td">
+                          <div className="ghh-actions">
+                            <button className="ghh-btn ghh-btn-edit" onClick={() => handleEditClick(hero)}>
                               {t("getHomeHero.buttons.edit")}
                             </button>
 
                             <button
-                              className="hh-btn hh-btn-delete"
+                              className="ghh-btn ghh-btn-delete"
                               onClick={() => handleDeleteClick(hero)}
                               disabled={deletingId === hero.id}
                             >
@@ -324,26 +346,26 @@ const GetHomeHero = () => {
               </div>
 
               {/* ===== Mobile/tablet card list (shown <= 820px via CSS) ===== */}
-              <div className="hh-cards">
+              <div className="ghh-cards">
                 {heroes.map((hero) => (
-                  <div className="hh-card-item" key={hero.id}>
-                    <div className="hh-card-row">
-                      <span className="hh-card-label">{t("getHomeHero.table.title")}</span>
-                      <span className="hh-card-value">{hero.title}</span>
+                  <div className="ghh-card-item" key={hero.id}>
+                    <div className="ghh-card-row">
+                      <span className="ghh-card-label">{t("getHomeHero.table.title")}</span>
+                      <span className="ghh-card-value">{stripHtml(hero.title)}</span>
                     </div>
-                    <div className="hh-card-row">
-                      <span className="hh-card-label">{t("getHomeHero.table.created")}</span>
-                      <span className="hh-card-value">
+                    <div className="ghh-card-row">
+                      <span className="ghh-card-label">{t("getHomeHero.table.created")}</span>
+                      <span className="ghh-card-value">
                         {hero.createdAt ? new Date(hero.createdAt).toLocaleDateString() : t("getHomeHero.table.notAvailable")}
                       </span>
                     </div>
 
-                    <div className="hh-card-actions">
-                      <button className="hh-btn hh-btn-edit" onClick={() => handleEditClick(hero)}>
+                    <div className="ghh-card-actions">
+                      <button className="ghh-btn ghh-btn-edit" onClick={() => handleEditClick(hero)}>
                         {t("getHomeHero.buttons.edit")}
                       </button>
                       <button
-                        className="hh-btn hh-btn-delete"
+                        className="ghh-btn ghh-btn-delete"
                         onClick={() => handleDeleteClick(hero)}
                         disabled={deletingId === hero.id}
                       >
@@ -357,21 +379,21 @@ const GetHomeHero = () => {
               </div>
 
               {totalPages > 1 && (
-                <div className="hh-pagination">
+                <div className="ghh-pagination">
                   <button
-                    className="hh-page-btn"
+                    className="ghh-page-btn"
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
                     {t("getHomeHero.pagination.prev")}
                   </button>
 
-                  <span className="hh-page-info">
+                  <span className="ghh-page-info">
                     {t("getHomeHero.pagination.pageOf", { current: currentPage, total: totalPages })}
                   </span>
 
                   <button
-                    className="hh-page-btn"
+                    className="ghh-page-btn"
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
                   >

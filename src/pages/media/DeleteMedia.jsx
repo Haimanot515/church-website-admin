@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 // Title is stored as RichTextField HTML — strip tags for plain-text display here
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -59,10 +60,10 @@ const DeleteMedia = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(item._id);
+      setDeletingId(item.id);
       setError("");
 
-      await API.delete(`/media/${item._id}`);
+      await API.delete(`/media/${item.id}`);
 
       await fetchMedia();
     } catch (err) {
@@ -107,7 +108,7 @@ const DeleteMedia = () => {
             </thead>
             <tbody>
               {media.map((item) => (
-                <tr key={item._id}>
+                <tr key={item.id}>
                   <td style={tdStyle}>{stripHtml(item.title) || "—"}</td>
                   <td style={tdStyle}>
                     <span style={typeBadgeStyle(item.mediaType)}>{item.mediaType}</span>
@@ -133,18 +134,18 @@ const DeleteMedia = () => {
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleDelete(item)}
-                      disabled={deletingId === item._id}
+                      disabled={deletingId === item.id}
                       style={{
                         padding: "6px 12px",
                         background: "#dc2626",
                         color: "#fff",
                         border: "none",
                         borderRadius: "6px",
-                        cursor: deletingId === item._id ? "not-allowed" : "pointer",
+                        cursor: deletingId === item.id ? "not-allowed" : "pointer",
                         fontSize: "13px",
                       }}
                     >
-                      {deletingId === item._id ? "Deleting..." : "Delete"}
+                      {deletingId === item.id ? "Deleting..." : "Delete"}
                     </button>
                   </td>
                 </tr>

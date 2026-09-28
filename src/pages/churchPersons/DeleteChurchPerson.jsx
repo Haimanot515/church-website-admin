@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const CATEGORY_LABELS = {
   leader: "Leader",
@@ -40,10 +41,10 @@ const DeleteChurchPerson = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(person._id);
+      setDeletingId(person.id);
       setError("");
 
-      await API.delete(`/church-persons/${person._id}`);
+      await API.delete(`/church-persons/${person.id}`);
 
       await fetchPeople();
     } catch (err) {
@@ -87,7 +88,7 @@ const DeleteChurchPerson = () => {
             </thead>
             <tbody>
               {people.map((person) => (
-                <tr key={person._id}>
+                <tr key={person.id}>
                   <td style={tdStyle}>
                     {person.photos && person.photos.length > 0 ? (
                       <img
@@ -105,18 +106,18 @@ const DeleteChurchPerson = () => {
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleDelete(person)}
-                      disabled={deletingId === person._id}
+                      disabled={deletingId === person.id}
                       style={{
                         padding: "6px 12px",
                         background: "#dc2626",
                         color: "#fff",
                         border: "none",
                         borderRadius: "6px",
-                        cursor: deletingId === person._id ? "not-allowed" : "pointer",
+                        cursor: deletingId === person.id ? "not-allowed" : "pointer",
                         fontSize: "13px",
                       }}
                     >
-                      {deletingId === person._id ? "Deleting..." : "Delete"}
+                      {deletingId === person.id ? "Deleting..." : "Delete"}
                     </button>
                   </td>
                 </tr>

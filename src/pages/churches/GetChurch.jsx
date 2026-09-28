@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurch.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -286,13 +287,12 @@ const GetChurch = () => {
                         {t("addressLabel")}
                         <span className="getChurch-optional"> ({t("optional")})</span>
                       </label>
-                      <input
+                      <RichTextField
                         id={`ec-address-${c.id}`}
-                        type="text"
-                        name="address"
                         value={editForm.address}
-                        onChange={handleEditChange}
-                        className="getChurch-input"
+                        onChange={(html) => setEditForm((prev) => ({ ...prev, address: html }))}
+                        minHeight="44px"
+                        toolbar="minimal"
                       />
 
                       <div className="getChurch-row2col">
@@ -301,13 +301,12 @@ const GetChurch = () => {
                             {t("serviceDaysLabel")}
                             <span className="getChurch-optional"> ({t("optional")})</span>
                           </label>
-                          <input
+                          <RichTextField
                             id={`ec-days-${c.id}`}
-                            type="text"
-                            name="serviceDays"
                             value={editForm.serviceDays}
-                            onChange={handleEditChange}
-                            className="getChurch-input"
+                            onChange={(html) => setEditForm((prev) => ({ ...prev, serviceDays: html }))}
+                            minHeight="44px"
+                            toolbar="minimal"
                           />
                         </div>
 
@@ -316,13 +315,12 @@ const GetChurch = () => {
                             {t("serviceTimeLabel")}
                             <span className="getChurch-optional"> ({t("optional")})</span>
                           </label>
-                          <input
+                          <RichTextField
                             id={`ec-time-${c.id}`}
-                            type="text"
-                            name="serviceTime"
                             value={editForm.serviceTime}
-                            onChange={handleEditChange}
-                            className="getChurch-input"
+                            onChange={(html) => setEditForm((prev) => ({ ...prev, serviceTime: html }))}
+                            minHeight="44px"
+                            toolbar="minimal"
                           />
                         </div>
                       </div>
@@ -430,16 +428,16 @@ const GetChurch = () => {
                         </span>
                       )}
                       {c.address && (
-                        <span className="getChurch-metaItem">{c.address}</span>
+                        <span className="getChurch-metaItem">{stripHtml(c.address)}</span>
                       )}
                       {c.serviceDays && (
                         <span className="getChurch-metaItem">
-                          {t("serviceDaysLabel")}: {c.serviceDays}
+                          {t("serviceDaysLabel")}: {stripHtml(c.serviceDays)}
                         </span>
                       )}
                       {c.serviceTime && (
                         <span className="getChurch-metaItem">
-                          {t("serviceTimeLabel")}: {c.serviceTime}
+                          {t("serviceTimeLabel")}: {stripHtml(c.serviceTime)}
                         </span>
                       )}
                     </div>

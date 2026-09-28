@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetPost.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for the plain-text table preview / validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -265,22 +266,22 @@ const GetPost = () => {
   };
 
   return (
-    <div className="gp-page">
-      <div className="gp-card">
-        <div className="gp-header">
+    <div className="gpost-page">
+      <div className="gpost-card">
+        <div className="gpost-header">
           <h2>{t("post.heading")}</h2>
 
           {!editingId && (
-            <button className="gp-btn-new" onClick={() => navigate("/admin/posts/create")}>
+            <button className="gpost-btn-new" onClick={() => navigate("/admin/posts/create")}>
               {t("post.newPost")}
             </button>
           )}
         </div>
 
-        {error && <p className="gp-error">{error}</p>}
+        {error && <p className="gpost-error">{error}</p>}
 
         {editingId && (
-          <div ref={editPanelRef} className="gp-edit-panel rte-page-shell">
+          <div ref={editPanelRef} className="gpost-edit-panel rte-page-shell">
             <RichTextProvider>
             <div className="rte-editor-shell">
               <RichTextToolbar />
@@ -288,26 +289,26 @@ const GetPost = () => {
               <div className="rte-scroll-area">
                 <h3>{t("post.editHeading")}</h3>
 
-                {formError && <p className="gp-error">{formError}</p>}
+                {formError && <p className="gpost-error">{formError}</p>}
 
                 {languagesLoading ? (
-                  <div className="gp-panelLoading">
-                    <div className="gp-panelSpinner" />
+                  <div className="gpost-panelLoading">
+                    <div className="gpost-panelSpinner" />
                     <span>{t("post.form.loadingLanguages")}</span>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="gp-form">
-                <label className="gp-label" htmlFor="gp-language">
+                  <form onSubmit={handleSubmit} className="gpost-form">
+                <label className="gpost-label" htmlFor="gpost-language">
                   {t("post.form.languageLabel")}
-                  <span className="gp-required"> *</span>
+                  <span className="gpost-required"> *</span>
                 </label>
                 <select
-                  id="gp-language"
+                  id="gpost-language"
                   name="language"
                   value={form.language}
                   onChange={handleChange}
                   required
-                  className="gp-select"
+                  className="gpost-select"
                 >
                   <option value="">{t("post.form.selectLanguage")}</option>
                   {languages.map((lang) => (
@@ -317,12 +318,12 @@ const GetPost = () => {
                   ))}
                 </select>
 
-                <label className="gp-label" htmlFor="gp-title">
+                <label className="gpost-label" htmlFor="gpost-title">
                   {t("post.form.titleLabel")}
-                  <span className="gp-required"> *</span>
+                  <span className="gpost-required"> *</span>
                 </label>
                 <RichTextField
-                  id="gp-title"
+                  id="gpost-title"
                   value={form.title}
                   onChange={(html) => setForm((prev) => ({ ...prev, title: html }))}
                   placeholder={t("post.form.titlePlaceholder")}
@@ -331,24 +332,24 @@ const GetPost = () => {
                   autoFocus
                 />
 
-                <label className="gp-label" htmlFor="gp-description">
+                <label className="gpost-label" htmlFor="gpost-description">
                   {t("post.form.descriptionLabel")}
-                  <span className="gp-required"> *</span>
+                  <span className="gpost-required"> *</span>
                 </label>
                 <RichTextField
-                  id="gp-description"
+                  id="gpost-description"
                   value={form.description}
                   onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
                   placeholder={t("post.form.descriptionPlaceholder")}
                   minHeight="90px"
                 />
 
-                <label className="gp-label" htmlFor="gp-content">
+                <label className="gpost-label" htmlFor="gpost-content">
                   {t("post.form.contentLabel")}
-                  <span className="gp-required"> *</span>
+                  <span className="gpost-required"> *</span>
                 </label>
                 <RichTextField
-                  id="gp-content"
+                  id="gpost-content"
                   value={form.content}
                   onChange={(html) => setForm((prev) => ({ ...prev, content: html }))}
                   placeholder={t("post.form.contentPlaceholder")}
@@ -357,23 +358,23 @@ const GetPost = () => {
 
                 {form.language && (
                   <>
-                    <label className="gp-label" htmlFor="gp-category">
+                    <label className="gpost-label" htmlFor="gpost-category">
                       {t("post.form.categoryLabel")}
-                      <span className="gp-required"> *</span>
+                      <span className="gpost-required"> *</span>
                     </label>
                     {categoriesLoading ? (
-                      <div className="gp-inlineLoading">
-                        <span className="gp-inlineSpinner" aria-hidden="true" />
+                      <div className="gpost-inlineLoading">
+                        <span className="gpost-inlineSpinner" aria-hidden="true" />
                         <span>{t("post.form.loadingCategories")}</span>
                       </div>
                     ) : (
                       <select
-                        id="gp-category"
+                        id="gpost-category"
                         name="category"
                         value={form.category}
                         onChange={handleChange}
                         required
-                        className="gp-select"
+                        className="gpost-select"
                       >
                         <option value="">
                           {categories.length === 0
@@ -390,15 +391,15 @@ const GetPost = () => {
                   </>
                 )}
 
-                <label className="gp-fileLabel" htmlFor="gp-image">
+                <label className="gpost-fileLabel" htmlFor="gpost-image">
                   {t("post.form.uploadImageLabel")}
-                  <span className="gp-optional"> ({t("post.form.optional")})</span>
+                  <span className="gpost-optional"> ({t("post.form.optional")})</span>
                   <input
-                    id="gp-image"
+                    id="gpost-image"
                     type="file"
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="gp-fileInput"
+                    className="gpost-fileInput"
                   />
                 </label>
 
@@ -406,26 +407,26 @@ const GetPost = () => {
                   <img
                     src={preview || existingImageUrl}
                     alt={t("post.form.imageAlt")}
-                    className="gp-file-preview"
+                    className="gpost-file-preview"
                   />
                 )}
 
-                <label className="gp-label" htmlFor="gp-status">
+                <label className="gpost-label" htmlFor="gpost-status">
                   {t("post.form.statusLabel")}
-                  <span className="gp-optional"> ({t("post.form.optional")})</span>
+                  <span className="gpost-optional"> ({t("post.form.optional")})</span>
                 </label>
                 <select
-                  id="gp-status"
+                  id="gpost-status"
                   name="status"
                   value={form.status}
                   onChange={handleChange}
-                  className="gp-select"
+                  className="gpost-select"
                 >
                   <option value="draft">{t("post.form.draft")}</option>
                   <option value="published">{t("post.form.published")}</option>
                 </select>
 
-                <label className="gp-checkbox-label">
+                <label className="gpost-checkbox-label">
                   <input
                     type="checkbox"
                     name="isTrending"
@@ -435,7 +436,7 @@ const GetPost = () => {
                   {t("post.form.trending")}
                 </label>
 
-                <label className="gp-checkbox-label">
+                <label className="gpost-checkbox-label">
                   <input
                     type="checkbox"
                     name="isFeatured"
@@ -445,7 +446,7 @@ const GetPost = () => {
                   {t("post.form.featured")}
                 </label>
 
-                <label className="gp-checkbox-label">
+                <label className="gpost-checkbox-label">
                   <input
                     type="checkbox"
                     name="isRecommended"
@@ -455,11 +456,11 @@ const GetPost = () => {
                   {t("post.form.recommended")}
                 </label>
 
-                <div className="gp-form-actions">
+                <div className="gpost-form-actions">
                   <button
                     type="submit"
                     disabled={submitting || !form.language || !form.category}
-                    className="gp-btn-primary"
+                    className="gpost-btn-primary"
                   >
                     {submitting ? t("post.form.saving") : t("post.form.saveChanges")}
                   </button>
@@ -468,7 +469,7 @@ const GetPost = () => {
                     type="button"
                     onClick={handleCancelEdit}
                     disabled={submitting}
-                    className="gp-btn-cancel"
+                    className="gpost-btn-cancel"
                   >
                     {t("post.form.cancel")}
                   </button>
@@ -483,16 +484,16 @@ const GetPost = () => {
 
         {!editingId &&
           (loading ? (
-            <div className="gp-panelLoading">
-              <div className="gp-panelSpinner" />
+            <div className="gpost-panelLoading">
+              <div className="gpost-panelSpinner" />
               <span>{t("post.loadingPosts")}</span>
             </div>
           ) : posts.length === 0 ? (
             <p>{t("post.noPosts")}</p>
           ) : (
             <>
-              <div className="gp-table-wrap">
-                <table className="gp-table">
+              <div className="gpost-table-wrap">
+                <table className="gpost-table">
                   <thead>
                     <tr>
                       <th>{t("post.table.title")}</th>
@@ -512,8 +513,8 @@ const GetPost = () => {
                         <td data-label={t("post.table.language")}>{post.language?.name || "—"}</td>
                         <td data-label={t("post.table.status")}>
                           <span
-                            className={`gp-status-badge ${
-                              post.status === "published" ? "gp-status-published" : "gp-status-draft"
+                            className={`gpost-status-badge ${
+                              post.status === "published" ? "gpost-status-published" : "gpost-status-draft"
                             }`}
                           >
                             {post.status === "published" ? t("post.form.published") : t("post.form.draft")}
@@ -524,13 +525,13 @@ const GetPost = () => {
                           {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "—"}
                         </td>
                         <td data-label={t("post.table.actions")}>
-                          <div className="gp-row-actions">
-                            <button className="gp-btn-edit" onClick={() => handleEditClick(post)}>
+                          <div className="gpost-row-actions">
+                            <button className="gpost-btn-edit" onClick={() => handleEditClick(post)}>
                               {t("post.actions.edit")}
                             </button>
 
                             <button
-                              className="gp-btn-delete"
+                              className="gpost-btn-delete"
                               onClick={() => handleDelete(post.id)}
                               disabled={deletingId === post.id}
                             >
@@ -544,21 +545,21 @@ const GetPost = () => {
                 </table>
               </div>
 
-              <div className="gp-pagination">
+              <div className="gpost-pagination">
                 <button
-                  className="gp-page-btn"
+                  className="gpost-page-btn"
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
                   {t("post.pagination.prev")}
                 </button>
 
-                <span className="gp-page-info">
+                <span className="gpost-page-info">
                   {t("post.pagination.pageOf", { current: currentPage, total: totalPages })}
                 </span>
 
                 <button
-                  className="gp-page-btn"
+                  className="gpost-page-btn"
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
                 >

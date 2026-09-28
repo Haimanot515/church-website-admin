@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 
 const DeletePromotion = () => {
@@ -25,7 +26,7 @@ const DeletePromotion = () => {
 
         const res = await API.get("/promotions");
 
-        const found = res.data.find((p) => p._id === id);
+        const found = res.data.find((p) => p.id === id);
 
         if (!found) {
           setError("Promotion not found");
@@ -105,7 +106,7 @@ const DeletePromotion = () => {
 
       <div
         style={{
-          maxWidth: "550px",
+          maxWidth: "700px",
           margin: "auto",
           background: "#fff",
           padding: "30px",

@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
-import RichTextEditor from "../../components/textEditor/RichTextEditor";
 import "./CreateHomeHero.css";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const CreateHomeHero = () => {
   const { t } = useTranslation();
@@ -57,6 +65,11 @@ const CreateHomeHero = () => {
       return;
     }
 
+    if (!stripHtml(formData.title)) {
+      setError("Title is required");
+      return;
+    }
+
     try {
       setLoading(true);
       const data = new FormData();
@@ -90,51 +103,60 @@ const CreateHomeHero = () => {
 
   return (
     <div className="hh-page">
-      <div className="hh-card">
+      <div className="hh-card rte-page-shell">
         <h2 className="hh-title">{t("createHomeHero.createTitle")}</h2>
 
         {error && <p className="hh-error">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="hh-form">
-          <select name="language" value={formData.language} onChange={handleChange} required>
-            <option value="" disabled>
-              {t("createHomeHero.form.selectLanguagePlaceholder")}
-            </option>
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
-
-          <input
-            type="text"
-            name="title"
-            placeholder={t("createHomeHero.form.titlePlaceholder")}
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-
-          <RichTextEditor
-            value={formData.description}
-            onChange={(html) => setFormData((prev) => ({ ...prev, description: html }))}
-            placeholder={t("createHomeHero.form.descriptionPlaceholder")}
-            minHeight="100px"
-          />
-
-          <div>
-            <label className="hh-file-label">{t("createHomeHero.form.heroImageLabel")}</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            {preview && <img src={preview} alt="preview" className="hh-file-preview" />}
+        <RichTextProvider>
+          <div className="rte-editor-shell">
+            <RichTextToolbar />
+            <RichTextContextMenu />
+            <div className="rte-scroll-area">
+              <form onSubmit={handleSubmit} className="hh-form">
+              <select name="language" value={formData.language} onChange={handleChange} required>
+                <option value="" disabled>
+                  {t("createHomeHero.form.selectLanguagePlaceholder")}
+                </option>
+                {languages.map((lang) => (
+                  <option key={lang.id} value={lang.id}>
+                    {lang.name} ({lang.code})
+                  </option>
+                ))}
+              </select>
+    
+              <RichTextField
+                id="rt-title"
+                value={formData.title}
+                onChange={(html) => setFormData((prev) => ({ ...prev, title: html }))}
+                placeholder={t("createHomeHero.form.titlePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
+    
+              <RichTextField
+      id="rt-description"
+                value={formData.description}
+                onChange={(html) => setFormData((prev) => ({ ...prev, description: html }))}
+                placeholder={t("createHomeHero.form.descriptionPlaceholder")}
+                minHeight="100px"
+              />
+    
+              <div>
+                <label className="hh-file-label">{t("createHomeHero.form.heroImageLabel")}</label>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+                {preview && <img src={preview} alt="preview" className="hh-file-preview" />}
+              </div>
+    
+              <div className="hh-form-actions">
+                <button type="submit" disabled={loading} className="hh-btn-primary">
+                  {loading ? t("createHomeHero.buttons.creating") : t("createHomeHero.buttons.create")}
+                </button>
+              </div>
+            </form>
+            </div>
           </div>
-
-          <div className="hh-form-actions">
-            <button type="submit" disabled={loading} className="hh-btn-primary">
-              {loading ? t("createHomeHero.buttons.creating") : t("createHomeHero.buttons.create")}
-            </button>
-          </div>
-        </form>
+        </RichTextProvider>
       </div>
     </div>
   );

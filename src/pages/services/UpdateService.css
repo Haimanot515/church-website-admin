@@ -1,19 +1,26 @@
 /* ===== Page shell ===== */
-.ms-page {
+
+.usvc-page {
+  min-height: 100vh;
+  background: #f1f5f9;
   padding: 30px;
+  box-sizing: border-box;
   max-width: 900px;
   margin: auto;
 }
 
-.ms-heading {
+.usvc-heading {
   margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.ms-error {
+.usvc-error {
   color: red;
 }
 
-.ms-list {
+.usvc-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -21,7 +28,8 @@
 }
 
 /* ===== Service card ===== */
-.ms-card {
+
+.usvc-card {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 10px;
@@ -32,31 +40,31 @@
   gap: 12px;
 }
 
-.ms-card-title {
+.usvc-card-title {
   margin: 0 0 4px 0;
 }
 
-.ms-card-meta {
+.usvc-card-meta {
   margin: 0;
   font-size: 0.85rem;
   color: #666;
 }
 
-.ms-status-active {
+.usvc-status-active {
   color: green;
 }
 
-.ms-status-inactive {
+.usvc-status-inactive {
   color: gray;
 }
 
-.ms-card-actions {
+.usvc-card-actions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
 }
 
-.ms-btn {
+.usvc-btn {
   padding: 8px 14px;
   color: #fff;
   border: none;
@@ -66,24 +74,37 @@
   white-space: nowrap;
 }
 
-.ms-btn-edit {
+.usvc-btn-edit {
+  padding: 6px 12px;
   background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
-.ms-btn-toggle-active {
+.usvc-btn-toggle-active {
   background: #f59e0b;
 }
 
-.ms-btn-toggle-inactive {
+.usvc-btn-toggle-inactive {
   background: #10b981;
 }
 
-.ms-btn-delete {
+.usvc-btn-delete {
+  padding: 6px 12px;
   background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
 /* ===== Edit panel ===== */
-.ms-edit-panel {
+
+.usvc-edit-panel {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 10px;
@@ -91,28 +112,29 @@
   margin-top: 20px;
 }
 
-.ms-edit-panel h3 {
+.usvc-edit-panel h3 {
   margin: 0 0 16px 0;
 }
 
-.ms-form {
+.usvc-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.ms-form input,
-.ms-form select,
-.ms-form textarea {
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.usvc-form input,
+.usvc-form select,
+.usvc-form textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
+  font-family: inherit;
 }
 
-.ms-checkbox-label {
+.usvc-checkbox-label {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -120,11 +142,11 @@
   color: #333;
 }
 
-.ms-checkbox-label input[type="checkbox"] {
+.usvc-checkbox-label input[type="checkbox"] {
   width: auto;
 }
 
-.ms-current-image {
+.usvc-current-image {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -132,44 +154,46 @@
   color: #666;
 }
 
-.ms-file-preview {
+.usvc-file-preview {
   max-width: 220px;
   border-radius: 8px;
   border: 1px solid #eee;
 }
 
-.ms-form-actions {
+.usvc-form-actions {
   display: flex;
   gap: 8px;
   margin-top: 8px;
 }
 
-.ms-btn-primary {
-  padding: 10px 18px;
+.usvc-btn-primary {
+  padding: 14px;
   background: #2563eb;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 10px;
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.ms-btn-primary:disabled {
+.usvc-btn-primary:disabled {
   background: #93c5fd;
   cursor: not-allowed;
 }
 
-.ms-btn-cancel {
-  padding: 10px 18px;
+.usvc-btn-cancel {
+  padding: 14px;
   background: #e5e7eb;
-  color: #111;
+  color: #334155;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 10px;
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.ms-btn-cancel:disabled {
+.usvc-btn-cancel:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -177,65 +201,60 @@
 /* ============================================================
    TABLET (<= 1024px)
    ============================================================ */
-@media (max-width: 1024px) {
-  .ms-page {
-    padding: 20px;
-  }
-}
 
 /* ============================================================
    MOBILE/TABLET (<= 820px)
    ============================================================ */
-@media (max-width: 820px) {
-  .ms-page {
-    padding: 12px;
-  }
 
-  .ms-card {
+@media (max-width: 820px) {
+  .usvc-card {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .ms-card-actions {
+  .usvc-card-actions {
     justify-content: flex-end;
   }
 
-  .ms-btn {
+  .usvc-btn {
     padding: 10px 14px;
   }
+
 }
 
 /* ============================================================
    SMALL MOBILE (<= 480px)
    ============================================================ */
-@media (max-width: 480px) {
-  .ms-page {
-    padding: 8px;
-  }
 
-  .ms-card {
+@media (max-width: 480px) {
+  .usvc-card {
     padding: 12px;
   }
 
-  .ms-card-actions {
+  .usvc-card-actions {
     flex-direction: column;
   }
 
-  .ms-btn {
+  .usvc-btn {
     width: 100%;
     text-align: center;
   }
 
-  .ms-form-actions {
+  .usvc-form-actions {
     flex-direction: column;
   }
 
-  .ms-btn-primary,
-  .ms-btn-cancel {
+  .usvc-btn-primary,
+  .usvc-btn-cancel {
     width: 100%;
   }
 
-  .ms-file-preview {
+  .usvc-file-preview {
     max-width: 100%;
   }
+
 }
+
+@media (max-width: 1024px) { .usvc-page { padding: 20px; } }
+@media (max-width: 820px) { .usvc-page { padding: 12px; } }
+@media (max-width: 480px) { .usvc-page { padding: 8px; } }

@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   name: "",
@@ -37,7 +46,7 @@ const UpdateLanguage = () => {
   };
 
   const handleEditClick = (language) => {
-    setEditingId(language._id);
+    setEditingId(language.id);
     setFormError("");
     setForm({
       name: language.name || "",
@@ -62,6 +71,11 @@ const UpdateLanguage = () => {
 
     setFormError("");
 
+    if (!stripHtml(form.name)) {
+      setFormError("Name is required");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -85,7 +99,7 @@ const UpdateLanguage = () => {
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
         style={{
-          maxWidth: "700px",
+          maxWidth: "1000px",
           margin: "auto",
           background: "#fff",
           padding: "30px",
@@ -99,6 +113,7 @@ const UpdateLanguage = () => {
 
         {editingId && (
           <div
+            className="rte-page-shell"
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
@@ -111,61 +126,69 @@ const UpdateLanguage = () => {
 
             {formError && <p style={{ color: "red" }}>{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Language Name"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-
-              <input
-                type="text"
-                name="code"
-                placeholder="Language Code (EN, AM, IT)"
-                value={form.code}
-                onChange={handleChange}
-                required
-                style={{ textTransform: "uppercase" }}
-              />
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  Cancel
-                </button>
+            <RichTextProvider>
+              <div className="rte-editor-shell">
+                <RichTextToolbar />
+                <RichTextContextMenu />
+                <div className="rte-scroll-area">
+                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <RichTextField
+                    id="ur-name"
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder="Language Name"
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <input
+                    type="text"
+                    name="code"
+                    placeholder="Language Code (EN, AM, IT)"
+                    value={form.code}
+                    onChange={handleChange}
+                    required
+                    style={{ textTransform: "uppercase" }}
+                  />
+    
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#2563eb",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      {submitting ? "Saving..." : "Save Changes"}
+                    </button>
+    
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#e5e7eb",
+                        color: "#334155",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+                </div>
               </div>
-            </form>
+            </RichTextProvider>
           </div>
         )}
 
@@ -184,8 +207,8 @@ const UpdateLanguage = () => {
             </thead>
             <tbody>
               {languages.map((lang) => (
-                <tr key={lang._id} style={editingId === lang._id ? { background: "#eff6ff" } : undefined}>
-                  <td style={tdStyle}>{lang.name}</td>
+                <tr key={lang.id} style={editingId === lang.id ? { background: "#eff6ff" } : undefined}>
+                  <td style={tdStyle}>{stripHtml(lang.name)}</td>
                   <td style={tdStyle}>
                     <span
                       style={{

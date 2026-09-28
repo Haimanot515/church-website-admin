@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const UpdateAdminHero = () => {
   const [formData, setFormData] = useState({

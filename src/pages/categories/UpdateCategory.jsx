@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
+
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
 
 const emptyForm = {
   name: "",
@@ -37,7 +46,7 @@ const UpdateCategory = () => {
   };
 
   const handleEditClick = (category) => {
-    setEditingId(category._id);
+    setEditingId(category.id);
     setFormError("");
     setForm({
       name: category.name || "",
@@ -62,6 +71,11 @@ const UpdateCategory = () => {
 
     setFormError("");
 
+    if (!stripHtml(form.name)) {
+      setFormError("Name is required");
+      return;
+    }
+
     try {
       setSubmitting(true);
 
@@ -85,7 +99,7 @@ const UpdateCategory = () => {
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1000px",
           margin: "auto",
           background: "#fff",
           padding: "30px",
@@ -99,6 +113,7 @@ const UpdateCategory = () => {
 
         {editingId && (
           <div
+            className="rte-page-shell"
             style={{
               border: "1px solid #e2e8f0",
               borderRadius: "10px",
@@ -111,59 +126,67 @@ const UpdateCategory = () => {
 
             {formError && <p style={{ color: "red" }}>{formError}</p>}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="Category Name"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-
-              <textarea
-                name="description"
-                placeholder="Category Description"
-                value={form.description}
-                onChange={handleChange}
-                rows="5"
-              />
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  {submitting ? "Saving..." : "Save Changes"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleCancelEdit}
-                  disabled={submitting}
-                  style={{
-                    padding: "14px",
-                    background: "#e5e7eb",
-                    color: "#334155",
-                    border: "none",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    flex: 1,
-                  }}
-                >
-                  Cancel
-                </button>
+            <RichTextProvider>
+              <div className="rte-editor-shell">
+                <RichTextToolbar />
+                <RichTextContextMenu />
+                <div className="rte-scroll-area">
+                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                  <RichTextField
+                    id="ur-name"
+                    value={form.name}
+                    onChange={(html) => setForm((prev) => ({ ...prev, name: html }))}
+                    placeholder="Category Name"
+                    minHeight="44px"
+                    toolbar="minimal"
+                  />
+    
+                  <RichTextField
+                    id="ur-description"
+                    value={form.description}
+                    onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+                    placeholder="Category Description"
+                    minHeight="140px"
+                  />
+    
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#2563eb",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      {submitting ? "Saving..." : "Save Changes"}
+                    </button>
+    
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      disabled={submitting}
+                      style={{
+                        padding: "14px",
+                        background: "#e5e7eb",
+                        color: "#334155",
+                        border: "none",
+                        borderRadius: "10px",
+                        cursor: "pointer",
+                        flex: 1,
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+                </div>
               </div>
-            </form>
+            </RichTextProvider>
           </div>
         )}
 
@@ -182,9 +205,9 @@ const UpdateCategory = () => {
             </thead>
             <tbody>
               {categories.map((cat) => (
-                <tr key={cat._id} style={editingId === cat._id ? { background: "#eff6ff" } : undefined}>
-                  <td style={tdStyle}>{cat.name}</td>
-                  <td style={tdStyle}>{cat.description || "—"}</td>
+                <tr key={cat.id} style={editingId === cat.id ? { background: "#eff6ff" } : undefined}>
+                  <td style={tdStyle}>{stripHtml(cat.name)}</td>
+                  <td style={tdStyle}>{stripHtml(cat.description) || "—"}</td>
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleEditClick(cat)}

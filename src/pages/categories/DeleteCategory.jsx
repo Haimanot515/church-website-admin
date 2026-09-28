@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const DeleteCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -34,10 +35,10 @@ const DeleteCategory = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(category._id);
+      setDeletingId(category.id);
       setError("");
 
-      await API.delete(`/categories/${category._id}`);
+      await API.delete(`/categories/${category.id}`);
 
       await fetchCategories();
     } catch (err) {
@@ -52,7 +53,7 @@ const DeleteCategory = () => {
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1000px",
           margin: "auto",
           background: "#fff",
           padding: "30px",
@@ -79,24 +80,24 @@ const DeleteCategory = () => {
             </thead>
             <tbody>
               {categories.map((cat) => (
-                <tr key={cat._id}>
+                <tr key={cat.id}>
                   <td style={tdStyle}>{cat.name}</td>
                   <td style={tdStyle}>{cat.description || "—"}</td>
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleDelete(cat)}
-                      disabled={deletingId === cat._id}
+                      disabled={deletingId === cat.id}
                       style={{
                         padding: "6px 12px",
                         background: "#dc2626",
                         color: "#fff",
                         border: "none",
                         borderRadius: "6px",
-                        cursor: deletingId === cat._id ? "not-allowed" : "pointer",
+                        cursor: deletingId === cat.id ? "not-allowed" : "pointer",
                         fontSize: "13px",
                       }}
                     >
-                      {deletingId === cat._id ? "Deleting..." : "Delete"}
+                      {deletingId === cat.id ? "Deleting..." : "Delete"}
                     </button>
                   </td>
                 </tr>

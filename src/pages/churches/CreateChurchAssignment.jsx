@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import API from "../../api/api";
 import "./CreateChurchAssignment.css";
+import "../shared/AdminShared.css";
+import { RichTextProvider } from "../../components/textEditor/RichTextContext";
+import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
+import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
+import RichTextField from "../../components/textEditor/RichTextField";
+
+// Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
+const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
+
 const CreateChurchAssignment = () => {
   const { t } = useTranslation("translation", { keyPrefix: "createChurchAssignment" });
   const [assignment, setAssignment] = useState({
@@ -58,6 +67,11 @@ const CreateChurchAssignment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!stripHtml(assignment.role)) {
+      setError("Role is required");
+      return;
+    }
+
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -102,107 +116,113 @@ const CreateChurchAssignment = () => {
   };
   return (
     <div className="createChurchAssignment-page">
-      <div className="createChurchAssignment-card">
+      <div className="createChurchAssignment-card rte-page-shell">
         <h2 className="createChurchAssignment-title">{t("title")}</h2>
         {error && <p className="createChurchAssignment-error">{error}</p>}
-        <form onSubmit={handleSubmit} className="createChurchAssignment-form">
-          <select
-            name="user"
-            value={assignment.user}
-            onChange={handleChange}
-            required
-            disabled={optionsLoading}
-            className="createChurchAssignment-select"
-          >
-            <option value="">
-              {optionsLoading ? t("loadingUsersMessage") : t("selectUserPlaceholder")}
-            </option>
-            {users.map((u) => (
-              // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
-              <option key={u.id} value={u.id}>
-                {u.name || u.username || u.email}
-              </option>
-            ))}
-          </select>
-          <select
-            name="church"
-            value={assignment.church}
-            onChange={handleChange}
-            required
-            disabled={optionsLoading}
-            className="createChurchAssignment-select"
-          >
-            <option value="">
-              {optionsLoading ? t("loadingChurchesMessage") : t("selectChurchPlaceholder")}
-            </option>
-            {churches.map((c) => (
-              // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
-              <option key={c.id} value={c.id}>
-                {c.churchName}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            name="role"
-            placeholder={t("rolePlaceholder")}
-            value={assignment.role}
-            onChange={handleChange}
-            required
-            className="createChurchAssignment-input"
-          />
-          <input
-            type="date"
-            name="servingSince"
-            value={assignment.servingSince}
-            onChange={handleChange}
-            className="createChurchAssignment-input"
-          />
-          <textarea
-            name="description"
-            placeholder={t("descriptionPlaceholder")}
-            value={assignment.description}
-            onChange={handleChange}
-            rows="4"
-            className="createChurchAssignment-textarea"
-          />
-          <div className="createChurchAssignment-fileGroup">
-            <label className="createChurchAssignment-fileLabel">{t("leaderPhotoLabel")}</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="createChurchAssignment-fileInput"
-            />
+        <RichTextProvider>
+          <div className="rte-editor-shell">
+            <RichTextToolbar />
+            <RichTextContextMenu />
+            <div className="rte-scroll-area">
+              <form onSubmit={handleSubmit} className="createChurchAssignment-form">
+              <select
+                name="user"
+                value={assignment.user}
+                onChange={handleChange}
+                required
+                disabled={optionsLoading}
+                className="createChurchAssignment-select"
+              >
+                <option value="">
+                  {optionsLoading ? t("loadingUsersMessage") : t("selectUserPlaceholder")}
+                </option>
+                {users.map((u) => (
+                  // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+                  <option key={u.id} value={u.id}>
+                    {u.name || u.username || u.email}
+                  </option>
+                ))}
+              </select>
+              <select
+                name="church"
+                value={assignment.church}
+                onChange={handleChange}
+                required
+                disabled={optionsLoading}
+                className="createChurchAssignment-select"
+              >
+                <option value="">
+                  {optionsLoading ? t("loadingChurchesMessage") : t("selectChurchPlaceholder")}
+                </option>
+                {churches.map((c) => (
+                  // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
+                  <option key={c.id} value={c.id}>
+                    {c.churchName}
+                  </option>
+                ))}
+              </select>
+              <RichTextField
+                id="rt-role"
+                value={assignment.role}
+                onChange={(html) => setAssignment((prev) => ({ ...prev, role: html }))}
+                placeholder={t("rolePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
+              />
+              <input
+                type="date"
+                name="servingSince"
+                value={assignment.servingSince}
+                onChange={handleChange}
+                className="createChurchAssignment-input"
+              />
+              <RichTextField
+                id="rt-description"
+                value={assignment.description}
+                onChange={(html) => setAssignment((prev) => ({ ...prev, description: html }))}
+                placeholder={t("descriptionPlaceholder")}
+                minHeight="140px"
+              />
+              <div className="createChurchAssignment-fileGroup">
+                <label className="createChurchAssignment-fileLabel">{t("leaderPhotoLabel")}</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="createChurchAssignment-fileInput"
+                />
+              </div>
+              {preview && (
+                <img src={preview} alt={t("imageAlt")} className="createChurchAssignment-preview" />
+              )}
+              {/* Drives the "Where I Serve Now" section on the public Church
+                  page (getLeadershipChurch requires isCurrent AND isPrimary).
+                  Only one assignment across all users can hold this — checking
+                  it will replace whichever assignment currently holds it. */}
+              <label className="createChurchAssignment-checkboxLabel">
+                <input
+                  type="checkbox"
+                  name="isPrimary"
+                  checked={assignment.isPrimary}
+                  onChange={handleChange}
+                  className="createChurchAssignment-checkbox"
+                />
+                <span>
+                  {t("setAsFeaturedLeader")}
+                  <small className="createChurchAssignment-hint">{t("featuredLeaderHint")}</small>
+                </span>
+              </label>
+              <button
+                type="submit"
+                disabled={loading || optionsLoading}
+                className="createChurchAssignment-submitButton"
+              >
+                {loading ? t("submittingButton") : t("submitButton")}
+              </button>
+            </form>
+            </div>
           </div>
-          {preview && (
-            <img src={preview} alt={t("imageAlt")} className="createChurchAssignment-preview" />
-          )}
-          {/* Drives the "Where I Serve Now" section on the public Church
-              page (getLeadershipChurch requires isCurrent AND isPrimary).
-              Only one assignment across all users can hold this — checking
-              it will replace whichever assignment currently holds it. */}
-          <label className="createChurchAssignment-checkboxLabel">
-            <input
-              type="checkbox"
-              name="isPrimary"
-              checked={assignment.isPrimary}
-              onChange={handleChange}
-              className="createChurchAssignment-checkbox"
-            />
-            <span>
-              {t("setAsFeaturedLeader")}
-              <small className="createChurchAssignment-hint">{t("featuredLeaderHint")}</small>
-            </span>
-          </label>
-          <button
-            type="submit"
-            disabled={loading || optionsLoading}
-            className="createChurchAssignment-submitButton"
-          >
-            {loading ? t("submittingButton") : t("submitButton")}
-          </button>
-        </form>
+        </RichTextProvider>
       </div>
     </div>
   );

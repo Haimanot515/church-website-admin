@@ -6,6 +6,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./CreateChurchStory.css";
+import "../shared/AdminShared.css";
 
 // Strips HTML tags for plain-text validation checks
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -122,6 +123,11 @@ const CreateChurchStory = () => {
     // instead of waiting for the schema validator to reject it.
     if (!/\d{4}/.test(story.range)) {
       setError(t("createChurchStory.errorRangeYearRequired"));
+      return;
+    }
+
+    if (!stripHtml(story.range)) {
+      setError("Range is required");
       return;
     }
 
@@ -256,15 +262,13 @@ const CreateChurchStory = () => {
                 {t("createChurchStory.rangeLabel")}
                 <span className="ccsRequired"> *</span>
               </label>
-              <input
+              <RichTextField
                 id="ccs-range"
-                type="text"
-                name="range"
-                placeholder={t("createChurchStory.rangePlaceholder")}
                 value={story.range}
-                onChange={handleChange}
-                required
-                className="ccsInput"
+                onChange={(html) => setStory((prev) => ({ ...prev, range: html }))}
+                placeholder={t("createChurchStory.rangePlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
               />
 
               <label className="ccsLabel" htmlFor="ccs-desc">
@@ -285,14 +289,13 @@ const CreateChurchStory = () => {
                     {t("createChurchStory.leaderLabel")}
                     <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="ccs-leader"
-                    type="text"
-                    name="leader"
-                    placeholder={t("createChurchStory.leaderPlaceholder")}
                     value={story.leader}
-                    onChange={handleChange}
-                    className="ccsInput"
+                    onChange={(html) => setStory((prev) => ({ ...prev, leader: html }))}
+                    placeholder={t("createChurchStory.leaderPlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
                 </div>
 
@@ -301,14 +304,13 @@ const CreateChurchStory = () => {
                     {t("createChurchStory.leaderRoleLabel")}
                     <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="ccs-leaderRole"
-                    type="text"
-                    name="leaderRole"
-                    placeholder={t("createChurchStory.leaderRolePlaceholder")}
                     value={story.leaderRole}
-                    onChange={handleChange}
-                    className="ccsInput"
+                    onChange={(html) => setStory((prev) => ({ ...prev, leaderRole: html }))}
+                    placeholder={t("createChurchStory.leaderRolePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
                 </div>
               </div>
@@ -317,14 +319,13 @@ const CreateChurchStory = () => {
                 {t("createChurchStory.servedByLabel")}
                 <span className="ccsOptional"> ({t("createChurchStory.optional")})</span>
               </label>
-              <input
+              <RichTextField
                 id="ccs-servedBy"
-                type="text"
-                name="servedBy"
-                placeholder={t("createChurchStory.servedByPlaceholder")}
                 value={story.servedBy}
-                onChange={handleChange}
-                className="ccsInput"
+                onChange={(html) => setStory((prev) => ({ ...prev, servedBy: html }))}
+                placeholder={t("createChurchStory.servedByPlaceholder")}
+                minHeight="44px"
+                toolbar="minimal"
               />
 
               <label className="ccsLabel" htmlFor="ccs-file">

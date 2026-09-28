@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import API from "../../api/api";
+import "../shared/AdminShared.css";
 
 const DeleteLanguage = () => {
   const [languages, setLanguages] = useState([]);
@@ -34,10 +35,10 @@ const DeleteLanguage = () => {
     if (!confirmed) return;
 
     try {
-      setDeletingId(language._id);
+      setDeletingId(language.id);
       setError("");
 
-      await API.delete(`/languages/${language._id}`);
+      await API.delete(`/languages/${language.id}`);
 
       await fetchLanguages();
     } catch (err) {
@@ -52,7 +53,7 @@ const DeleteLanguage = () => {
     <div style={{ minHeight: "100vh", background: "#f1f5f9", padding: "30px" }}>
       <div
         style={{
-          maxWidth: "700px",
+          maxWidth: "1000px",
           margin: "auto",
           background: "#fff",
           padding: "30px",
@@ -79,7 +80,7 @@ const DeleteLanguage = () => {
             </thead>
             <tbody>
               {languages.map((lang) => (
-                <tr key={lang._id}>
+                <tr key={lang.id}>
                   <td style={tdStyle}>{lang.name}</td>
                   <td style={tdStyle}>
                     <span
@@ -98,18 +99,18 @@ const DeleteLanguage = () => {
                   <td style={tdStyle}>
                     <button
                       onClick={() => handleDelete(lang)}
-                      disabled={deletingId === lang._id}
+                      disabled={deletingId === lang.id}
                       style={{
                         padding: "6px 12px",
                         background: "#dc2626",
                         color: "#fff",
                         border: "none",
                         borderRadius: "6px",
-                        cursor: deletingId === lang._id ? "not-allowed" : "pointer",
+                        cursor: deletingId === lang.id ? "not-allowed" : "pointer",
                         fontSize: "13px",
                       }}
                     >
-                      {deletingId === lang._id ? "Deleting..." : "Delete"}
+                      {deletingId === lang.id ? "Deleting..." : "Delete"}
                     </button>
                   </td>
                 </tr>

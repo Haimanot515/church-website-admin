@@ -7,6 +7,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchPerson.css";
+import "../shared/AdminShared.css";
 
 const CATEGORY_OPTIONS = [
   { value: "leader", labelKey: "categories.leader" },
@@ -304,14 +305,13 @@ const GetChurchPerson = () => {
                     {t("roleLabel")}
                     <span className="getChurchPerson-optional"> ({t("optional")})</span>
                   </label>
-                  <input
+                  <RichTextField
                     id="gcp-role"
-                    type="text"
-                    name="role"
-                    placeholder={t("rolePlaceholder")}
                     value={form.role}
-                    onChange={handleChange}
-                    className="getChurchPerson-input"
+                    onChange={(html) => setForm((prev) => ({ ...prev, role: html }))}
+                    placeholder={t("rolePlaceholder")}
+                    minHeight="44px"
+                    toolbar="minimal"
                   />
 
                   <label className="getChurchPerson-label" htmlFor="gcp-description">
@@ -448,7 +448,7 @@ const GetChurchPerson = () => {
                         </span>
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.roleTitle")}>
-                        {person.role || "\u2014"}
+                        {stripHtml(person.role) || "\u2014"}
                       </td>
                       <td className="getChurchPerson-td" data-label={t("tableHeaders.actions")}>
                         <div className="getChurchPerson-rowActions">
