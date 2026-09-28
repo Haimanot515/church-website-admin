@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import API from "../../api/api";
 import { useTranslation } from "react-i18next";
 import ActionMenu from "../../components/ActionMenu";
@@ -24,19 +24,61 @@ const AdminUsers = ({ mode }) => {
   const [rowDraft, setRowDraft] = useState({});
   const [rowBusyId, setRowBusyId] = useState(null);
 
-  const fetchUsersPage = async (page = 1) => {
+  // Infinite scroll: pages are appended as the user scrolls down.
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loadingRef = useRef(false);
+  const sentinelRef = useRef(null);
+  const hasMore = users.length < totalUsers;
+
+  const fetchUsersPage = async (page = 1, { append = false } = {}) => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     try {
-      setLoading(true);
+      append ? setLoadingMore(true) : setLoading(true);
       const res = await API.get(`/admin/users?page=${page}&limit=${PAGE_SIZE}`);
-      setUsers(res.data.users);
+      const incoming = res.data.users || [];
+      setUsers((prev) => {
+        if (!append) return incoming;
+        const seen = new Set(prev.map((u) => u.id));
+        return [...prev, ...incoming.filter((u) => !seen.has(u.id))];
+      });
       setTotalUsers(res.data.totalUsers);
       setCurrentPage(page);
     } catch (err) {
       setError(t("adminUsers.errors.fetchUsers"));
     } finally {
+      loadingRef.current = false;
       setLoading(false);
+      setLoadingMore(false);
     }
   };
+
+  // Reload everything that is currently shown (used after a delete / update).
+  const refreshUsers = async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    try {
+      const pages = Math.max(1, currentPage);
+      let all = [];
+      let total = 0;
+      for (let p = 1; p <= pages; p++) {
+        const res = await API.get(`/admin/users?page=${p}&limit=${PAGE_SIZE}`);
+        all = all.concat(res.data.users || []);
+        total = res.data.totalUsers;
+      }
+      setUsers(all);
+      setTotalUsers(total);
+    } catch {
+      setError(t("adminUsers.errors.fetchUsers"));
+    } finally {
+      loadingRef.current = false;
+    }
+  };
+
+  const loadMore = useCallback(() => {
+    if (!loadingRef.current) fetchUsersPage(currentPage + 1, { append: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   const handleSearch = async () => {
     if (!searchQuery) return;
@@ -69,7 +111,7 @@ const AdminUsers = ({ mode }) => {
     setSearchQuery("");
     setSearchResult(null);
     setEditMode(false);
-    fetchUsersPage(currentPage);
+    refreshUsers();
   };
 
   const handleDelete = async () => {
@@ -81,7 +123,7 @@ const AdminUsers = ({ mode }) => {
     setSearchQuery("");
     setSearchResult(null);
     setEditMode(false);
-    fetchUsersPage(currentPage);
+    refreshUsers();
   };
 
   const startRowEdit = (user) => {
@@ -121,7 +163,7 @@ const AdminUsers = ({ mode }) => {
       setRowBusyId(user.id);
       await API.delete(`/admin/delete/${user.id}`);
       alert(t("adminUsers.alerts.userDeleted"));
-      fetchUsersPage(currentPage);
+      refreshUsers();
     } catch {
       alert(t("adminUsers.errors.fetchUsers"));
     } finally {
@@ -165,6 +207,20 @@ const AdminUsers = ({ mode }) => {
     fetchUsersPage(1);
   }, []);
 
+  // Load the next page when the sentinel at the bottom of the list comes into view.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasMore || loading || loadingMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadMore();
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadingMore, loadMore, users.length]);
+
   return (
     <div className="admin-users-page">
 
@@ -176,7 +232,7 @@ const AdminUsers = ({ mode }) => {
 
           {error && <p className="au-error">{error}</p>}
 
-          {loading ? (
+          {loading && users.length === 0 ? (
             <p className="au-loading">{t("adminUsers.view.loading")}</p>
           ) : (
             <>
@@ -296,21 +352,9 @@ const AdminUsers = ({ mode }) => {
                 </table>
               </div>
 
-              <div className="au-pagination">
-                <button
-                  className="au-page-btn"
-                  onClick={() => fetchUsersPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  {t("adminUsers.view.previous")}
-                </button>
-
-                <button
-                  className="au-page-btn"
-                  onClick={() => fetchUsersPage(currentPage + 1)}
-                >
-                  {t("adminUsers.view.next")}
-                </button>
+              {/* Infinite-scroll sentinel */}
+              <div ref={sentinelRef} className="au-load-more" aria-hidden={!hasMore}>
+                {loadingMore && t("adminUsers.view.loading")}
               </div>
             </>
           )}

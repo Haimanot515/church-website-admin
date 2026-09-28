@@ -210,6 +210,14 @@
 /* ===================================================================
    Pagination
 =================================================================== */
+.au-load-more {
+  min-height: 40px;
+  padding: 12px 0 0;
+  text-align: center;
+  color: var(--au-text-muted);
+  font-size: 0.9rem;
+}
+
 .au-pagination {
   display: flex;
   justify-content: space-between;
