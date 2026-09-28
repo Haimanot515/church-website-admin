@@ -477,3 +477,142 @@ html, body { overflow-x: hidden; width: 100%; }
 
 /* Long tables / forms scroll inside the form area, never sideways */
 .admin-main table { max-width: 100%; }
+
+/* ============================================================
+   CONSISTENT PAGE TITLE
+   The heading of every admin page ("All Posts", "Create Post", ...)
+   uses exactly the same size / weight / colour as the submenu
+   heading ("Posts") and sits on the same horizontal level.
+   Submenu heading: 17.5px / 700 / #0f172a, text centre 34.5px
+   below the top bar.
+   ============================================================ */
+.admin-main .ca-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .ga-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .hh-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .ghh-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cba-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gba-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cc-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gc-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .ccsPage :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gcsPage :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .createChurchPerson-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .getChurchPerson-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .rcpPage :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .createChurch-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .createChurchAssignment-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .getChurch-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cfaq-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gfaq-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cl-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gl-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cm-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gm-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cmv-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gmv-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cpost-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gpost-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cp-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gp-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .up-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .csvc-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .ms-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .usvc-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .cs-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .gs-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .admin-users-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)),
+  .admin-main .ap-page :is(h1, h2):not(:is([contenteditable], [contenteditable] *, .au-subtitle)) {
+  display: flex;
+  align-items: center;
+  min-height: 35px;
+  margin-top: 0;
+  font-family: inherit;
+  font-size: 17.5px;
+  font-weight: 700;
+  line-height: 29px;
+  color: #0f172a;
+  flex: 1 1 auto;
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: 0; /* raise this (e.g. 24px) to push the title a little right */
+  padding-right: 0;
+}
+
+/* Top spacing so the title's centre lines up with the submenu heading */
+.admin-main .ca-card,
+.admin-main .ga-card,
+.admin-main .au-card,
+.admin-main .hh-card,
+.admin-main .ghh-card,
+.admin-main .cba-card,
+.admin-main .gba-card,
+.admin-main .cc-card,
+.admin-main .gc-card,
+.admin-main .ccsCard,
+.admin-main .gcsCard,
+.admin-main .createChurchPerson-card,
+.admin-main .getChurchPerson-card,
+.admin-main .rcpCard,
+.admin-main .createChurch-card,
+.admin-main .createChurchAssignment-card,
+.admin-main .getChurch-card,
+.admin-main .cfaq-card,
+.admin-main .gfaq-card,
+.admin-main .cl-card,
+.admin-main .gl-card,
+.admin-main .cm-card,
+.admin-main .gm-card,
+.admin-main .cmv-card,
+.admin-main .gmv-card,
+.admin-main .cpost-card,
+.admin-main .gpost-card,
+.admin-main .cp-card,
+.admin-main .gp-card,
+.admin-main .up-card,
+.admin-main .csvc-card,
+.admin-main .cs-card,
+.admin-main .gs-card,
+.admin-main .ap-card,
+.admin-main .ms-page,
+.admin-main .usvc-page {
+  padding-top: 17px;
+}
+
+
+
+/* Titles are centred in the page area; the New button stays at the right end
+   of the same line without pulling the title off-centre. */
+.admin-main :has(> .gba-btn-new),
+.admin-main :has(> .getChurch-newButton),
+.admin-main :has(> .gpost-btn-new),
+.admin-main :has(> .gm-btn-new),
+.admin-main :has(> .gc-btn-new),
+.admin-main :has(> .getChurchPerson-newButton),
+.admin-main :has(> .gp-btn-new),
+.admin-main :has(> .gcsNewButton),
+.admin-main :has(> .gl-btn-new),
+.admin-main :has(> .ga-btn-new),
+.admin-main :has(> .ghh-new-btn),
+.admin-main :has(> .ap-btn-new) {
+  position: relative;
+}
+
+@media (min-width: 641px) {
+  .admin-main .gba-btn-new,
+  .admin-main .getChurch-newButton,
+  .admin-main .gpost-btn-new,
+  .admin-main .gm-btn-new,
+  .admin-main .gc-btn-new,
+  .admin-main .getChurchPerson-newButton,
+  .admin-main .gp-btn-new,
+  .admin-main .gcsNewButton,
+  .admin-main .gl-btn-new,
+  .admin-main .ga-btn-new,
+  .admin-main .ghh-new-btn,
+  .admin-main .ap-btn-new {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

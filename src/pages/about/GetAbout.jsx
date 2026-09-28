@@ -9,6 +9,7 @@ import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetAbout.css";
 import "../shared/AdminShared.css";
 import ActionMenu from "../../components/ActionMenu";
+import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Strips HTML tags for the plain-text table preview snippet
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -29,7 +30,6 @@ const GetAbout = () => {
   const [allEntries, setAllEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [deletingId, setDeletingId] = useState(null);
 
   const [editingId, setEditingId] = useState(null);
@@ -61,15 +61,19 @@ const GetAbout = () => {
     }
   };
 
-  const totalPages = Math.max(1, Math.ceil(allEntries.length / ENTRIES_PER_PAGE));
-  const entries = allEntries.slice(
-    (currentPage - 1) * ENTRIES_PER_PAGE,
-    currentPage * ENTRIES_PER_PAGE
-  );
+  // Infinite scroll: show more rows as the user scrolls down
+  const [visibleCount, setVisibleCount] = useState(ENTRIES_PER_PAGE);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const entries = allEntries.slice(0, visibleCount);
+  const hasMore = visibleCount < allEntries.length;
 
-  const goToPage = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+  const loadMore = () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    setTimeout(() => {
+      setVisibleCount((c) => c + ENTRIES_PER_PAGE);
+      setLoadingMore(false);
+    }, 400);
   };
 
   // --- Edit (inline, no navigation) ---
@@ -162,13 +166,6 @@ const GetAbout = () => {
       }
 
       await fetchAbout();
-
-      // If deleting the last item on a page, step back a page
-      const remaining = allEntries.length - 1;
-      const newTotalPages = Math.max(1, Math.ceil(remaining / ENTRIES_PER_PAGE));
-      if (currentPage > newTotalPages) {
-        setCurrentPage(newTotalPages);
-      }
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("getAbout.errors.delete"));
@@ -318,29 +315,12 @@ const GetAbout = () => {
                 </table>
               </div>
 
-              {totalPages > 1 && (
-                <div className="ga-pagination">
-                  <button
-                    onClick={() => goToPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="ga-page-btn"
-                  >
-                    {t("getAbout.pagination.prev")}
-                  </button>
-
-                  <span className="ga-page-info">
-                    {t("getAbout.pagination.pageOf", { current: currentPage, total: totalPages })}
-                  </span>
-
-                  <button
-                    onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="ga-page-btn"
-                  >
-                    {t("getAbout.pagination.next")}
-                  </button>
-                </div>
-              )}
+              <InfiniteScrollSentinel
+                hasMore={hasMore}
+                loading={loadingMore}
+                onLoadMore={loadMore}
+                text={t("getAbout.loadingMore", "Loading more...")}
+              />
             </>
           ))}
       </div>

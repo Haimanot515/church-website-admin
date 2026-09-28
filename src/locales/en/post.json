@@ -58,5 +58,6 @@
     "loadCategories": "Failed to load categories for this language",
     "update": "Failed to update post",
     "delete": "Failed to delete post"
-  }
+  },
+  "loadingMore": "Loading more..."
 }

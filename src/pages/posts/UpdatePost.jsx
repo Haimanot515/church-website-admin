@@ -6,6 +6,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -31,6 +32,7 @@ const UpdatePost = () => {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const [categories, setCategories] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -44,9 +46,9 @@ const UpdatePost = () => {
   const [formError, setFormError] = useState("");
 
   useEffect(() => {
-    fetchPosts(currentPage);
+    fetchPosts(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
     const fetchOptions = async () => {
@@ -68,28 +70,53 @@ const UpdatePost = () => {
     fetchOptions();
   }, []);
 
-  const fetchPosts = async (page) => {
+  // append=true adds the next page under the current rows (infinite scroll)
+  const fetchPosts = async (page, append = false) => {
     try {
-      setLoading(true);
+      append ? setLoadingMore(true) : setLoading(true);
       setError("");
 
       const res = await API.get("/posts", {
         params: { page, limit: POSTS_PER_PAGE },
       });
 
-      setPosts(res.data.posts);
+      setPosts((prev) => {
+        if (!append) return res.data.posts;
+        const seen = new Set(prev.map((p) => p.id));
+        return [...prev, ...res.data.posts.filter((p) => !seen.has(p.id))];
+      });
       setTotalPages(res.data.totalPages);
+      setCurrentPage(page);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Failed to load posts");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
-  const goToPage = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+  // Reload every page currently shown (after edit / delete)
+  const refreshPosts = async () => {
+    try {
+      let all = [];
+      let total = 1;
+      for (let pg = 1; pg <= currentPage; pg++) {
+        const res = await API.get("/posts", { params: { page: pg, limit: POSTS_PER_PAGE } });
+        all = all.concat(res.data.posts);
+        total = res.data.totalPages;
+      }
+      setPosts(all);
+      setTotalPages(total);
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || "Failed to load posts");
+    }
+  };
+
+  const loadMorePosts = () => {
+    if (loading || loadingMore || currentPage >= totalPages) return;
+    fetchPosts(currentPage + 1, true);
   };
 
   const handleEditClick = (post) => {
@@ -178,7 +205,7 @@ const UpdatePost = () => {
 
       alert("Post updated successfully");
       handleCancelEdit();
-      await fetchPosts(currentPage);
+      await refreshPosts();
     } catch (err) {
       console.log(err);
       setFormError(err.response?.data?.message || "Failed to update post");
@@ -436,35 +463,12 @@ const UpdatePost = () => {
               </table>
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "10px",
-                marginTop: "25px",
-              }}
-            >
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                style={pageButtonStyle(currentPage === 1)}
-              >
-                Prev
-              </button>
-
-              <span style={{ fontSize: "14px", color: "#444" }}>
-                Page {currentPage} of {totalPages}
-              </span>
-
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                style={pageButtonStyle(currentPage === totalPages)}
-              >
-                Next
-              </button>
-            </div>
+            <InfiniteScrollSentinel
+              hasMore={currentPage < totalPages}
+              loading={loadingMore}
+              onLoadMore={loadMorePosts}
+              text="Loading more..."
+            />
           </>
         )}
       </div>

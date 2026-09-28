@@ -36,5 +36,6 @@
     "load": "Failed to load About entries",
     "update": "Failed to update About entry",
     "delete": "Failed to delete About entry"
-  }
+  },
+  "loadingMore": "Loading more..."
 }

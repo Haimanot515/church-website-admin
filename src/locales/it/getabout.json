@@ -36,5 +36,6 @@
     "load": "Impossibile caricare le voci Chi Siamo",
     "update": "Impossibile aggiornare la voce Chi Siamo",
     "delete": "Impossibile eliminare la voce Chi Siamo"
-  }
+  },
+  "loadingMore": "Caricamento altri..."
 }

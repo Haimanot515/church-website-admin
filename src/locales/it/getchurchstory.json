@@ -38,5 +38,6 @@
   "yearLabel": "Anno: {{year}}",
   "previous": "Precedente",
   "next": "Successivo",
-  "pageLabel": "Pagina {{page}} di {{totalPages}}"
+  "pageLabel": "Pagina {{page}} di {{totalPages}}",
+  "loadingMore": "Caricamento altri..."
 }

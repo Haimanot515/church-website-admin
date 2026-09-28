@@ -9,6 +9,7 @@ import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetPost.css";
 import "../shared/AdminShared.css";
 import ActionMenu from "../../components/ActionMenu";
+import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Strips HTML tags for the plain-text table preview / validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -37,6 +38,7 @@ const GetPost = () => {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
   const [languages, setLanguages] = useState([]);
@@ -55,9 +57,9 @@ const GetPost = () => {
   const editPanelRef = useRef(null);
 
   useEffect(() => {
-    fetchPosts(currentPage);
+    fetchPosts(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -106,28 +108,53 @@ const GetPost = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingId, form.language, languages]);
 
-  const fetchPosts = async (page) => {
+  // append=true adds the next page under the current rows (infinite scroll)
+  const fetchPosts = async (page, append = false) => {
     try {
-      setLoading(true);
+      append ? setLoadingMore(true) : setLoading(true);
       setError("");
 
       const res = await API.get("/posts", {
         params: { page, limit: POSTS_PER_PAGE },
       });
 
-      setPosts(res.data.posts);
+      setPosts((prev) => {
+        if (!append) return res.data.posts;
+        const seen = new Set(prev.map((p) => p.id));
+        return [...prev, ...res.data.posts.filter((p) => !seen.has(p.id))];
+      });
       setTotalPages(res.data.totalPages);
+      setCurrentPage(page);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("post.errors.loadPosts"));
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
   };
 
-  const goToPage = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+  // Reload every page currently shown (after edit / delete) without losing the scroll position
+  const refreshPosts = async () => {
+    try {
+      let all = [];
+      let total = 1;
+      for (let pg = 1; pg <= currentPage; pg++) {
+        const res = await API.get("/posts", { params: { page: pg, limit: POSTS_PER_PAGE } });
+        all = all.concat(res.data.posts);
+        total = res.data.totalPages;
+      }
+      setPosts(all);
+      setTotalPages(total);
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || t("post.errors.loadPosts"));
+    }
+  };
+
+  const loadMorePosts = () => {
+    if (loading || loadingMore || currentPage >= totalPages) return;
+    fetchPosts(currentPage + 1, true);
   };
 
   const handleEditClick = (post) => {
@@ -234,7 +261,7 @@ const GetPost = () => {
 
       alert(t("post.updateSuccess"));
       handleCancelEdit();
-      await fetchPosts(currentPage);
+      await refreshPosts();
     } catch (err) {
       console.log(err);
       setFormError(err.response?.data?.message || t("post.errors.update"));
@@ -257,7 +284,7 @@ const GetPost = () => {
         handleCancelEdit();
       }
 
-      await fetchPosts(currentPage);
+      await refreshPosts();
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || t("post.errors.delete"));
@@ -550,27 +577,12 @@ const GetPost = () => {
                 </table>
               </div>
 
-              <div className="gpost-pagination">
-                <button
-                  className="gpost-page-btn"
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                >
-                  {t("post.pagination.prev")}
-                </button>
-
-                <span className="gpost-page-info">
-                  {t("post.pagination.pageOf", { current: currentPage, total: totalPages })}
-                </span>
-
-                <button
-                  className="gpost-page-btn"
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                >
-                  {t("post.pagination.next")}
-                </button>
-              </div>
+              <InfiniteScrollSentinel
+                hasMore={currentPage < totalPages}
+                loading={loadingMore}
+                onLoadMore={loadMorePosts}
+                text={t("post.loadingMore", "Loading more...")}
+              />
             </>
           ))}
       </div>

@@ -42,5 +42,6 @@
     "updateError": "Failed to update Home Hero",
     "deleteError": "Failed to delete Home Hero",
     "loadError": "Failed to load Home Hero entries"
-  }
+  },
+  "loadingMore": "Loading more..."
 }

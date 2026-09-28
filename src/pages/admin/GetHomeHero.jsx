@@ -10,6 +10,7 @@ import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
 import ActionMenu from "../../components/ActionMenu";
+import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -28,7 +29,6 @@ const GetHomeHero = () => {
   const [allHeroes, setAllHeroes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [deletingId, setDeletingId] = useState(null);
 
   // --- Inline edit panel state ---
@@ -65,15 +65,19 @@ const GetHomeHero = () => {
     }
   };
 
-  const totalPages = Math.max(1, Math.ceil(allHeroes.length / HEROES_PER_PAGE));
-  const heroes = allHeroes.slice(
-    (currentPage - 1) * HEROES_PER_PAGE,
-    currentPage * HEROES_PER_PAGE
-  );
+  // Infinite scroll: show more rows as the user scrolls down
+  const [visibleCount, setVisibleCount] = useState(HEROES_PER_PAGE);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const heroes = allHeroes.slice(0, visibleCount);
+  const hasMore = visibleCount < allHeroes.length;
 
-  const goToPage = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+  const loadMore = () => {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    setTimeout(() => {
+      setVisibleCount((c) => c + HEROES_PER_PAGE);
+      setLoadingMore(false);
+    }, 400);
   };
 
   // --- Edit panel open/close ---
@@ -181,12 +185,6 @@ const GetHomeHero = () => {
       }
 
       await fetchHeroes();
-
-      const remaining = allHeroes.length - 1;
-      const newTotalPages = Math.max(1, Math.ceil(remaining / HEROES_PER_PAGE));
-      if (currentPage > newTotalPages) {
-        setCurrentPage(newTotalPages);
-      }
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.msg || t("getHomeHero.messages.deleteError"));
@@ -384,29 +382,12 @@ const GetHomeHero = () => {
                 ))}
               </div>
 
-              {totalPages > 1 && (
-                <div className="ghh-pagination">
-                  <button
-                    className="ghh-page-btn"
-                    onClick={() => goToPage(currentPage - 1)}
-                    disabled={currentPage === 1}
-                  >
-                    {t("getHomeHero.pagination.prev")}
-                  </button>
-
-                  <span className="ghh-page-info">
-                    {t("getHomeHero.pagination.pageOf", { current: currentPage, total: totalPages })}
-                  </span>
-
-                  <button
-                    className="ghh-page-btn"
-                    onClick={() => goToPage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    {t("getHomeHero.pagination.next")}
-                  </button>
-                </div>
-              )}
+              <InfiniteScrollSentinel
+                hasMore={hasMore}
+                loading={loadingMore}
+                onLoadMore={loadMore}
+                text={t("getHomeHero.loadingMore", "Loading more...")}
+              />
             </>
           ))}
       </div>

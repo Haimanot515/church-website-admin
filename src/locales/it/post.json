@@ -58,5 +58,6 @@
     "loadCategories": "Impossibile caricare le categorie per questa lingua",
     "update": "Impossibile aggiornare l'articolo",
     "delete": "Impossibile eliminare l'articolo"
-  }
+  },
+  "loadingMore": "Caricamento altri..."
 }

@@ -38,5 +38,6 @@
   "yearLabel": "ዓመት: {{year}}",
   "previous": "ቀዳሚ",
   "next": "ቀጣይ",
-  "pageLabel": "ገፅ {{page}} ከ {{totalPages}}"
+  "pageLabel": "ገፅ {{page}} ከ {{totalPages}}",
+  "loadingMore": "ተጨማሪ በመጫን ላይ..."
 }

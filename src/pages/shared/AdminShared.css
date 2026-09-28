@@ -32,7 +32,7 @@
 .ap-form { display: flex; flex-direction: column; gap: 15px; }
 .ap-field { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--ap-field-border); border-radius: var(--ap-radius-field); font-size: 14px; font-family: inherit; }
 .ap-btn-primary { padding: 14px; background: var(--ap-primary); color: #fff; border: none; border-radius: var(--ap-radius-btn); cursor: pointer; font-size: 14px; font-weight: 600; }
-.ap-btn-new { padding: 10px 18px; background: var(--ap-primary); color: #fff; border: none; border-radius: var(--ap-radius-field); cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.ap-btn-new { padding: 10px 18px; background: #16a34a; color: #fff; border: none; border-radius: var(--ap-radius-field); cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; }
 .ap-btn-edit { padding: 6px 12px; background: var(--ap-primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .ap-btn-delete { padding: 6px 12px; background: var(--ap-danger); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .ap-btn-cancel { padding: 14px; background: var(--ap-cancel-bg); color: var(--ap-cancel-text); border: none; border-radius: var(--ap-radius-btn); cursor: pointer; font-size: 14px; font-weight: 600; }

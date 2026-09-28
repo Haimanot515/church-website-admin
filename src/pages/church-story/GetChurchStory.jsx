@@ -9,6 +9,7 @@ import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetChurchStory.css";
 import "../shared/AdminShared.css";
 import ActionMenu from "../../components/ActionMenu";
+import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -32,6 +33,7 @@ const GetChurchStories = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
@@ -44,14 +46,19 @@ const GetChurchStories = () => {
 
   const editPanelRef = useRef(null);
 
-  const fetchStories = async (pageToLoad) => {
+  // append=true adds the next page under the current rows (infinite scroll)
+  const fetchStories = async (pageToLoad, append = false) => {
     try {
-      setLoading(true);
+      append ? setLoadingMore(true) : setLoading(true);
 
       // Matches GET /api/church-story?page=&limit= -> getChurchStories
       const res = await API.get(`/church-story?page=${pageToLoad}&limit=10`);
 
-      setStories(res.data.stories);
+      setStories((prev) => {
+        if (!append) return res.data.stories;
+        const seen = new Set(prev.map((x) => x.id));
+        return [...prev, ...res.data.stories.filter((x) => !seen.has(x.id))];
+      });
       setTotalPages(res.data.totalPages);
       setPage(res.data.page);
     } catch (err) {
@@ -60,7 +67,31 @@ const GetChurchStories = () => {
       setError(err.response?.data?.message || t("getChurchStories.errorLoad"));
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
+  };
+
+  // Reload every page currently shown (after edit / delete)
+  const refreshStories = async () => {
+    try {
+      let all = [];
+      let total = 1;
+      for (let pg = 1; pg <= page; pg++) {
+        const res = await API.get(`/church-story?page=${pg}&limit=10`);
+        all = all.concat(res.data.stories);
+        total = res.data.totalPages;
+      }
+      setStories(all);
+      setTotalPages(total);
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || t("getChurchStories.errorLoad"));
+    }
+  };
+
+  const loadMoreStories = () => {
+    if (loading || loadingMore || page >= totalPages) return;
+    fetchStories(page + 1, true);
   };
 
   useEffect(() => {
@@ -173,7 +204,7 @@ const GetChurchStories = () => {
 
       alert(t("getChurchStories.successUpdate"));
       handleCancelEdit();
-      await fetchStories(page);
+      await refreshStories();
     } catch (err) {
       console.log(err);
 
@@ -453,29 +484,12 @@ const GetChurchStories = () => {
                   ))}
                 </div>
 
-                {totalPages > 1 && (
-                  <div className="gcsPagination">
-                    <button
-                      onClick={() => fetchStories(page - 1)}
-                      disabled={page <= 1}
-                      className="gcsPageButton"
-                    >
-                      {t("getChurchStories.previous")}
-                    </button>
-
-                    <span className="gcsPageLabel">
-                      {t("getChurchStories.pageLabel", { page, totalPages })}
-                    </span>
-
-                    <button
-                      onClick={() => fetchStories(page + 1)}
-                      disabled={page >= totalPages}
-                      className="gcsPageButton"
-                    >
-                      {t("getChurchStories.next")}
-                    </button>
-                  </div>
-                )}
+                <InfiniteScrollSentinel
+                  hasMore={page < totalPages}
+                  loading={loadingMore}
+                  onLoadMore={loadMoreStories}
+                  text={t("getChurchStories.loadingMore", "Loading more...")}
+                />
               </>
             )}
           </>

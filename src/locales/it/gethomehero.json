@@ -42,5 +42,6 @@
     "updateError": "Impossibile aggiornare Home Hero",
     "deleteError": "Impossibile eliminare Home Hero",
     "loadError": "Impossibile caricare le voci Home Hero"
-  }
+  },
+  "loadingMore": "Caricamento altri..."
 }
