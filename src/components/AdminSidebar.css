@@ -248,8 +248,8 @@ html, body { overflow-x: hidden; width: 100%; }
 .admin-main {
   margin-left: 0;
   min-height: 100vh;
-  padding: 20px;
-  padding-top: calc(var(--navbar-h) + 20px);
+  padding: 0;
+  padding-top: var(--navbar-h);
   background: #ffffff;
   max-width: 100%;
   overflow-x: hidden;
@@ -318,7 +318,7 @@ html, body { overflow-x: hidden; width: 100%; }
 }
 
 @media (max-width: 480px) {
-  .admin-main { padding: 16px; padding-top: calc(var(--navbar-h) + 16px); }
+  .admin-main { padding: 0; padding-top: var(--navbar-h); }
 }
 
 /* ============================================================
@@ -361,7 +361,119 @@ html, body { overflow-x: hidden; width: 100%; }
 
   .admin-main {
     margin-left: 264px;
-    padding: 32px 40px;
-    padding-top: calc(var(--navbar-h) + 32px);
+    padding: 0;
+    padding-top: var(--navbar-h);
   }
 }
+
+/* ============================================================
+   THREE-SECTION LAYOUT: menu | submenu | form
+   The form area is the whole third section. Every page used to
+   wrap itself in its own grey "page" box (background + padding +
+   min-height) and a centred, width-capped "card". That outer space
+   squeezed the form and pushed its text/buttons off to the right.
+   These overrides remove that wrapper space in one place, so no
+   per-page CSS needs to change. Specificity (.admin-main .x) beats
+   the per-page single-class rules, including their media queries.
+   ============================================================ */
+
+/* Outer page boxes: no background, no padding, no forced height */
+.admin-main .ca-page,
+.admin-main .ga-page,
+.admin-main .hh-page,
+.admin-main .ghh-page,
+.admin-main .cba-page,
+.admin-main .gba-page,
+.admin-main .cc-page,
+.admin-main .gc-page,
+.admin-main .ccsPage,
+.admin-main .gcsPage,
+.admin-main .createChurchPerson-page,
+.admin-main .getChurchPerson-page,
+.admin-main .rcpPage,
+.admin-main .createChurch-page,
+.admin-main .createChurchAssignment-page,
+.admin-main .getChurch-page,
+.admin-main .cfaq-page,
+.admin-main .gfaq-page,
+.admin-main .cl-page,
+.admin-main .gl-page,
+.admin-main .cm-page,
+.admin-main .gm-page,
+.admin-main .cmv-page,
+.admin-main .gmv-page,
+.admin-main .cpost-page,
+.admin-main .gpost-page,
+.admin-main .cp-page,
+.admin-main .gp-page,
+.admin-main .up-page,
+.admin-main .csvc-page,
+.admin-main .ms-page,
+.admin-main .usvc-page,
+.admin-main .cs-page,
+.admin-main .gs-page,
+.admin-main .admin-users-page,
+.admin-main .ap-page {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Cards: fill the whole third section, no centring, no width cap */
+.admin-main .ca-card,
+.admin-main .ga-card,
+.admin-main .au-card,
+.admin-main .au-search-panel,
+.admin-main .hh-card,
+.admin-main .ghh-card,
+.admin-main .cba-card,
+.admin-main .gba-card,
+.admin-main .cc-card,
+.admin-main .gc-card,
+.admin-main .ccsCard,
+.admin-main .gcsCard,
+.admin-main .createChurchPerson-card,
+.admin-main .getChurchPerson-card,
+.admin-main .rcpCard,
+.admin-main .createChurch-card,
+.admin-main .createChurchAssignment-card,
+.admin-main .getChurch-card,
+.admin-main .cfaq-card,
+.admin-main .gfaq-card,
+.admin-main .cl-card,
+.admin-main .gl-card,
+.admin-main .cm-card,
+.admin-main .gm-card,
+.admin-main .cmv-card,
+.admin-main .gmv-card,
+.admin-main .cpost-card,
+.admin-main .gpost-card,
+.admin-main .cp-card,
+.admin-main .gp-card,
+.admin-main .up-card,
+.admin-main .csvc-card,
+.admin-main .cs-card,
+.admin-main .gs-card,
+.admin-main .ap-card,
+.admin-main .ap-card--form,
+.admin-main .admin-dashboard {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+/* Rich-text pages pin their height to the viewport minus the navbar */
+.admin-main .rte-page-shell {
+  height: calc(100vh - var(--navbar-h, 78px));
+}
+
+/* Long tables / forms scroll inside the form area, never sideways */
+.admin-main table { max-width: 100%; }
