@@ -9,7 +9,6 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
-import ActionMenu from "../../components/ActionMenu";
 import InfiniteScrollSentinel from "../../components/InfiniteScrollSentinel";
 
 // Fields are stored as rich-text HTML — strip tags for plain-text checks and list display
@@ -140,9 +139,7 @@ const GetHomeHero = () => {
 
       if (image) formData.append("image", image);
 
-      await API.put(`/homeheros/${editingId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await API.put(`/homeheros/${editingId}`, formData);
 
       alert(t("getHomeHero.messages.updateSuccess"));
       handleCancelEdit();
@@ -323,21 +320,21 @@ const GetHomeHero = () => {
                         </td>
                         <td className="ghh-td">
                           <div className="ghh-actions">
-                            <ActionMenu
-                              items={[
-                                {
-                                  label: t("getHomeHero.buttons.edit"),
-                                  onClick: () => handleEditClick(hero),
-                                  tone: "edit",
-                                },
-                                {
-                                  label: deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete"),
-                                  onClick: () => handleDeleteClick(hero),
-                                  tone: "delete",
-                                  disabled: deletingId === hero.id,
-                                },
-                              ]}
-                            />
+                            <button
+                              type="button"
+                              className="ghh-btn ghh-btn-edit"
+                              onClick={() => handleEditClick(hero)}
+                            >
+                              {t("getHomeHero.buttons.edit")}
+                            </button>
+                            <button
+                              type="button"
+                              className="ghh-btn ghh-btn-delete"
+                              disabled={deletingId === hero.id}
+                              onClick={() => handleDeleteClick(hero)}
+                            >
+                              {deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete")}
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -362,21 +359,21 @@ const GetHomeHero = () => {
                     </div>
 
                     <div className="ghh-card-actions">
-                      <ActionMenu
-                        items={[
-                          {
-                            label: t("getHomeHero.buttons.edit"),
-                            onClick: () => handleEditClick(hero),
-                            tone: "edit",
-                          },
-                          {
-                            label: deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete"),
-                            onClick: () => handleDeleteClick(hero),
-                            tone: "delete",
-                            disabled: deletingId === hero.id,
-                          },
-                        ]}
-                      />
+                      <button
+                              type="button"
+                              className="ghh-btn ghh-btn-edit"
+                              onClick={() => handleEditClick(hero)}
+                            >
+                              {t("getHomeHero.buttons.edit")}
+                            </button>
+                            <button
+                              type="button"
+                              className="ghh-btn ghh-btn-delete"
+                              disabled={deletingId === hero.id}
+                              onClick={() => handleDeleteClick(hero)}
+                            >
+                              {deletingId === hero.id ? t("getHomeHero.buttons.deleting") : t("getHomeHero.buttons.delete")}
+                            </button>
                     </div>
                   </div>
                 ))}

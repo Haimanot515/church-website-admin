@@ -68,12 +68,8 @@ const GetChurch = () => {
     try {
       setDeletingId(id);
 
-      const token = localStorage.getItem("token");
-
-      // Matches DELETE /api/churches/:id in churchRoutes.js
-      await API.delete(`/churches/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // Auth header is attached by the API interceptor
+      await API.delete(`/churches/${id}`);
 
       // Remove locally instead of refetching everything
       // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
@@ -153,10 +149,12 @@ const GetChurch = () => {
       formData.append("address", editForm.address);
       formData.append("serviceDays", editForm.serviceDays);
       formData.append("serviceTime", editForm.serviceTime);
-      formData.append("isFeatured", editForm.isFeatured);
-      formData.append("isPrimary", editForm.isPrimary);
-      // language intentionally not sent — it's fixed at creation and the
-      // update controller leaves it untouched when omitted.
+      formData.append("isFeatured", String(editForm.isFeatured));
+      formData.append("isPrimary", String(editForm.isPrimary));
+      // Send the existing language id back so the Prisma update never
+      // loses/overwrites the relation.
+      const langId = editLanguage?.id ?? editLanguage;
+      if (langId) formData.append("language", langId);
 
       if (editForm.image) {
         formData.append("image", editForm.image);
@@ -164,15 +162,10 @@ const GetChurch = () => {
 
       // Auth header is already attached globally by the API interceptor.
       // Matches PUT /api/churches/:id in churchRoutes.js
-      const res = await API.put(`/churches/${id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      await API.put(`/churches/${id}`, formData);
 
-      const updated = res.data.church || res.data;
-
-      // Patch it in place instead of refetching the whole list
-      // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
-      setChurches((prev) => prev.map((c) => (c.id === id ? updated : c)));
+      // Refetch so the row has the same shape as the list endpoint returns
+      await fetchChurches();
 
       cancelEdit();
     } catch (err) {

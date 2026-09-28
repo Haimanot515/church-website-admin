@@ -10,6 +10,7 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) =>
@@ -17,6 +18,10 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
+    setSuccess("");
     try {
       const res = await API.post("/auth/login", form);
       sessionStorage.setItem("token", res.data.token);
@@ -27,6 +32,8 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
       if (!adminFlag) {
         setError(t("adminLogin.errors.notAdmin"));
         setSuccess("");
+        sessionStorage.removeItem("token");
+        setSubmitting(false);
         return;
       }
 
@@ -42,6 +49,7 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
       const errorMsg = err.response?.data?.msg || t("adminLogin.errors.generic");
       setSuccess("");
       setError(errorMsg);
+      setSubmitting(false);
     }
   };
 
@@ -153,8 +161,8 @@ const AdminLoginPage = ({ setLoggedIn, setIsAdmin }) => {
               />
             </label>
 
-            <button type="submit" className="submit-button">
-              {t("adminLogin.submitButton")}
+            <button type="submit" className="submit-button" disabled={submitting} aria-busy={submitting}>
+              {submitting ? t("adminLogin.submittingButton") : t("adminLogin.submitButton")}
             </button>
           </form>
 

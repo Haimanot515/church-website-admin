@@ -18,5 +18,6 @@
   "errors": {
     "notAdmin": "This account does not have admin access.",
     "generic": "Something went wrong"
-  }
+  },
+  "submittingButton": "Logging in..."
 }

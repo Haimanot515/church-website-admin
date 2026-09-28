@@ -18,5 +18,6 @@
   "errors": {
     "notAdmin": "Questo account non ha accesso amministrativo.",
     "generic": "Qualcosa è andato storto"
-  }
+  },
+  "submittingButton": "Accesso in corso..."
 }

@@ -412,3 +412,15 @@
   .ghh-page { padding: 8px; }
   .ghh-card { padding: 12px; }
 }
+
+/* Make sure the Edit / Delete buttons are always visible on the hero list */
+.ghh-actions,
+.ghh-card-actions {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  gap: 8px;
+}
+.ghh-btn-edit,
+.ghh-btn-delete { min-width: 72px; }
+.ghh-btn:disabled { opacity: 0.6; cursor: not-allowed; }

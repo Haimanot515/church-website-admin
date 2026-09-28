@@ -8,6 +8,7 @@ import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetFaq.css";
 import "../shared/AdminShared.css";
 import ActionMenu from "../../components/ActionMenu";
+import { resolveLanguageId, toInt } from "../../utils/ids";
 
 // Strips HTML tags for plain-text display/validation
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -72,7 +73,7 @@ const GetFaq = () => {
       answer: entry.answer,
       category: entry.category,
       order: entry.order,
-      language: entry.language?.id || entry.language,
+      language: resolveLanguageId(entry, languages),
     });
     setFormError("");
     setError("");
@@ -105,9 +106,16 @@ const GetFaq = () => {
 
     try {
       setSaving(true);
-      const res = await API.put(`/faq/${id}`, editData);
+      const payload = {
+        question: editData.question,
+        answer: editData.answer,
+        category: editData.category,
+        order: toInt(editData.order),
+        language: editData.language,
+      };
+      await API.put(`/faq/${id}`, payload);
       // PostgreSQL/Prisma returns `id`, not MongoDB `_id`
-      setEntries((prev) => prev.map((entry) => (entry.id === id ? res.data : entry)));
+      await fetchEntries();
       setEditingId(null);
       setEditData({});
     } catch (err) {

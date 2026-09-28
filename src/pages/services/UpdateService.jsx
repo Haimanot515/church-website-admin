@@ -6,6 +6,7 @@ import { RichTextProvider } from "../../components/textEditor/RichTextContext";
 import RichTextToolbar from "../../components/textEditor/RichTextToolbar";
 import RichTextContextMenu from "../../components/textEditor/RichTextContextMenu";
 import RichTextField from "../../components/textEditor/RichTextField";
+import { resolveLanguageId } from "../../utils/ids";
 import "./UpdateService.css";
 import "../shared/AdminShared.css";
 
@@ -67,7 +68,7 @@ const UpdateService = () => {
           day: data.day || "",
           time: data.time || "",
           category: data.category || "Other",
-          language: data.languageId || data.language?.id || "",
+          language: resolveLanguageId(data, langRes.data || []),
           location: data.location || "",
           isFeatured: !!data.isFeatured,
           image: null,
@@ -131,8 +132,6 @@ const UpdateService = () => {
     try {
       setSaving(true);
 
-      const token = localStorage.getItem("token");
-
       const formData = new FormData();
       formData.append("title", service.title);
       formData.append("description", service.description);
@@ -141,19 +140,16 @@ const UpdateService = () => {
       formData.append("category", service.category);
       formData.append("language", service.language);
       formData.append("location", service.location);
-      formData.append("isFeatured", service.isFeatured);
+      formData.append("isFeatured", String(service.isFeatured));
 
       // Only send a new image if the user picked one; otherwise backend keeps existing
       if (service.image) {
         formData.append("image", service.image);
       }
 
-      await API.put(`/services/${id}`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Auth header is attached by the API interceptor; let the browser set the
+      // multipart boundary itself.
+      await API.put(`/services/${id}`, formData);
 
       alert(t("updateService.createSuccess"));
       navigate("/admin/services/view");

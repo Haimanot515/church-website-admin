@@ -18,8 +18,6 @@ const GetService = () => {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState(null);
 
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
     fetchServices();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,9 +52,7 @@ const GetService = () => {
     try {
       setDeletingId(id);
 
-      await API.delete(`/services/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await API.delete(`/services/${id}`);
 
       setServices((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
@@ -70,13 +66,8 @@ const GetService = () => {
     const newStatus = service.status === "active" ? "inactive" : "active";
 
     try {
-      const res = await API.put(
-        `/services/${service.id}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setServices((prev) => prev.map((s) => (s.id === service.id ? res.data : s)));
+      await API.put(`/services/${service.id}`, { status: newStatus });
+      await fetchServices();
     } catch (err) {
       alert(err.response?.data?.message || t("getService.errors.updateStatus"));
     }

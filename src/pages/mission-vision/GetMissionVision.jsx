@@ -8,6 +8,7 @@ import RichTextField from "../../components/textEditor/RichTextField";
 import "./GetMissionVision.css";
 import "../shared/AdminShared.css";
 import ActionMenu from "../../components/ActionMenu";
+import { resolveLanguageId, toInt } from "../../utils/ids";
 
 // Strips HTML tags for the plain-text read-only view
 const stripHtml = (html) => (html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "");
@@ -59,7 +60,7 @@ const GetMissionVision = () => {
       title: entry.title,
       desc: entry.desc,
       order: entry.order,
-      language: entry.language?.id || entry.language,
+      language: resolveLanguageId(entry, languages),
     });
     setError("");
   };
@@ -78,8 +79,16 @@ const GetMissionVision = () => {
     setError("");
     try {
       setSaving(true);
-      const res = await API.put(`/mission-vision/${id}`, editData);
-      setEntries((prev) => prev.map((entry) => (entry.id === id ? res.data : entry)));
+      const payload = {
+        type: editData.type,
+        title: editData.title,
+        desc: editData.desc,
+        order: toInt(editData.order),
+        language: editData.language,
+      };
+      const res = await API.put(`/mission-vision/${id}`, payload);
+      // Refetch so the row keeps the same shape as the list endpoint returns
+      await fetchEntries();
       setEditingId(null);
       setEditData({});
     } catch (err) {
